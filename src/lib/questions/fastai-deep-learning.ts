@@ -16,7 +16,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "ResNets utilize skip connections (or residual connections) that bypass some layers, providing an alternative path for the gradient to flow backwards. This solves the vanishing gradient problem, which plagues very deep plain networks.",
+        "**Step 1:** ResNets utilize skip connections (or residual connections) that bypass some layers, providing an alternative path for the gradient to flow backwards.",
       hints: [
         "Think about what happens to gradients as they flow backward through many layers.",
         "ResNet stands for Residual Network - the key is in the name.",
@@ -36,7 +36,7 @@ registerQuestions({
       ],
       correctAnswer: 0,
       explanation:
-        "fastai's `vision_learner` function creates a `Learner` that wraps a pre-trained architecture (like `resnet34`) with a custom head, ready for fine-tuning. It sets up the DataLoaders, model, loss function, and metrics together.",
+        "**Step 1:** fastai's `vision_learner` function creates a `Learner` that wraps a pre-trained architecture (like `resnet34`) with a custom head, ready for fine-tuning.",
       hints: [
         "fastai renamed `cnn_learner` to `vision_learner` in version 2.",
         "The first argument is the DataLoaders, the second is the architecture.",
@@ -56,7 +56,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "The number in a ResNet variant name (18, 34, 50, 101, 152) refers to the total number of layers with learnable weights (weight layers). Deeper networks are more expressive but require more computation and data.",
+        "**Step 1:** The number in a ResNet variant name (18, 34, 50, 101, 152) refers to the total number of layers with learnable weights (weight layers).",
       hints: [
         "ResNet-34 has 34 layers while ResNet-50 has 50 layers.",
         "More layers generally means more representational power, but also more compute.",
@@ -71,7 +71,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "The core idea of a residual block is: output = F(x) + x, where F(x) is the transformation learned by the block's layers, and x is the identity shortcut. The addition happens before the final ReLU activation.",
+        "**Step 1:** The core idea of a residual block is: output = F(x) + x, where F(x) is the transformation learned by the block's layers, and x is the identity shortcut.",
       hints: [
         "The residual connection passes the identity of x alongside the learned transformation.",
         "Think about what 'residual' means - the block learns the residual on top of the identity.",
@@ -91,7 +91,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Bottleneck blocks use a 1\\times1 conv to reduce channels, a 3\\times3 conv on the reduced channels, then a 1\\times1 conv to restore channel count. This reduces the number of parameters and computation while preserving representational power.",
+        "**Step 1:** Bottleneck blocks use a 1\\times1 conv to reduce channels, a 3\\times3 conv on the reduced channels, then a 1\\times1 conv to restore channel count.",
       hints: [
         "The 1\\times1 convolution acts as a channel dimension reducer (bottleneck).",
         "This design allows ResNet-50 to be deeper than ResNet-34 without a proportional increase in parameters.",
@@ -111,7 +111,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "fastai's `fine_tune(n)` performs one epoch of frozen body training first (training just the head), then unfreezes all layers and trains for `n` epochs using discriminative learning rates - lower rates for earlier layers, higher for the head.",
+        "**Step 1:** fastai's `fine_tune(n)` performs one epoch of frozen body training first (training just the head), then unfreezes all layers and trains for `n` epochs using discriminative learning rates - lower rates for earlier layers, higher for the head.",
       hints: [
         "The body of a pre-trained model already has useful features; the head needs more training.",
         "`fine_tune` is a convenience wrapper around `fit_one_cycle` with freeze/unfreeze logic.",
@@ -133,7 +133,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "In fastai, fine-tuning typically starts by freezing the pre-trained 'body' (which already knows how to detect general features) and training only the randomly initialized 'head' (customized for the specific task), before unfreezing and training the entire network with discriminative learning rates.",
+        "**Step 1:** In fastai, fine-tuning typically starts by freezing the pre-trained 'body' (which already knows how to detect general features) and training only the randomly initialized 'head' (customized for the specific task), before unfreezing and training the entire network with discriminative learning rates.",
       hints: [
         "The pre-trained weights are valuable - you don't want to destroy them with a high learning rate early on.",
         "Think about what 'freezing' layers means: their weights are not updated during backprop.",
@@ -153,7 +153,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Discriminative learning rates allow earlier layers (which have learned general low-level features) to be updated slowly, while later layers (closer to the task-specific head) can be updated more aggressively. In fastai, you pass a slice to specify min/max LR.",
+        "**Step 1:** Discriminative learning rates allow earlier layers (which have learned general low-level features) to be updated slowly, while later layers (closer to the task-specific head) can be updated more aggressively.",
       hints: [
         "Earlier layers in a pre-trained network learned general features (edges, textures) that change little between tasks.",
         "In fastai, you can pass `lr_max=slice(1e-6, 1e-4)` to specify a range.",
@@ -168,7 +168,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "`learn.unfreeze()` sets `requires_grad=True` for all parameters in the model, enabling the pre-trained backbone's weights to be updated during subsequent training steps.",
+        "**Step 1:** `learn.unfreeze()` sets `requires_grad=True` for all parameters in the model, enabling the pre-trained backbone's weights to be updated during subsequent training steps.",
       hints: [
         "Think about what freezing means in PyTorch: `requires_grad=False` prevents gradient computation.",
         "After unfreezing, you typically use discriminative learning rates to update different layers at different speeds.",
@@ -188,7 +188,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Catastrophic forgetting happens when a model trained on a new task overwrites previously learned knowledge. Large updates to early pre-trained layers destroy their carefully learned representations of low-level features, which is why discriminative (lower) learning rates for early layers are critical.",
+        "**Step 1:** Catastrophic forgetting happens when a model trained on a new task overwrites previously learned knowledge.",
       hints: [
         "Pre-trained features in early layers (edges, curves) are useful for almost any vision task.",
         "The solution is to use much smaller learning rates for the pre-trained backbone than for the new head.",
@@ -208,7 +208,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`learn.freeze_to(n)` is a more granular control that freezes the first n layer groups (not individual layers). This allows progressive unfreezing where you gradually unfreeze more of the pre-trained body over multiple training phases.",
+        "**Step 1:** `learn.freeze_to(n)` is a more granular control that freezes the first n layer groups (not individual layers).",
       hints: [
         "fastai groups layers into 'layer groups' for purposes like discriminative learning rates.",
         "Progressive unfreezing is one strategy: unfreeze from the top down over multiple cycles.",
@@ -228,7 +228,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`learn.fine_tune(n)` is a convenience method: it trains 1 epoch with the body frozen (to warm up the head), then unfreezes everything and trains for n more epochs with discriminative learning rates. So `fine_tune(4)` = 1 frozen epoch + 4 unfrozen epochs.",
+        "**Step 1:** `learn.fine_tune(n)` is a convenience method: it trains 1 epoch with the body frozen (to warm up the head), then unfreezes everything and trains for n more epochs with discriminative learning rates.",
       hints: [
         "The argument to `fine_tune()` is the number of unfrozen epochs, not the total.",
         "The initial frozen epoch trains only the newly added head to a reasonable starting point.",
@@ -250,7 +250,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "Data augmentation (like random cropping, flipping, and rotation) forces the model to learn invariant features, making it generalize better to unseen data and reducing overfitting.",
+        "**Step 1:** Data augmentation (like random cropping, flipping, and rotation) forces the model to learn invariant features, making it generalize better to unseen data and reducing overfitting.",
       hints: [
         "Consider what problem augmentation solves: the model seeing the same image in the same way each epoch.",
         "Augmentation is applied randomly at train time, not at inference time (usually).",
@@ -270,7 +270,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`aug_transforms()` returns a collection of common augmentation transforms (flips, rotations, zoom, brightness, contrast, warp) that fastai applies on GPU at the batch level during training. Because they run on GPU after batch formation, they're much faster than CPU-based per-image augmentation.",
+        "**Step 1:** `aug_transforms()` returns a collection of common augmentation transforms (flips, rotations, zoom, brightness, contrast, warp) that fastai applies on GPU at the batch level during training.",
       hints: [
         "fastai performs augmentation on GPU at batch level for speed.",
         "These transforms are only applied during training, not validation, to give an honest evaluation.",
@@ -285,7 +285,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: 1,
       explanation:
-        "Data augmentation is applied only to the training set. The validation set uses deterministic transforms (like resizing and normalization only) to give an honest, reproducible measure of model performance. Randomly modifying validation images would make evaluation inconsistent.",
+        "**Step 1:** Data augmentation is applied only to the training set.\n\n**Step 2:** The validation set uses deterministic transforms (like resizing and normalization only) to give an honest, reproducible measure of model performance.\n\n**Step 3:** Randomly modifying validation images would make evaluation inconsistent.",
       hints: [
         "The validation set is used to measure how well your model generalizes - any randomness would make the metric noisy.",
         "In fastai's DataBlock API, `item_tfms` and `batch_tfms` with augmentation are designed for the training pipeline.",
@@ -305,7 +305,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`item_tfms` (like `Resize`) run on individual items on CPU before they are collated into a batch. `batch_tfms` (like `aug_transforms()`) run on full GPU batches and can apply randomized transforms much more efficiently.",
+        "**Step 1:** `item_tfms` (like `Resize`) run on individual items on CPU before they are collated into a batch. `batch_tfms` (like `aug_transforms()`) run on full GPU batches and can apply randomized transforms much more efficiently.",
       hints: [
         "Resizing must happen before batching because all images in a batch must have the same dimensions.",
         "GPU-accelerated batch transforms can apply complex augmentations much faster than per-image CPU transforms.",
@@ -325,7 +325,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "RandomErasing (also related to CutOut) randomly selects rectangular regions of training images and fills them with noise or zeros. This prevents the network from over-relying on specific discriminative regions, improving robustness and generalization.",
+        "**Step 1:** RandomErasing (also related to CutOut) randomly selects rectangular regions of training images and fills them with noise or zeros.",
       hints: [
         "Think about what happens if a model always identifies a bird by its beak - RandomErasing forces it to use other features too.",
         "This is different from Mixup/CutMix which blend multiple images together.",
@@ -345,7 +345,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`RandomResizedCrop` samples a crop with random scale (e.g., 8-100% of image area) and random aspect ratio, then resizes to the target size. This single transform provides both scale invariance and positional augmentation, and is a staple of modern image classification pipelines.",
+        "**Step 1:** `RandomResizedCrop` samples a crop with random scale (e.g., 8-100% of image area) and random aspect ratio, then resizes to the target size.",
       hints: [
         "This is the standard augmentation used in training ImageNet models.",
         "It exposes the model to the object at various scales and positions, improving generalization.",
@@ -367,7 +367,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "The LR Finder slowly increases the learning rate and records the loss. By plotting this, practitioners can pick a learning rate where the loss is decreasing most rapidly (steepest downward slope) before it starts diverging.",
+        "**Step 1:** The LR Finder slowly increases the learning rate and records the loss.",
       hints: [
         "Look for the point of steepest descent on the loss vs. learning rate plot.",
         "The LR Finder was introduced by Leslie Smith in the paper 'Cyclical Learning Rates'.",
@@ -387,7 +387,7 @@ registerQuestions({
       ],
       correctAnswer: 0,
       explanation:
-        "fastai's `Learner` has a built-in `lr_find()` method that runs the learning rate finder, plots the loss vs. learning rate curve, and suggests a good learning rate. It resets the model weights after running so no actual learning is lost.",
+        "**Step 1:** fastai's `Learner` has a built-in `lr_find()` method that runs the learning rate finder, plots the loss vs. learning rate curve, and suggests a good learning rate.",
       hints: [
         "The method name is `lr_find()`, similar to how you might name it: find the learning rate.",
         "It both runs the finder and plots the result automatically.",
@@ -407,7 +407,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "You should pick a learning rate where the loss is still clearly decreasing - roughly one order of magnitude before the minimum loss point. The minimum itself is often too high and causes instability; you want the steepest downward slope region.",
+        "**Step 1:** You should pick a learning rate where the loss is still clearly decreasing - roughly one order of magnitude before the minimum loss point.",
       hints: [
         "Choosing the absolute minimum on the LR plot often leads to divergence in practice.",
         "Think of it as: where is loss falling fastest and most stably?",
@@ -422,7 +422,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "fastai's `lr_find()` saves the model state before running the finder and restores it afterward. This means you can safely run it before `fit_one_cycle()` without any risk of corrupting your model's weights.",
+        "**Step 1:** fastai's `lr_find()` saves the model state before running the finder and restores it afterward.",
       hints: [
         "If it modified the weights, the LR finder itself would be a partial training run.",
         "fastai uses the `Recorder` callback to track losses during the finder sweep.",
@@ -442,7 +442,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Leslie Smith's 1-cycle policy increases the LR from a low start to a max value (warmup), then decreases back to a very small value (cosine annealing), while momentum does the inverse. This allows larger effective learning rates, speeding up convergence and often achieving better final accuracy.",
+        "**Step 1:** Leslie Smith's 1-cycle policy increases the LR from a low start to a max value (warmup), then decreases back to a very small value (cosine annealing), while momentum does the inverse.",
       hints: [
         "This is also called 'superconvergence' - it often converges faster than constant-LR training.",
         "The momentum schedule is the inverse: it starts high, decreases as LR rises, then rises again.",
@@ -462,7 +462,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`fit()` trains with a fixed learning rate. `fit_one_cycle()` implements the 1-cycle policy: it ramps the LR up then down over all epochs, which in practice converges faster and often to better optima. fastai recommends `fit_one_cycle()` as the default training method.",
+        "**Step 1:** `fit()` trains with a fixed learning rate. `fit_one_cycle()` implements the 1-cycle policy: it ramps the LR up then down over all epochs, which in practice converges faster and often to better optima. fastai recommends `fit_one_cycle()` as the default training method.",
       hints: [
         "The 1-cycle policy was shown by Leslie Smith to achieve 'superconvergence'.",
         "The LR schedule in `fit_one_cycle` spans the entire training run, not just one epoch.",
@@ -483,7 +483,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "The DataBlock API is a highly customizable pipeline system that defines the types of inputs/targets, how to get items, how to split data into train/validation sets, and what transformations to apply.",
+        "**Step 1:** The DataBlock API is a highly customizable pipeline system that defines the types of inputs/targets, how to get items, how to split data into train/validation sets, and what transformations to apply.",
       hints: [
         "DataBlock is about building DataLoaders - the things that feed data into training.",
         "Think of DataBlock as a recipe: it specifies all the steps to go from raw files to ready-to-train batches.",
@@ -503,7 +503,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "The `splitter` in a DataBlock determines which items go to the training set and which go to the validation set. Common splitters include `RandomSplitter` (random split by percentage), `GrandparentSplitter` (by folder name), and `IndexSplitter`.",
+        "**Step 1:** The `splitter` in a DataBlock determines which items go to the training set and which go to the validation set.",
       hints: [
         "Without a splitter, fastai wouldn't know which data to validate on.",
         "fastai uses the validation set to compute metrics after each epoch.",
@@ -523,7 +523,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`get_items` is the function that collects all items (typically file paths) from the data source. For image data stored in folders, `get_image_files` is commonly used. The DataBlock calls this function to discover all available data.",
+        "**Step 1:** `get_items` is the function that collects all items (typically file paths) from the data source.\n\n**Step 2:** For image data stored in folders, `get_image_files` is commonly used.\n\n**Step 3:** The DataBlock calls this function to discover all available data.",
       hints: [
         "Common `get_items` functions: `get_image_files` for images, `get_text_files` for text.",
         "This is the first step in building a data pipeline: find all the data.",
@@ -538,7 +538,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "The `blocks` parameter defines the types of input and output. `(ImageBlock, CategoryBlock)` means: inputs are images, targets are single categories. Other combinations include `(ImageBlock, MultiCategoryBlock)` for multi-label classification or `(ImageBlock, ImageBlock)` for image-to-image tasks.",
+        "**Step 1:** The `blocks` parameter defines the types of input and output. `(ImageBlock, CategoryBlock)` means: inputs are images, targets are single categories.",
       hints: [
         "The first element in `blocks` is the input type, the second is the target type.",
         "fastai uses this information to know which transforms, metrics, and loss functions make sense.",
@@ -558,7 +558,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "If data is sorted (e.g., by date, subject, or class label), taking the last 20% would create a biased validation set. Random splitting with a fixed seed creates a representative validation split while remaining reproducible.",
+        "**Step 1:** If data is sorted (e.g., by date, subject, or class label), taking the last 20% would create a biased validation set.",
       hints: [
         "Consider what happens if your image files are named by class: last 20% would only contain certain classes.",
         "Setting `seed=42` makes the split reproducible across runs.",
@@ -578,7 +578,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`dblock.summary(path)` is an essential debugging tool that processes a small sample of data through the entire DataBlock pipeline, printing each step and showing the resulting tensor shapes. It helps identify misconfigured transforms, wrong block types, or unexpected data formats before training begins.",
+        "**Step 1:** `dblock.summary(path)` is an essential debugging tool that processes a small sample of data through the entire DataBlock pipeline, printing each step and showing the resulting tensor shapes.",
       hints: [
         "When building a new DataBlock, `summary()` is the first thing to call if something seems wrong.",
         "It shows you exactly what your model will receive as input.",
@@ -599,7 +599,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "TTA creates multiple augmented copies of an input during inference. The model predicts on all copies, and the results are averaged (or maxed), leading to a more robust and accurate final prediction.",
+        "**Step 1:** TTA creates multiple augmented copies of an input during inference.",
       hints: [
         "TTA is an inference-time technique - no additional training occurs.",
         "Averaging predictions from multiple views reduces the effect of any single augmentation artifact.",
@@ -619,7 +619,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "fastai provides `learn.tta()` which applies Test-Time Augmentation and returns predictions. It runs the validation data through the model multiple times with different random augmentations and averages the results.",
+        "**Step 1:** fastai provides `learn.tta()` which applies Test-Time Augmentation and returns predictions.",
       hints: [
         "The method is named `tta()` for Test-Time Augmentation.",
         "It returns a tuple of (predictions, targets) just like `get_preds()`.",
@@ -634,7 +634,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "TTA runs multiple forward passes (e.g., 4-8) for each input, which requires proportionally more memory and compute time. However, since it's inference only (no backprop), the memory overhead is smaller than training, and the accuracy gain often justifies the cost.",
+        "**Step 1:** TTA runs multiple forward passes (e.g., 4-8) for each input, which requires proportionally more memory and compute time.",
       hints: [
         "Each augmented view requires its own forward pass through the model.",
         "No gradients are computed during TTA, which saves some memory compared to training.",
@@ -654,7 +654,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Augmentations in TTA must produce images that are still valid members of their class. Horizontally flipping a 'b' creates a 'd', and flipping a '6' creates something similar to a '9'. Domain knowledge should guide which augmentations are appropriate for TTA.",
+        "**Step 1:** Augmentations in TTA must produce images that are still valid members of their class.\n\n**Step 2:** Horizontally flipping a 'b' creates a 'd', and flipping a '6' creates something similar to a '9'.\n\n**Step 3:** Domain knowledge should guide which augmentations are appropriate for TTA.",
       hints: [
         "Think about whether a horizontally flipped image is still a valid example of the same class.",
         "This is why `aug_transforms()` has `do_flip` parameter to control whether flipping is applied.",
@@ -674,7 +674,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "TTA shows diminishing returns: the first few augmented views provide the most variance reduction, but each additional view contributes less. Typically 4-8 TTA passes captures most of the benefit; going to 32 or 64 passes rarely improves results significantly enough to justify the compute cost.",
+        "**Step 1:** TTA shows diminishing returns: the first few augmented views provide the most variance reduction, but each additional view contributes less.",
       hints: [
         "Think about the law of diminishing returns - the 100th sample from a distribution tells you little more than the 10th.",
         "In practice, 4 TTA passes is commonly used as a good trade-off.",
@@ -694,7 +694,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Model ensembling averages predictions from multiple differently-trained models to reduce variance. TTA achieves a similar effect by averaging predictions from the same model on multiple augmented views of one input. It's a computationally cheaper way to get some ensemble-like benefits.",
+        "**Step 1:** Model ensembling averages predictions from multiple differently-trained models to reduce variance.\n\n**Step 2:** TTA achieves a similar effect by averaging predictions from the same model on multiple augmented views of one input.\n\n**Step 3:** It's a computationally cheaper way to get some ensemble-like benefits.",
       hints: [
         "Both ensembling and TTA rely on the principle that averaging independent predictions reduces variance.",
         "TTA trades training multiple models for running multiple inference passes on one model.",
@@ -716,7 +716,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "Mixup blends two images (e.g., 30% dog, 70% cat) and their labels simultaneously. This regularizes the network, forcing it to make smoother transitions between classes.",
+        "**Step 1:** Mixup blends two images (e.g., 30% dog, 70% cat) and their labels simultaneously.",
       hints: [
         "Mixup applies to both the inputs AND the labels simultaneously.",
         "The blending weight lambda is sampled from a Beta distribution.",
@@ -736,7 +736,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "In fastai, Mixup is implemented as a callback. You enable it by passing `cbs=MixUp()` (or `cbs=MixUp(0.4)` with a specific alpha) to the `Learner` constructor or `fit` method. The callback intercepts each batch and applies the mixing operation.",
+        "**Step 1:** In fastai, Mixup is implemented as a callback.\n\n**Step 2:** You enable it by passing `cbs=MixUp()` (or `cbs=MixUp(0.4)` with a specific alpha) to the `Learner` constructor or `fit` method.\n\n**Step 3:** The callback intercepts each batch and applies the mixing operation.",
       hints: [
         "fastai's callback system allows augmentation to be plugged into the training loop at the batch level.",
         "The `MixUp` callback modifies both inputs and targets before the forward pass.",
@@ -751,7 +751,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "Cross-Entropy loss naturally handles soft/mixed labels. When Mixup creates a target of [0.7, 0.3] (70% cat, 30% dog), the loss is computed as a weighted combination of the losses for each class, which is mathematically equivalent to computing cross-entropy with the interpolated probability vector.",
+        "**Step 1:** Cross-Entropy loss naturally handles soft/mixed labels.",
       hints: [
         "Cross-entropy accepts any probability distribution as a target, not just one-hot vectors.",
         "Some implementations compute the loss as a weighted sum of two separate cross-entropy terms.",
@@ -771,7 +771,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "CutMix pastes a rectangular crop from image B into image A, and adjusts the label proportionally (by the fraction of area from each image). Unlike Mixup's global blending, CutMix produces locally coherent image regions, which can be more informative for the model.",
+        "**Step 1:** CutMix pastes a rectangular crop from image B into image A, and adjusts the label proportionally (by the fraction of area from each image).",
       hints: [
         "In CutMix, each region of the image comes entirely from one source image, not a blend.",
         "The label mixing ratio in CutMix is determined by the area of the pasted patch.",
@@ -791,7 +791,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Mixup forces the model to learn linear interpolations between training examples. This discourages memorization of individual examples and encourages smooth, linear behavior between classes, which acts as an implicit regularizer and often improves generalization.",
+        "**Step 1:** Mixup forces the model to learn linear interpolations between training examples.",
       hints: [
         "A model that memorizes training data would fail on mixed images because they don't exist in the dataset.",
         "Mixup makes the model's prediction function smoother between training examples.",
@@ -811,7 +811,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Beta(alpha, alpha) with small alpha produces a U-shaped distribution concentrated near 0 and 1. This means most sampled lambdas will be close to 0 or 1, resulting in little actual mixing (the output is nearly identical to one of the source images). Higher alpha values create more uniform mixing.",
+        "**Step 1:** Beta(alpha, alpha) with small alpha produces a U-shaped distribution concentrated near 0 and 1.\n\n**Step 2:** This means most sampled lambdas will be close to 0 or 1, resulting in little actual mixing (the output is nearly identical to one of the source images).\n\n**Step 3:** Higher alpha values create more uniform mixing.",
       hints: [
         "Beta(0.5, 0.5) produces a U-shaped distribution; Beta(1, 1) is uniform; Beta(2, 2) concentrates near 0.5.",
         "Setting alpha=1 in MixUp means lambda is uniform on [0, 1], giving equal probability to all mixing ratios.",
@@ -833,7 +833,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "ULMFiT introduced transfer learning to NLP by first pre-training a language model (e.g., on Wikipedia), fine-tuning it to the specific style of the target corpus, and finally replacing the LM head with a classifier head to fine-tune on the classification task.",
+        "**Step 1:** ULMFiT introduced transfer learning to NLP by first pre-training a language model (e.g., on Wikipedia), fine-tuning it to the specific style of the target corpus, and finally replacing the LM head with a classifier head to fine-tune on the classification task.",
       hints: [
         "ULMFiT proved that transfer learning for NLP was feasible, predating BERT and GPT.",
         "The three stages mirror the pattern used in computer vision fine-tuning.",
@@ -853,7 +853,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "ULMFiT introduced gradual unfreezing: rather than unfreezing all layers at once, it unfreezes the top layer first and trains for one epoch, then unfreezes the next layer down, and so on. Combined with discriminative LRs (lower for earlier layers), this prevents catastrophic forgetting.",
+        "**Step 1:** ULMFiT introduced gradual unfreezing: rather than unfreezing all layers at once, it unfreezes the top layer first and trains for one epoch, then unfreezes the next layer down, and so on.",
       hints: [
         "Gradual unfreezing is the NLP equivalent of starting with a frozen backbone in computer vision.",
         "The intuition: the final layers are most task-specific, so unfreeze those first.",
@@ -873,7 +873,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "ULMFiT uses a standard autoregressive language model: given the previous tokens, predict the next one. This self-supervised objective requires no labeled data and can use enormous text corpora (e.g., Wikipedia) to learn rich representations of language.",
+        "**Step 1:** ULMFiT uses a standard autoregressive language model: given the previous tokens, predict the next one.",
       hints: [
         "This is the same task as GPT-style models: predict the next word.",
         "BERT uses masked language modeling (predict missing words) - a different approach.",
@@ -888,7 +888,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "ULMFiT (Howard & Ruder, 2018) was a seminal paper that proved NLP transfer learning was viable at scale. It achieved state-of-the-art results on multiple text classification benchmarks and directly inspired the transformer-based pre-training approaches (BERT, GPT) that followed.",
+        "**Step 1:** ULMFiT (Howard & Ruder, 2018) was a seminal paper that proved NLP transfer learning was viable at scale.",
       hints: [
         "ULMFiT was published by Jeremy Howard (fastai founder) and Sebastian Ruder in 2018.",
         "Before ULMFiT, NLP models were typically trained from scratch on each task.",
@@ -908,7 +908,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "A model pre-trained on Wikipedia excels at encyclopedic text but may underperform on movie reviews or medical notes. Fine-tuning the LM on the target corpus (e.g., IMDB reviews) adapts the model to domain-specific vocabulary and style, providing better initialization for classifier fine-tuning.",
+        "**Step 1:** A model pre-trained on Wikipedia excels at encyclopedic text but may underperform on movie reviews or medical notes.",
       hints: [
         "Wikipedia English and Twitter English are both English but have very different vocabularies and styles.",
         "This step is self-supervised - no labels are needed, just the raw target-domain text.",
@@ -928,7 +928,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "The typical ULMFiT workflow in fastai: (1) fine-tune the language model, (2) save the encoder with `learn.save_encoder('finetuned_enc')`, (3) create a `text_classifier_learner` for the classification task, (4) load the saved encoder with `learn.load_encoder('finetuned_enc')`, then train the classifier.",
+        "**Step 1:** The typical ULMFiT workflow in fastai: (1) fine-tune the language model, (2) save the encoder with `learn.save_encoder('finetuned_enc')`, (3) create a `text_classifier_learner` for the classification task, (4) load the saved encoder with `learn.load_encoder('finetuned_enc')`, then train the classifier.",
       hints: [
         "The encoder (LSTM body) is what carries the learned language representations.",
         "fastai separates the encoder from the decoder/head so it can be reused across tasks.",
@@ -949,7 +949,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "LSTMs introduce a complex gating mechanism (forget, input, output gates) and a separate cell state, which allows gradients to flow more easily across long sequences, solving the vanishing gradient issue of vanilla RNNs.",
+        "**Step 1:** LSTMs introduce a complex gating mechanism (forget, input, output gates) and a separate cell state, which allows gradients to flow more easily across long sequences, solving the vanishing gradient issue of vanilla RNNs.",
       hints: [
         "LSTM stands for Long Short-Term Memory - the name hints at the core innovation.",
         "The forget gate allows the LSTM to selectively discard irrelevant information from the cell state.",
@@ -969,7 +969,7 @@ registerQuestions({
       ],
       correctAnswer: 0,
       explanation:
-        "The forget gate takes the previous hidden state and current input, passes them through a sigmoid, and outputs values between 0 and 1 for each cell state element. A value of 0 means 'completely forget'; 1 means 'completely keep'. This selective forgetting is what gives LSTMs their long-term memory capability.",
+        "**Step 1:** The forget gate takes the previous hidden state and current input, passes them through a sigmoid, and outputs values between 0 and 1 for each cell state element.\n\n**Step 2:** A value of 0 means 'completely forget'; 1 means 'completely keep'.\n\n**Step 3:** This selective forgetting is what gives LSTMs their long-term memory capability.",
       hints: [
         "Values from 0 to 1 act as a soft mask on the cell state - 0 forgets, 1 retains.",
         "The forget gate is one of three gates (forget, input, output) in a standard LSTM.",
@@ -984,7 +984,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "Weight sharing across time steps is a defining characteristic of RNNs. The same weight matrix W is applied at every time step, which gives RNNs their ability to handle sequences of variable length and their parameter efficiency, but also makes gradient flow challenging over long sequences.",
+        "**Step 1:** Weight sharing across time steps is a defining characteristic of RNNs.",
       hints: [
         "Think of an RNN as a feedforward network where the same layer is applied repeatedly.",
         "This weight sharing is analogous to how CNNs share weights spatially across positions.",
@@ -1004,7 +1004,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "BPTT treats the unrolled RNN as a deep feedforward network. The gradient of the loss w.r.t. early time steps requires multiplying by the recurrent weight matrix many times. If the largest eigenvalue of this matrix is < 1, gradients vanish exponentially; if > 1, they explode.",
+        "**Step 1:** BPTT treats the unrolled RNN as a deep feedforward network.\n\n**Step 2:** The gradient of the loss w.r.t. early time steps requires multiplying by the recurrent weight matrix many times.\n\n**Step 3:** If the largest eigenvalue of this matrix is < 1, gradients vanish exponentially; if > 1, they explode.",
       hints: [
         "Each time step in the unrolled RNN is like one layer in a deep network.",
         "The problem is analogous to the vanishing gradient in very deep feedforward networks.",
@@ -1024,7 +1024,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "A bidirectional RNN runs two separate RNNs: one processing the sequence left-to-right (forward), and one right-to-left (backward). At each time step, the hidden states from both are concatenated, giving the model context from both past and future tokens - very useful for tasks like named entity recognition.",
+        "**Step 1:** A bidirectional RNN runs two separate RNNs: one processing the sequence left-to-right (forward), and one right-to-left (backward).",
       hints: [
         "Useful for classification tasks where you know the full sequence (not generation tasks).",
         "Each position sees both the tokens before and after it.",
@@ -1044,7 +1044,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "AWD-LSTM (Merity et al., 2017) stands for ASGD Weight-Dropped LSTM. It applies several regularization techniques: DropConnect on the recurrent weight matrices (weight dropout), embedding dropout, locked dropout on hidden states, and AR/TAR regularization, achieving state-of-the-art language modeling at the time.",
+        "**Step 1:** AWD-LSTM (Merity et al., 2017) stands for ASGD Weight-Dropped LSTM.",
       hints: [
         "AWD-LSTM is the default architecture used by fastai for text classification via ULMFiT.",
         "DropConnect differs from regular Dropout: it drops weights (connections) rather than activations.",
@@ -1065,7 +1065,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Random Forests are an ensemble method that builds numerous independent decision trees (bagging) using random subsets of data and features. Averaging their outputs creates a more robust model that is less prone to overfitting than a single tree.",
+        "**Step 1:** Random Forests are an ensemble method that builds numerous independent decision trees (bagging) using random subsets of data and features.",
       hints: [
         "'Random' in Random Forests refers to the random sampling of both data (rows) and features (columns).",
         "Averaging many slightly different, overfitting trees cancels out their individual errors.",
@@ -1085,7 +1085,7 @@ registerQuestions({
       ],
       correctAnswer: 0,
       explanation:
-        "Bagging (Bootstrap Aggregating, used in Random Forests) trains many independent models in parallel on bootstrapped data subsets and aggregates results. Boosting trains models sequentially, where each new model focuses on the mistakes of the previous ensemble, building a strong learner from weak ones.",
+        "**Step 1:** Bagging (Bootstrap Aggregating, used in Random Forests) trains many independent models in parallel on bootstrapped data subsets and aggregates results.",
       hints: [
         "Bagging reduces variance; boosting reduces bias.",
         "XGBoost and LightGBM are popular gradient boosting implementations.",
@@ -1105,7 +1105,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Feature importance in Random Forests measures each feature's contribution to prediction accuracy by averaging the impurity decrease (e.g., Gini impurity) associated with each feature split across all trees. High importance features are the strongest predictors in your dataset.",
+        "**Step 1:** Feature importance in Random Forests measures each feature's contribution to prediction accuracy by averaging the impurity decrease (e.g., Gini impurity) associated with each feature split across all trees.",
       hints: [
         "Feature importance helps with feature selection and understanding your model.",
         "In scikit-learn, `forest.feature_importances_` gives you these values.",
@@ -1120,7 +1120,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "An individual deep decision tree has high variance - it memorizes training data. Random Forests reduce this variance by averaging many independently trained trees on random data/feature subsets. Each tree is biased toward its bootstrap sample, but averaging cancels these individual biases out.",
+        "**Step 1:** An individual deep decision tree has high variance - it memorizes training data.\n\n**Step 2:** Random Forests reduce this variance by averaging many independently trained trees on random data/feature subsets.\n\n**Step 3:** Each tree is biased toward its bootstrap sample, but averaging cancels these individual biases out.",
       hints: [
         "This is the classic bias-variance trade-off: one deep tree has low bias but high variance.",
         "The ensemble average has similar bias but dramatically reduced variance.",
@@ -1140,7 +1140,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "fastai's approach recommends starting with a Random Forest as a baseline for tabular data because it's fast, interpretable, and provides feature importances. These importances reveal which features matter, guiding feature engineering, selection of categorical vs. continuous variables, and validating that the neural network is learning reasonable patterns.",
+        "**Step 1:** fastai's approach recommends starting with a Random Forest as a baseline for tabular data because it's fast, interpretable, and provides feature importances.",
       hints: [
         "Random Forests are an excellent baseline for tabular data - they often match neural network performance with less effort.",
         "Feature importances from a forest help you focus neural network feature engineering on what matters most.",
@@ -1160,7 +1160,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Each tree in a Random Forest is trained on a bootstrap sample (roughly 63% of the data). The remaining ~37% (out-of-bag samples) weren't used to train that tree, so they can be used to evaluate it. Averaging OOB predictions across all trees gives a reliable validation error estimate without needing a separate validation set.",
+        "**Step 1:** Each tree in a Random Forest is trained on a bootstrap sample (roughly 63% of the data).\n\n**Step 2:** The remaining ~37% (out-of-bag samples) weren't used to train that tree, so they can be used to evaluate it.\n\n**Step 3:** Averaging OOB predictions across all trees gives a reliable validation error estimate without needing a separate validation set.",
       hints: [
         "OOB error is essentially free - it uses data that was already not used for each tree's training.",
         "OOB samples average to about 36.8% of total data (1 - 1/e \\approx 0.632 are in-bag).",
@@ -1181,7 +1181,7 @@ registerQuestions({
       ],
       correctAnswer: 0,
       explanation:
-        "Progressive resizing speeds up initial training and helps the model generalize better by learning scale-invariant features. It's like a form of data augmentation that changes image resolution.",
+        "**Step 1:** Progressive resizing speeds up initial training and helps the model generalize better by learning scale-invariant features.",
       hints: [
         "Small images train faster because each forward pass processes fewer pixels.",
         "Starting with small images then moving to larger ones acts as a curriculum for the model.",
@@ -1196,7 +1196,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "When training switches from smaller to larger images, the model effectively sees the data from a new perspective (more detail, different aspect ratios after resizing). This distribution shift disrupts any overfitting to the smaller images and encourages the model to learn more general, resolution-invariant features.",
+        "**Step 1:** When training switches from smaller to larger images, the model effectively sees the data from a new perspective (more detail, different aspect ratios after resizing).",
       hints: [
         "Each resolution change is similar to fine-tuning on a slightly different dataset.",
         "The model must generalize across resolutions, which prevents it from memorizing low-resolution artifacts.",
@@ -1217,7 +1217,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Instead of using hard one-hot targets (e.g., [1.0, 0.0]), label smoothing changes them to softer probabilities (e.g., [0.9, 0.1]). This discourages the network from pushing logits to extreme values and improves generalization.",
+        "**Step 1:** Instead of using hard one-hot targets (e.g., [1.0, 0.0]), label smoothing changes them to softer probabilities (e.g., [0.9, 0.1]).",
       hints: [
         "A model that is 99.99% confident is probably overfitting - label smoothing prevents this.",
         "Label smoothing adds a small epsilon to the non-target class probabilities.",
@@ -1237,7 +1237,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "In fastai, label smoothing is applied through the loss function. Instead of using the standard `CrossEntropyLoss`, you use `LabelSmoothingCrossEntropy` which internally blends the hard target with a uniform distribution during loss computation - no changes to the data pipeline are needed.",
+        "**Step 1:** In fastai, label smoothing is applied through the loss function.",
       hints: [
         "The smoothing happens at the loss function level, not in the data loading pipeline.",
         "You pass it as `loss_func=LabelSmoothingCrossEntropy()` to `vision_learner` or `Learner`.",
@@ -1259,7 +1259,7 @@ registerQuestions({
       ],
       correctAnswer: 0,
       explanation:
-        "Raw text must first be split into tokens (words, subwords, or characters). Then, a vocabulary is built, and those tokens are numericalized (mapped to unique integer indices) before they can be fed into an embedding layer.",
+        "**Step 1:** Raw text must first be split into tokens (words, subwords, or characters).",
       hints: [
         "You can't convert tokens to integers until you know what tokens exist.",
         "The vocabulary is built from the tokenized training set.",
@@ -1281,7 +1281,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "A Wikipedia pre-trained model knows general English, but fine-tuning it as an LM on your specific dataset (e.g., IMDB reviews or medical notes) helps it adapt to the domain-specific vocabulary and stylistic nuances.",
+        "**Step 1:** A Wikipedia pre-trained model knows general English, but fine-tuning it as an LM on your specific dataset (e.g., IMDB reviews or medical notes) helps it adapt to the domain-specific vocabulary and stylistic nuances.",
       hints: [
         "Wikipedia English differs greatly from Twitter slang or medical terminology.",
         "This LM fine-tuning step is self-supervised - no labels needed, just raw text.",
@@ -1303,7 +1303,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "To process sequences in parallel batches, fastai pads shorter sequences with a special token (like `xxpad`). It also uses techniques like sorting by length (SortishSampler) to group sequences of similar lengths, minimizing wasted computation on padding.",
+        "**Step 1:** To process sequences in parallel batches, fastai pads shorter sequences with a special token (like `xxpad`).",
       hints: [
         "Batches require all sequences to be the same length - padding achieves this.",
         "Sorting by length reduces padding waste: similar-length sequences are batched together.",
@@ -1325,7 +1325,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Embeddings map categories (like user IDs or zip codes) to dense vectors. The network learns these vector representations during training, capturing semantic relationships between categories that one-hot encoding cannot.",
+        "**Step 1:** Embeddings map categories (like user IDs or zip codes) to dense vectors.",
       hints: [
         "One-hot encoding a vocabulary of 50,000 words creates 50,000-dimensional sparse vectors; embeddings might use just 300 dimensions.",
         "The embedding vectors are learned parameters, updated during backpropagation.",
@@ -1347,7 +1347,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "Matrix factorization discovers latent factors by finding a user embedding matrix and an item embedding matrix such that their dot product approximates the known ratings in the sparse user-item matrix.",
+        "**Step 1:** Matrix factorization discovers latent factors by finding a user embedding matrix and an item embedding matrix such that their dot product approximates the known ratings in the sparse user-item matrix.",
       hints: [
         "The user and item embeddings represent latent features (e.g., movie genres, user preferences).",
         "Only observed ratings are used for training; the model predicts missing ones.",
@@ -1368,7 +1368,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Collaborative filtering relies on past user-item interactions. A 'cold start' occurs when a new user joins or a new item is added, making it impossible to recommend based on historical data until interactions occur.",
+        "**Step 1:** Collaborative filtering relies on past user-item interactions.",
       hints: [
         "No interaction history = no basis for personalized recommendations.",
         "Common solutions include content-based fallbacks or asking new users for preferences.",
@@ -1390,7 +1390,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "In fastai's tabular processing (TabularPandas), continuous variables have missing values filled and are normalized, while categorical variables are stringified, categorized, and converted to integer codes for the embedding layers.",
+        "**Step 1:** In fastai's tabular processing (TabularPandas), continuous variables have missing values filled and are normalized, while categorical variables are stringified, categorized, and converted to integer codes for the embedding layers.",
       hints: [
         "Normalization of continuous variables helps gradient descent converge faster.",
         "Categorical variables need integer codes so they can be looked up in an embedding table.",
@@ -1411,7 +1411,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "Max pooling downsamples the feature maps by taking the maximum value over a small window. This reduces computational load, controls overfitting, and makes the detection of features somewhat invariant to small translations.",
+        "**Step 1:** Max pooling downsamples the feature maps by taking the maximum value over a small window.",
       hints: [
         "Max pooling with a 2\\times2 window and stride 2 halves the spatial dimensions.",
         "Taking the maximum value preserves the strongest activation of a feature in each region.",
@@ -1431,7 +1431,7 @@ registerQuestions({
       ],
       correctAnswer: 0,
       explanation:
-        "A strided convolution learns how to downsample (the kernel weights are trained), while max pooling is a fixed operation with no learnable parameters. Modern architectures (like ResNet) often prefer strided convolutions over max pooling because they let the network learn the optimal downsampling strategy.",
+        "**Step 1:** A strided convolution learns how to downsample (the kernel weights are trained), while max pooling is a fixed operation with no learnable parameters.",
       hints: [
         "Parameters = learnable. Max pooling has no learnable parameters.",
         "Strided convolutions are preferred in modern architectures because the downsampling is learned, not hand-designed.",
@@ -1453,7 +1453,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Cross-entropy loss measures the difference between two probability distributions. Unlike MSE, when combined with softmax, its derivative is linear w.r.t the logits, avoiding the vanishing gradient problem when predictions are very wrong but confident.",
+        "**Step 1:** Cross-entropy loss measures the difference between two probability distributions.",
       hints: [
         "MSE with sigmoid/softmax can lead to very small gradients when the output is near 0 or 1.",
         "Cross-entropy + softmax gradients simplify to (predicted - actual), which is elegant and numerically stable.",
@@ -1473,7 +1473,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "In multi-label classification, each class is an independent yes/no decision. Sigmoid is applied to each output independently (not softmax across outputs), and Binary Cross-Entropy is computed per class. fastai uses `BCEWithLogitsLoss` by default when `MultiCategoryBlock` is detected in the DataBlock.",
+        "**Step 1:** In multi-label classification, each class is an independent yes/no decision.",
       hints: [
         "Softmax forces outputs to sum to 1, which is wrong for multi-label tasks where multiple classes can be active.",
         "Sigmoid treats each class independently: each output is squashed to [0,1] on its own.",
@@ -1495,7 +1495,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "If weights are initialized to zero, every neuron in a layer computes the same output and receives the same gradient, effectively acting as a single neuron. Kaiming/He initialization breaks this symmetry and scales the variance to prevent vanishing/exploding gradients with ReLU activations.",
+        "**Step 1:** If weights are initialized to zero, every neuron in a layer computes the same output and receives the same gradient, effectively acting as a single neuron.",
       hints: [
         "Symmetry breaking is essential: neurons must start differently to learn different features.",
         "Kaiming initialization scales variance by 2/n where n is the number of input connections.",
@@ -1515,7 +1515,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Batch Normalization normalizes the pre-activations (or activations) within each mini-batch to zero mean and unit variance, then applies learnable scale and shift parameters. This re-centering at each layer prevents activations from exploding or vanishing regardless of initial weight magnitudes, making the network much more robust to initialization choices.",
+        "**Step 1:** Batch Normalization normalizes the pre-activations (or activations) within each mini-batch to zero mean and unit variance, then applies learnable scale and shift parameters.",
       hints: [
         "Without BatchNorm, bad initialization can cause activations to become very large or very small in deep networks.",
         "BatchNorm introduces its own learnable parameters (gamma and beta) for scale and shift.",
@@ -1537,7 +1537,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "Adam (Adaptive Moment Estimation) combines ideas from Momentum (exponential moving average of past gradients) and RMSProp (scaling by the moving average of squared gradients) to adaptively adjust the learning rate for each individual parameter.",
+        "**Step 1:** Adam (Adaptive Moment Estimation) combines ideas from Momentum (exponential moving average of past gradients) and RMSProp (scaling by the moving average of squared gradients) to adaptively adjust the learning rate for each individual parameter.",
       hints: [
         "'Adaptive' means each parameter gets its own effective learning rate based on its gradient history.",
         "The first moment is the mean of gradients (momentum); the second moment is the variance (RMSProp).",
@@ -1559,7 +1559,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Standard GD computes the gradient over the entire dataset before taking a step. SGD approximates the gradient using a random mini-batch, making it much faster to compute and allowing for more frequent updates.",
+        "**Step 1:** Standard GD computes the gradient over the entire dataset before taking a step.",
       hints: [
         "'Mini-batch SGD' is what practitioners usually mean when they say SGD.",
         "Frequent noisy updates can help SGD escape local minima that full-batch GD might get stuck in.",
@@ -1581,7 +1581,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`TabularDataLoaders.from_df()` is the high-level fastai API for building DataLoaders directly from a pandas DataFrame for tabular learning. It handles categorical embedding setup, continuous normalization, and train/valid splitting in one call.",
+        "**Step 1:** `TabularDataLoaders.from_df()` is the high-level fastai API for building DataLoaders directly from a pandas DataFrame for tabular learning.",
       hints: [
         "fastai provides task-specific DataLoaders factories: `TabularDataLoaders`, `ImageDataLoaders`, `TextDataLoaders`.",
         "You pass lists of `cat_names`, `cont_names`, and `y_names` to specify column roles.",
@@ -1601,7 +1601,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "fastai applies the empirical rule `min(600, round(1.6 * n_cat**0.56))` to automatically choose embedding sizes for each categorical variable, where `n_cat` is the number of unique categories. This heuristic (derived from Kaggle competitions) balances representational capacity with parameter efficiency.",
+        "**Step 1:** fastai applies the empirical rule `min(600, round(1.6 * n_cat**0.56))` to automatically choose embedding sizes for each categorical variable, where `n_cat` is the number of unique categories.",
       hints: [
         "A categorical column with 10 unique values gets a smaller embedding than one with 10,000.",
         "The cap of 600 prevents excessively large embeddings for high-cardinality columns.",
@@ -1616,7 +1616,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "fastai's tabular neural network architecture embeds each categorical variable through its own `Embedding` layer (converting integer codes to dense vectors) and concatenates those embeddings with the normalized continuous variables before passing everything through fully connected layers.",
+        "**Step 1:** fastai's tabular neural network architecture embeds each categorical variable through its own `Embedding` layer (converting integer codes to dense vectors) and concatenates those embeddings with the normalized continuous variables before passing everything through fully connected layers.",
       hints: [
         "Embeddings turn integer category codes into dense, meaningful float vectors.",
         "Continuous variables are already numeric, so they just need normalization before concatenation.",
@@ -1638,7 +1638,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`CollabDataLoaders.from_df()` builds DataLoaders for collaborative filtering directly from a DataFrame with user, item, and rating columns. It handles vocabulary creation for users and items, and sets up the data pipeline for embedding-based recommender models.",
+        "**Step 1:** `CollabDataLoaders.from_df()` builds DataLoaders for collaborative filtering directly from a DataFrame with user, item, and rating columns.",
       hints: [
         "fastai uses task-specific DataLoaders factories for each domain.",
         "You specify `user_name`, `item_name`, and `rating_name` column arguments.",
@@ -1658,7 +1658,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "User bias captures how much a particular user rates above or below average (some users are generous raters, others harsh). Item bias captures the global popularity/quality of an item. The prediction is: `dot(user_emb, item_emb) + user_bias + item_bias`, so biases handle the 'easy' part while embeddings capture interaction effects.",
+        "**Step 1:** User bias captures how much a particular user rates above or below average (some users are generous raters, others harsh).\n\n**Step 2:** Item bias captures the global popularity/quality of an item.\n\n**Step 3:** The prediction is: `dot(user_emb, item_emb) + user_bias + item_bias`, so biases handle the 'easy' part while embeddings capture interaction effects.",
       hints: [
         "Think of user bias as: does this user always rate 0.5 stars above average?",
         "Item bias: is this movie consistently rated highly regardless of the user?",
@@ -1678,7 +1678,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "The dot product between user and item embeddings measures alignment of their latent factor vectors. A high dot product means the user's preferences (captured by their embedding) align strongly with the item's characteristics (captured by its embedding), predicting a high rating.",
+        "**Step 1:** The dot product between user and item embeddings measures alignment of their latent factor vectors.",
       hints: [
         "Latent factors might correspond to genres, styles, or other abstract properties.",
         "If a user embedding vector and item embedding vector point in similar directions, their dot product is large.",
@@ -1700,7 +1700,7 @@ registerQuestions({
       ],
       correctAnswer: 0,
       explanation:
-        "`TextDataLoaders.from_folder(path, is_lm=True)` creates DataLoaders for language model training/fine-tuning. The `is_lm=True` flag tells fastai to use language model targets (next-token prediction) rather than classification labels.",
+        "**Step 1:** `TextDataLoaders.from_folder(path, is_lm=True)` creates DataLoaders for language model training/fine-tuning.",
       hints: [
         "Setting `is_lm=True` shifts the targets to be the next tokens rather than class labels.",
         "This is the starting point for ULMFiT-style language model fine-tuning.",
@@ -1720,7 +1720,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`text_classifier_learner(dls, AWD_LSTM, drop_mult=0.5)` creates a `Learner` that wraps an AWD-LSTM body with a classification head. After creating it, you load the fine-tuned language model encoder with `learn.load_encoder('finetuned_enc')` to initialize the body with pre-trained weights.",
+        "**Step 1:** `text_classifier_learner(dls, AWD_LSTM, drop_mult=0.5)` creates a `Learner` that wraps an AWD-LSTM body with a classification head.",
       hints: [
         "The architecture (`AWD_LSTM`) is the second argument, analogous to `vision_learner(dls, resnet34)`.",
         "`drop_mult` scales all dropout rates in the model, allowing regularization strength control.",
@@ -1735,7 +1735,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "Language model fine-tuning uses next-token prediction as its objective. The targets are automatically derived from the input text itself (shifted by one position), so no human-provided labels are needed. This allows leveraging large amounts of unlabeled domain text.",
+        "**Step 1:** Language model fine-tuning uses next-token prediction as its objective.\n\n**Step 2:** The targets are automatically derived from the input text itself (shifted by one position), so no human-provided labels are needed.\n\n**Step 3:** This allows leveraging large amounts of unlabeled domain text.",
       hints: [
         "The label for each token is simply the next token in the sequence - no annotation needed.",
         "This is why it's called self-supervised: the data creates its own supervision signal.",
@@ -1757,7 +1757,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`accuracy_multi` applies a threshold (default 0.5) to each class's sigmoid output independently and counts a prediction as correct for a class if it exceeds the threshold. This is appropriate for multi-label tasks where softmax-based accuracy is meaningless.",
+        "**Step 1:** `accuracy_multi` applies a threshold (default 0.5) to each class's sigmoid output independently and counts a prediction as correct for a class if it exceeds the threshold.",
       hints: [
         "Multi-label problems use sigmoid per class, not softmax across classes.",
         "`accuracy_multi` has a `thresh` parameter you can tune for precision/recall trade-off.",
@@ -1777,7 +1777,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Softmax creates a competition between classes (probabilities sum to 1), which is correct for single-label tasks but wrong for multi-label. Sigmoid squashes each logit independently to [0, 1], allowing multiple classes to simultaneously have probabilities near 1 - which is what we want when an image can be both 'dog' and 'outdoor'.",
+        "**Step 1:** Softmax creates a competition between classes (probabilities sum to 1), which is correct for single-label tasks but wrong for multi-label.",
       hints: [
         "An image can be both 'dog' and 'running' - softmax would force the model to choose one.",
         "sigmoid(x) = 1/(1+e^-x) is applied elementwise; softmax normalizes across all elements.",
@@ -1797,7 +1797,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "fastai automatically selects `BCEWithLogitsLoss` for multi-label classification. This combines sigmoid activation with binary cross-entropy in a numerically stable way, computing an independent binary loss for each class.",
+        "**Step 1:** fastai automatically selects `BCEWithLogitsLoss` for multi-label classification.",
       hints: [
         "fastai infers the loss function from the DataBlock's output block type.",
         "`BCEWithLogitsLoss` is more numerically stable than applying sigmoid then `BCELoss` separately.",
@@ -1819,7 +1819,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`unet_learner(dls, resnet34)` builds a U-Net architecture dynamically, using a pretrained encoder (e.g., ResNet-34) as the downsampling body and generating a matching decoder with skip connections. This is fastai's standard API for semantic segmentation.",
+        "**Step 1:** `unet_learner(dls, resnet34)` builds a U-Net architecture dynamically, using a pretrained encoder (e.g., ResNet-34) as the downsampling body and generating a matching decoder with skip connections.",
       hints: [
         "U-Net's encoder-decoder with skip connections is the standard segmentation architecture.",
         "The pre-trained ResNet acts as the encoder; fastai builds the decoder automatically.",
@@ -1839,7 +1839,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Semantic segmentation classifies every pixel in the image into one of N classes. fastai applies cross-entropy loss pixel-wise: for each pixel, the model outputs N logits and the loss is computed as if that pixel were a standalone single-label classification problem. The total loss averages over all pixels.",
+        "**Step 1:** Semantic segmentation classifies every pixel in the image into one of N classes. fastai applies cross-entropy loss pixel-wise: for each pixel, the model outputs N logits and the loss is computed as if that pixel were a standalone single-label classification problem.",
       hints: [
         "Think of each pixel as a tiny single-label classification problem.",
         "The target mask assigns one class label per pixel; cross-entropy compares the model's N-class output at each pixel.",
@@ -1859,7 +1859,7 @@ registerQuestions({
       ],
       correctAnswer: 3,
       explanation:
-        "fastai provides two equivalent approaches for segmentation DataLoaders: `SegmentationDataLoaders.from_label_func()` is a high-level convenience factory, while using `DataBlock(blocks=(ImageBlock, MaskBlock(...)))` offers more flexibility. Both ultimately produce the same type of DataLoaders.",
+        "**Step 1:** fastai provides two equivalent approaches for segmentation DataLoaders: `SegmentationDataLoaders.from_label_func()` is a high-level convenience factory, while using `DataBlock(blocks=(ImageBlock, MaskBlock(...)))` offers more flexibility.",
       hints: [
         "`MaskBlock` is the output block for segmentation in the DataBlock API.",
         "The label function maps each image path to its corresponding segmentation mask path.",
@@ -1881,7 +1881,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Bounding box regression is the task of predicting the spatial location of objects as rectangles defined by continuous coordinates (typically center_x, center_y, width, height or x1, y1, x2, y2). This is a regression problem over the box coordinates, separate from the classification head that predicts the object class.",
+        "**Step 1:** Bounding box regression is the task of predicting the spatial location of objects as rectangles defined by continuous coordinates (typically center_x, center_y, width, height or x1, y1, x2, y2).",
       hints: [
         "Object detection has two outputs per detected object: class (classification) and box coordinates (regression).",
         "The loss combines a classification loss for the class and a regression loss (e.g., L1 or smooth L1) for the box.",
@@ -1901,7 +1901,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "Anchor-based detectors (Faster R-CNN, SSD, YOLO v2-v3) predefine a set of fixed anchor boxes at each feature map location and predict offsets from those anchors. Anchor-free detectors (FCOS, CenterNet, DETR) directly predict object centers or corners without relying on anchors, eliminating anchor hyperparameter tuning and simplifying the pipeline.",
+        "**Step 1:** Anchor-based detectors (Faster R-CNN, SSD, YOLO v2-v3) predefine a set of fixed anchor boxes at each feature map location and predict offsets from those anchors.",
       hints: [
         "Anchor boxes are hand-designed templates; anchor-free methods learn to predict boxes directly.",
         "DETR (DEtection TRansformer) is a prominent anchor-free model using transformers.",
@@ -1921,7 +1921,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "For detection DataLoaders with fastai's DataBlock API, you use `blocks=(ImageBlock, BBoxBlock)` or `blocks=(ImageBlock, BBoxLblBlock)` depending on whether you need class labels. You supply separate `get_y` functions that return the bounding box coordinates and class labels from your annotation source.",
+        "**Step 1:** For detection DataLoaders with fastai's DataBlock API, you use `blocks=(ImageBlock, BBoxBlock)` or `blocks=(ImageBlock, BBoxLblBlock)` depending on whether you need class labels.",
       hints: [
         "`BBoxBlock` handles bounding box coordinate transforms; `BBoxLblBlock` adds class labels.",
         "The annotations are typically stored in JSON (COCO format) or CSV files.",
@@ -1943,7 +1943,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "fastai's training loop fires `before_batch` immediately before forward pass + loss computation for each batch, and `after_batch` immediately after the optimizer step. Callbacks that need to modify inputs or outputs per-batch (like Mixup or gradient clipping) hook into these events.",
+        "**Step 1:** fastai's training loop fires `before_batch` immediately before forward pass + loss computation for each batch, and `after_batch` immediately after the optimizer step.",
       hints: [
         "fastai uses `before_*` / `after_*` naming conventions for callback events.",
         "Other batch-level events include `before_forward`, `after_forward`, `before_backward`, `after_backward`.",
@@ -1963,7 +1963,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Mixed precision training (AMP) uses FP16 for most computations (reducing memory bandwidth and exploiting Tensor Cores on modern GPUs) while keeping a FP32 master copy of weights for updates. A gradient scaler prevents underflow during FP16 backward passes. This typically provides 2-3x speedup with no accuracy loss.",
+        "**Step 1:** Mixed precision training (AMP) uses FP16 for most computations (reducing memory bandwidth and exploiting Tensor Cores on modern GPUs) while keeping a FP32 master copy of weights for updates.\n\n**Step 2:** A gradient scaler prevents underflow during FP16 backward passes.\n\n**Step 3:** This typically provides 2-3x speedup with no accuracy loss.",
       hints: [
         "FP16 uses half the memory of FP32 and is faster on GPUs with Tensor Cores (NVIDIA Volta+).",
         "The key challenge in FP16 training is that very small gradients can underflow to zero - the scaler prevents this.",
@@ -1983,7 +1983,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`CudaCallback` is a lightweight fastai callback that hooks into `before_batch` and moves the input data (and labels) from CPU to GPU memory. It works alongside the model being placed on GPU, ensuring that each batch is on the correct device before the forward pass runs.",
+        "**Step 1:** `CudaCallback` is a lightweight fastai callback that hooks into `before_batch` and moves the input data (and labels) from CPU to GPU memory.",
       hints: [
         "Data is loaded on CPU by DataLoaders; it must be moved to GPU for neural network forward passes.",
         "Forgetting to move data to GPU is a common PyTorch error: 'Expected all tensors to be on the same device'.",
@@ -2005,7 +2005,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`learn.to_fp16()` is a convenience method that adds fastai's `MixedPrecision` callback to the Learner and returns `self`. This enables PyTorch's Automatic Mixed Precision (AMP) for subsequent training calls, providing faster training and lower memory usage on modern GPUs.",
+        "**Step 1:** `learn.to_fp16()` is a convenience method that adds fastai's `MixedPrecision` callback to the Learner and returns `self`.",
       hints: [
         "`to_fp16()` is syntactic sugar for adding `MixedPrecision()` to the Learner's callback list.",
         "You chain it like: `learn = vision_learner(dls, resnet50).to_fp16()`.",
@@ -2025,7 +2025,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "In DDP, each GPU holds a full copy of the model and processes a shard of the batch. After each backward pass, DDP automatically performs an all-reduce (typically NCCL ring-allreduce) to average gradients across all GPUs. Each GPU then performs the same optimizer step with the averaged gradients, keeping all model copies in sync.",
+        "**Step 1:** In DDP, each GPU holds a full copy of the model and processes a shard of the batch.\n\n**Step 2:** After each backward pass, DDP automatically performs an all-reduce (typically NCCL ring-allreduce) to average gradients across all GPUs.\n\n**Step 3:** Each GPU then performs the same optimizer step with the averaged gradients, keeping all model copies in sync.",
       hints: [
         "All-reduce = sum gradients across all GPUs then divide by the number of GPUs.",
         "The effective batch size is `per_gpu_batch_size \\times num_gpus`, so the learning rate often needs scaling.",
@@ -2040,7 +2040,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "With DDP, each GPU processes its own mini-batch and the total batch size is `per_gpu_batch \\times num_gpus`. The linear scaling rule (Goyal et al., 2017) states that the learning rate should be scaled proportionally (LR \\times num_gpus) to maintain equivalent optimization dynamics. fastai's `DistributedTrainer` callback handles much of the DDP setup automatically.",
+        "**Step 1:** With DDP, each GPU processes its own mini-batch and the total batch size is `per_gpu_batch \\times num_gpus`.",
       hints: [
         "Larger effective batch size \\to smoother gradient estimates \\to can use a larger learning rate.",
         "The linear scaling rule works well up to moderate GPU counts; warmup is recommended for very large batches.",
@@ -2062,10 +2062,11 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "In fastai's `vision_learner`, the 'body' is the pretrained CNN backbone (e.g., ResNet-34 without its ImageNet classification head), which is transferred from ImageNet. The 'head' is the new task-specific layers that fastai appends (adaptive average pooling, batch norm, dropout, linear layers) to adapt the model to the target number of classes.",
+        "**Step 1:** In fastai's `vision_learner`, the 'body' is the pretrained CNN backbone (e.g., ResNet-34 without its ImageNet classification head), which is transferred from ImageNet.",
       hints: [
         "The body is frozen by default during the first training phase of `fine_tune()`.",
         "`learn.model[0]` is the body; `learn.model[1]` is the head in most fastai vision models.",
+        "The 'head' contains task-specific layers adapted to the new classification problem, while the 'body' contains general feature extractors.",
       ],
     },
     {
@@ -2082,7 +2083,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`freeze_to(-2)` freezes all layer groups except the last 2. Negative indexing works like Python list slicing: -2 means 'leave the last 2 groups trainable'. This is useful for progressive unfreezing: you unfreeze layers gradually from the top (head) downward, training each newly unfrozen group before proceeding to earlier layers.",
+        "**Step 1:** `freeze_to(-2)` freezes all layer groups except the last 2.\n\n**Step 2:** Negative indexing works like Python list slicing: -2 means 'leave the last 2 groups trainable'.\n\n**Step 3:** This is useful for progressive unfreezing: you unfreeze layers gradually from the top (head) downward, training each newly unfrozen group before proceeding to earlier layers.",
       hints: [
         "fastai groups model layers into layer groups for freeze/unfreeze and discriminative LR purposes.",
         "Progressive unfreezing order: unfreeze head first, then upper body, then lower body.",
@@ -2102,7 +2103,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "A splitter function takes a model and returns a list of parameter groups (body layers grouped by depth, plus the head). fastai uses this grouping to apply discriminative learning rates (different LR per group) and for `freeze_to()` / `unfreeze()` operations. Custom architectures need a custom splitter to enable these features.",
+        "**Step 1:** A splitter function takes a model and returns a list of parameter groups (body layers grouped by depth, plus the head). fastai uses this grouping to apply discriminative learning rates (different LR per group) and for `freeze_to()` / `unfreeze()` operations.",
       hints: [
         "Standard architectures like ResNet have built-in splitters in fastai.",
         "You pass `splitter=my_splitter` to `Learner` when using a non-standard architecture.",
@@ -2124,7 +2125,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`learn.save('name')` saves a state dict of model weights (and optionally optimizer state) - useful for training checkpoints. `learn.export('model.pkl')` pickles the complete Learner including all preprocessing transforms and vocabulary, making it self-contained for inference without needing to recreate the DataLoaders.",
+        "**Step 1:** `learn.save('name')` saves a state dict of model weights (and optionally optimizer state) - useful for training checkpoints. `learn.export('model.pkl')` pickles the complete Learner including all preprocessing transforms and vocabulary, making it self-contained for inference without needing to recreate the DataLoaders.",
       hints: [
         "For deployment, use `export()`; for resuming training, use `save()`.",
         "`load_learner('model.pkl')` can restore an exported learner in one line.",
@@ -2144,7 +2145,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "ONNX is an open format for ML models that can be run by many runtimes (ONNX Runtime, TensorRT, CoreML, OpenVINO) without Python, PyTorch, or fastai. Unlike pickle export, ONNX is version-agnostic and works across languages and platforms. You export via `torch.onnx.export(learn.model, ...)` after getting the model from the learner.",
+        "**Step 1:** ONNX is an open format for ML models that can be run by many runtimes (ONNX Runtime, TensorRT, CoreML, OpenVINO) without Python, PyTorch, or fastai.\n\n**Step 2:** Unlike pickle export, ONNX is version-agnostic and works across languages and platforms.\n\n**Step 3:** You export via `torch.onnx.export(learn.model, ...)` after getting the model from the learner.",
       hints: [
         "ONNX Runtime can run models in C++, C#, Java, etc. - no Python needed.",
         "This is useful for edge deployment (mobile, embedded) or high-performance serving.",
@@ -2159,7 +2160,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "When you export a fastai Learner with `learn.export()` and reload it with `load_learner()`, the DataLoaders (including all item transforms and batch transforms like resizing and normalization) are embedded in the exported file. Calling `learn.predict(new_item)` automatically runs the complete preprocessing pipeline before inference.",
+        "**Step 1:** When you export a fastai Learner with `learn.export()` and reload it with `load_learner()`, the DataLoaders (including all item transforms and batch transforms like resizing and normalization) are embedded in the exported file.",
       hints: [
         "This is why `export()` is preferred over `save()` for deployment: preprocessing comes along.",
         "You don't need to manually resize or normalize your input - the Learner handles it.",
@@ -2181,7 +2182,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "An autoencoder learns to copy its input to its output through a bottleneck layer (latent space). The encoder compresses the data, and the decoder attempts to reconstruct it, forcing the model to learn a meaningful lower-dimensional representation.",
+        "**Step 1:** An autoencoder learns to copy its input to its output through a bottleneck layer (latent space).",
       hints: [
         "The bottleneck forces the model to learn a compressed representation of the data.",
         "The reconstruction loss (e.g., MSE between input and output) drives training.",
@@ -2203,7 +2204,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "U-Net introduces skip connections across the 'U' shape. These connections pass spatial information from the downsampling path directly to the upsampling path, crucial for precise localization in tasks like image segmentation.",
+        "**Step 1:** U-Net introduces skip connections across the 'U' shape.",
       hints: [
         "The 'U' shape of U-Net comes from the symmetric encoder-decoder with skip connections bridging them.",
         "Without skip connections, the decoder would have to reconstruct fine spatial details from a compressed bottleneck alone.",
@@ -2225,7 +2226,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "GANs consist of a Generator (which synthesizes fake data from noise) and a Discriminator (which acts as a binary classifier to distinguish real vs. fake). They are trained together in a zero-sum game.",
+        "**Step 1:** GANs consist of a Generator (which synthesizes fake data from noise) and a Discriminator (which acts as a binary classifier to distinguish real vs. fake).",
       hints: [
         "The generator never sees real data directly; it only receives feedback through the discriminator.",
         "Training GANs is notoriously difficult due to mode collapse and training instability.",
@@ -2247,7 +2248,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "Diffusion models are trained to reverse a forward diffusion process (which adds noise to an image). During generation, they start with pure Gaussian noise and iteratively 'denoise' it to reveal a coherent image.",
+        "**Step 1:** Diffusion models are trained to reverse a forward diffusion process (which adds noise to an image).",
       hints: [
         "The forward process gradually adds noise; the model learns to reverse this process.",
         "Many denoising steps (e.g., 50-1000) are needed to go from pure noise to a clear image.",
@@ -2269,7 +2270,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Machine learning models learn from historical data. If that data contains biases, the model will likely learn and automate those biases, potentially causing harm when deployed in real-world systems.",
+        "**Step 1:** Machine learning models learn from historical data.",
       hints: [
         "Biased training data leads to biased models - garbage in, garbage out.",
         "Fairness metrics (e.g., equal opportunity, demographic parity) help quantify and address bias.",
@@ -2291,7 +2292,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "fastai models can be easily exported to a .pkl file and deployed using frameworks like Gradio or Streamlit on Hugging Face Spaces for interactive web applications.",
+        "**Step 1:** fastai models can be easily exported to a .pkl file and deployed using frameworks like Gradio or Streamlit on Hugging Face Spaces for interactive web applications.",
       hints: [
         "fastai's `learn.export()` saves the model including the DataLoaders configuration.",
         "Gradio is a popular choice for creating quick ML demos.",
@@ -2311,7 +2312,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`learn.export('model.pkl')` saves the complete Learner object including the model weights AND the DataLoaders configuration (transforms, vocab, etc.), making it self-contained for deployment. `learn.save()` only saves the model weights and requires the DataLoaders to be recreated separately.",
+        "**Step 1:** `learn.export('model.pkl')` saves the complete Learner object including the model weights AND the DataLoaders configuration (transforms, vocab, etc.), making it self-contained for deployment. `learn.save()` only saves the model weights and requires the DataLoaders to be recreated separately.",
       hints: [
         "`export()` is for deployment; `save()` is for checkpointing during training.",
         "The exported .pkl includes everything needed to make predictions on new data.",
@@ -2331,7 +2332,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`load_learner('model.pkl')` reconstructs the complete Learner from the exported file, including the model and all preprocessing transforms. This single line is all you need to go from a .pkl file to a fully functional model ready for inference.",
+        "**Step 1:** `load_learner('model.pkl')` reconstructs the complete Learner from the exported file, including the model and all preprocessing transforms.",
       hints: [
         "The function is `load_learner`, not `Learner.load`.",
         "It's imported from `fastai.vision.all` (or the relevant fastai module).",
@@ -2346,7 +2347,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "Hugging Face Spaces provides free hosting for Gradio and Streamlit web applications, making it the standard platform for sharing interactive ML demos. The fastai course specifically recommends it as the easiest way to deploy and share your trained models.",
+        "**Step 1:** Hugging Face Spaces provides free hosting for Gradio and Streamlit web applications, making it the standard platform for sharing interactive ML demos.",
       hints: [
         "Spaces runs your app on Hugging Face's servers, so no cloud account setup is needed.",
         "You just push your app code and model file to a Spaces repository.",
@@ -2366,7 +2367,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "fastai exports use Python's pickle, which is sensitive to library versions. A model exported with fastai 2.7 may not load correctly with fastai 2.3. Best practice is to pin library versions and match the training and deployment environments using requirements.txt or conda environments.",
+        "**Step 1:** fastai exports use Python's pickle, which is sensitive to library versions.\n\n**Step 2:** A model exported with fastai 2.7 may not load correctly with fastai 2.3.\n\n**Step 3:** Best practice is to pin library versions and match the training and deployment environments using requirements.txt or conda environments.",
       hints: [
         "This is a well-known limitation of pickle-based serialization in Python.",
         "ONNX export is an alternative that avoids this issue but requires additional conversion steps.",
@@ -2386,7 +2387,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`learn.predict(item)` returns a 3-tuple: the decoded prediction label (e.g., 'cat'), the integer index of that label, and a tensor of probabilities for all classes. In a Gradio app, you typically use `learn.predict(img)[2].tolist()` to get a dict mapping class names to probabilities for the label output component.",
+        "**Step 1:** `learn.predict(item)` returns a 3-tuple: the decoded prediction label (e.g., 'cat'), the integer index of that label, and a tensor of probabilities for all classes.",
       hints: [
         "The third element (index 2) is the full probability distribution over all classes.",
         "In Gradio's Label component, you pass a dict of class: probability pairs.",
