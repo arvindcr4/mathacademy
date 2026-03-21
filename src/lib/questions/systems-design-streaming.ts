@@ -15,7 +15,12 @@ const questions: Record<string, Question[]> = {
         "The number of Kafka broker nodes in the cluster"
       ],
       correctAnswer: 1,
-      explanation: "The partition count is the hard ceiling on consumer group parallelism. Kafka assigns each partition to at most one consumer within a consumer group at any time. Adding more consumers than partitions leaves the extra consumers idle. LinkedIn designed Kafka this way to provide strong ordering within a partition while enabling horizontal scale across partitions. If you need more parallelism, increase the partition count before creating the topic — partitions can be added but not removed.",
+      explanation: "**Step 1:** Recognize that Kafka assigns each partition to at most one consumer within a consumer group at any time, establishing a hard ceiling on parallelism. **Step 2:** Adding more consumers than partitions leaves the extra consumers idle — they have no partition to consume from. **Step 3:** If you need more parallelism, increase the partition count before creating the topic — partitions can be added but not removed. LinkedIn designed Kafka this way to provide strong ordering within a partition while enabling horizontal scale across partitions.",
+      stepByStep: {
+        step1: "Understand that Kafka maps partitions to consumers one-to-one within a consumer group, so each partition can only be consumed by a single consumer at any given time.",
+        step2: "Recognize that having more consumers than partitions results in idle consumers — they have no partition assigned to them.",
+        step3: "Conclude that the partition count is the fundamental parallelism limit, and to increase it you must add partitions before topic creation (since partitions cannot be removed)."
+      },
       hints: [
         "Can two consumers in the same group read from the same partition simultaneously?",
         "What happens to a consumer instance when there are more consumers than partitions?"
@@ -33,7 +38,12 @@ const questions: Record<string, Question[]> = {
         "The broker routes the message to a consumer instance whose ID matches the key"
       ],
       correctAnswer: 1,
-      explanation: "Kafka's default partitioner applies a hash function to the message key and maps it to a partition (partition = hash(key) % numPartitions). All messages with the same key go to the same partition, and Kafka guarantees ordering within a partition. This is the standard approach for ensuring that all events for a given user, order, or entity are processed in the order they were produced. Uber uses this pattern so that ride lifecycle events (REQUEST, ACCEPT, START, END) for a given trip_id always arrive in order.",
+      explanation: "**Step 1:** Apply the default partitioner formula: partition = murmur2(key) % numPartitions. The hash function maps each unique key to a specific partition number. **Step 2:** All messages with the same key hash to the same partition, and Kafka guarantees ordering within a single partition. **Step 3:** This ensures that all events for a given user, order, or entity are processed in the order they were produced. Uber uses this pattern so that ride lifecycle events (REQUEST, ACCEPT, START, END) for a given trip_id always arrive in order.",
+      stepByStep: {
+        step1: "First, apply the partitioner formula: partition = murmur2(key) % numPartitions — the key's hash determines which partition receives the message.",
+        step2: "Then, recognize that because the same key always produces the same hash, all messages with the same key go to the same partition, and Kafka preserves their order within that partition.",
+        step3: "Finally, understand that this provides per-key ordering guarantees — events for the same user (or entity) are always processed sequentially."
+      },
       hints: [
         "The partitioner formula is: partition = murmur2(key) % numPartitions.",
         "What would happen to ordering if events for the same user_id landed on different partitions?"
@@ -51,7 +61,12 @@ const questions: Record<string, Question[]> = {
         "It reads from the beginning of the topic (offset 0) on every restart"
       ],
       correctAnswer: 1,
-      explanation: "Kafka stores committed consumer offsets in the internal __consumer_offsets topic. On restart, the consumer resumes from the last committed offset, causing the 1,000 unacknowledged messages to be re-delivered. This is the at-least-once delivery semantic — messages may be reprocessed, so consumer logic must be idempotent. Netflix and LinkedIn design their Kafka consumers around this: each message carries a unique ID that downstream systems check before writing, discarding duplicates.",
+      explanation: "**Step 1:** Kafka stores committed consumer offsets in the internal __consumer_offsets topic, which marks the boundary between 'processed' and 'to-be-processed' records. **Step 2:** On restart, the consumer resumes from the last committed offset, meaning the 1,000 unacknowledged messages are re-delivered. **Step 3:** This is the at-least-once delivery semantic — messages may be reprocessed, so consumer logic must be idempotent. Netflix and LinkedIn design their Kafka consumers around this: each message carries a unique ID that downstream systems check before writing, discarding duplicates.",
+      stepByStep: {
+        step1: "First, understand that Kafka records committed offsets in the __consumer_offsets topic, marking how far processing has progressed.",
+        step2: "Then, on restart, the consumer reads from the last committed offset, causing all unacknowledged messages to be re-delivered.",
+        step3: "Finally, recognize this delivers at-least-once semantics, requiring consumer logic to be idempotent (able to safely process the same message twice)."
+      },
       hints: [
         "Offsets mark the boundary between 'processed' and 'to-be-processed'.",
         "What does 'at-least-once' delivery mean for the consumer's processing logic?"
@@ -63,7 +78,12 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Kafka guarantees total message ordering across all partitions of a topic.",
       correctAnswer: "false",
-      explanation: "False. Kafka guarantees ordering only within a single partition. Messages across different partitions have no global ordering guarantee relative to each other. Two messages written to partition 0 and partition 1 simultaneously cannot be reliably ordered. To preserve total order for a logical entity (e.g., all events for a user), use a consistent partition key (e.g., user_id) so all related events land in the same partition. This is a foundational Kafka design constraint documented by LinkedIn when open-sourcing Kafka in 2011.",
+      explanation: "**Step 1:** Kafka guarantees ordering only within a single partition — messages written to partition 0 and partition 1 have no global ordering guarantee relative to each other. **Step 2:** Two messages written simultaneously to different partitions cannot be reliably ordered, since they reside on different brokers with independent write paths. **Step 3:** To preserve total order for a logical entity, use a consistent partition key (e.g., user_id) so all related events land in the same partition. This is a foundational Kafka design constraint documented by LinkedIn when open-sourcing Kafka in 2011.",
+      stepByStep: {
+        step1: "First, understand that Kafka only guarantees ordering within a single partition — each partition maintains its own independent message sequence.",
+        step2: "Then, recognize that messages across different partitions have no defined global ordering relationship since they are written to different brokers independently.",
+        step3: "Finally, to achieve per-entity ordering, use a consistent partition key (like user_id) so all events for the same entity go to the same partition."
+      },
       hints: [
         "If partition 0 and partition 1 are on different brokers, who decides which message was 'first'?",
         "How do you ensure all events for one user arrive in order?"
@@ -84,7 +104,12 @@ const questions: Record<string, Question[]> = {
         "Use Kafka's built-in at-least-once guarantee and compensate for occasional double charges manually"
       ],
       correctAnswer: 1,
-      explanation: "Exactly-once semantics at the application level requires idempotent consumers. Each payment message carries a unique payment_id. Before writing the charge to the database, the consumer checks whether payment_id already exists in a deduplication table (using a UNIQUE constraint or INSERT ... ON CONFLICT DO NOTHING). If it exists, the message is skipped as a duplicate. Kafka's enable.idempotence=true and transactions handle the producer-to-broker leg, but application-level idempotency is still required for the consumer-to-database leg. Stripe and Uber both use this pattern.",
+      explanation: "**Step 1:** Exactly-once at the application level requires idempotent consumers. Each payment message carries a unique payment_id. **Step 2:** Before writing the charge to the database, the consumer checks whether payment_id already exists in a deduplication table (using a UNIQUE constraint or INSERT ... ON CONFLICT DO NOTHING). If it exists, the message is skipped as a duplicate. **Step 3:** Kafka's enable.idempotence=true and transactions handle the producer-to-broker leg, but application-level idempotency is still required for the consumer-to-database leg. Stripe and Uber both use this pattern.",
+      stepByStep: {
+        step1: "First, understand that exactly-once semantics at the application layer requires idempotent processing — applying the same operation multiple times must yield the same result as applying it once.",
+        step2: "Then, use the payment_id as an idempotency key: before writing, check if it already exists in a deduplication table using a UNIQUE constraint or INSERT ... ON CONFLICT DO NOTHING.",
+        step3: "Finally, recognize that Kafka's idempotent producer and transactions handle the producer-to-broker leg, but the consumer-to-database leg still needs application-level idempotency."
+      },
       hints: [
         "What makes an operation idempotent? Applying it multiple times yields the same result as once.",
         "How can a relational database enforce that the same payment_id is never processed twice?"
@@ -97,12 +122,17 @@ const questions: Record<string, Question[]> = {
       question: "Kafka's idempotent producer (enable.idempotence=true) prevents which specific failure scenario that causes duplicate messages?",
       options: [
         "A consumer reading the same message twice because it crashed before committing its offset",
-        "A producer retrying after a network timeout causes a duplicate because the broker wrote the message but the ACK was lost in transit",
+        "A producer retry after a network timeout causes a duplicate because the broker wrote the message but the ACK was lost in transit",
         "A broker losing a message due to disk failure before replication to followers completes",
         "Two producers publishing to the same partition with overlapping sequence numbers"
       ],
       correctAnswer: 1,
-      explanation: "The idempotent producer assigns each batch a producer ID (PID) and a monotonically increasing sequence number. If the broker writes the batch to the partition log and the ACK is dropped by the network, the producer retries. Without idempotence, the broker would write the batch a second time. With idempotence, the broker uses the (PID, sequence) pair to detect the duplicate and returns success without writing again. Confluent introduced this feature in Kafka 0.11 as the foundation for exactly-once semantics. acks=all combined with enable.idempotence=true is the recommended production configuration.",
+      explanation: "**Step 1:** The idempotent producer assigns each batch a producer ID (PID) and a monotonically increasing sequence number. **Step 2:** If the broker writes the batch to the partition log and the ACK is dropped by the network, the producer retries using the same (PID, sequence) pair. **Step 3:** Without idempotence, the broker would write the batch a second time. With idempotence, the broker detects the duplicate using the (PID, sequence) pair and returns success without writing again. Confluent introduced this feature in Kafka 0.11 as the foundation for exactly-once semantics. acks=all combined with enable.idempotence=true is the recommended production configuration.",
+      stepByStep: {
+        step1: "First, understand that the idempotent producer assigns each batch a PID and a monotonically increasing sequence number before sending.",
+        step2: "Then, when a retry occurs after a network timeout (ACK lost in transit), the same (PID, sequence) pair is resent — the broker recognizes it as a potential duplicate.",
+        step3: "Finally, the broker uses the (PID, sequence) pair to detect and deduplicate the retry, returning success without re-writing to the log, thus preventing duplicate messages."
+      },
       hints: [
         "When does a producer retry — when it does not receive an ACK within request.timeout.ms.",
         "What information does the broker need to know 'I already wrote this batch'?"
@@ -123,7 +153,12 @@ const questions: Record<string, Question[]> = {
         "Increase the Kafka topic retention period to ensure messages are not deleted before processing"
       ],
       correctAnswer: 1,
-      explanation: "Before scaling, verify that the bottleneck is actually insufficient consumer instances. If consumers == partitions, adding more consumers yields zero benefit — extra consumers sit idle. The real bottleneck may be slow downstream processing (DB writes, HTTP calls), GC pauses, or single-threaded processing within a consumer. Uber's real-time data platform team found that most consumer lag incidents stemmed from slow downstream IO, not insufficient consumer count. Profile the per-message processing latency and check CPU/IO utilization before scaling horizontally.",
+      explanation: "**Step 1:** Before scaling, verify that the bottleneck is actually insufficient consumer instances. If consumers == partitions, adding more consumers yields zero benefit — extra consumers sit idle. **Step 2:** The real bottleneck may be slow downstream processing (DB writes, HTTP calls), GC pauses, or single-threaded processing within a consumer. **Step 3:** Profile the per-message processing latency and check CPU/IO utilization before scaling horizontally. Uber's real-time data platform team found that most consumer lag incidents stemmed from slow downstream IO, not insufficient consumer count.",
+      stepByStep: {
+        step1: "First, check if consumers already equal partitions — this is the maximum useful consumer count, so adding more will leave extra consumers idle.",
+        step2: "Then, if consumers already match partitions, investigate the actual bottleneck: slow downstream IO (database writes, HTTP calls), GC pauses, or single-threaded processing constraints.",
+        step3: "Finally, profile per-message processing latency and CPU/IO utilization to identify the real constraint before attempting horizontal scaling."
+      },
       hints: [
         "What is the maximum number of useful consumers in a consumer group for a topic with N partitions?",
         "If consumers are already equal to partitions, what else could be causing lag to grow?"
@@ -135,7 +170,12 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Consumer lag measured in message count is always a reliable indicator of processing delay in seconds.",
       correctAnswer: "false",
-      explanation: "False. Message lag (count) does not directly translate to time delay without knowing the current production rate. 1 million messages of lag means 1 second of delay at 1M msg/sec but 17 minutes at 1K msg/sec. Time-based lag (seconds = lag_messages / current_throughput_rate) is a far better SLI for latency SLOs. Netflix's keystone pipeline team uses both metrics: message lag for capacity planning and time-based lag for alerting on SLO breaches. Monitoring tools like Burrow and kminion expose both metrics.",
+      explanation: "**Step 1:** Message lag (count) does not directly translate to time delay without knowing the current production rate. **Step 2:** 1 million messages of lag means 1 second of delay at 1M msg/sec but 17 minutes at 1K msg/sec. **Step 3:** Time-based lag (seconds = lag_messages / current_throughput_rate) is a far better SLI for latency SLOs. Netflix's keystone pipeline team uses both metrics: message lag for capacity planning and time-based lag for alerting on SLO breaches.",
+      stepByStep: {
+        step1: "First, understand that message count lag alone is insufficient — 1 million messages represents different time delays depending on the production rate.",
+        step2: "Then, calculate time-based lag using the formula: seconds = lag_messages / current_throughput_rate, which converts count into a meaningful latency metric.",
+        step3: "Finally, use message lag for capacity planning and time-based lag for alerting on SLO breaches, as Netflix's keystone pipeline team does."
+      },
       hints: [
         "If a topic produces 1 message per hour and you have 1 message of lag, is that urgent?",
         "What additional data point converts message count lag into seconds of delay?"
@@ -156,7 +196,12 @@ const questions: Record<string, Question[]> = {
         "Global window with a count-based trigger firing every 1,000 events"
       ],
       correctAnswer: 1,
-      explanation: "A sliding window of size 60 minutes and slide interval 5 minutes produces a new result every 5 minutes, each covering the last hour of events. Each event belongs to 12 overlapping windows (60 / 5). This delivers the rolling-hour semantic with 5-minute freshness. Tumbling windows update only once per hour. Session windows are user-inactivity-based and produce variable-length windows. LinkedIn uses sliding windows for feed engagement metrics and Netflix for content popularity dashboards.",
+      explanation: "**Step 1:** A sliding window of size 60 minutes and slide interval 5 minutes produces a new result every 5 minutes, each covering the last hour of events. **Step 2:** Each event belongs to 12 overlapping windows (60 / 5 = 12), enabling a rolling-hour semantic with 5-minute freshness. **Step 3:** Tumbling windows update only once per hour. Session windows are user-inactivity-based and produce variable-length windows. LinkedIn uses sliding windows for feed engagement metrics and Netflix for content popularity dashboards.",
+      stepByStep: {
+        step1: "First, understand that a sliding window with size 60 minutes and slide 5 minutes emits a new result every 5 minutes, each covering the preceding 60-minute window.",
+        step2: "Then, recognize that each event belongs to 12 overlapping windows (60 / 5 = 12), which maintains the rolling-hour semantic with 5-minute freshness.",
+        step3: "Finally, distinguish this from tumbling windows (non-overlapping, hourly updates) and session windows (inactivity-based, variable-length)."
+      },
       hints: [
         "How many overlapping windows does each event belong to in a 60-min/5-min sliding window?",
         "What is the difference between window size and slide interval?"
@@ -174,7 +219,12 @@ const questions: Record<string, Question[]> = {
         "A processing-time timer fires based on the task manager system clock"
       ],
       correctAnswer: 1,
-      explanation: "In event-time processing, Flink closes and fires a window when the watermark surpasses the window's end time. The watermark represents Flink's estimate of event-time progress, derived from timestamps in the data stream. This decouples window firing from wall-clock time, enabling correct handling of late and out-of-order events. If events stop arriving, the watermark stops advancing and windows never fire — unlike processing-time windows which fire on the system clock regardless. Databricks and Flink's 2015 ATC paper document this as the key distinction between event-time and processing-time semantics.",
+      explanation: "**Step 1:** In event-time processing, Flink uses watermarks as its estimate of event-time progress, derived from timestamps embedded in the data stream. **Step 2:** Flink closes and fires a window when the watermark surpasses the window's end time (watermark > window_end). **Step 3:** This decouples window firing from wall-clock time, enabling correct handling of late and out-of-order events. If events stop arriving, the watermark stops advancing and windows never fire — unlike processing-time windows which fire on the system clock regardless. Databricks and Flink's 2015 ATC paper document this as the key distinction between event-time and processing-time semantics.",
+      stepByStep: {
+        step1: "First, understand that watermarks represent Flink's estimate of event-time progress, carrying timestamps from the data stream itself.",
+        step2: "Then, recognize that a window fires when the watermark passes the window's end timestamp (watermark > window_end), not based on wall-clock time.",
+        step3: "Finally, appreciate that this decoupling allows correct handling of late and out-of-order events, unlike processing-time windows which fire based on the system clock."
+      },
       hints: [
         "What is the purpose of a watermark — what does 'watermark T' assert about the stream?",
         "Why can't a processing-time clock correctly handle late-arriving events?"
@@ -195,7 +245,12 @@ const questions: Record<string, Question[]> = {
         "The watermark rolls back to accommodate the late event and re-triggers affected windows"
       ],
       correctAnswer: 1,
-      explanation: "Once the watermark advances past a window's end time plus any configured allowed lateness, that window is garbage-collected. Events arriving after this point are 'late' in Flink's model. They are either silently dropped or routed to a side output (a secondary stream) for separate handling — for example, an audit topic or a late-data reconciliation pipeline. Watermarks are monotonically non-decreasing; they never go backward, as doing so would invalidate downstream state. Uber's Flink platform uses side outputs to capture late IoT sensor events for offline reconciliation without blocking real-time aggregations.",
+      explanation: "**Step 1:** Once the watermark advances past a window's end time plus any configured allowed lateness, that window is garbage-collected. **Step 2:** Events arriving after this point are 'late' in Flink's model — they are either silently dropped or routed to a side output (a secondary stream) for separate handling. **Step 3:** Watermarks are monotonically non-decreasing; they never go backward, as doing so would invalidate downstream state. Uber's Flink platform uses side outputs to capture late IoT sensor events for offline reconciliation without blocking real-time aggregations.",
+      stepByStep: {
+        step1: "First, understand that when the watermark passes a window's end timestamp plus allowed lateness, that window is garbage-collected and no longer accepts new events.",
+        step2: "Then, recognize that late events (arriving after the window has fired) are either dropped silently or routed to a side output for separate handling like an audit topic.",
+        step3: "Finally, note that watermarks are monotonically non-decreasing — they can never go backward, as rolling back would invalidate the state of downstream operators."
+      },
       hints: [
         "Can a watermark ever decrease? What would happen to window state if it could?",
         "What is Flink's 'allowedLateness' parameter and how does it extend the window lifetime?"
@@ -207,7 +262,12 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Increasing the watermark delay from 1 minute to 10 minutes in a streaming pipeline eliminates more late data but also increases end-to-end result latency by approximately 9 minutes.",
       correctAnswer: "true",
-      explanation: "True. The watermark delay is a direct trade-off between completeness (fewer late events dropped) and latency (longer wait before windows fire). A 10-minute watermark means results are delayed by 10 minutes relative to event time — a window covering 12:00-13:00 event time will not fire until the watermark reaches 13:10. This 10-minute buffer accommodates late-arriving events at the cost of staleness. LinkedIn's Samza team and Flink's documentation both describe this as the fundamental completeness-vs-latency knob in event-time stream processing.",
+      explanation: "**Step 1:** The watermark delay is a direct trade-off between completeness (fewer late events dropped) and latency (longer wait before windows fire). **Step 2:** A 10-minute watermark means results are delayed by 10 minutes relative to event time — a window covering 12:00–13:00 event time will not fire until the watermark reaches 13:10. **Step 3:** This 10-minute buffer accommodates late-arriving events at the cost of staleness. LinkedIn's Samza team and Flink's documentation both describe this as the fundamental completeness-vs-latency knob in event-time stream processing.",
+      stepByStep: {
+        step1: "First, understand that the watermark delay directly controls how long Flink waits before firing windows — a larger delay means a longer wait.",
+        step2: "Then, recognize that a 10-minute watermark delays results by 10 minutes relative to event time (a 12:00–13:00 window fires at ~13:10).",
+        step3: "Finally, appreciate that this trade-off is fundamental: more watermark lag reduces late data but increases result staleness."
+      },
       hints: [
         "If the watermark is 10 minutes behind event time, when does the 13:00 window boundary trigger?",
         "What is the relationship between watermark lag and result freshness?"
@@ -228,7 +288,12 @@ const questions: Record<string, Question[]> = {
         "Ingestion layer — it buffers events before routing them to batch and speed layers"
       ],
       correctAnswer: 1,
-      explanation: "Lambda architecture has three layers: (1) Batch layer — processes the complete dataset periodically (e.g., every few hours with Spark/Hadoop), producing accurate but stale views. (2) Speed layer — processes events in real time (Flink/Storm), serving approximate results for data not yet in the batch view. (3) Serving layer — merges batch and speed layer views to answer queries. Nathan Marz coined Lambda architecture at BackType/Twitter to solve real-time analytics on top of Hadoop's batch paradigm.",
+      explanation: "**Step 1:** Lambda architecture has three layers: batch layer (processes complete dataset periodically, producing accurate but stale views), speed layer (processes events in real time, serving approximate results for recent data), and serving layer (merges batch and speed layer views to answer queries). **Step 2:** The speed layer fills the gap for data not yet incorporated into the batch view, providing low-latency results at the cost of approximation. **Step 3:** Nathan Marz coined Lambda architecture at BackType/Twitter to solve real-time analytics on top of Hadoop's batch paradigm.",
+      stepByStep: {
+        step1: "First, recall that Lambda architecture consists of three layers: batch (accurate but periodic), speed (real-time approximate), and serving (merges both views).",
+        step2: "Then, understand that the speed layer specifically fills the latency gap for recent events not yet incorporated into the batch view.",
+        step3: "Finally, recognize that the batch layer is inherently stale and the speed layer compensates by providing immediate real-time approximations."
+      },
       hints: [
         "Lambda architecture has three layers — what gap does the speed layer fill?",
         "Why is the batch layer inherently stale and what compensates for it?"
@@ -246,7 +311,12 @@ const questions: Record<string, Question[]> = {
         "Lambda's serving layer introduces query latency above 100ms making it unsuitable for user-facing products"
       ],
       correctAnswer: 1,
-      explanation: "Jay Kreps (co-creator of Kafka, then at LinkedIn) argued in a 2014 blog post that Lambda's fundamental operational cost is maintaining two codebases — one batch (MapReduce/Spark) and one streaming (Storm/Flink) — that must produce equivalent outputs. Bugs appear when the two implementations drift. Kappa collapses this into a single streaming system: all processing uses a streaming job, and historical reprocessing is done by replaying the Kafka log from offset 0 through the same job. This eliminates the batch layer, halving the maintenance surface area.",
+      explanation: "**Step 1:** Jay Kreps (co-creator of Kafka, then at LinkedIn) identified that Lambda's fundamental operational cost is maintaining two codebases — one batch (MapReduce/Spark) and one streaming (Storm/Flink) — that must produce equivalent outputs. **Step 2:** Bugs appear when the two implementations drift apart, leading to divergent results between the batch and speed layers. **Step 3:** Kappa collapses this into a single streaming system: all processing uses a streaming job, and historical reprocessing is done by replaying the Kafka log from offset 0 through the same job. This eliminates the batch layer, halving the maintenance surface area.",
+      stepByStep: {
+        step1: "First, understand that Lambda requires two separate code implementations (batch and streaming) that must produce equivalent results for the same input data.",
+        step2: "Then, recognize that bugs arise when the two implementations diverge, causing inconsistent outputs between the batch and speed layers.",
+        step3: "Finally, Kappa eliminates this dual-maintenance burden by using a single streaming job for both real-time and historical reprocessing via Kafka log replay."
+      },
       hints: [
         "What is the main complexity Lambda adds over a single-system approach?",
         "What Kafka capability enables Kappa to reprocess historical data without a separate batch system?"
@@ -258,7 +328,12 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "In Kappa architecture, historical reprocessing is done by replaying events from the beginning of the Kafka topic through the same streaming job used for real-time processing.",
       correctAnswer: "true",
-      explanation: "True. This is the core insight of Kappa architecture. Kafka retains events for a configurable period (or indefinitely with tiered storage). To reprocess history after a bug fix or logic change, you start a new instance of the streaming job from offset 0 (or a specific historical offset) on a new consumer group and new output topic. Once it catches up to real time, you atomically swap the serving layer to point to the new output. The old job is decommissioned. This eliminates the need for a separate batch system. Confluent documents this as the standard Kappa deployment model.",
+      explanation: "**Step 1:** Kafka retains events for a configurable period (or indefinitely with tiered storage). **Step 2:** To reprocess history after a bug fix or logic change, start a new instance of the streaming job from offset 0 (or a specific historical offset) on a new consumer group and new output topic. **Step 3:** Once it catches up to real time, atomically swap the serving layer to point to the new output and decommission the old job. This eliminates the need for a separate batch system. Confluent documents this as the standard Kappa deployment model.",
+      stepByStep: {
+        step1: "First, understand that Kafka retains events long enough (via retention settings or tiered storage) to support historical replay from any offset.",
+        step2: "Then, to reprocess history, start a new instance of the streaming job from offset 0 on a new consumer group and new output topic.",
+        step3: "Finally, once the new job catches up to real time, atomically redirect the serving layer to the new output and decommission the old job."
+      },
       hints: [
         "What Kafka setting retains data long enough for historical reprocessing?",
         "How do you deploy a new version of a streaming job without downtime in Kappa?"
@@ -279,7 +354,12 @@ const questions: Record<string, Question[]> = {
         "Spark Structured Streaming supports event-time watermarks; Flink only supports processing-time windows"
       ],
       correctAnswer: 1,
-      explanation: "Flink is a true streaming engine processing records one at a time through a dataflow graph, with RocksDB-backed stateful operators, asynchronous incremental checkpointing (Chandy-Lamport barriers), and sub-second latency. Spark Structured Streaming uses micro-batches (default trigger interval 0ms but still batch execution), which adds latency but inherits the full Catalyst/Tungsten optimization stack. Flink achieves lower latency and richer stateful processing primitives (keyed state, timers, process functions). Databricks uses both in production but recommends Delta Live Tables over raw Structured Streaming for most pipelines.",
+      explanation: "**Step 1:** Flink is a true streaming engine processing records one at a time through a dataflow graph, with RocksDB-backed stateful operators and sub-second latency. **Step 2:** Spark Structured Streaming uses micro-batches (default trigger interval 0ms but still batch execution), which adds latency but inherits the full Catalyst/Tungsten optimization stack from Spark SQL. **Step 3:** Flink achieves lower latency and richer stateful processing primitives (keyed state, timers, process functions). Databricks uses both in production but recommends Delta Live Tables over raw Structured Streaming for most pipelines.",
+      stepByStep: {
+        step1: "First, understand that Flink is a true record-at-a-time streaming engine with native stateful operators, RocksDB state backend, and sub-second latency.",
+        step2: "Then, recognize that Spark Structured Streaming uses micro-batches (despite 0ms trigger), adding latency but gaining the full Catalyst/Tungsten optimizer from Spark SQL.",
+        step3: "Finally, conclude that Flink offers lower latency and richer stateful primitives, while Spark benefits from optimizer integration and ecosystem compatibility."
+      },
       hints: [
         "What is the difference between micro-batch processing and true record-at-a-time streaming?",
         "What state backend does Flink use for large state (GB-TB range)?"
@@ -297,7 +377,12 @@ const questions: Record<string, Question[]> = {
         "Barriers signal the end of a Kafka partition to the Flink source connector"
       ],
       correctAnswer: 1,
-      explanation: "Flink's JobManager triggers a checkpoint by injecting checkpoint barrier records at each source. When a downstream operator receives a barrier on all input channels, it asynchronously snapshots its state (keyed state, operator state) to a configured state backend (HDFS, S3, RocksDB) and then forwards the barrier. This allows a globally consistent distributed snapshot without pausing the entire pipeline — only a brief alignment phase at each operator buffers in-flight records. On failure, Flink restores all operator states from the last successful checkpoint and replays from the corresponding Kafka offsets. This was published in Flink's ATC'15 paper.",
+      explanation: "**Step 1:** Flink's JobManager triggers a checkpoint by injecting checkpoint barrier records at each source. **Step 2:** When a downstream operator receives a barrier on all input channels, it asynchronously snapshots its state (keyed state, operator state) to a configured state backend and then forwards the barrier. **Step 3:** This allows a globally consistent distributed snapshot without pausing the entire pipeline — only a brief alignment phase at each operator buffers in-flight records. On failure, Flink restores all operator states from the last successful checkpoint and replays from corresponding Kafka offsets. This was published in Flink's ATC'15 paper.",
+      stepByStep: {
+        step1: "First, understand that the JobManager initiates a checkpoint by injecting barrier records at each source operator.",
+        step2: "Then, when a downstream operator receives barriers on all input channels, it asynchronously snapshots its state to durable storage and forwards the barrier.",
+        step3: "Finally, recognize that this enables a globally consistent distributed snapshot without a global stop-the-world pause — only a brief alignment phase at each operator."
+      },
       hints: [
         "How does Flink take a consistent distributed snapshot without a global stop-the-world pause?",
         "When does an operator actually snapshot its state during checkpointing?"
@@ -318,7 +403,12 @@ const questions: Record<string, Question[]> = {
         "Running a nightly batch aggregation job that computes and stores the current state summary"
       ],
       correctAnswer: 1,
-      explanation: "In event sourcing, the append-only event log is the system of record. Current state = fold(initial_state, events). For example, a bank account state is the sum of all DEPOSITED and WITHDRAWN events for that account_id. Snapshots are an optimization: start from the latest snapshot and replay only subsequent events, avoiding full history replay for high-event-count entities. Axon Framework and Kafka-based event sourcing at Confluent both use this model. Benefits include a complete immutable audit trail and the ability to reconstruct state at any historical moment.",
+      explanation: "**Step 1:** In event sourcing, the append-only event log is the system of record, not a mutable state table. **Step 2:** Current state is computed by replaying all domain events for that entity from the log in chronological order and folding them into state (state = fold(initial_state, events)). For example, a bank account balance is the sum of all DEPOSITED and WITHDRAWN events for that account_id. **Step 3:** Snapshots are an optimization: start from the latest snapshot and replay only subsequent events. Axon Framework and Kafka-based event sourcing at Confluent both use this model.",
+      stepByStep: {
+        step1: "First, understand that in event sourcing, the append-only event log is the system of truth — not a mutable state table.",
+        step2: "Then, compute current state by replaying events in chronological order: state = fold(initial_state, events) — for example, summing all DEPOSITED and WITHDRAWN events for an account.",
+        step3: "Finally, use snapshots as an optimization: start from the latest snapshot and replay only events after that point to avoid full history replay."
+      },
       hints: [
         "In event sourcing, the log is the source of truth — not a mutable state table.",
         "How does event replay answer 'what was the account balance at 3pm last Tuesday'?"
@@ -336,7 +426,12 @@ const questions: Record<string, Question[]> = {
         "Polling the command database every second and copying changed rows to a separate read database"
       ],
       correctAnswer: 1,
-      explanation: "CQRS separates writes (commands) from reads (queries). On the command side, domain events are published to Kafka. On the query side, consumer services build read-optimized projections from those events: an order history page materializes events into a PostgreSQL timeline table; a product search page projects events into Elasticsearch. Each projection is eventually consistent with the command side and optimized for its specific query pattern. This decoupling is used at LMAX Exchange and in microservice architectures at Netflix and Uber.",
+      explanation: "**Step 1:** CQRS separates writes (commands) from reads (queries). On the command side, domain events are published to Kafka. **Step 2:** On the query side, consumer services build read-optimized projections from those events: an order history page materializes events into a PostgreSQL timeline table; a product search page projects events into Elasticsearch. **Step 3:** Each projection is eventually consistent with the command side and optimized for its specific query pattern. This decoupling is used at LMAX Exchange and in microservice architectures at Netflix and Uber.",
+      stepByStep: {
+        step1: "First, understand that CQRS separates command (write) and query (read) sides — commands publish domain events to Kafka.",
+        step2: "Then, query side consumers materialize these events into read-optimized projections tailored to specific query patterns (e.g., PostgreSQL for timelines, Elasticsearch for search).",
+        step3: "Finally, each projection is eventually consistent with the command side and optimized for its specific query access pattern."
+      },
       hints: [
         "Why would different query use cases need different read models?",
         "How does Kafka decouple the command (write) side from the query (read) side?"
@@ -357,7 +452,12 @@ const questions: Record<string, Question[]> = {
         "PostgreSQL's LISTEN/NOTIFY pub-sub mechanism for row-level change notifications"
       ],
       correctAnswer: 1,
-      explanation: "Debezium registers as a PostgreSQL logical replication client using a replication slot. PostgreSQL writes every INSERT, UPDATE, and DELETE to its WAL before applying it (for durability). The logical replication protocol decodes WAL entries into structured change events (old values, new values, operation type). Debezium's connector reads these decoded events and publishes them to Kafka topics — one topic per table by default. This approach has zero impact on normal query traffic and captures changes at the row level without modifying application code. LinkedIn uses Debezium-based CDC in their data mesh architecture.",
+      explanation: "**Step 1:** PostgreSQL writes every INSERT, UPDATE, and DELETE to its WAL before applying it to data pages (for durability and crash recovery). **Step 2:** Debezium registers as a PostgreSQL logical replication client using a replication slot. The logical replication protocol decodes WAL entries into structured change events (old values, new values, operation type). **Step 3:** Debezium reads these decoded events and publishes them to Kafka topics — one topic per table by default. This approach has zero impact on normal query traffic and captures changes at the row level without modifying application code.",
+      stepByStep: {
+        step1: "First, understand that PostgreSQL writes all row changes to the WAL (write-ahead log) before applying them, ensuring durability on crash.",
+        step2: "Then, Debezium registers as a logical replication client using a replication slot, which decodes WAL entries into structured change events via the pgoutput or decoderbufs plugin.",
+        step3: "Finally, Debezium publishes these change events to Kafka topics (one per table) with zero impact on application query traffic and no code changes required."
+      },
       hints: [
         "What does PostgreSQL write before applying any change to ensure durability on crash?",
         "What is a logical replication slot and how does it differ from physical replication?"
@@ -375,7 +475,12 @@ const questions: Record<string, Question[]> = {
         "Renaming an existing required field to a new name"
       ],
       correctAnswer: 1,
-      explanation: "Backward compatibility means a new schema version can deserialize data written with the old schema. Adding an optional field with a default value is the canonical backward-compatible change: messages serialized with the old schema (missing the new field) deserialize successfully under the new schema, substituting the default. Removing required fields, changing field types, or renaming fields break backward compatibility — old data cannot be deserialized with the new schema. Confluent Schema Registry enforces the configured compatibility level (BACKWARD, FORWARD, FULL) on schema registration, rejecting incompatible changes.",
+      explanation: "**Step 1:** Backward compatibility means a new schema version can deserialize data written with the old schema (new code reads old data). **Step 2:** Adding an optional field with a default value is the canonical backward-compatible change: messages serialized with the old schema (missing the new field) deserialize successfully under the new schema, substituting the default. **Step 3:** Removing required fields, changing field types, or renaming fields all break backward compatibility — old data cannot be deserialized with the new schema. Confluent Schema Registry enforces the configured compatibility level on schema registration, rejecting incompatible changes.",
+      stepByStep: {
+        step1: "First, understand that backward compatibility means new schema version can read data written with the old schema (new code reads old data).",
+        step2: "Then, adding an optional field with a default value is backward-compatible: old data missing the field deserializes successfully by substituting the default.",
+        step3: "Finally, removing required fields, changing types, or renaming fields all break backward compatibility because old data cannot satisfy the new schema."
+      },
       hints: [
         "Backward compatibility: new code reads old data. What happens if old data has no value for a new required field?",
         "What makes a field optional in Avro, and what role does a default value play?"
@@ -396,7 +501,12 @@ const questions: Record<string, Question[]> = {
         "Limiting total topic size by deleting all messages beyond a configured byte threshold"
       ],
       correctAnswer: 1,
-      explanation: "Log compaction guarantees that for each unique message key, at least the most recent value is retained. This makes a compacted topic behave like a distributed key-value store snapshotted as a log. Kafka Streams uses compacted changelog topics to rebuild local state stores on restart: instead of replaying the entire event history, it only needs the latest value per key. Sending a tombstone (key=X, value=null) deletes the key from the compacted log. Confluent uses compacted topics for KTable semantics and database CDC mirroring.",
+      explanation: "**Step 1:** Log compaction guarantees that for each unique message key, at least the most recent value is retained, regardless of how old the message is. **Step 2:** This makes a compacted topic behave like a distributed key-value store snapshotted as a log — the latest value per key represents current state. **Step 3:** Kafka Streams uses compacted changelog topics to rebuild local state stores on restart: instead of replaying the entire event history, it only needs the latest value per key. Sending a tombstone (key=X, value=null) deletes the key from the compacted log. Confluent uses compacted topics for KTable semantics and database CDC mirroring.",
+      stepByStep: {
+        step1: "First, understand that log compaction retains at least the most recent value per key regardless of message age, deleting older duplicates.",
+        step2: "Then, recognize this transforms a compacted topic into a key-value store where the latest value per key represents current state.",
+        step3: "Finally, Kafka Streams uses compacted changelog topics to rebuild local state by loading only the latest value per key, avoiding full history replay."
+      },
       hints: [
         "What is a KTable in Kafka Streams and why does it need a compacted changelog topic?",
         "If a user's profile has been updated 1,000 times, how many records remain after log compaction?"
@@ -408,7 +518,12 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Kafka's time-based retention and log compaction can be enabled simultaneously on the same topic using cleanup.policy=compact,delete.",
       correctAnswer: "true",
-      explanation: "True. Setting cleanup.policy=compact,delete enables both policies: the topic retains at least the latest value per key (compaction guarantee), AND segments older than retention.ms or larger than retention.bytes are eventually deleted. This is useful for CDC changelog topics that need latest-value semantics but should not grow unboundedly. Old compacted segments that age past the retention window are deleted. This is the default configuration for Kafka Streams internal changelog topics in production deployments and is documented in Confluent's operator guide.",
+      explanation: "**Step 1:** Setting cleanup.policy=compact,delete enables both policies on the same topic simultaneously. **Step 2:** Compaction ensures the latest value per key is retained (compaction guarantee), while time/size-based deletion removes segments older than retention.ms or larger than retention.bytes. **Step 3:** This is useful for CDC changelog topics that need latest-value semantics but should not grow unboundedly. Old compacted segments that age past the retention window are deleted. This is the default configuration for Kafka Streams internal changelog topics in production.",
+      stepByStep: {
+        step1: "First, understand that cleanup.policy=compact,delete enables both policies simultaneously on the same topic.",
+        step2: "Then, compaction retains the latest value per key while retention.ms/retention.bytes delete aged segments, combining latest-value semantics with size management.",
+        step3: "Finally, this configuration is the default for Kafka Streams internal changelog topics in production, supporting CDC use cases that need both semantics."
+      },
       hints: [
         "What does cleanup.policy=compact,delete mean for a topic?",
         "What happens to an old compacted segment when it ages past retention.ms?"
@@ -429,7 +544,12 @@ const questions: Record<string, Question[]> = {
         "The JobManager detects high queue depth via metrics and dynamically reduces source partition assignments"
       ],
       correctAnswer: 1,
-      explanation: "Flink uses a credit-based flow control mechanism layered on top of TCP's inherent backpressure. When a downstream task's input buffer is full, it cannot grant buffer credits to upstream. The upstream task blocks on its network write, which fills the TCP send buffer, which TCP flow control propagates upstream through all operators to the source. This is implicit backpressure with zero coordination overhead — no polling, no explicit signals. Flink's web UI displays backpressure ratios (fraction of time operators are blocked on output) per operator, which Netflix and Uber use to identify bottleneck stages in production streaming jobs.",
+      explanation: "**Step 1:** Flink uses a credit-based flow control mechanism layered on top of TCP's inherent backpressure. **Step 2:** When a downstream task's input buffer is full, it cannot grant buffer credits to upstream. The upstream task blocks on its network write, which fills the TCP send buffer, which TCP flow control propagates upstream through all operators to the source. **Step 3:** This is implicit backpressure with zero coordination overhead — no polling, no explicit signals. Flink's web UI displays backpressure ratios per operator, which Netflix and Uber use to identify bottleneck stages.",
+      stepByStep: {
+        step1: "First, understand that Flink uses credit-based flow control layered on TCP's inherent backpressure mechanism.",
+        step2: "Then, when a downstream task's input buffer is full (no credits to grant), the upstream task blocks on its network write, filling the TCP send buffer.",
+        step3: "Finally, TCP flow control propagates this backpressure upstream all the way to the source — zero explicit coordination needed, just natural network semantics."
+      },
       hints: [
         "What happens at the TCP level when a receiver's buffer is full and a sender tries to write?",
         "Does Flink need an explicit backpressure protocol or does it rely on existing network semantics?"
@@ -447,7 +567,12 @@ const questions: Record<string, Question[]> = {
         "LSM-tree — log-structured merge-tree for efficient on-disk sorted key-value storage"
       ],
       correctAnswer: 1,
-      explanation: "HyperLogLog (HLL) is the standard solution for approximate distinct count at scale. Using ~12 KB of memory (2^14 registers), HLL estimates cardinality with ~0.81% standard error regardless of whether the actual count is 1 million or 1 trillion. Redis implements PFADD/PFCOUNT for HLL natively. Twitter, Facebook, and LinkedIn all use HLL for unique visitor counting in their real-time analytics pipelines. Count-Min Sketch estimates event frequencies (how many times did X occur?), not cardinality. Bloom filter tests set membership (have I seen X before?), not distinct count.",
+      explanation: "**Step 1:** HyperLogLog (HLL) is the standard solution for approximate distinct count at scale. Using ~12 KB of memory (2^14 registers), HLL estimates cardinality with ~0.81% standard error regardless of whether the actual count is 1 million or 1 trillion. **Step 2:** Redis implements PFADD/PFCOUNT for HLL natively. Twitter, Facebook, and LinkedIn all use HLL for unique visitor counting in their real-time analytics pipelines. **Step 3:** Count-Min Sketch estimates event frequencies (how many times did X occur?), not cardinality. Bloom filter tests set membership (have I seen X before?), not distinct count.",
+      stepByStep: {
+        step1: "First, understand that HyperLogLog is specifically designed for approximate distinct counting, using ~12 KB to achieve ~0.81% standard error at any scale.",
+        step2: "Then, recognize that it exploits the statistical property of hash functions: the maximum number of leading zeros in hashed values correlates with cardinality.",
+        step3: "Finally, distinguish it from Count-Min Sketch (frequency estimation) and Bloom filters (set membership) — HLL uniquely answers 'how many distinct elements?'"
+      },
       hints: [
         "Which probabilistic data structure is specifically designed for counting distinct elements?",
         "How does HyperLogLog estimate cardinality — what statistical property of hashes does it exploit?"
@@ -468,7 +593,12 @@ const questions: Record<string, Question[]> = {
         "Kafka Streams automatically reprocesses the purchase event when the matching KTable entry is updated"
       ],
       correctAnswer: 1,
-      explanation: "A KStream-KTable join is a point-in-time lookup join: for each KStream record, Kafka Streams performs a synchronous lookup of the KTable's current state at that instant in processing time. If the profile does not exist yet (or has an older value), the purchase event is either dropped (inner join) or enriched with null (left join). Subsequent KTable updates do not trigger reprocessing of past KStream events. This is fundamentally different from a KStream-KStream windowed join, which does buffer events within a time window to match records. LinkedIn uses KStream-KTable joins for activity enrichment in their analytics pipeline.",
+      explanation: "**Step 1:** A KStream-KTable join is a point-in-time lookup join: for each KStream record, Kafka Streams performs a synchronous lookup of the KTable's current state at that instant in processing time. **Step 2:** If the profile does not exist yet (or has an older value), the purchase event is either dropped (inner join) or enriched with null (left join). **Step 3:** Subsequent KTable updates do not trigger reprocessing of past KStream events — this is fundamentally different from a KStream-KStream windowed join, which buffers events within a time window to match records.",
+      stepByStep: {
+        step1: "First, understand that a KStream-KTable join is a snapshot lookup: each KStream record joins against the KTable's current state at the moment of processing.",
+        step2: "Then, if the KTable value is missing or stale at processing time, the join proceeds with null (left join) or drops the record (inner join).",
+        step3: "Finally, recognize that KTable updates arriving later do not retroactively update already-emitted results — unlike a KStream-KStream windowed join which buffers events."
+      },
       hints: [
         "Is a KStream-KTable join time-windowed or is it a snapshot lookup?",
         "How does a KStream-KTable join differ from a KStream-KStream join in buffering behavior?"
@@ -489,7 +619,12 @@ const questions: Record<string, Question[]> = {
         "Set auto.offset.reset=latest so the consumer skips all existing messages and starts from the newest"
       ],
       correctAnswer: 1,
-      explanation: "A Dead Letter Queue (DLQ) is the standard pattern for unprocessable messages. After N retries, the consumer publishes the raw message bytes to a DLQ topic (e.g., payments.dlq) along with metadata: original topic, partition, offset, timestamp, and the exception stack trace. The consumer then commits the offset for the original topic, unblocking the pipeline. A separate DLQ consumer or alerting system monitors the DLQ for investigation and potential manual replay. Netflix, Uber, and AWS SQS all use this pattern. Setting auto.offset.reset=latest is destructive — it permanently skips all messages between the current and latest offsets.",
+      explanation: "**Step 1:** A Dead Letter Queue (DLQ) is the standard pattern for unprocessable messages. After N retries, the consumer publishes the raw message bytes to a DLQ topic (e.g., payments.dlq) along with metadata: original topic, partition, offset, timestamp, and the exception stack trace. **Step 2:** The consumer then commits the offset for the original topic, unblocking the pipeline to continue processing subsequent messages. **Step 3:** A separate DLQ consumer or alerting system monitors the DLQ for investigation and potential manual replay. Netflix, Uber, and AWS SQS all use this pattern. Setting auto.offset.reset=latest is destructive — it permanently skips all messages between the current and latest offsets.",
+      stepByStep: {
+        step1: "First, after a configurable number of retries, publish the unprocessable message to a DLQ topic (e.g., payments.dlq) with error metadata (original topic, partition, offset, exception stack trace).",
+        step2: "Then, commit the offset on the original topic to unblock the pipeline so it can continue processing subsequent messages.",
+        step3: "Finally, a separate DLQ consumer or alerting system monitors for investigation and potential manual replay or correction."
+      },
       hints: [
         "What risk do you take if the consumer blocks indefinitely on a message that will never parse?",
         "Where should unprocessable messages go so the main pipeline can continue processing?"
@@ -507,7 +642,12 @@ const questions: Record<string, Question[]> = {
         "Using producer quotas to throttle the StatsD publisher write rate to match InfluxDB ingestion speed"
       ],
       correctAnswer: 1,
-      explanation: "Retention policies are the primary safeguard against unbounded disk growth. Setting retention.ms=3600000 (1 hour) causes the broker to delete segments older than 1 hour. Setting retention.bytes=10737418240 (10 GB per partition) adds a size cap. If InfluxDB falls behind and consumer lag grows, old metrics are purged rather than filling broker disks. This is a deliberate trade-off: metrics pipelines typically accept loss of old data over broker instability. Producer quotas (option D) would backpressure StatsD publishers rather than allow data to accumulate and expire naturally.",
+      explanation: "**Step 1:** Retention policies are the primary safeguard against unbounded disk growth. Setting retention.ms=3600000 (1 hour) causes the broker to delete segments older than 1 hour. **Step 2:** Setting retention.bytes=10737418240 (10 GB per partition) adds a size cap. If InfluxDB falls behind and consumer lag grows, old metrics are purged rather than filling broker disks. **Step 3:** This is a deliberate trade-off: metrics pipelines typically accept loss of old data over broker instability. Producer quotas (option D) would backpressure StatsD publishers rather than allow data to accumulate and expire naturally.",
+      stepByStep: {
+        step1: "First, configure retention.ms (time-based) and retention.bytes (size-based) to enforce automatic message expiration when limits are reached.",
+        step2: "Then, when InfluxDB falls behind and consumer lag grows, old metrics are purged by the retention policy rather than accumulating indefinitely on brokers.",
+        step3: "Finally, accept this trade-off: metrics pipelines typically prefer losing old data over broker instability from unbounded disk consumption."
+      },
       hints: [
         "What Kafka configuration controls how long data is kept before automatic deletion?",
         "What is the trade-off between setting a short vs long retention period for a high-throughput metrics topic?"
@@ -528,7 +668,12 @@ const questions: Record<string, Question[]> = {
         "Columnar formats store data pre-sorted by primary key, reducing the number of rows scanned per query"
       ],
       correctAnswer: 1,
-      explanation: "The core columnar advantage is IO reduction via column projection. In a CSV/JSON row file, each row stores all 100 columns contiguously — reading 3 columns still requires reading or seeking past all 100 columns per row. In Parquet or ORC, each column's bytes are stored together, so a query touching 3 columns reads only ~3% of total data bytes. Additionally, per-column compression ratios are far superior because values are of the same type and similar magnitude (run-length encoding, dictionary encoding, delta encoding). Databricks' Delta Lake, Apache ORC in Hive, and Google BigQuery's Capacitor all exploit this principle for analytical performance.",
+      explanation: "**Step 1:** In row-oriented storage (CSV/JSON), each row stores all 100 columns contiguously — reading 3 columns requires reading or seeking past all 100 columns per row. **Step 2:** In Parquet or ORC, each column's bytes are stored together (columnar layout), so a query touching 3 columns reads only ~3% of total data bytes. **Step 3:** Additionally, per-column compression ratios are far superior because values are of the same type and similar magnitude (run-length encoding, dictionary encoding, delta encoding). Databricks' Delta Lake, Apache ORC in Hive, and Google BigQuery's Capacitor all exploit this principle.",
+      stepByStep: {
+        step1: "First, understand that row-oriented storage (CSV/JSON) stores all 100 columns contiguously per row, so accessing 3 columns still requires reading all 100.",
+        step2: "Then, in columnar storage (Parquet/ORC), each column's values are stored separately and contiguously, so only the 3 needed columns are read from disk.",
+        step3: "Finally, columnar formats also achieve better compression because same-type, similar-magnitude values in each column compress efficiently with RLE, dictionary, or delta encoding."
+      },
       hints: [
         "How is data physically laid out in a Parquet file row group vs a CSV row?",
         "If each column is stored separately, what IO is saved when a query needs only 3 of 100 columns?"
@@ -546,7 +691,12 @@ const questions: Record<string, Question[]> = {
         "Set spark.sql.shuffle.partitions=10000 to create more shuffle partitions so the skewed key is automatically redistributed"
       ],
       correctAnswer: 1,
-      explanation: "Key salting is the standard fix for single-key data skew. If the key 'bot123' accounts for 50 GB of data, appending a random integer 0-9 creates 10 virtual keys (bot123_0 through bot123_9), spreading load across 10 partitions processed in parallel. After aggregation, a second pass strips the suffix and merges the 10 sub-results. Increasing shuffle partitions (option D) does not help if one key dominates — all records for that key still hash to the same partition. Databricks engineers and Spark engineers at Netflix documented salting as the primary mitigation for skewed joins and groupBy aggregations.",
+      explanation: "**Step 1:** Key salting is the standard fix for single-key data skew. If the key 'bot123' accounts for 50 GB of data, appending a random integer 0–9 creates 10 virtual keys (bot123_0 through bot123_9). **Step 2:** These virtual keys spread across 10 partitions, enabling parallel processing of the skewed key's data. **Step 3:** After aggregation, a second pass strips the suffix and merges the 10 sub-results. Simply increasing shuffle partitions (option D) does not help — all records for that key still hash to the same partition. Databricks engineers and Spark engineers at Netflix documented salting as the primary mitigation for skewed joins and groupBy aggregations.",
+      stepByStep: {
+        step1: "First, apply key salting: append a random integer suffix (0 to N-1) to the skewed key, creating N virtual keys that hash to different partitions.",
+        step2: "Then, process in N sub-partitions in parallel, where each sub-partition handles one salt variant of the skewed key.",
+        step3: "Finally, after aggregation, perform a second pass to strip the suffix and merge the N partial results into the final output."
+      },
       hints: [
         "If one key holds 50 GB, how do you split it across multiple partitions without changing business semantics?",
         "Why does simply increasing spark.sql.shuffle.partitions not help when one specific key is the bottleneck?"
