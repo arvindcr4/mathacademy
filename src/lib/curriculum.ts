@@ -1546,6 +1546,88 @@ export const courses: Course[] = [
       },
     ]
   },
+  // PRODUCTION ML & LLM ENGINEERING
+  {
+    id: 'production-ml-engineering',
+    slug: 'production-ml-engineering',
+    name: 'Production ML & LLM Engineering',
+    description: 'Advanced deployment patterns, LLM ops, real-time inference systems, and production-grade ML.',
+    topics: [
+      {
+        id: 'llm-serving-patterns',
+        name: 'LLM Serving Architectures',
+        description: 'Serving LLMs at scale: batching, caching, routing, and cost optimization.',
+        knowledgePoints: [
+          { id: 'pme-kp-1', slug: 'llm-serving-arch', name: 'LLM Serving Architecture Overview' },
+          { id: 'pme-kp-2', slug: 'kv-cache-mgmt', name: 'KV Cache Management & Memory Optimization' },
+          { id: 'pme-kp-3', slug: 'request-routing', name: 'Request Routing & Load Balancing for LLMs' },
+          { id: 'pme-kp-4', slug: 'model-caching', name: 'Model Caching & Warm Pools' },
+          { id: 'pme-kp-5', slug: 'llm-cost-optimization', name: 'LLM Cost Optimization & Token Economics' },
+        ]
+      },
+      {
+        id: 'retrieval-augmented-systems',
+        name: 'RAG Systems & Vector Databases',
+        description: 'Production RAG pipelines, vector stores, and retrieval optimization.',
+        knowledgePoints: [
+          { id: 'pme-kp-6', slug: 'rag-pipeline', name: 'Production RAG Pipeline Architecture' },
+          { id: 'pme-kp-7', slug: 'vector-databases', name: 'Vector Databases (Pinecone, Weaviate, Qdrant)' },
+          { id: 'pme-kp-8', slug: 'hybrid-search', name: 'Hybrid Search (Dense + Sparse Retrieval)' },
+          { id: 'pme-kp-9', slug: 'reranking-prod', name: 'Reranking & Cross-Encoder Optimization' },
+          { id: 'pme-kp-10', slug: 'rag-evaluation', name: 'RAG Evaluation (RAGAS, ARES, DeepEval)' },
+        ]
+      },
+      {
+        id: 'llmops',
+        name: 'LLMOps & Model Lifecycle',
+        description: 'Prompt versioning, LLM monitoring, evaluation pipelines, and A/B testing.',
+        knowledgePoints: [
+          { id: 'pme-kp-11', slug: 'prompt-versioning', name: 'Prompt Versioning & Management (LangSmith)' },
+          { id: 'pme-kp-12', slug: 'llm-observability', name: 'LLM Observability & Tracing (Langfuse)' },
+          { id: 'pme-kp-13', slug: 'llm-eval-pipeline', name: 'Automated LLM Evaluation Pipelines' },
+          { id: 'pme-kp-14', slug: 'ab-testing-llm', name: 'A/B Testing LLMs & Shadow Deployment' },
+          { id: 'pme-kp-15', slug: 'llm-guardrails', name: 'LLM Guardrails & Safety Layers' },
+        ]
+      },
+      {
+        id: 'streaming-ml',
+        name: 'Streaming & Real-Time ML',
+        description: 'Online learning, streaming inference, and real-time feature computation.',
+        knowledgePoints: [
+          { id: 'pme-kp-16', slug: 'streaming-inference', name: 'Streaming Inference & Low-Latency Serving' },
+          { id: 'pme-kp-17', slug: 'online-learning-prod', name: 'Online Learning & Continual Training in Production' },
+          { id: 'pme-kp-18', slug: 'real-time-features', name: 'Real-Time Feature Computation (Flink, Redis)' },
+          { id: 'pme-kp-19', slug: 'event-driven-ml', name: 'Event-Driven ML Pipelines (Kafka + ML)' },
+          { id: 'pme-kp-20', slug: 'edge-inference', name: 'Edge Inference & On-Device ML' },
+        ]
+      },
+      {
+        id: 'ml-platform-engineering',
+        name: 'ML Platform Engineering',
+        description: 'Building internal ML platforms, compute orchestration, and developer experience.',
+        knowledgePoints: [
+          { id: 'pme-kp-21', slug: 'ml-platform-arch', name: 'ML Platform Architecture & Design Principles' },
+          { id: 'pme-kp-22', slug: 'ray-distributed', name: 'Ray & Distributed Computing for ML' },
+          { id: 'pme-kp-23', slug: 'gpu-cluster-mgmt', name: 'GPU Cluster Management & Scheduling' },
+          { id: 'pme-kp-24', slug: 'training-infra', name: 'Large-Scale Training Infrastructure' },
+          { id: 'pme-kp-25', slug: 'ml-developer-experience', name: 'ML Developer Experience & Tooling' },
+        ]
+      },
+      {
+        id: 'production-debugging',
+        name: 'Production Debugging & Incident Response',
+        description: 'Diagnosing ML failures, data quality issues, and on-call for ML systems.',
+        knowledgePoints: [
+          { id: 'pme-kp-26', slug: 'ml-debugging', name: 'Debugging ML Models in Production' },
+          { id: 'pme-kp-27', slug: 'data-quality-prod', name: 'Data Quality Monitoring & Data Contracts' },
+          { id: 'pme-kp-28', slug: 'ml-incident-response', name: 'ML Incident Response & Postmortems' },
+          { id: 'pme-kp-29', slug: 'shadow-deployment', name: 'Shadow Deployment & Canary Releases' },
+          { id: 'pme-kp-30', slug: 'cost-attribution-ml', name: 'ML Cost Attribution & FinOps' },
+        ]
+      },
+    ]
+  },
+
   // META-LEARNING & FEW-SHOT LEARNING
   {
     id: 'meta-learning',
