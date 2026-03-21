@@ -1,5 +1,5 @@
 import type { Question } from "@/lib/curriculum";
-import { registerQuestions } from "@/lib/questions";
+import { registerQuestions } from "./registry";
 
 const questions: Record<string, Question[]> = {
   perceptron: [
@@ -1736,5 +1736,589 @@ const questions: Record<string, Question[]> = {
     },
   ],
 };
+
+const questionsExtra: Record<string, Question[]> = {
+  "transformer-fundamentals": [
+    {
+      id: "q-dl-kp31-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In the scaled dot-product attention mechanism, queries Q, keys K, and values V are derived from the input. Why is the dot product scaled by 1/sqrt(d_k)?",
+      options: [
+        "To make the attention weights sum to d_k instead of 1",
+        "To prevent the dot products from growing large in magnitude when d_k is large, which would push softmax into regions with very small gradients",
+        "To normalize the value vectors so they have unit norm",
+        "To ensure queries and keys have the same dimensionality as values",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "When d_k is large, dot products Q times K^T grow in magnitude because they are sums of d_k terms each with variance 1. Large values push softmax toward near-one-hot distributions with near-zero gradients. Scaling by 1/sqrt(d_k) normalizes the variance of the dot product to 1, keeping gradients healthy.",
+      hints: [
+        "If each element of Q and K has zero mean and unit variance, Q times K^T has variance d_k — dividing by sqrt(d_k) gives variance 1.",
+        "Near-one-hot softmax outputs have near-zero gradients everywhere except the argmax — this kills learning.",
+      ],
+    },
+    {
+      id: "q-dl-kp31-2",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Sinusoidal positional encodings in the original transformer are learned parameters that are updated during training.",
+      options: ["True", "False"],
+      correctAnswer: "False",
+      explanation:
+        "Vaswani et al. (2017) used fixed sinusoidal positional encodings — sin and cos functions of different frequencies — that are not learned. This allows the model to generalize to sequence lengths not seen during training. Later models like BERT and GPT-2 switched to learned positional embeddings.",
+      hints: [
+        "PE(pos, 2i) = sin(pos / 10000^(2i/d_model)) — this is a fixed formula, not a weight matrix.",
+        "Sinusoidal encodings allow extrapolation to longer sequences; learned encodings may not generalize beyond training lengths.",
+      ],
+    },
+    {
+      id: "q-dl-kp31-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Multi-head attention with h heads splits d_model into h subspaces of dimension d_k = d_model/h. What is the computational advantage of this design compared to a single head with d_model dimensions?",
+      options: [
+        "Multi-head attention requires fewer parameters because d_k is less than d_model",
+        "Each head can attend to different representation subspaces simultaneously while keeping total computation comparable to a single full-dimension attention operation",
+        "Multi-head attention eliminates the need for positional encodings",
+        "Multi-head attention reduces the quadratic O(n squared) complexity of attention to linear O(n)",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "With h heads of dimension d_k = d_model/h each, total computation is h times O(n squared times d_k) = O(n squared times d_model) — the same as one full-dimensional head. The benefit is representational diversity: different heads can capture syntactic, semantic, and positional patterns in parallel, improving model expressivity without extra cost.",
+      hints: [
+        "Total parameters for h heads equals a constant in d_model — the computation scales identically.",
+        "Visualizations of attention heads show specialization: some heads attend to syntax, others to coreference.",
+      ],
+    },
+  ],
+
+  "modern-architectures": [
+    {
+      id: "q-dl-kp32-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Mamba (Gu and Dao, 2023) uses a selective state space model (SSM) to achieve linear-time sequence modeling. What makes Mamba's SSM 'selective' compared to classical linear SSMs?",
+      options: [
+        "Mamba selects which attention heads to activate based on input",
+        "Mamba's state transition matrices A, B, C are functions of the input token, allowing the model to selectively retain or discard information based on content",
+        "Mamba uses sparse activations similar to mixture-of-experts",
+        "Mamba selects between SSM and attention layers based on sequence length",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Classical SSMs have fixed (input-independent) parameters. Mamba makes B, C, and the discretization delta input-dependent, so the model dynamically selects how much each input token modifies the hidden state. This gives it context-dependent filtering like attention but with O(n) inference cost.",
+      hints: [
+        "In S4, the transition matrix A is fixed. In Mamba, the input gate modulates how much each token updates the state.",
+        "Content-dependent state transitions enable Mamba to forget irrelevant tokens and retain relevant ones — like soft attention but recurrent.",
+      ],
+    },
+    {
+      id: "q-dl-kp32-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "RWKV combines elements of transformers and RNNs to achieve transformer-quality performance with linear-time inference, making it suitable for very long sequences.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "RWKV (Peng et al., 2023) uses a linear attention formulation that can be computed recurrently (O(n) inference) or in parallel (like transformers during training). It matches transformer quality on many NLP benchmarks while scaling to very long sequences without quadratic memory cost.",
+      hints: [
+        "RWKV stands for Receptance Weighted Key Value — it replaces softmax attention with linear attention computed recurrently.",
+        "During inference, RWKV runs as an RNN (O(1) per token); during training it runs in parallel like a transformer.",
+      ],
+    },
+    {
+      id: "q-dl-kp32-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "RetNet (Sun et al., 2023) introduces a 'retention' mechanism as an alternative to attention. What is the key computational property of retention that distinguishes it from standard attention?",
+      options: [
+        "Retention uses sparse connections between tokens to reduce compute",
+        "Retention allows three computation modes: parallel (like attention), recurrent (O(1) inference), and chunkwise-recurrent (balancing training efficiency and sequence length)",
+        "Retention replaces softmax with a linear activation to save memory",
+        "Retention uses relative positional bias instead of absolute positional encoding",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "RetNet's key innovation is the 'dual form' property: the same model can be computed in parallel mode for training (like transformers), recurrent mode for inference (like RNNs with O(1) per token), and chunkwise mode for long-sequence training efficiency. This eliminates the training/inference architecture mismatch of traditional RNNs.",
+      hints: [
+        "The three modes of RetNet: parallel (GPT-style training), recurrent (RNN-style inference), chunkwise (long-doc processing).",
+        "This parallelism-recurrence duality is the key insight: one model, multiple execution strategies.",
+      ],
+    },
+  ],
+
+  "training-stability-advanced": [
+    {
+      id: "q-dl-kp33-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Gradient clipping by global norm computes the L2 norm of all gradients concatenated and scales them down if the norm exceeds a threshold. Why is global norm clipping preferred over per-parameter clipping?",
+      options: [
+        "Global norm clipping is faster to compute than per-parameter clipping",
+        "Global norm clipping preserves the direction of the gradient update while only reducing its magnitude, whereas per-parameter clipping distorts the update direction",
+        "Global norm clipping applies only to the final layer where gradients are largest",
+        "Global norm clipping is required by all modern deep learning frameworks",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "When you clip each parameter's gradient independently, the relative magnitudes change, distorting the update direction. Global norm clipping scales all gradients by the same factor, preserving the direction of the update vector in parameter space while bounding its magnitude. This is the standard approach in transformers and RNNs.",
+      hints: [
+        "If you clip two gradients independently to the same value, the combined direction changes. Scaling both by the same factor preserves direction.",
+        "PyTorch's torch.nn.utils.clip_grad_norm_ implements global norm clipping.",
+      ],
+    },
+    {
+      id: "q-dl-kp33-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Loss spikes during LLM training are typically caused by outlier batches with very high loss, and the standard mitigation is to simply skip those batches.",
+      options: ["True", "False"],
+      correctAnswer: "False",
+      explanation:
+        "Skipping loss spike batches is one approach but is not the only or necessarily the best one. Loss spikes also arise from learning rate being too high, optimizer state corruption, or numerical instability. Mitigation strategies include gradient clipping, loss spike detection with rollback to a checkpoint, learning rate reduction, and better data filtering.",
+      hints: [
+        "PaLM (Chowdhery et al., 2022) handled loss spikes by restarting from a checkpoint before the spike and skipping the problematic data.",
+        "Gradient clipping prevents spikes from corrupting optimizer momentum state — stopping gradient explosions before they compound.",
+      ],
+    },
+    {
+      id: "q-dl-kp33-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Stochastic Weight Averaging with warm restarts (SWAR) improves model generalization. What is the intuition behind warm restarts in this context?",
+      options: [
+        "Warm restarts gradually reduce the learning rate to zero each cycle, ensuring the model converges to the global minimum",
+        "Warm restarts periodically reset the learning rate to a high value, causing the optimizer to explore different regions of loss landscape and enabling averaging of diverse weight solutions",
+        "Warm restarts reinitialize the model weights periodically to escape local minima",
+        "Warm restarts increase the batch size at each restart to improve gradient estimates",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Cosine annealing with warm restarts (SGDR, Loshchilov and Hutter, 2017) periodically resets the learning rate to a high value. Each high-LR phase explores a different basin of the loss landscape. Averaging the weights found at the end of each cycle (SWA) yields a solution in a flatter, more generalizable region than any single cycle's minimum.",
+      hints: [
+        "SGDR resets lr to lr_max at each cycle start — the model re-explores the loss landscape before settling.",
+        "SWA (Izmailov et al., 2018) shows that the average of cyclically annealed weights outperforms any individual endpoint.",
+      ],
+    },
+  ],
+
+  "lr-schedule-advanced": [
+    {
+      id: "q-dl-kp34-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "The linear warmup plus cosine decay learning rate schedule is standard for transformer pretraining. Why is a warmup phase at the start of training important?",
+      options: [
+        "Warmup prevents the model from learning too fast and overfitting to the first batches",
+        "At the start of training, gradient estimates are noisy and Adam's second moment estimate is unreliable — warmup with a small LR prevents large destructive updates before the optimizer stabilizes",
+        "Warmup is needed to allow the learning rate to exceed 1.0 safely in later stages",
+        "Warmup prevents gradient clipping from activating during early training",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Early in training, Adam's second moment estimate v (used in the denominator) is near zero, making the effective step size very large and noisy. A small initial LR during warmup (typically 1,000-10,000 steps) lets v accumulate reliable statistics before the full LR is applied. Without warmup, early large updates can permanently damage the model.",
+      hints: [
+        "Adam's bias correction addresses the cold start problem mathematically, but warmup provides additional stability in practice.",
+        "The original transformer paper (Vaswani et al., 2017) used 4,000 warmup steps with the Noam schedule.",
+      ],
+    },
+    {
+      id: "q-dl-kp34-2",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "In cosine annealing, the learning rate follows a cosine curve from lr_max to lr_min, reaching its lowest value at the end of training or the end of each cycle.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Cosine annealing (Loshchilov and Hutter, 2017) sets lr(t) = lr_min + 0.5 times (lr_max minus lr_min) times (1 + cos(pi times t/T)). At t=0, lr equals lr_max; at t=T, lr equals lr_min. The smooth decay avoids abrupt LR drops and helps the optimizer settle into flat minima at the end of training.",
+      hints: [
+        "The cosine curve starts at lr_max and decreases smoothly to lr_min — no sudden drops like step decay.",
+        "With warm restarts (SGDR), T resets to T_0 at cycle boundaries, causing lr to jump back to lr_max.",
+      ],
+    },
+    {
+      id: "q-dl-kp34-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Cyclical learning rates (CLR, Smith 2017) cycle the learning rate between lr_min and lr_max throughout training. What surprising finding did Smith report about using higher learning rates than typical?",
+      options: [
+        "Higher learning rates always cause divergence if they exceed the Lipschitz constant of the loss",
+        "Cyclically using learning rates that would cause divergence if held constant can actually improve generalization because the transient high-LR phase helps escape sharp local minima",
+        "CLR only works with SGD and fails with Adam",
+        "The optimal lr_max is always the learning rate at which training loss starts to increase",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Smith's key finding was that learning rates which cause instability when held constant can be beneficial when cycled through, because the brief high-LR phase kicks the optimizer out of sharp, poorly-generalizing minima and into broader, flatter basins. This 'super-convergence' phenomenon was later explained through the flat minima generalization hypothesis.",
+      hints: [
+        "Sharp minima (narrow valleys in loss landscape) generalize poorly; flat minima generalize well. High LR phases escape sharp ones.",
+        "The LR range test (increasing LR from very small to very large and watching loss) identifies the optimal lr_min and lr_max for CLR.",
+      ],
+    },
+  ],
+
+  "data-efficiency": [
+    {
+      id: "q-dl-kp35-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Few-shot fine-tuning adapts a pretrained model using only a small labeled dataset (e.g., 10-100 examples). Why does this work much better for pretrained models than for randomly initialized models?",
+      options: [
+        "Pretrained models have smaller weight matrices that require fewer gradient updates",
+        "Pretraining provides rich feature representations that only require a small number of task-specific examples to steer, whereas random initialization requires many examples to build these features from scratch",
+        "Few-shot fine-tuning uses a different optimizer that is more sample-efficient",
+        "Pretrained models have seen the fine-tuning examples during pretraining and memorized them",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Pretraining on large corpora learns general-purpose representations covering syntax, semantics, and world knowledge. Fine-tuning steers these representations for a specific task, requiring only a few examples to specify the desired behavior. Random initialization has no prior knowledge — every feature must be learned from the small dataset, which is drastically insufficient.",
+      hints: [
+        "Think of it as transfer learning: the hard work (feature extraction) is done during pretraining; fine-tuning is just specialization.",
+        "Howard and Ruder (2018) demonstrated in ULMFiT that fine-tuning a pretrained LM on 100 examples outperforms training from scratch on 10,000.",
+      ],
+    },
+    {
+      id: "q-dl-kp35-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Data augmentation techniques such as random cropping and color jitter increase the effective training set size by creating new training examples, thereby reducing overfitting.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Data augmentation applies random but label-preserving transformations (crop, flip, color jitter for images; back-translation, synonym substitution for text) to generate novel views of existing examples. This effectively multiplies the training set size, teaches the model invariance to these transformations, and reduces overfitting.",
+      hints: [
+        "A horizontally flipped image of a cat is still a cat — flipping is a label-preserving augmentation.",
+        "SimCLR and other contrastive learning methods use aggressive augmentation as the core of their self-supervised training.",
+      ],
+    },
+    {
+      id: "q-dl-kp35-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "PAC learning theory provides a sample complexity bound for learning a concept class. For a finite hypothesis class H, the sample complexity to achieve error at most epsilon with probability at least 1 minus delta is approximately:",
+      options: [
+        "O(|H| / epsilon)",
+        "O(log(|H| / delta) / epsilon)",
+        "O(|H| squared times log(1 / epsilon))",
+        "O(VC-dim(H) times log(1 / epsilon) / delta)",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The PAC sample complexity bound for a finite hypothesis class H is m >= (1/epsilon)(log|H| + log(1/delta)), which is O(log(|H|/delta)/epsilon). The log|H| term captures the complexity of the hypothesis class — larger classes need more data. For infinite classes, VC dimension replaces log|H|.",
+      hints: [
+        "The bound has two terms: 1/epsilon for the accuracy requirement and log(1/delta) for the confidence requirement.",
+        "Key insight: sample complexity grows logarithmically with hypothesis class size — even exponentially large classes need few samples.",
+      ],
+    },
+  ],
+
+  "neural-ode": [
+    {
+      id: "q-dl-kp36-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Neural ODEs (Chen et al., 2018) model the hidden state dynamics as an ODE: dh/dt = f(h(t), t, theta). What makes this formulation memory-efficient compared to deep residual networks?",
+      options: [
+        "Neural ODEs use fewer parameters because the same network f is applied at each time step",
+        "Neural ODEs use the adjoint method to compute gradients without storing intermediate activations, requiring O(1) memory in the number of function evaluations",
+        "Neural ODEs skip the backward pass entirely and use finite differences for gradients",
+        "Neural ODEs compress activations using quantization during the forward pass",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Standard backpropagation through an ODE solver requires storing all intermediate function evaluations — O(N) memory where N is the number of solver steps. The adjoint method solves a separate ODE backward in time to compute gradients, requiring only O(1) memory (just storing the final state). This is the key memory efficiency claim of Neural ODEs.",
+      hints: [
+        "The adjoint state a(t) = -dL/dh(t) satisfies an ODE that can be solved backward from T to 0.",
+        "Memory efficiency: ResNet with N layers stores N activation tensors; Neural ODE with N steps stores only the final output.",
+      ],
+    },
+    {
+      id: "q-dl-kp36-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Neural ODEs can model continuous-time dynamics, making them suitable for irregularly sampled time series data where observations occur at non-uniform time intervals.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Because Neural ODEs model dynamics as a continuous-time ODE, they can evaluate the hidden state at any time t — including irregular observation times. Standard RNNs require uniformly spaced inputs or padding/masking for irregular timestamps. Neural ODEs handle irregularity naturally by integrating from one observation time to the next.",
+      hints: [
+        "Medical records often have irregular timestamps — Neural ODEs are a natural fit for this domain.",
+        "Latent ODE (Rubanova et al., 2019) extends Neural ODEs for irregular time series with an encoder-decoder architecture.",
+      ],
+    },
+    {
+      id: "q-dl-kp36-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "The adjoint method for Neural ODE training computes gradients by solving a second ODE backward in time. What quantities does the backward ODE propagate?",
+      options: [
+        "The original hidden state h(t) and the network weights theta",
+        "The adjoint state a(t) = dL/dh(t), the gradient of loss with respect to theta, and the gradient with respect to the initial time",
+        "The softmax probabilities and the cross-entropy loss",
+        "The Hessian matrix of the loss with respect to all parameters",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The augmented backward ODE propagates three quantities simultaneously: a(t) = dL/dh(t) (adjoint state), dL/dtheta (accumulated parameter gradient), and dL/dt_0 (gradient with respect to initial time). These are solved jointly using an ODE solver run backward from T to 0.",
+      hints: [
+        "The adjoint method is analogous to backpropagation but for continuous dynamics — it backpropagates through time continuously.",
+        "Chen et al. (2018) Appendix B derives the adjoint ODE in full — three coupled differential equations.",
+      ],
+    },
+  ],
+
+  "mixture-of-experts": [
+    {
+      id: "q-dl-kp37-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In a Mixture-of-Experts (MoE) layer, top-k routing selects the k experts with the highest router logits for each token. What is the computational advantage of top-k=2 routing compared to using all N experts?",
+      options: [
+        "Top-2 routing uses 2/N of the total expert parameters per token, enabling models with total parameters N times larger without N times the compute",
+        "Top-2 routing reduces the number of attention heads in the transformer",
+        "Top-2 routing eliminates the need for the feed-forward network in the transformer block",
+        "Top-2 routing uses half the training data compared to dense models",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "With N experts and top-k routing, each token is processed by only k experts. The total model has N times the expert parameters, but each forward pass activates only k/N of them — keeping FLOPs constant while scaling model capacity. Mixtral 8x7B activates 2 of 8 experts per token, giving 46.7B total parameters but only 12.9B active parameters per forward pass.",
+      hints: [
+        "Mixtral 8x7B: 8 experts times 7B parameters each = 56B total, but top-2 means only 14B active per token.",
+        "MoE decouples model capacity (total params) from inference cost (active params) — a key scaling advantage.",
+      ],
+    },
+    {
+      id: "q-dl-kp37-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Expert collapse in MoE training occurs when the router sends most or all tokens to a small subset of experts, leaving other experts undertrained and underutilized.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Expert collapse (also called load imbalance) is a training failure mode where popular experts receive more tokens, become better trained, and attract even more tokens — a positive feedback loop. Auxiliary load balancing losses (Shazeer et al., GShard) add a regularization term that penalizes uneven expert usage, enforcing roughly uniform expert utilization.",
+      hints: [
+        "Without load balancing, experts collapse into a small group — effectively wasting the MoE architecture.",
+        "GShard and Switch Transformer both use auxiliary losses to enforce expert load balance.",
+      ],
+    },
+    {
+      id: "q-dl-kp37-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "The Switch Transformer (Fedus et al., 2022) uses top-1 routing (each token goes to exactly one expert). What key design insight justified this simplification over top-2 routing?",
+      options: [
+        "Top-1 routing doubles training speed by halving expert computation per token",
+        "Top-1 routing reduces routing complexity and eliminates the need for combining multiple expert outputs, achieving better scaling efficiency even though it reduces per-token capacity compared to top-2",
+        "Top-1 routing prevents expert collapse by ensuring uniform token distribution",
+        "Top-1 routing enables sparse backpropagation that skips gradient computation for inactive experts",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Fedus et al. found that top-1 routing achieves better perplexity/compute tradeoffs than top-2 at large scale by simplifying the routing mechanism and enabling larger total expert counts. The reduced routing overhead and simpler expert output aggregation allows scaling to more experts with the same compute budget.",
+      hints: [
+        "Switch Transformer showed top-1 routing with 2048 experts achieves better scaling than dense models at equivalent FLOPs.",
+        "Top-1 routing means no expert output weighted averaging — each token gets exactly one expert's output.",
+      ],
+    },
+  ],
+
+  "multi-task-learning-advanced": [
+    {
+      id: "q-dl-kp38-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Gradient surgery (Yu et al., 2020) addresses task interference in multi-task learning by modifying conflicting gradients. What does it do when two task gradients conflict?",
+      options: [
+        "It averages the two conflicting gradients to find a compromise update direction",
+        "It projects each conflicting gradient onto the normal plane of the other, removing the component that increases the other task's loss",
+        "It scales conflicting gradients down to zero to stop the interference",
+        "It alternates between tasks, applying only one task's gradient per batch",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Gradient surgery detects conflict when two task gradients have negative cosine similarity (they point in opposing directions). For conflicting pairs, it projects each gradient to remove the component in the direction of the other task's gradient — finding an update that does not increase either task's loss. This mitigates catastrophic forgetting and negative transfer.",
+      hints: [
+        "Conflict is detected when the cosine similarity between two task gradients is negative.",
+        "Gradient surgery is applied pairwise between all conflicting task gradient pairs before the optimizer step.",
+      ],
+    },
+    {
+      id: "q-dl-kp38-2",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Task interference in multi-task learning occurs when training on one task degrades performance on another task sharing the same model parameters.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Negative transfer (task interference) happens when gradients from different tasks point in conflicting directions, causing updates that improve one task to hurt another. This is the central challenge of multi-task learning and motivates methods like gradient surgery, task weighting, and task-specific adapter layers.",
+      hints: [
+        "Positive transfer is when tasks help each other; negative transfer is when they hurt each other.",
+        "Tasks with very different label spaces or objectives tend to interfere more than related tasks.",
+      ],
+    },
+    {
+      id: "q-dl-kp38-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Uncertainty-based task weighting (Kendall et al., 2018) sets task loss weights proportional to task-specific uncertainty. What is the intuition behind this approach?",
+      options: [
+        "Tasks with higher uncertainty get lower weights because they provide noisy gradients",
+        "Tasks with higher homoscedastic uncertainty (output noise) should have their loss scaled down, as the model's predictions for noisy tasks should have wider confidence intervals",
+        "Uncertainty weighting ensures all tasks have equal gradient magnitudes before summation",
+        "Only the hardest task (highest loss) receives a nonzero weight at each step",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Kendall et al. treat each task's output noise as a learnable scalar sigma_i. The combined loss is a sum of (L_i / 2 sigma_i squared) + log sigma_i terms. Tasks with higher noise get lower effective weights (1/sigma_i squared) automatically, as large sigma_i means the task's labels are noisy and should not dominate. The log sigma_i term prevents sigma_i from growing to infinity.",
+      hints: [
+        "Homoscedastic uncertainty is task-level noise, not instance-level — it measures how noisy a task is overall.",
+        "The learned sigma_i values naturally adapt the loss weights: noisy tasks get small effective weights, clean tasks get large weights.",
+      ],
+    },
+  ],
+
+  "continual-learning-advanced": [
+    {
+      id: "q-dl-kp39-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Catastrophic forgetting in neural networks refers to what phenomenon?",
+      options: [
+        "A model forgetting its training data when the learning rate is set too high",
+        "When a neural network trained sequentially on new tasks rapidly loses performance on previously learned tasks because new gradient updates overwrite old weights",
+        "When a model's validation loss suddenly spikes due to a corrupted batch",
+        "When dropout randomly disables neurons, causing the model to forget recent patterns",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Catastrophic forgetting (McCloskey and Cohen, 1989; Ratcliff, 1990) occurs because SGD optimizes for the current task without constraint on preserving past task performance. Gradient updates for Task B overwrite the weight configurations that enabled Task A performance. This is the fundamental challenge of continual learning.",
+      hints: [
+        "Unlike human memory, which consolidates old memories while learning new ones, standard NNs have no such consolidation mechanism.",
+        "Fine-tuning a pretrained model on a new task almost always causes some forgetting of the original task.",
+      ],
+    },
+    {
+      id: "q-dl-kp39-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Elastic Weight Consolidation (EWC) prevents catastrophic forgetting by penalizing changes to weights that were most important for previous tasks, using the Fisher information matrix to measure weight importance.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "EWC (Kirkpatrick et al., 2017) adds a regularization term proportional to the Fisher information times the squared difference from the previous task's optimal weights. High Fisher information means the weight is important — the quadratic penalty resists changing it. This is inspired by synaptic consolidation in neuroscience.",
+      hints: [
+        "Fisher information approximates the curvature of the loss — high curvature means small changes cause large performance drops.",
+        "EWC is like Bayesian continual learning: the previous optimal weights serve as a prior when learning new tasks.",
+      ],
+    },
+    {
+      id: "q-dl-kp39-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Progressive Neural Networks (Rusu et al., 2016) prevent catastrophic forgetting through a fundamentally different approach than EWC. What is their key architectural mechanism?",
+      options: [
+        "Progressive networks use weight averaging across all previous task networks",
+        "Progressive networks freeze all weights from previous tasks and add new columns of weights for each new task, with lateral connections from old columns to the new one",
+        "Progressive networks store a replay buffer of previous task data and mix it into new task training batches",
+        "Progressive networks use hypernetworks to generate task-specific weight deltas",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Progressive Neural Networks add a new network column per task, with all previous columns frozen. Lateral connections from frozen columns to the new column allow knowledge transfer without interference — the new task learns to leverage but not modify old task representations. The cost is that model size grows linearly with the number of tasks.",
+      hints: [
+        "Frozen previous columns means no forgetting. New column means no interference. Lateral connections enable knowledge transfer.",
+        "The tradeoff: ProgNets scale poorly (one column per task) but perfectly preserve all previous tasks.",
+      ],
+    },
+  ],
+
+  "neural-architecture-design": [
+    {
+      id: "q-dl-kp40-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "When designing a neural network, width refers to the number of neurons per layer and depth refers to the number of layers. For a fixed parameter budget, which generally produces better results on complex tasks and why?",
+      options: [
+        "Wider networks, because more neurons per layer capture more features in parallel",
+        "Deeper networks, because composition of many nonlinear functions enables exponentially more functions than a shallow network with the same parameters",
+        "Neither — width and depth are exactly equivalent for a fixed parameter count",
+        "It depends only on the optimizer used, not the architecture",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Theoretical results (Pascanu et al., 2013; Telgarsky, 2016) show that deep networks can represent functions requiring exponentially wider shallow networks. Depth enables hierarchical feature composition — low layers detect edges, mid layers detect shapes, high layers detect objects — a capability that cannot be replicated by adding neurons to a single layer.",
+      hints: [
+        "A 2-layer network can approximate any function (universal approximation), but may need exponentially many neurons versus a deeper network.",
+        "ResNets outperform wide shallow networks at the same parameter count on ImageNet — empirically confirming depth's advantage.",
+      ],
+    },
+    {
+      id: "q-dl-kp40-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "The receptive field of a neuron in a convolutional neural network is the region of the input image that can influence that neuron's activation, and it grows with each successive convolutional layer.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "With a 3x3 convolution, layer 1 neurons see a 3x3 region, layer 2 neurons see a 5x5 region (3x3 plus 1 pixel border on each side from the previous layer), and so on. After L layers with 3x3 kernels, the receptive field is (2L+1) by (2L+1). Deeper networks have larger receptive fields, enabling them to capture long-range spatial dependencies.",
+      hints: [
+        "Receptive field after L layers of 3x3 convolutions with stride 1: (2L+1) by (2L+1).",
+        "Dilated convolutions increase receptive field without depth: dilation rate d expands the effective kernel size.",
+      ],
+    },
+    {
+      id: "q-dl-kp40-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Inductive biases in neural architecture design encode prior assumptions about the problem structure. What inductive bias does a convolutional layer encode that a fully connected layer does not?",
+      options: [
+        "Temporal ordering — CNNs assume inputs arrive in a fixed sequence",
+        "Translation equivariance and locality — CNNs assume that useful features appear in local neighborhoods and that the same feature detector is valid anywhere in the input",
+        "Permutation invariance — CNNs assume the order of channels does not matter",
+        "Scale invariance — CNNs assume features at different zoom levels are equally important",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Convolutional layers encode two key inductive biases: (1) locality — each filter connects to a local patch, assuming relevant features are local; (2) translation equivariance — the same weights are applied at every position (weight sharing), assuming that a feature detector useful at one location works everywhere. These biases reduce parameters and embed domain knowledge about natural images.",
+      hints: [
+        "Translation equivariance: if the input shifts, the feature map shifts by the same amount — enabled by weight sharing across positions.",
+        "Locality: a 3x3 filter only sees a 3x3 patch — this embeds the prior that nearby pixels are more related than distant ones.",
+      ],
+    },
+  ],
+};
+
+Object.assign(questions, questionsExtra);
 
 registerQuestions(questions);
