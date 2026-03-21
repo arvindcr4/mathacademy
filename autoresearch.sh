@@ -10,14 +10,14 @@ KP_COUNT=$(grep -cE "^\s+\{ id: '[^']+', slug: '[^']+', name: '[^']+' \}," src/l
 TOPICS_EMPTY=$(grep -c "knowledgePoints: \[\]" src/lib/curriculum.ts || true)
 TOPICS_EMPTY=${TOPICS_EMPTY:-0}
 
-# Count topics with non-empty knowledgePoints (total topics = 73)
-TOPICS_FILLED=$((73 - TOPICS_EMPTY))
+# Count topics with non-empty knowledgePoints (total topics = 79)
+TOPICS_FILLED=$((79 - TOPICS_EMPTY))
 
-# Target: 73 total topics, 0 empty means 100% coverage
+# Target: 79 total topics, 0 empty means 100% coverage
 echo "METRIC knowledge_points_count=$KP_COUNT"
 echo "METRIC topics_empty=$TOPICS_EMPTY"
 echo "METRIC topics_filled=$TOPICS_FILLED"
-python3 -c "print(f'coverage_percent={round(($TOPICS_FILLED * 100) / 73, 1)}')"
+python3 -c "print(f'coverage_percent={round(($TOPICS_FILLED * 100) / 79, 1)}')"
 
 python3 - <<'PY'
 from pathlib import Path

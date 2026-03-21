@@ -47,6 +47,97 @@ export const categories = [
 
 export const courses: Course[] = [
   {
+    id: 'karpathy-nn-zero-to-hero',
+    slug: 'karpathy-nn-zero-to-hero',
+    name: 'Neural Networks: Zero to Hero',
+    description: 'Build neural networks from scratch, from micrograd to nanoGPT, inspired by Andrej Karpathy.',
+    category: 'software-engineering',
+    icon: '🧠',
+    color: '#E34F26',
+    topicCount: 6,
+    estimatedHours: 20,
+    topics: [
+      {
+        id: 'micrograd-autograd',
+        slug: 'micrograd-autograd',
+        name: 'Micrograd & Autograd Engines',
+        description: 'Building a scalar-valued autograd engine and backpropagation from scratch.',
+        knowledgePoints: [
+          { id: 'k-kp-1', slug: 'derivative-chain-rule', name: 'Derivatives & The Chain Rule' },
+          { id: 'k-kp-2', slug: 'computational-graphs', name: 'Computational Graphs' },
+          { id: 'k-kp-3', slug: 'topological-sort-autograd', name: 'Topological Sort for Backprop' },
+          { id: 'k-kp-4', slug: 'neuron-implementation', name: 'Implementing a Neuron' },
+          { id: 'k-kp-5', slug: 'gradient-descent-basics', name: 'Gradient Descent' }
+        ]
+      },
+      {
+        id: 'makemore-bigram',
+        slug: 'makemore-bigram',
+        name: 'Makemore: Bigram Models',
+        description: 'Character-level language modeling using counting and basic neural nets.',
+        knowledgePoints: [
+          { id: 'k-kp-6', slug: 'character-level-lm', name: 'Character-Level Language Modeling' },
+          { id: 'k-kp-7', slug: 'bigram-counting', name: 'Bigram Counting & Probabilities' },
+          { id: 'k-kp-8', slug: 'negative-log-likelihood', name: 'Negative Log Likelihood Loss' },
+          { id: 'k-kp-9', slug: 'smoothing-counts', name: 'Smoothing (Faking Counts)' },
+          { id: 'k-kp-10', slug: 'one-hot-encoding', name: 'One-Hot Encoding Inputs' }
+        ]
+      },
+      {
+        id: 'makemore-mlp',
+        slug: 'makemore-mlp',
+        name: 'Makemore: MLPs',
+        description: 'Implementing the Bengio et al. 2003 MLP character-level language model.',
+        knowledgePoints: [
+          { id: 'k-kp-11', slug: 'embedding-lookups', name: 'Embedding Lookup Tables (C)' },
+          { id: 'k-kp-12', slug: 'hidden-layers', name: 'Hidden Layers & Tanh' },
+          { id: 'k-kp-13', slug: 'pytorch-cross-entropy', name: 'PyTorch cross_entropy Efficiency' },
+          { id: 'k-kp-14', slug: 'minibatches', name: 'Minibatch Training' },
+          { id: 'k-kp-15', slug: 'learning-rate-decay', name: 'Learning Rate Decay' }
+        ]
+      },
+      {
+        id: 'makemore-internals',
+        slug: 'makemore-internals',
+        name: 'Makemore: Activations & Gradients',
+        description: 'Deep dive into initialization, batch normalization, and gradient flow.',
+        knowledgePoints: [
+          { id: 'k-kp-16', slug: 'kaiming-init', name: 'Kaiming Initialization' },
+          { id: 'k-kp-17', slug: 'dead-neurons', name: 'Dead Neurons & Tanh Saturation' },
+          { id: 'k-kp-18', slug: 'batch-normalization', name: 'Batch Normalization' },
+          { id: 'k-kp-19', slug: 'batchnorm-inference', name: 'BatchNorm at Inference Time' },
+          { id: 'k-kp-20', slug: 'pytorch-hooks', name: 'Visualizing with PyTorch Hooks' }
+        ]
+      },
+      {
+        id: 'lets-build-gpt',
+        slug: 'lets-build-gpt',
+        name: 'Let\'s Build GPT',
+        description: 'Building a transformer-based language model from scratch.',
+        knowledgePoints: [
+          { id: 'k-kp-21', slug: 'self-attention-math', name: 'Math of Self-Attention' },
+          { id: 'k-kp-22', slug: 'causal-masking', name: 'Causal Masking (tril)' },
+          { id: 'k-kp-23', slug: 'multi-head-attention', name: 'Multi-Head Attention' },
+          { id: 'k-kp-24', slug: 'positional-encoding-gpt', name: 'Positional Encoding' },
+          { id: 'k-kp-25', slug: 'residual-connections', name: 'Residual Connections & LayerNorm' }
+        ]
+      },
+      {
+        id: 'nanogpt-systems',
+        slug: 'nanogpt-systems',
+        name: 'NanoGPT & Systems',
+        description: 'Training fast, efficient Transformers and reproducing GPT-2.',
+        knowledgePoints: [
+          { id: 'k-kp-26', slug: 'mixed-precision-training', name: 'Mixed Precision Training' },
+          { id: 'k-kp-27', slug: 'gradient-accumulation', name: 'Gradient Accumulation' },
+          { id: 'k-kp-28', slug: 'distributed-data-parallel', name: 'Distributed Data Parallel (DDP)' },
+          { id: 'k-kp-29', slug: 'fused-adamw', name: 'Fused AdamW Optimizer' },
+          { id: 'k-kp-30', slug: 'flash-attention', name: 'FlashAttention' }
+        ]
+      }
+    ]
+  },
+  {
     id: 'gemini-multimodal',
     slug: 'gemini-multimodal',
     name: 'Google Gemini & Multimodal AI',
