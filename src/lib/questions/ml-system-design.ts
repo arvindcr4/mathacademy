@@ -30,7 +30,7 @@ const questions: Record<string, Question[]> = {
       question:
         "In an ML system design document, data freshness requirements (how recently training data must be from) are determined solely by model accuracy needs and not by the serving latency SLO.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Data freshness requirements are driven by the rate of concept drift in the domain, not serving latency. A fraud detection model may need hourly retraining because fraud patterns evolve daily. A movie recommendation model may be retrained weekly. Serving latency SLO constrains feature retrieval at inference time, not how stale training data can be. These are independent requirements.",
       hints: [
@@ -105,7 +105,7 @@ const questions: Record<string, Question[]> = {
       question:
         "A p99 latency SLO (e.g., p99 < 100 ms) is a functional requirement because it directly determines which ML model to use.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         'Latency SLOs are non-functional (quality-of-service) requirements: they constrain how well the system performs, not what it computes. They do influence model selection as a hard constraint, but they describe system properties, not behaviors. Functional requirements describe what outputs the system produces (e.g., "return ranked list of 10 items").',
       hints: [
@@ -163,7 +163,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Framing a problem as multi-task learning (predicting multiple outputs simultaneously) always increases computational cost with no accuracy benefit.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Multi-task learning often improves accuracy on each individual task by sharing representations across related tasks. For example, a model predicting both CTR and conversion rate shares a user interest representation, and gradients from each task regularize the other. The shared backbone reduces overall inference cost compared to running two separate models. The trade-off is increased training complexity.",
       hints: [
@@ -218,7 +218,7 @@ const questions: Record<string, Question[]> = {
       question:
         "A search ranking problem can always be reduced to pointwise regression (predicting a relevance score per document) without any loss in ranking quality.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Pointwise regression ignores inter-document relationships: predicting scores independently cannot capture relative ordering constraints. Listwise losses (e.g., ListNet, LambdaLoss) directly optimize ranking metrics like NDCG by considering the full ranked list jointly. Pointwise approaches often underperform pairwise and listwise on NDCG because they optimize the wrong objective.",
       hints: [
@@ -276,7 +276,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Human annotation agreement (inter-annotator agreement, e.g., Cohen\'s kappa) should be measured and reported before using human labels as training data ground truth.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Low inter-annotator agreement (e.g., kappa < 0.6) means labels are inconsistent across annotators — the training signal is noisy. Training on such data produces a model that learns annotator disagreement rather than true signal. IAA must be measured first, annotation guidelines refined, annotators calibrated, and only sufficiently agreed-upon labels used. IAA < 0.6 typically requires annotation guideline revision.",
       hints: [
@@ -331,7 +331,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Collecting training data from production logs is always safe because production data reflects the true real-world distribution the model will serve.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Production logs reflect the current model\'s decisions, creating a feedback loop bias: the model only shows items it already thinks are relevant, so the data never covers items it would have incorrectly penalized. This creates a self-reinforcing loop that amplifies existing model biases. Random exploration (e.g., ε-greedy or logging policies) is needed to collect unbiased training data.",
       hints: [
@@ -389,7 +389,7 @@ const questions: Record<string, Question[]> = {
       question:
         "A streaming feature pipeline that computes per-user aggregations using Apache Flink guarantees exactly-once feature update semantics by default, with no additional configuration.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Flink supports exactly-once processing but it requires explicit configuration: checkpointing must be enabled (state.checkpoints.dir), the sink must support idempotent writes or transactions (e.g., Kafka transactional producer, JDBC with upsert semantics), and the source must support replay (Kafka with offset tracking). Default Flink pipelines provide at-least-once semantics. Exactly-once requires coordinating Flink checkpoints with sink transaction commits.",
       hints: [
@@ -424,7 +424,7 @@ const questions: Record<string, Question[]> = {
       question:
         "A feature store\'s offline store (e.g., BigQuery or Parquet files) is used to serve features at model inference time in production.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "The offline store is used for training data generation and batch inference — not for real-time serving. The online store (Redis, DynamoDB, Cassandra) serves features at inference time because it supports low-latency point lookups (sub-millisecond). The offline store contains the full feature history for point-in-time correct training data generation, but querying it at inference time would introduce seconds of latency — incompatible with real-time serving SLOs.",
       hints: [
@@ -459,7 +459,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Train-serve skew in an ML system occurs when features are computed differently during training (offline) vs. serving (online), causing the model to receive different inputs at inference time than it was trained on.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         'Train-serve skew is one of the most common production ML bugs. Example: during training, "user age in days" is computed as (current_date − birthdate) using a static training date; at serving, it is recomputed with today\'s date — always giving the correct age. But if the serving code uses a different formula (e.g., age in years vs. days), the model receives a wildly different feature value. Feature stores prevent this by enforcing one shared computation for both training and serving.',
       hints: [
@@ -517,7 +517,7 @@ const questions: Record<string, Question[]> = {
       question:
         "When comparing two models in an A/B test, statistical significance (p < 0.05) guarantees that the observed improvement is large enough to be worth the deployment cost.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Statistical significance only means the observed difference is unlikely to be due to chance — it says nothing about the magnitude or practical importance of the difference. With large sample sizes (common in ML A/B tests), even a 0.001% CTR improvement can be statistically significant. Practical significance requires also reporting the effect size (absolute and relative lift) and comparing it to the cost of deployment, maintenance, and infrastructure. Minimum detectable effect (MDE) should be pre-specified based on business value.",
       hints: [
@@ -572,7 +572,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Offline evaluation metrics (e.g., AUC on a held-out test set) reliably predict online A/B test results, so A/B testing is optional once offline metrics are satisfactory.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Offline metrics measure model quality on static historical data and cannot capture feedback loops, user behavior changes, novelty effects, or system-level interactions that only appear in live traffic. It is common for a model with better offline AUC to perform worse in an A/B test due to factors invisible in the training data. Online A/B testing is mandatory before full promotion.",
       hints: [
@@ -630,7 +630,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Using a larger batch size in distributed training always improves model accuracy because more samples are used per gradient update.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Large batch sizes can hurt generalization. Small-batch SGD converges to sharper minima with poor generalization; large-batch training converges faster but often to sharp minima that generalize poorly ('generalization gap'). The linear scaling rule (scale learning rate proportionally with batch size) partially mitigates this but has limits. Learning rate warmup, gradient clipping, and careful batch size selection are required to achieve good accuracy with large batches.",
       hints: [
@@ -665,7 +665,7 @@ const questions: Record<string, Question[]> = {
       question:
         "A model trained with a fixed random seed on the same data will always produce exactly identical weights across different hardware accelerators (e.g., V100 vs. A100).",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Different GPU architectures implement floating-point operations with different rounding behaviors, and CUDA non-deterministic operations (e.g., atomicAdd in certain kernels) produce different results across GPU generations even with fixed seeds. Additionally, cuDNN algorithm selection changes across library versions. For truly reproducible training, deterministic CUDA mode must be explicitly enabled (torch.use_deterministic_algorithms(True)) and the same hardware/library version must be used.",
       hints: [
@@ -700,7 +700,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Continuous training (automatically retraining on new production data) always improves model quality compared to periodic manual retraining.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         'Continuous training introduces risks: a data pipeline bug can corrupt training data, a sudden distribution shift can degrade the model, and noisy labels from a new data source can reduce quality. Continuous training pipelines require validation gates (e.g., "new model must achieve AUC ≥ current model − 0.01 on a holdout set") and automated rollback before promotion.',
       hints: [
@@ -758,7 +758,7 @@ const questions: Record<string, Question[]> = {
       question:
         "INT8 quantization of a neural network always degrades model accuracy compared to FP32, making it unsuitable for production serving.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Post-training INT8 quantization often achieves accuracy within 0.5-1% of FP32 on most tasks while reducing model size by 4× and inference latency by 2-4×. Quantization-aware training (QAT) further closes the accuracy gap. For well-calibrated models on tasks like image classification, speech recognition, and NLP classification, INT8 is routinely used in production (e.g., TensorRT, OpenVINO deployments). Accuracy loss only becomes significant for tasks requiring fine-grained numerical precision.",
       hints: [
@@ -833,7 +833,7 @@ const questions: Record<string, Question[]> = {
       question:
         "vLLM\'s continuous batching (also called iteration-level scheduling) improves LLM serving throughput by allowing new requests to join an in-progress batch when earlier requests in that batch finish generating their sequences.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Traditional static batching waits for all requests in a batch to finish before starting new ones — requests that finish early leave GPU capacity idle. vLLM\'s continuous batching schedules at the token generation step level: when a sequence completes (hits EOS or max_tokens), its slot is immediately filled by a waiting request. This dramatically improves GPU utilization and throughput for variable-length LLM outputs.",
       hints: [
@@ -891,7 +891,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Item-to-item collaborative filtering (recommending items similar to what the user last interacted with) inherently suffers from filter bubble effects that user-to-user collaborative filtering does not.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Both item-to-item and user-to-user collaborative filtering can cause filter bubbles. Item-to-item tends to recommend similar items (e.g., more of the same genre), narrowing diversity. User-to-user can equally narrow recommendations if similar users share the same homogeneous taste. The filter bubble is a property of the feedback loop architecture and optimization objective, not just the CF variant. Diversity-promoting objectives (MMR, DPP) and explicit exploration mechanisms address filter bubbles in both approaches.",
       hints: [
@@ -926,7 +926,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Online (real-time) features such as 'items clicked in the last 5 minutes' require a streaming pipeline to compute and cannot be served from a pre-materialized batch feature store.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Online features that capture very recent user behavior (session-level signals within the last minutes) change too rapidly to be served from a batch-materialized store, which is typically updated hourly or daily. They require a streaming pipeline (Flink, Kafka Streams) that computes per-user aggregations in near-real-time and writes to the online store continuously. These session features are critical for recommendation quality — a user who just clicked on action movies should immediately get more action movie recommendations.",
       hints: [
@@ -961,7 +961,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Matrix factorization (a form of collaborative filtering) requires explicit item content features (title, genre, description) to generate item embeddings.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Matrix factorization learns item (and user) embeddings purely from the user-item interaction matrix (ratings, clicks, watch history). It requires no content features. Content-based filtering uses item features to recommend similar items. Hybrid systems combine both. Netflix\'s original recommendation system used collaborative filtering before it had rich content metadata.",
       hints: [
@@ -1019,7 +1019,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Query expansion (adding synonyms and related terms to a query before retrieval) always improves precision in keyword-based search systems.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Query expansion improves recall (finding more relevant documents) but typically hurts precision (adding noise from irrelevant expanded terms). For example, expanding 'apple' to include 'fruit, iPhone, company' may retrieve relevant iPhone documents but also fruit recipes and company filings. Controlled query expansion (using domain-specific dictionaries or model-generated expansions limited to high-confidence synonyms) is required to prevent precision degradation. Pseudo-relevance feedback can also introduce topic drift.",
       hints: [
@@ -1054,7 +1054,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Mean Reciprocal Rank (MRR) and NDCG@10 always agree on which ranking system is better when comparing two systems on the same query set.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "MRR measures where the first relevant result appears (1/rank_of_first_relevant). NDCG@10 measures the quality of the entire top-10 list, rewarding systems that place multiple relevant results early with higher relevance grades. A system with perfect MRR (first result always relevant) but poor NDCG@10 (only the first result is relevant) can lose to a system with lower MRR but many moderately-relevant results in the top 10. The two metrics optimize for different aspects of ranking quality.",
       hints: [
@@ -1089,7 +1089,7 @@ const questions: Record<string, Question[]> = {
       question:
         "In a hybrid search system, BM25 scores and dense embedding similarity scores can be combined via linear interpolation: final_score = α × BM25 + (1−α) × cosine_similarity. This combination typically outperforms either alone.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "BM25 excels at exact keyword matching (high precision for rare terms); dense bi-encoders excel at semantic matching (capturing paraphrases and synonyms). Their failure modes differ: BM25 misses semantic matches, dense models miss rare/specific terms. Linear interpolation (with α tuned on a validation set) combines their strengths, a technique called hybrid retrieval. Reciprocal Rank Fusion (RRF) is an alternative that does not require score normalization.",
       hints: [
@@ -1147,7 +1147,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Graph-based fraud detection (modeling account relationships as a graph and using graph neural networks) is superior to tabular feature-based models for detecting all types of fraud.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Graph-based fraud detection excels at detecting coordinated fraud rings where multiple accounts collaborate (e.g., synthetic identity fraud networks, mule account networks). For isolated individual fraud (e.g., a single stolen card used for unauthorized purchases), tabular GBDTs with velocity features (transaction count in 1h, spending pattern deviation) are typically more effective and faster to serve. The best production systems combine both: tabular features for fast first-pass scoring and GNNs for network-level signals.",
       hints: [
@@ -1202,7 +1202,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Using the raw transaction timestamp as a feature in a fraud detection model is always safe and does not risk data leakage.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Raw timestamps can cause label leakage because fraud labels (chargebacks) are typically assigned days to weeks after the transaction occurs. If the training dataset is built with the chargeback-date timestamp rather than the transaction-date timestamp, the model learns to associate temporal patterns with future labels it could not know at inference time. Safe alternatives include derived temporal features (hour of day, day of week) computed from the transaction timestamp only.",
       hints: [
@@ -1260,7 +1260,7 @@ const questions: Record<string, Question[]> = {
       question:
         "A generalized second-price (GSP) auction used in sponsored search is equivalent to a truthful Vickrey-Clarke-Groves (VCG) mechanism.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "GSP is not truthful in general: bidders can benefit by bidding strategically (not at their true value), because the payment structure in GSP does not satisfy incentive compatibility for all positions. VCG is provably truthful (bidding true value is a dominant strategy) but computationally expensive and rarely used in practice. Google\'s original AdWords used GSP, not VCG. The distinction matters for mechanism design in ads systems.",
       hints: [
@@ -1315,7 +1315,7 @@ const questions: Record<string, Question[]> = {
       question:
         "For ads ranking systems, calibration of pCTR (i.e., predicted probabilities match observed click rates) is more important than AUC because auction pricing and budget pacing depend on the absolute probability value.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "AUC-ROC measures ranking quality (can you distinguish clickers from non-clickers?) but not calibration (does pCTR=0.02 mean ~2% of similar ads are clicked?). Auction clearing prices, second-price auction mechanics, and advertiser budget pacing all depend on absolute pCTR values. A perfectly ranked but poorly calibrated model can systematically over- or under-charge advertisers, causing billing errors and budget misallocation.",
       hints: [
@@ -1373,7 +1373,7 @@ const questions: Record<string, Question[]> = {
       question:
         "In a feed ranking system, training on historical user interactions creates a feedback loop that can amplify existing biases in content recommendations over time.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The feedback loop works as follows: (1) the current model ranks content A highly → users click on A → A generates more training signal → the next model ranks A even higher → A crowds out content B. If the current model has a bias toward certain content types (e.g., sensational content), each training iteration amplifies that bias. Breaking the loop requires exploration (showing non-top-ranked content to collect unbiased signal), causal methods (IPS debiasing), and diversity objectives.",
       hints: [
@@ -1428,7 +1428,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Optimizing a news feed purely for dwell time (seconds spent reading a post) reliably improves long-term user retention and satisfaction.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Dwell time can be maximized by outrage-inducing, anxiety-provoking, or clickbait content that holds attention without providing value. Multiple platforms have found that dwell-time optimization decreases long-term retention, increases churn, and correlates with negative user wellbeing. Multi-objective optimization combining dwell time with explicit satisfaction signals (surveys) and return visit rate better captures true user value.",
       hints: [
@@ -1486,7 +1486,7 @@ const questions: Record<string, Question[]> = {
       question:
         "For content moderation, the precision-recall trade-off can be independently controlled by adjusting the model\'s classification threshold after training, without retraining the model.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "A classifier outputs a probability score for each piece of content. By adjusting the threshold (e.g., from 0.5 to 0.3 for more aggressive removal), precision and recall trade off without retraining. Lowering the threshold increases recall (catches more harmful content) but decreases precision (more false positives). Raising it does the reverse. The optimal threshold depends on the platform\'s policy goals (e.g., protecting minors requires high recall; reducing creator friction requires high precision).",
       hints: [
@@ -1541,7 +1541,7 @@ const questions: Record<string, Question[]> = {
       question:
         "A content moderation classifier with 99% accuracy on a held-out test set is production-ready if the harmful content rate is 0.1% of all posts.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         'At 0.1% harmful content rate, a classifier predicting "safe" for every post achieves 99.9% accuracy. A 99% accurate model may be worse than this trivial baseline. The relevant metrics are precision and recall on the harmful class: how many true harmful posts are caught (recall) and how many flagged posts are truly harmful (precision). Accuracy is a misleading metric for rare-class detection.',
       hints: [
@@ -1599,7 +1599,7 @@ const questions: Record<string, Question[]> = {
       question:
         "In ML-based entity resolution, using the match/non-match labels from a manually-curated gold standard test set to evaluate a production system is sufficient, even if the production data distribution differs from the test set.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Gold standard test sets for entity resolution are typically constructed by sampling record pairs for human labeling — often with oversampling of potential matches to create a balanced evaluation set. Production data has a very different distribution: most pairs are non-matches (extreme class imbalance), and the specific entity types, data quality issues, and domain distribution may differ. Production monitoring must include sampling from live decisions and measuring precision/recall on production-representative pairs.",
       hints: [
@@ -1654,7 +1654,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Blocking in entity resolution reduces the number of record pairs that must be compared, at the cost of potentially missing some true matches.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         'Blocking is a precision-recall trade-off: it dramatically reduces the number of comparisons (enabling scalability) but introduces false negatives when true matches are assigned to different blocks. Well-designed blocking (using multiple blocking keys, "canopy clustering," or LSH-based blocking) minimizes this recall loss while maintaining tractable candidate pair counts.',
       hints: [

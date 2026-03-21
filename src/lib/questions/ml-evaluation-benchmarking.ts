@@ -998,7 +998,7 @@ const questions: Record<string, Question[]> = {
     },
   ],
 
-  "regression-metrics": [
+  "regression-metrics-v2": [
     {
       id: "q-eval-kp19-1",
       type: "multiple-choice",
@@ -1047,7 +1047,7 @@ const questions: Record<string, Question[]> = {
     },
   ],
 
-  "ranking-metrics": [
+  "ranking-metrics-v2": [
     {
       id: "q-eval-kp20-1",
       type: "multiple-choice",
