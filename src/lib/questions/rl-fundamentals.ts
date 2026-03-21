@@ -2185,5 +2185,519 @@ const questions: Record<string, Question[]> = {
   ],
 };
 
+
+const extra: Record<string, Question[]> = {
+  "nstep-returns": [
+    {
+      id: "q-rl-kp46-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "The n-step TD return G_t^(n) = r_{t+1} + γr_{t+2} + ... + γ^{n-1}r_{t+n} + γ^n V(S_{t+n}). What happens to this return as n → ∞ for an episodic task?",
+      options: [
+        "It converges to the one-step TD target r_{t+1} + γV(S_{t+1})",
+        "It converges to the full Monte Carlo return: the sum of all future discounted rewards",
+        "It diverges to infinity for γ < 1",
+        "It equals the TD(λ) λ-return for any fixed λ",
+      ],
+      correctAnswer: 1,
+      explanation: "As n → ∞, the bootstrapped value V(S_{t+n}) is pushed further into the future. For episodic tasks it eventually becomes V(terminal) = 0, and the n-step return equals the full sum of discounted rewards from t to the episode end — exactly the Monte Carlo return. n-step TD interpolates between one-step TD (n=1, high bias/low variance) and Monte Carlo (n=∞, low bias/high variance).",
+      hints: [
+        "As n grows, how many real rewards are included versus the bootstrapped estimate?",
+        "At the terminal state, what is V(S_T) for a properly initialized value function?",
+      ],
+    },
+    {
+      id: "q-rl-kp46-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "n-step TD with n=1 is equivalent to standard one-step TD(0) prediction.",
+      correctAnswer: "True",
+      explanation: "Substituting n=1 into G_t^(n) = r_{t+1} + γ^1 V(S_{t+1}) gives exactly the TD(0) target. The n-step family unifies TD(0) (n=1) and Monte Carlo (n=T), allowing practitioners to tune the bias-variance trade-off by selecting n. This is why Sutton & Barto dedicate Chapter 7 to n-step bootstrapping as a bridge between TD and MC methods.",
+      hints: [
+        "Write out G_t^(1) explicitly and compare to the TD(0) update target r_{t+1} + γV(S_{t+1}).",
+        "Both formulas use exactly one real reward and then bootstrap from V(S_{t+1}).",
+      ],
+    },
+    {
+      id: "q-rl-kp46-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The λ-return G_t^λ = (1-λ) * Σ_{n=1}^{∞} λ^{n-1} G_t^{(n)} is a geometric mixture of all n-step returns. What weight does it assign to G_t^{(n)} for n < T-t?",
+      options: [
+        "(1-λ)λ^{n-1}",
+        "1/n for all n",
+        "λ^{n-1} divided by the normalization constant",
+        "(1-λ)^n",
+      ],
+      correctAnswer: 0,
+      explanation: "The λ-return weights each n-step return G_t^{(n)} by (1-λ)λ^{n-1} for n < T-t, with the remaining weight λ^{T-t-1} assigned to the terminal Monte Carlo return. All weights sum to 1. When λ=0, all weight goes to the 1-step return (TD(0)). When λ=1, all weight goes to the Monte Carlo return. Intermediate λ provides a smooth interpolation controlled by the exponential decay rate.",
+      hints: [
+        "The weights (1-λ)λ^{n-1} form a geometric series. What do they sum to as n goes from 1 to infinity?",
+        "When λ=0: (1-0)*0^0=1 for n=1, and 0 for all n>1. Does this match TD(0)?",
+      ],
+    },
+  ],
+
+  "eligibility-traces-advanced": [
+    {
+      id: "q-rl-kp47-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "In TD(λ) with accumulating eligibility traces, the trace for state s updates as e_t(s) = γλ * e_{t-1}(s) + 1[S_t = s]. What role does the trace play in the weight update?",
+      options: [
+        "It stores the gradient of the policy with respect to action selection",
+        "It acts as a memory assigning credit to recently and frequently visited states, so the TD error at time t updates all state values weighted by their trace e_t(s)",
+        "It normalizes the learning rate to prevent large updates",
+        "It replaces the reward signal with a smoothed moving average",
+      ],
+      correctAnswer: 1,
+      explanation: "The eligibility trace e_t(s) decays by γλ each step and is incremented when s is visited. The TD(λ) update is ΔV(s) = α * δ_t * e_t(s) for all s simultaneously, where δ_t is the TD error. States visited recently and frequently receive larger updates. The trace elegantly solves the credit-assignment problem without storing an n-step buffer, implementing the backward view equivalent of the λ-return forward view.",
+      hints: [
+        "The trace decays exponentially unless the state is revisited. What happens to the trace of a state visited many steps ago?",
+        "The update ΔV(s) = α * δ_t * e_t(s) applies to ALL states at each step. This is the backward-view equivalent of which forward-view quantity?",
+      ],
+    },
+    {
+      id: "q-rl-kp47-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Replacing eligibility traces (where e_t(s) is reset to 1 on revisiting state s) can outperform accumulating traces when states are revisited frequently within an episode.",
+      correctAnswer: "True",
+      explanation: "Replacing traces set e_t(s) = 1 whenever S_t = s, capping the trace. Accumulating traces can grow large when a state is revisited in a loop — if visited 10 times, the trace can reach 1/(1-γλ). This runaway growth can cause instability. Replacing traces prevent it, and Sutton & Barto show they often outperform accumulating traces in environments where the agent revisits states frequently.",
+      hints: [
+        "With accumulating traces, visiting state s 10 times yields trace approximately 1/(1-γλ). Could this magnitude cause instability in the update ΔV(s) = α * δ_t * e_t(s)?",
+        "Replacing traces cap the maximum trace at 1. How does this affect the maximum update magnitude for a single step?",
+      ],
+    },
+    {
+      id: "q-rl-kp47-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The forward view (λ-return) and backward view (TD(λ) with eligibility traces) are theoretically equivalent in the offline setting but diverge online. What does 'offline' mean in this context?",
+      options: [
+        "Updates are applied only at the end of each episode using a fixed V. Online means within-episode updates that change V mid-episode, altering targets G_t^λ which depend on V(S_{t+n}).",
+        "Offline means using a replay buffer; online means on-policy sampling. The equivalence breaks due to importance sampling weights.",
+        "Offline means using a fixed dataset of trajectories collected before training begins.",
+        "Offline means γ=1; online means γ<1. The equivalence breaks because discount affects traces differently.",
+      ],
+      correctAnswer: 0,
+      explanation: "In the offline setting, V is fixed throughout an episode and updates are applied only at the end. The forward view (λ-return using fixed V) and backward view (eligibility traces) produce identical weight changes. Online: V is updated within the episode. Mid-episode changes mean G_t^λ changes as V is updated, breaking the equivalence. True Online TD(λ) (van Seijen et al., 2016) resolves this with a corrected dutch traces formulation that remains equivalent to the online λ-return target.",
+      hints: [
+        "The λ-return G_t^λ uses V(S_{t+n}). If V changes mid-episode, does G_t^λ change too?",
+        "In the offline case, all updates happen after the episode, so V is fixed during G_t^λ computation. Is V fixed in the online case?",
+      ],
+    },
+  ],
+
+  "count-based-exploration": [
+    {
+      id: "q-rl-kp48-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Count-based exploration methods give a bonus reward r_plus = β / sqrt(N(s)) where N(s) is the visit count. What is the key insight behind this bonus?",
+      options: [
+        "Rarely visited states have high uncertainty in value estimates, so the bonus encourages the agent to resolve that uncertainty (optimism under uncertainty)",
+        "The bonus ensures the agent collects equal numbers of samples from all states",
+        "It penalizes the agent for revisiting states to prevent circular behavior",
+        "It is equivalent to adding entropy regularization to the policy",
+      ],
+      correctAnswer: 0,
+      explanation: "Count-based exploration is motivated by optimism under uncertainty: states visited rarely (small N(s)) have high uncertainty in their value estimates, so the agent should explore them to potentially discover high-reward regions. The bonus β/sqrt(N(s)) decreases as N(s) grows, naturally reducing exploration. This mirrors UCB1 from multi-armed bandits which adds β*sqrt(ln t / N(a)) to action values.",
+      hints: [
+        "What happens to the bonus β/sqrt(N(s)) as N(s) grows large? Does the agent eventually stop exploring that state?",
+        "Think about the UCB principle from bandits: it favors arms with high uncertainty. How is count-based exploration in MDPs analogous?",
+      ],
+    },
+    {
+      id: "q-rl-kp48-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Count-based exploration methods scale naturally to high-dimensional continuous state spaces like raw image observations.",
+      correctAnswer: "False",
+      explanation: "Count-based methods require counting visits to individual states. In continuous or high-dimensional spaces (e.g., Atari pixel observations), each state is visited at most once, making raw counts useless. Pseudo-count methods (Bellemare et al., 2016) address this by using a density model to estimate a pseudo-count from the rate of surprise: the model's prediction probability for s before and after seeing it determines a pseudo-count that generalizes to nearby states.",
+      hints: [
+        "In a continuous state space, how many times would any exact state typically be visited during training?",
+        "If N(s) = 0 or 1 for all s (because states are never revisited exactly), what does the bonus β/sqrt(N(s)) look like for all states?",
+      ],
+    },
+    {
+      id: "q-rl-kp48-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The Intrinsic Curiosity Module (ICM, Pathak et al., 2017) uses an inverse dynamics model to train its feature representation. Why is the inverse model crucial for addressing the noisy-TV problem?",
+      options: [
+        "The inverse model caps the maximum intrinsic reward to prevent the agent being distracted by TV noise",
+        "The inverse model predicts action a_t from (phi(s_t), phi(s_{t+1})). Training features to predict actions forces them to encode only state aspects controllable by the agent. Uncontrollable noise (TV pixels) is irrelevant to action prediction and excluded from phi, so the forward model cannot be fooled by stochastic uncontrollable observations.",
+        "The inverse model replaces the forward model, using backward prediction to compute intrinsic rewards",
+        "The inverse model provides a separate reward signal that cancels out the noise-driven reward",
+      ],
+      correctAnswer: 1,
+      explanation: "ICM's inverse model predicts a_t from (φ(s_t), φ(s_{t+1})). For this to be accurate, φ must encode state aspects that change due to the agent's actions. Random TV pixels change independently of actions and are useless for action prediction — they are excluded from φ. The forward model predicts φ(s_{t+1}) from (φ(s_t), a_t); since φ ignores uncontrollable noise, the forward model can learn to predict φ(s_{t+1}) for TV-related transitions, driving intrinsic reward to zero.",
+      hints: [
+        "The noisy TV problem: an agent gets intrinsic reward for staring at random TV because the forward model cannot predict random pixels. What must be true about features φ to prevent this?",
+        "The inverse model predicts the action from state transitions. What does this force the features to capture, and what does it force them to ignore?",
+      ],
+    },
+  ],
+
+  "bellman-operators-theory": [
+    {
+      id: "q-rl-kp49-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The Bellman optimality operator T* is a γ-contraction in the sup-norm. What does Banach's fixed-point theorem guarantee about repeated application (T*)^k V?",
+      options: [
+        "||(T*)^k V - V*||_inf ≤ γ^k ||V - V*||_inf, so (T*)^k V converges to V* geometrically for any initial V",
+        "The sequence (T*)^k V converges to V* in exactly |S| steps",
+        "The operator T* is only a contraction for γ < 0.5",
+        "(T*)^k V diverges unless V is initialized to zero",
+      ],
+      correctAnswer: 0,
+      explanation: "The Bellman optimality operator T*V(s) = max_a [r(s,a) + γ * Σ_{s'} P(s'|s,a) V(s')] is a γ-contraction in the sup-norm. By Banach's fixed-point theorem, it has a unique fixed point V*, and for any initial V: ||(T*)^k V - V*||_inf ≤ γ^k ||V - V*||_inf. This is the theoretical foundation of value iteration: each sweep contracts the error by factor γ, guaranteeing geometric convergence for any γ < 1.",
+      hints: [
+        "A contraction mapping satisfies d(Tx, Ty) ≤ γ * d(x,y). How does repeated application affect the distance to the fixed point?",
+        "Banach's theorem: any contraction on a complete metric space has a unique fixed point reachable by iteration. What is the fixed point of T*?",
+      ],
+    },
+    {
+      id: "q-rl-kp49-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "The Bellman evaluation operator T^π (for a fixed policy π) is also a γ-contraction with unique fixed point V^π, guaranteeing convergence of iterative policy evaluation from any initial value function.",
+      correctAnswer: "True",
+      explanation: "The Bellman evaluation operator T^π V(s) = Σ_a π(a|s) [r(s,a) + γ * Σ_{s'} P(s'|s,a) V(s')] is a γ-contraction in the sup-norm with unique fixed point V^π. This guarantees that iterative policy evaluation — repeatedly applying T^π starting from any V_0 — converges to V^π geometrically: ||(T^π)^k V_0 - V^π||_inf ≤ γ^k ||V_0 - V^π||_inf.",
+      hints: [
+        "The contraction argument does not depend on whether we take a max or a weighted sum over actions. Does T^π also contract by factor γ?",
+        "What is the fixed point of T^π V = V? This is exactly the Bellman equation for V^π.",
+      ],
+    },
+    {
+      id: "q-rl-kp49-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Q-learning with function approximation can diverge even when tabular Q-learning converges. Which condition of the contraction-mapping proof fails with function approximation?",
+      options: [
+        "The Bellman operator T* is no longer a γ-contraction when the action space is continuous",
+        "The projected Bellman operator Π∘T* (where Π projects onto the function approximation class) is NOT generally a contraction, enabling divergence — as shown by Baird's counterexample (1995)",
+        "Neural networks cannot represent Q-functions for γ close to 1",
+        "Function approximation effectively changes the discount factor γ, invalidating the contraction",
+      ],
+      correctAnswer: 1,
+      explanation: "With function approximation, Q is constrained to a parametric family. After applying T*, the result T*Q may not lie in this family, so we project back: Π(T*Q). The composition Π∘T* is NOT generally a contraction — Baird (1995) showed a simple linear function approximation example that diverges with off-policy semi-gradient TD. DQN's experience replay and target networks empirically stabilize training but do not provide theoretical convergence guarantees for neural networks.",
+      hints: [
+        "T* is a contraction on the full value function space. Projection onto a restricted parametric space happens after applying T*. Does projection preserve the contraction property?",
+        "Baird's counterexample (1995) showed divergence of linear FA with off-policy TD. What does this say about the projected Bellman operator Π∘T*?",
+      ],
+    },
+  ],
+
+  "convergence-theory": [
+    {
+      id: "q-rl-kp50-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Tabular Q-learning converges under the Robbins-Monro conditions: Σ_t α_t = ∞ and Σ_t α_t^2 < ∞. What do these two conditions ensure respectively?",
+      options: [
+        "Σ α_t = ∞ ensures updates are large enough in aggregate to overcome any initial bias; Σ α_t^2 < ∞ ensures accumulated variance of update noise goes to zero",
+        "Σ α_t = ∞ ensures fast convergence; Σ α_t^2 < ∞ ensures sufficient exploration",
+        "Σ α_t = ∞ ensures numerical stability; Σ α_t^2 < ∞ ensures the policy improves monotonically",
+        "Both conditions together just mean the step size must remain smaller than 1",
+      ],
+      correctAnswer: 0,
+      explanation: "The Robbins-Monro conditions guarantee stochastic approximation convergence: (1) Σ α_t = ∞ means steps are large enough in aggregate to overcome any initial bias — the algorithm can correct errors of any magnitude. (2) Σ α_t^2 < ∞ means step sizes shrink fast enough that accumulated noise variance goes to zero. Together they ensure convergence. The schedule α_t = 1/t satisfies both; a constant α satisfies only the first and causes Q to fluctuate around Q* rather than converge exactly.",
+      hints: [
+        "The schedule α_t = 1/t satisfies Σ 1/t = ∞ and Σ 1/t^2 < ∞. What about a constant step size α?",
+        "If α is constant, Σ α^2 = ∞. What does failure of the second condition mean for exact convergence?",
+      ],
+    },
+    {
+      id: "q-rl-kp50-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Value iteration is guaranteed to find the exact optimal value function V* in a finite number of iterations for finite MDPs with γ < 1.",
+      correctAnswer: "False",
+      explanation: "Value iteration converges asymptotically to V* but does not reach it in finite steps. Each iteration contracts the error by factor γ: ||V_k - V*||_inf ≤ γ^k ||V_0 - V*||_inf. For practical ε-optimality, we stop when ||V_{k+1} - V_k||_inf < ε(1-γ)/(2γ), which guarantees the greedy policy is ε-optimal. Exact convergence in finite steps would require γ=0.",
+      hints: [
+        "Each value iteration sweep multiplies the error by γ < 1. Does the error ever reach exactly zero in a finite number of steps?",
+        "For ε-optimality: how many iterations k satisfy γ^k * ||V_0 - V*||_inf ≤ ε?",
+      ],
+    },
+    {
+      id: "q-rl-kp50-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Policy iteration converges in finite steps for finite MDPs. Which of the following best explains why?",
+      options: [
+        "Policy iteration uses a faster Bellman operator that contracts by γ^2 instead of γ",
+        "Policy iteration evaluates V^π exactly by solving a linear system and improves strictly at each step. Since there are finitely many deterministic policies (|A|^|S|) and each step yields strict improvement, the algorithm must terminate.",
+        "Policy iteration parallelizes backup operations across all states simultaneously",
+        "Policy iteration does not require a discount factor γ so convergence rate is γ-independent",
+      ],
+      correctAnswer: 1,
+      explanation: "Policy iteration alternates between exact policy evaluation (solving (I - γP^π)V = R^π) and greedy improvement. The policy strictly improves at each step: V^{π_{k+1}}(s) ≥ V^{π_k}(s) for all s, with strict inequality somewhere unless π_k is already optimal. Since there are finitely many deterministic policies (|A|^|S|) and each step strictly improves, the algorithm terminates in at most |A|^|S| steps — in practice much fewer.",
+      hints: [
+        "How many distinct deterministic policies exist in a finite MDP with |S| states and |A| actions per state?",
+        "Can policy iteration revisit the same policy twice? What does strict monotone improvement imply about the sequence of policies?",
+      ],
+    },
+  ],
+
+  "dyna-architecture": [
+    {
+      id: "q-rl-kp51-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "The Dyna-Q architecture (Sutton, 1990) integrates model-based and model-free RL. After each real environment step, Dyna-Q performs n additional planning steps. What do these planning steps involve?",
+      options: [
+        "Collecting n more real environment transitions using the current policy",
+        "Sampling previously experienced (s,a) pairs from a learned model and applying Q-learning updates to the simulated (s, a, r_hat, s_hat) transitions",
+        "Computing n-step TD returns using the real trajectory",
+        "Running policy gradient updates using the model's simulated trajectories",
+      ],
+      correctAnswer: 1,
+      explanation: "In Dyna-Q, the model M(s,a) stores the estimated next state and reward for previously visited (s,a) pairs. After each real transition: (1) update Q(s,a) with real data; (2) update M(s,a) with observed r and s'; (3) for n iterations, sample a random previously-seen (s,a), query M to get (r_hat, s_hat), and apply Q-learning. This improves sample efficiency by extracting more value from each real experience without additional environment interactions.",
+      hints: [
+        "Dyna-Q stores a model of the environment. What does the model predict given a state and action?",
+        "Planning uses simulated experience. How many real environment steps does one planning iteration require?",
+      ],
+    },
+    {
+      id: "q-rl-kp51-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "In Dyna-Q, increasing the number of planning steps n always improves performance regardless of the quality of the learned environment model.",
+      correctAnswer: "False",
+      explanation: "If the environment model is inaccurate (e.g., early in learning or in non-stationary environments), extensive planning on a wrong model can be harmful — the agent reinforces incorrect Q-values based on faulty simulated experience. With an accurate model, more planning steps improve performance; with an inaccurate model, excessive planning can be worse than fewer steps or pure model-free RL. Dyna-Q+ addresses non-stationarity by adding exploration bonuses for infrequently tried actions.",
+      hints: [
+        "If the model is wrong and predicts the wrong next state, what happens to Q-values after many planning steps using that wrong model?",
+        "Dyna-Q+ adds exploration bonuses for actions not tried recently. What problem is it solving?",
+      ],
+    },
+    {
+      id: "q-rl-kp51-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Dyna-Q uses a tabular model memorizing exact (s,a) → (r,s') transitions. How do world-model approaches like Dreamer (Hafner et al., 2020) generalize this to image observations?",
+      options: [
+        "Dreamer uses a larger lookup table with image compression to handle pixel inputs",
+        "Dreamer learns a recurrent latent dynamics model: an encoder maps images to compact latent states z_t, a transition model predicts p(z_{t+1}|z_t, a_t), a reward model predicts r from z_t, and planning occurs via imagined rollouts entirely in latent space",
+        "Dreamer replaces the model with a retrieval system that finds the most similar stored image",
+        "Dreamer learns the transition function directly in pixel space using a convolutional decoder",
+      ],
+      correctAnswer: 1,
+      explanation: "Dreamer (RSSM) learns a compact latent world model: encoder h(o_t)→z_t maps observations to latent states; a recurrent transition model predicts z_{t+1} from (z_t, a_t, h_t) via a GRU; reward and value models predict r and V from z. During imagination, the agent rolls out trajectories purely in latent space and trains a policy via backpropagation through time. This makes planning tractable for pixel-observation environments where Dyna's tabular model is infeasible.",
+      hints: [
+        "A tabular model stores exact state-action pairs. Why can't this work with 84x84x4 pixel frames?",
+        "Dreamer's key insight: learn a compressed representation z_t and model transitions in latent space. What are the benefits of planning in latent space rather than pixel space?",
+      ],
+    },
+  ],
+
+  "planning-algorithms": [
+    {
+      id: "q-rl-kp52-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Monte Carlo Tree Search (MCTS) uses the UCT formula: UCT(s,a) = Q(s,a) + C * sqrt(ln N(s) / N(s,a)). What is the purpose of the second term?",
+      options: [
+        "It penalizes actions taken too many times, encouraging the agent to give up on bad actions",
+        "It adds an exploration bonus that is large when action a has been tried rarely relative to total visits N(s), encouraging exploration of less-sampled branches",
+        "It normalizes Q(s,a) to lie in [0,1]",
+        "It estimates the variance of the Q-value estimate to reduce noise",
+      ],
+      correctAnswer: 1,
+      explanation: "The UCT exploration bonus C*sqrt(ln N(s) / N(s,a)) grows as N(s,a) decreases relative to N(s). This implements UCB1 from multi-armed bandits in tree search: actions sampled fewer times get a higher exploration bonus, ensuring all branches are tried sufficiently often. As N(s,a) grows, the bonus shrinks, shifting focus to exploitation. AlphaZero extends UCT by replacing Q with a neural network value estimate and adding a prior P(a|s) from a policy network.",
+      hints: [
+        "If action a has been tried very few times (N(s,a) is small), is the UCT bonus large or small?",
+        "Compare UCT to UCB1 for bandits: UCB1 = Q_bar_a + C*sqrt(ln t / N_a). What is the MDP analog of t?",
+      ],
+    },
+    {
+      id: "q-rl-kp52-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "MuZero learns to plan without learning to reconstruct observations, instead learning a latent transition model sufficient only for MCTS-based planning.",
+      correctAnswer: "True",
+      explanation: "MuZero (Schrittwieser et al., 2020) learns three functions: a representation function mapping observations to latent states, a dynamics function predicting the next latent state and reward, and a prediction function outputting policy and value. Crucially, MuZero does NOT learn to reconstruct observations — there is no decoder. It learns a latent model sufficient for MCTS planning, trained to match MCTS policy targets and game outcomes, achieving state-of-the-art on Atari, Go, Chess, and Shogi.",
+      hints: [
+        "MuZero uses MCTS for planning. Does it need to reconstruct pixel observations from latent states to perform this planning?",
+        "What does MuZero's dynamics function predict, and is this a full generative model of observations?",
+      ],
+    },
+    {
+      id: "q-rl-kp52-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Prioritized sweeping focuses Dyna-style model updates on state-action pairs with large expected value changes. What determines the priority assigned to a pair?",
+      options: [
+        "The most recently visited (s,a) pair receives highest priority",
+        "Priority is the expected magnitude of the Bellman error |Q(s,a) - (r + γ * max_{a'} Q(s',a'))| after receiving a model update propagated backward from a high-TD-error transition",
+        "Pairs with the smallest visit count N(s,a) get highest priority",
+        "The pair with the highest current Q-value estimate gets highest priority",
+      ],
+      correctAnswer: 1,
+      explanation: "Prioritized sweeping (Moore & Atkeson, 1993) maintains a priority queue ordered by expected Bellman error magnitude. After observing a large TD error at (s,a), it identifies predecessor states that may now have large value changes and adds them to the queue. This focuses computation on the most informative updates, propagating value information backward from high-reward states much faster than uniform Dyna planning — dramatically reducing the number of updates needed for maze-like problems.",
+      hints: [
+        "If Q(s,a) just changed a lot due to a large TD error, which states should we update next?",
+        "Value information propagates backward: if s' has high value and we just discovered this, which predecessors of s' should be prioritized?",
+      ],
+    },
+  ],
+
+  "intrinsic-motivation": [
+    {
+      id: "q-rl-kp53-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Random Network Distillation (RND, Burda et al., 2019) computes intrinsic rewards as ||f(s) - g_theta(s)||^2, where f is a fixed random network and g_theta is a trained predictor. Why does this measure novelty?",
+      options: [
+        "Novel states have large prediction error because g_theta has not been trained on them; frequently visited states have small error because g_theta has been optimized on those states",
+        "The KL divergence between f(s) and g_theta(s) treated as probability distributions measures state rarity",
+        "The cosine similarity between f(s) and the previous state embedding measures transition novelty",
+        "The negative log probability of s under g_theta's distribution measures how unlikely the state is",
+      ],
+      correctAnswer: 0,
+      explanation: "RND's intrinsic reward is ||f(s) - g_theta(s)||^2. The random network f has fixed weights. The predictor g_theta is trained to minimize this error on visited states. For frequently visited states, g_theta has many training examples and achieves low error. For novel states, g_theta has few examples and has high error, yielding a large intrinsic reward. RND is computationally efficient and effective for hard-exploration Atari games like Montezuma's Revenge.",
+      hints: [
+        "The predictor g_theta is only trained on states the agent has actually visited. What does high prediction error indicate about how often s has been visited?",
+        "Both f and g_theta have the same output dimension. What is the advantage of using a fixed random target network instead of a learned one?",
+      ],
+    },
+    {
+      id: "q-rl-kp53-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "All intrinsic motivation methods for exploration require maintaining an explicit count N(s) of how many times each state has been visited.",
+      correctAnswer: "False",
+      explanation: "Many intrinsic motivation methods avoid explicit state counts. RND uses neural network prediction error. ICM uses forward model prediction error in a learned feature space. VIME uses information gain on a Bayesian neural network model. These methods generalize to continuous and high-dimensional state spaces where exact state counts are meaningless (every state is visited at most once). Pseudo-count methods approximate counts via density models but still avoid explicit enumeration.",
+      hints: [
+        "RND computes intrinsic reward as ||f(s) - g_theta(s)||^2. Does this formula require knowing N(s)?",
+        "What makes explicit counts infeasible for high-dimensional observations like 84x84 pixel images?",
+      ],
+    },
+    {
+      id: "q-rl-kp53-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The noisy-TV problem is a failure mode for forward-prediction-based intrinsic motivation. Which describes the problem and a valid solution?",
+      options: [
+        "The agent's policy network oscillates between actions, creating instability. Solution: use a target network to stabilize updates.",
+        "In environments with irreducible stochasticity (e.g., a TV showing random noise), a forward model predicting next states in raw observation space always has high error regardless of the agent's actions, generating intrinsic reward for watching TV. Solution: ICM's inverse model trains features to encode only controllable state aspects, excluding uncontrollable noise so the forward model's error goes to zero for TV-watching.",
+        "The reward function is corrupted by random environmental noise. Solution: use reward normalization.",
+        "The agent's value function oscillates due to high learning rates. Solution: reduce the step size alpha.",
+      ],
+      correctAnswer: 1,
+      explanation: "The noisy-TV problem: a forward model predicting next observations in raw pixel space is attracted to irreducible stochasticity (random noise, particle effects) because the error can never be reduced. ICM's inverse model (predicting a_t from (phi(s_t), phi(s_{t+1}))) forces features to encode only controllable state aspects — random TV pixels are irrelevant to action prediction and are excluded from phi. RND also avoids this: f(s) is deterministic, so even for a noisy TV, f(s) gives a consistent target that g_theta can learn to predict, driving intrinsic reward to zero.",
+      hints: [
+        "A random TV generates different pixels every frame. Can any forward model in raw pixel space predict the next frame's exact noise pattern?",
+        "RND's target f(s) is deterministic (fixed random weights). Does f(s) change between visits to the same TV state? Can g_theta eventually learn to predict it?",
+      ],
+    },
+  ],
+
+  "fixed-point-theory": [
+    {
+      id: "q-rl-kp54-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The Bellman equation V^π = R^π + γ * P^π * V^π can be written as a linear system. What is the closed-form solution for V^π?",
+      options: [
+        "V^π = (I - γ * P^π)^{-1} * R^π",
+        "V^π = (I + γ * P^π)^{-1} * R^π",
+        "V^π = R^π / (1 - γ)",
+        "V^π = γ * (I - P^π)^{-1} * R^π",
+      ],
+      correctAnswer: 0,
+      explanation: "Rearranging V = R^π + γ * P^π * V gives (I - γ * P^π) * V = R^π, so V^π = (I - γ * P^π)^{-1} * R^π. The matrix (I - γ * P^π) is invertible because its eigenvalues are 1 - γ*λ_i where λ_i are eigenvalues of the stochastic matrix P^π (|λ_i| ≤ 1), so 1 - γ*λ_i ≥ 1-γ > 0 for γ < 1. This closed-form requires O(|S|^3) computation and proves V^π uniquely exists, but iterative policy evaluation avoids explicit matrix inversion.",
+      hints: [
+        "Start from V = R^π + γ * P^π * V. Collect V terms on one side: (I - γ*P^π)*V = R^π. How do you solve for V?",
+        "Is (I - γ * P^π) invertible for γ < 1? What are its eigenvalues given that P^π is a stochastic matrix?",
+      ],
+    },
+    {
+      id: "q-rl-kp54-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "For a discounted MDP with γ < 1, the optimal value function V* is the unique fixed point of T*, always exists, and is always finite for bounded rewards.",
+      correctAnswer: "True",
+      explanation: "By Banach's fixed-point theorem, since T* is a γ-contraction on the complete metric space of bounded functions with the sup-norm, it has a unique fixed point V*. Boundedness: since |r| ≤ r_max, the value function satisfies |V*(s)| ≤ r_max / (1-γ) < ∞. Uniqueness: if V and U are both fixed points, then ||V - U||_inf = ||T*V - T*U||_inf ≤ γ * ||V - U||_inf, requiring ||V - U||_inf = 0.",
+      hints: [
+        "If |r(s,a)| ≤ r_max for all s,a, what is an upper bound on |Σ_{t=0}^∞ γ^t * r_t|?",
+        "If V and U are both fixed points of T*, what does the contraction inequality γ * ||V - U||_inf ≥ ||V - U||_inf imply?",
+      ],
+    },
+    {
+      id: "q-rl-kp54-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Semi-gradient TD(0) with linear function approximation V(s;w) = w^T * phi(s) does not minimize a well-defined fixed loss. What does it actually converge to (for linear FA)?",
+      options: [
+        "The minimum of the mean squared TD error E[δ_t^2], equivalent to MSE from supervised learning with fixed targets",
+        "The TD fixed point w* satisfying E[δ_t * phi(s_t)] = 0, found by treating the target (r + γ*V(s';w)) as a constant when computing gradients — so the update is not the gradient of any fixed scalar objective",
+        "The minimum of the projected Bellman error ||V_w - Π * T^π * V_w||_μ^2 directly",
+        "The minimum of the KL divergence between the target and current value distributions",
+      ],
+      correctAnswer: 1,
+      explanation: "Semi-gradient TD treats the target y_t = r + γ*V(s';w) as a constant (stops gradient through V(s';w)), computing update -α * δ_t * phi(s_t). This is not the gradient of any fixed scalar loss because the target changes as w changes. For linear FA, the algorithm converges to the TD fixed point w* satisfying E[δ_t * phi(s_t)] = 0, equivalently Π * T^π * V_{w*} = V_{w*}. The resulting error satisfies ||V_{w*} - V*||_μ ≤ (1/sqrt(1-γ)) * min_w ||V_w - V*||_μ.",
+      hints: [
+        "In supervised learning the target y_t is fixed. In TD, the target r + γ*V(s';w) depends on w. What happens to the gradient calculation when you treat the target as a constant?",
+        "If y_t(w) changes as w changes, is -(1/2) * ||V(s;w) - y_t(w)||^2 a well-defined scalar objective we can minimize by gradient descent?",
+      ],
+    },
+  ],
+
+  "model-based-rl-advanced": [
+    {
+      id: "q-rl-kp55-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "MBPO (Model-Based Policy Optimization, Janner et al., 2019) uses short model-generated rollouts (k=1 to 5 steps) to augment real data. Why are short rollouts preferred over long ones?",
+      options: [
+        "Short rollouts fit in GPU memory while long rollouts do not",
+        "Model errors compound over time: a model with per-step error ε accumulates O(k*ε) error over k steps. Short rollouts bound this compounding, balancing the benefit of model-generated data against model bias.",
+        "Long rollouts require a target network to stabilize, which MBPO does not implement",
+        "Short rollouts allow more frequent policy gradient updates per wall-clock time",
+      ],
+      correctAnswer: 1,
+      explanation: "MBPO's theoretical bound shows |J(π) - J_model(π)| ≤ O(k * ε_model / (1-γ)) + O(γ^k / (1-γ) * ε_real), where ε_model is the model's one-step error and ε_real captures real-data coverage error. Short rollouts (small k) limit model bias accumulation. Longer rollouts create more biased estimates. Empirically, k=1 works well for simple tasks; k up to 10 for harder environments. Real transitions are always included to anchor rollout starting states.",
+      hints: [
+        "If a model makes error ε at each step, what is the total error after k steps of a rollout?",
+        "Long rollouts using an imperfect model move the agent far from states covered by real data. How does this affect the quality of value estimates?",
+      ],
+    },
+    {
+      id: "q-rl-kp55-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "A world model that accurately minimizes one-step observation prediction loss (MSE on next observations) is always sufficient to learn a near-optimal policy via model-based planning.",
+      correctAnswer: "False",
+      explanation: "A model with low one-step MSE may still be a poor model for policy optimization: (1) the model may have high error in regions of state space visited by the optimal policy, even if global MSE is low; (2) compounding errors over multi-step rollouts can be large even when per-step error is small; (3) the relevant metric for policy optimization is return under the model vs. real environment, not global observation MSE. This motivates value-equivalent models trained jointly with policy objectives, and latent models like MuZero that match return distributions rather than observations.",
+      hints: [
+        "MSE averages over the training data distribution. If the optimal policy visits different states, can a low global MSE still imply high error on policy-relevant states?",
+        "Even if per-step observation MSE is ε, how does error grow over H steps of a planning rollout?",
+      ],
+    },
+    {
+      id: "q-rl-kp55-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "AlphaZero trains its neural network to predict π_MCTS proportional to N(s,a)^{1/τ} (MCTS visit counts) rather than just the greedy MCTS action. What is the primary reason for this design choice?",
+      options: [
+        "The softmax of visit counts is more numerically stable than one-hot action targets",
+        "MCTS represents a stronger policy than the raw neural network because it performs lookahead over many trajectories. Using π_MCTS as the training target causes the network to distill the search result, progressively learning to approximate what deep MCTS search would produce — acting as an iterative policy improvement operator.",
+        "Using the greedy action would make training deterministic and prevent exploration during self-play",
+        "The visit counts are more readily differentiable through the MCTS computation graph",
+      ],
+      correctAnswer: 1,
+      explanation: "AlphaZero's training loop: (1) use the current neural network (p, v) as prior and value estimate in MCTS; (2) MCTS produces a refined policy π_MCTS by aggregating evidence from thousands of simulations; (3) train the network to predict π_MCTS and the game outcome z. MCTS is a policy improvement operator: given the network's initial p(a|s), MCTS produces a better policy. Training the network to match π_MCTS distills the search's strength into the network, making future MCTS searches even stronger — a virtuous cycle enabling superhuman performance.",
+      hints: [
+        "MCTS performs many simulations from each position. Is the resulting π_MCTS a stronger or weaker policy than the raw network output p(a|s)?",
+        "If MCTS is a policy improvement step and you train the network to mimic MCTS output, what happens to the quality of future MCTS searches that use the improved network as prior?",
+      ],
+    },
+  ],
+};
+Object.assign(questions, extra);
+
 registerQuestions(questions);
 export default questions;

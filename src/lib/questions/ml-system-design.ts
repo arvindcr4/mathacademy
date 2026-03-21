@@ -335,8 +335,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Production logs reflect the current model\'s decisions, creating a feedback loop bias: the model only shows items it already thinks are relevant, so the data never covers items it would have incorrectly penalized. This creates a self-reinforcing loop that amplifies existing model biases. Random exploration (e.g., ε-greedy or logging policies) is needed to collect unbiased training data.",
       hints: [
-        "If the current model never shows category X, production logs have no signal on how users would respond to X.",
-        "Logged data captures only what the existing system chose to act on — a biased sample.",
+        "What type of data does production logging capture — only what the current model chose to show, or everything that exists?",
+        "What bias does this create, and what mechanism is needed to collect unbiased signal about items the model would not have surfaced?",
       ],
     },
     {
@@ -689,8 +689,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Full reproducibility requires all five: (1) data version — which dataset split; (2) code commit — exact training code; (3) hyperparameter config — all tunable parameters; (4) random seeds — Python, NumPy, PyTorch, CUDA; (5) environment — pinned library versions (Docker image or conda lock file). Any single missing element breaks reproducibility.",
       hints: [
-        "A hyperparameter config without a data version doesn\'t tell you what data the model was trained on.",
-        "Library version drift (e.g., PyTorch 1.13 vs. 2.0) can change numerical results even with fixed seeds.",
+        "What five components must be versioned together to fully reproduce a training run?",
+        "Can the same code, seeds, and hyperparameters produce different results on different library versions?",
       ],
     },
     {
