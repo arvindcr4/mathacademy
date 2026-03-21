@@ -2167,6 +2167,528 @@ const questions: Record<string, Question[]> = {
       ],
     },
   ],
+
+  "kubernetes-ml-infra": [
+    {
+      id: "q-prod-kp41-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "A Kubernetes Deployment for ML model serving has 3 replicas. When a new model version is deployed, which rollout strategy minimizes user impact while verifying the new model behaves correctly in production?",
+      options: [
+        "Recreate strategy: terminate all 3 old pods, then start 3 new pods.",
+        "RollingUpdate with maxSurge=1, maxUnavailable=0: add one new pod, wait for it to pass readiness probes (including a health check that verifies model inference returns valid predictions), then terminate one old pod, repeating until complete.",
+        "Deploy the new model version to a separate Namespace and switch DNS manually.",
+        "Blue-green at the node level: provision a new node pool and drain the old one.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "RollingUpdate with maxUnavailable=0 maintains full capacity throughout the rollout: at no point are fewer than 3 healthy pods serving traffic. Readiness probes for ML models should include a warm-up inference call (verify the model loaded and returns valid output), not just HTTP 200 on a /health endpoint. maxSurge=1 allows one extra pod during transition, limiting resource overage to 33%.",
+      hints: [
+        "maxUnavailable=0 means: never go below 3 healthy pods during the rollout — zero downtime guaranteed.",
+        "ML readiness probes should call /predict with a sample input and validate the response schema, not just ping /health.",
+      ],
+    },
+    {
+      id: "q-prod-kp41-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A GPU-accelerated ML serving pod requests `nvidia.com/gpu: 1`. The pod is scheduled to a node with an A100, but inference latency is 3x higher than expected. What is the most likely cause and fix?",
+      options: [
+        "The pod is sharing the GPU with other pods — request more GPU memory.",
+        "The container is not using the GPU: the CUDA libraries in the Docker image do not match the CUDA driver version on the node, causing PyTorch to silently fall back to CPU. Fix: pin the Docker image CUDA toolkit version to match the node\'s CUDA driver (driver >= toolkit version), and add a startup check that asserts torch.cuda.is_available() == True.",
+        "Kubernetes GPU scheduling is always slower than bare-metal GPU access.",
+        "The nvidia.com/gpu resource request is only a hint; Kubernetes does not guarantee GPU assignment.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "CUDA version mismatch is the most common cause of silent CPU fallback in GPU-scheduled pods: if the Docker image was built with CUDA 12.1 but the node driver only supports CUDA 11.8, PyTorch may silently fall back to CPU (3-100x slower). The fix: (1) check CUDA compatibility (driver version >= toolkit version); (2) add `assert torch.cuda.is_available()` in the model server startup; (3) pin the base image CUDA version in the Dockerfile and validate against cluster node drivers in CI.",
+      hints: [
+        "torch.cuda.is_available() returning False in a GPU pod means CUDA version mismatch — check driver vs toolkit.",
+        "The CUDA compatibility rule: driver version must be >= CUDA toolkit version. Driver 515 supports CUDA <= 11.7.",
+      ],
+    },
+    {
+      id: "q-prod-kp41-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Kubernetes Horizontal Pod Autoscaler (HPA) can scale ML serving deployments based on custom metrics like inference queue depth or GPU utilization, not just CPU and memory.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Kubernetes HPA supports custom and external metrics via the Custom Metrics API (adapter implementations include Prometheus Adapter, Datadog Cluster Agent). For ML serving, useful HPA metrics include: inference queue depth (scale up when > N requests queued), GPU utilization (scale up when > 80%), and p99 latency (scale up when > SLO). CPU-based HPA is often a poor signal for GPU workloads where CPU is nearly idle but GPU is saturated.",
+      hints: [
+        "GPU utilization is a better HPA signal than CPU for GPU-accelerated ML serving — CPU is nearly idle during GPU inference.",
+        "Prometheus Adapter exposes custom Prometheus metrics (like queue_depth) to the Kubernetes HPA.",
+      ],
+    },
+  ],
+
+  "docker-ml-serving": [
+    {
+      id: "q-prod-kp42-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "What is the best practice for structuring a Dockerfile for an ML model serving container to minimize rebuild time when model code changes but weights do not?",
+      options: [
+        "Copy everything (code + weights) in a single COPY instruction at the beginning of the Dockerfile.",
+        "Order Dockerfile layers from least to most frequently changing: (1) base image with CUDA/Python; (2) system dependencies; (3) Python package installation (requirements.txt COPY + pip install); (4) application code COPY. Download model weights at runtime from an artifact store, not baked into the image.",
+        "Use a single-stage build with all operations in one RUN command to minimize layer count.",
+        "Copy the weights first since they are the largest artifact and caching them saves the most time.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Docker layer caching: each layer is cached until its inputs change. Layers after a changed layer are all invalidated. Ordering from slow-changing to fast-changing maximizes cache hits: the base image and system deps rarely change; Python packages change occasionally; application code changes frequently. Weights are not baked in — a 10 GB weight file in the image makes push/pull impractical and couples model versioning to image versioning.",
+      hints: [
+        "requirements.txt COPY before app code COPY: pip install is only re-run when dependencies change, not on every code change.",
+        "Docker build layer cache: layer N is invalidated only if layer N-1 changed. Put stable layers first.",
+      ],
+    },
+    {
+      id: "q-prod-kp42-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A multi-stage Dockerfile for an ML model server has a build stage (installs compilers, builds C extensions) and a runtime stage (only copies the built artifacts). What problem does this solve?",
+      options: [
+        "Multi-stage builds run faster because Docker parallelizes the stages.",
+        "The runtime image does not contain build tools (gcc, cmake, build-essential) that inflate image size and increase attack surface. Only the compiled artifacts are copied to the lean runtime image, reducing image size by 60-80% for Python packages with C extensions (numpy, scipy, PyTorch CPU).",
+        "Multi-stage builds allow different base images for training and serving.",
+        "Multi-stage builds automatically pin all dependency versions.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Multi-stage builds (FROM ... AS build / FROM ... AS runtime / COPY --from=build) produce lean runtime images: the build stage installs compilers and headers needed to compile C extensions; the runtime stage copies only the compiled .so files and Python packages. A PyTorch CPU serving image drops from ~4 GB (with build tools) to ~1.5 GB (runtime only). Smaller images: faster pulls, reduced attack surface, lower registry storage costs.",
+      hints: [
+        "Build tools (gcc, cmake) are needed to compile, not to run — multi-stage builds exclude them from the final image.",
+        "COPY --from=build copies only the installed packages from the build stage, leaving compilers behind.",
+      ],
+    },
+    {
+      id: "q-prod-kp42-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Running ML model serving containers as a non-root user (e.g., USER 1000) in Docker is a security best practice that limits the blast radius if the container is compromised.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Running as non-root limits privilege escalation: a compromised container process running as root can potentially escape to the host if other vulnerabilities exist; running as UID 1000 (non-root) limits the process to its container filesystem. Best practices: add `USER 1000` in the Dockerfile, ensure model weight files and logs are owned by UID 1000, and use `--read-only` filesystem with specific writable mounts for log directories.",
+      hints: [
+        "Docker root inside a container does not equal root on the host (with user namespaces enabled), but defense-in-depth recommends non-root anyway.",
+        "Kubernetes security contexts can enforce non-root via runAsNonRoot: true in the pod spec.",
+      ],
+    },
+  ],
+
+  "model-registry-mlflow": [
+    {
+      id: "q-prod-kp43-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In MLflow, what is the difference between mlflow.log_metric() and mlflow.log_artifact(), and when should each be used?",
+      options: [
+        "They are equivalent; use either based on preference.",
+        "log_metric() stores scalar numerical values (loss, accuracy, AUC) with an optional step for time-series tracking — stored in the MLflow database for querying and comparison. log_artifact() stores arbitrary files (model weights, plots, data samples) in the artifact store (S3/GCS) — referenced by URI, not queryable as scalars.",
+        "log_metric() stores training metrics; log_artifact() stores serving metrics.",
+        "log_artifact() should only be used for model weights; log_metric() for everything else.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "MLflow tracking separates scalars from files: metrics (float values, optional step for curves) are stored in the MLflow tracking DB and queryable via the UI or API for experiment comparison. Artifacts (weights, plots, configs, datasets) are stored in the artifact store and referenced by URI. Key difference: you can compare val_loss curves across 100 runs using metrics; you cannot efficiently compare binary files. Log what you need to compare as metrics; log what you need to reproduce as artifacts.",
+      hints: [
+        "log_metric('val_loss', 0.25, step=epoch) enables plotting training curves and comparing across 100 runs in the MLflow UI.",
+        "log_artifact('confusion_matrix.png') stores the file in S3 and links it to the run — viewable in the MLflow UI.",
+      ],
+    },
+    {
+      id: "q-prod-kp43-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "An ML team uses MLflow Model Registry with stages: Staging, Production, Archived. A model promoted to Production is discovered to have a data leakage bug. What is the correct sequence of actions?",
+      options: [
+        "Delete the model version from the registry to prevent future use.",
+        "Transition the buggy Production model to Archived (preserving audit trail), transition the last known-good version back to Production, file an incident report documenting the bug and its data scope, retrain a corrected model version, validate it in Staging, then promote it to Production through the standard review process.",
+        "Leave the model in Production and add a comment explaining the bug.",
+        "Overwrite the Production model weights with the corrected version without changing the version number.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Model registry incident response: (1) Archiving preserves the audit trail (when was it deployed, what predictions were made) — critical for compliance and incident analysis; (2) rolling back to the last known-good version minimizes ongoing harm; (3) the incident report documents scope (how many predictions were affected, what decisions were made based on them); (4) a corrected model must go through the full validation process — skipping validation after an incident is how you create the next incident. Never delete production models — they are part of the audit trail.",
+      hints: [
+        "Archive, not delete: you need the audit trail of what model was running when for compliance and incident analysis.",
+        "Roll back first, investigate second — stop the bleeding before diagnosing the wound.",
+      ],
+    },
+    {
+      id: "q-prod-kp43-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "MLflow autolog (mlflow.autolog()) automatically captures hyperparameters, metrics, and model artifacts for supported ML frameworks (sklearn, PyTorch, XGBoost) without requiring explicit log_param() calls.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "MLflow autolog patches the training APIs of supported frameworks to automatically capture: (1) hyperparameters (passed to the estimator constructor); (2) training metrics (per-epoch loss, validation metrics); (3) model artifacts (serialized model in the framework\'s native format); (4) environment information (library versions). This reduces boilerplate and ensures consistent logging across experiments. Call mlflow.autolog() before training to enable it.",
+      hints: [
+        "mlflow.autolog() before sklearn.fit() automatically logs all hyperparameters and the fitted model — zero extra code.",
+        "Autolog does not capture custom metrics — still use log_metric() for business-specific evaluation metrics.",
+      ],
+    },
+  ],
+
+  "mlops-cicd": [
+    {
+      id: "q-prod-kp44-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "What is the difference between Continuous Training (CT) and Continuous Delivery (CD) in an MLOps pipeline?",
+      options: [
+        "CT and CD are the same concept applied to ML systems.",
+        "Continuous Training automatically retrains models when triggered by data drift, schedule, or performance degradation — producing a new model artifact. Continuous Delivery automatically validates and deploys approved model artifacts to production — the downstream step that takes a trained model and makes it live.",
+        "CT is for training pipeline automation; CD is for deployment only, and they run independently.",
+        "CT retrains on new data; CD retrains on new code changes.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "MLOps automation levels: CT handles model freshness by triggering retraining pipelines (on schedule, drift alerts, or performance degradation). CD handles deployment safety by running validation gates (non-regression checks, shadow mode, canary) before promoting the new model to production. The full loop: drift detected → CT retrains → CD validates and promotes. Each can fail independently: CT may retrain successfully but CD blocks promotion due to a metric regression.",
+      hints: [
+        "CT = keeping the model fresh. CD = keeping the deployment safe. They are sequential, not redundant.",
+        "A drift alert triggers CT; CD runs automatically when CT produces a model that passes offline evaluation gates.",
+      ],
+    },
+    {
+      id: "q-prod-kp44-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "An MLOps pipeline automatically retrains a fraud model nightly on the past 90 days of data. The training job succeeds, but promotion is blocked by the CD quality gate (AUC on holdout < threshold). What should the automated system do?",
+      options: [
+        "Auto-promote the model anyway since it was trained on fresher data.",
+        "Keep the existing production model running, alert the ML team with training logs and evaluation metrics, capture the failed model in the registry as Staging (not Production) for offline debugging, and schedule a human review before the next training cycle.",
+        "Automatically lower the AUC threshold to allow the model to be promoted.",
+        "Revert to the oldest model in the registry as the safest option.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Failed quality gates are critical safety signals — the automated response must: (1) preserve production stability by keeping the existing model; (2) alert humans with enough context to diagnose the issue (training metrics, data statistics, diff from previous model); (3) store the failed model for offline analysis — it may reveal data quality issues or distribution changes; (4) not auto-adjust thresholds, which would defeat the purpose of the gate. The quality gate exists precisely to block this case from reaching production automatically.",
+      hints: [
+        "A quality gate failure on fresh data often signals data quality issues upstream, not model quality issues.",
+        "Never auto-adjust quality thresholds — they exist to require human judgment for borderline cases.",
+      ],
+    },
+    {
+      id: "q-prod-kp44-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Automated retraining triggers based on data drift (e.g., PSI > 0.25 on key features) are preferable to purely schedule-based retraining because they retrain only when the data distribution has actually changed.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Drift-triggered retraining is more efficient than schedule-based retraining: stable data distributions do not require frequent retraining, so schedule-based systems waste compute training when nothing has changed. Conversely, sudden distribution shifts (e.g., COVID changing transaction patterns overnight) require immediate retraining, which a weekly schedule misses. The optimal MLOps pipeline combines both: scheduled retraining as a baseline plus drift-triggered retraining for sudden shifts.",
+      hints: [
+        "Weekly retraining wastes compute when distributions are stable; it also misses sudden shifts between training cycles.",
+        "Drift-triggered retraining is reactive; scheduled retraining is proactive. The best systems use both.",
+      ],
+    },
+  ],
+
+  "data-drift-monitoring": [
+    {
+      id: "q-prod-kp45-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "What is the difference between covariate shift (feature drift) and concept drift, and which is more dangerous for ML models?",
+      options: [
+        "They are the same: both describe changes in the data distribution.",
+        "Covariate shift: P(X) changes but P(Y|X) stays the same (features drift but the underlying relationship is stable). Concept drift: P(Y|X) changes (the relationship between features and labels changes — the model is fundamentally wrong and must be retrained on new labeled data). Concept drift is more dangerous because it requires new ground truth labels to detect and fix.",
+        "Covariate shift only affects online models; concept drift only affects batch models.",
+        "Concept drift is detected by PSI; covariate shift is detected by KS test.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Covariate shift (P(X) changes): feature distributions drift but the mapping X→Y remains valid. Detection: PSI, KS test on features. Treatment: retrain on data representative of the new P(X). Concept drift (P(Y|X) changes): what predicts Y has fundamentally changed. Detection: requires labeled production data to measure accuracy degradation — harder and slower to detect. Treatment: retrain with new labeled data reflecting the new concept. Concept drift is more dangerous because it is harder to detect (needs labels) and requires more data to fix.",
+      hints: [
+        "Covariate shift: the input distribution changed. Concept drift: the ground truth relationship changed.",
+        "Concept drift requires new labeled data to detect and fix — you cannot detect it from input features alone.",
+      ],
+    },
+    {
+      id: "q-prod-kp45-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A production ML system has a 14-day label delay (labels for transactions are only available after 14 days). How do you monitor for model performance degradation during this delay window?",
+      options: [
+        "Wait 14 days after each deployment before checking model performance.",
+        "Use proxy metrics: monitor prediction score distributions (score drift via PSI/KS), feature distributions (input drift), business proxy metrics (e.g., chargeback rate, complaint rate), and upstream data pipeline health. Establish statistical process control charts to detect anomalies in these proxies during the 14-day window before ground truth labels arrive.",
+        "Reduce the label delay by paying for faster labeling.",
+        "Only monitor latency and error rate during the label delay window.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Label delay is a fundamental challenge in production ML monitoring. During the delay window: (1) prediction score drift is a leading indicator — if score distributions shift, model behavior has changed even before labels confirm degradation; (2) feature drift indicates input distribution change; (3) business proxy metrics (chargebacks, complaints) provide early user-impact signals with lower latency than model labels; (4) data pipeline health prevents silent upstream failures. When labels arrive, perform delayed evaluation and compare to the proxy signals to calibrate them for future windows.",
+      hints: [
+        "Score distribution drift is a leading indicator: if the model suddenly predicts much higher fraud rates, something changed.",
+        "Business proxy metrics (chargebacks) have 1-3 day delay vs. model labels with 14 days — use them as early warning.",
+      ],
+    },
+    {
+      id: "q-prod-kp45-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Monitoring only aggregate model accuracy (e.g., overall AUC) in production is insufficient because it can mask severe performance degradation on specific user segments or time windows.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Aggregate metrics hide slice failures: a model with 95% overall accuracy may have 60% accuracy on a critical segment (e.g., mobile users, new users, specific geographic regions). Slice-based monitoring tracks metrics per segment and alerts on slice-level degradation independent of aggregate metrics. Time-window monitoring (hourly/daily slices) catches temporal degradation that daily aggregates smooth over.",
+      hints: [
+        "A model serving 1M users/day can drop to 50% accuracy for 100K of them without moving the aggregate metric noticeably.",
+        "Always monitor your highest-stakes segments independently: highest-revenue users, regulated populations, geographic regions.",
+      ],
+    },
+  ],
+
+  "weights-biases-mlops": [
+    {
+      id: "q-prod-kp46-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In Weights & Biases (W&B), what is a sweep and how does it accelerate hyperparameter optimization compared to manual grid search?",
+      options: [
+        "A sweep is a visualization of training loss curves across multiple runs.",
+        "A W&B sweep defines a search space (hyperparameter ranges and distributions) and a search strategy (grid, random, or Bayesian optimization); W&B agents automatically sample configurations, run training jobs, and report metrics back — enabling parallel distributed hyperparameter search that intelligently focuses on promising regions of the search space.",
+        "A sweep is a scheduled pipeline that retrains models on new data.",
+        "A sweep exports trained models to the W&B model registry for deployment.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "W&B sweeps automate HPO: (1) define sweep config (search space: lr=[1e-4, 1e-2], batch_size=[32, 128, 256]; strategy: Bayesian); (2) launch agents on multiple machines; (3) agents sample configs from W&B sweep server, run training, report metrics; (4) Bayesian optimization uses prior run results to sample more promising configs. This dramatically outperforms manual grid search for high-dimensional spaces and distributes across multiple GPUs automatically.",
+      hints: [
+        "Bayesian sweep: run 5 trials, update surrogate model, sample next config from promising regions, repeat. Smarter than random.",
+        "W&B sweep agents can run on different machines — one sweep config file launches 20 parallel HPO jobs.",
+      ],
+    },
+    {
+      id: "q-prod-kp46-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A team uses W&B Artifacts to version datasets and models. A production incident traces back to a model trained on a corrupted dataset version. How do W&B Artifacts enable root cause analysis?",
+      options: [
+        "W&B Artifacts only track models, not datasets.",
+        "W&B Artifacts store full lineage: the production model artifact links to the exact training run, which links to the exact dataset artifact (with its version and hash). The corrupted dataset is identified by tracing the artifact lineage graph, enabling pinpointing exactly which data version caused the issue, which other models were trained on it, and when the corruption was introduced.",
+        "W&B Artifacts store checksums but not lineage between datasets and models.",
+        "Root cause analysis requires checking the model\'s git commit history, not W&B artifacts.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "W&B Artifact lineage is a directed acyclic graph: dataset artifact → training run → model artifact → serving deployment. When an incident occurs: (1) identify the production model artifact; (2) trace its lineage to the training run; (3) identify the input dataset artifact; (4) check the dataset artifact\'s version history and hash. This identifies the exact corrupted data version, all models trained on it, and enables mass rollback of all affected deployments.",
+      hints: [
+        "Artifact lineage = a directed graph from raw data → processed data → training run → model → deployment.",
+        "Without lineage tracking, 'which data trained this model?' requires manual investigation of logs and scripts.",
+      ],
+    },
+    {
+      id: "q-prod-kp46-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "W&B Reports allow ML teams to document experiment results, compare model versions, and share findings with stakeholders in a reproducible, interactive format linked directly to the underlying run data.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "W&B Reports combine narrative (markdown text) with live experiment data (charts, metrics, artifact comparisons) in a shareable URL. Unlike static slides, Reports are linked to the underlying run data: charts update if new runs are added, metrics can be compared across model versions, and any stakeholder with access can drill into individual runs. This enables reproducible experiment documentation and model comparison without manually copying plots into slides.",
+      hints: [
+        "W&B Reports are live documents — the charts pull from actual run data, not static screenshots that go stale.",
+        "Sharing a W&B Report link gives stakeholders interactive access to compare models without requiring W&B expertise.",
+      ],
+    },
+  ],
+
+  "ab-testing-ml": [
+    {
+      id: "q-prod-kp47-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "An A/B test for a new recommendation model routes 50% of users to the challenger (model B). After 3 days, model B shows a 2% lift in click-through rate with p-value = 0.03. Should you promote model B to 100% traffic?",
+      options: [
+        "Yes — p-value < 0.05 means the result is statistically significant, so promote immediately.",
+        "Not yet. Verify: (1) the test ran long enough to capture weekly seasonality (7+ days recommended); (2) check for novelty effects (users click more because recommendations look different, not because they are better); (3) validate that the primary business metric (purchases, not just CTR) also improved; (4) ensure the sample size was pre-calculated to achieve the desired power before the test started.",
+        "No — p-value must be < 0.01 for ML A/B tests.",
+        "Yes — 3 days is sufficient for recommendation systems since session data accumulates quickly.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Common A/B test pitfalls: (1) week-of-week effects: Monday users behave differently from weekend users — 3 days misses this; (2) novelty effect: new recommendations get extra clicks from curiosity, not quality — the effect often decays over weeks; (3) metric misalignment: CTR improvement may not translate to purchase lift; (4) peeking: if the test was stopped early when p<0.05, the result is unreliable (multiple comparisons inflate Type I error). Best practice: pre-register sample size and duration before starting.",
+      hints: [
+        "Always check the primary business metric (purchases, revenue), not just the proxy metric you optimized for.",
+        "Novelty effect test: does the CTR lift decay after the first 3-5 days of exposure for repeat users?",
+      ],
+    },
+    {
+      id: "q-prod-kp47-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "An A/B test for a pricing model uses user-level randomization, but product analytics finds that control group users are seeing treatment prices (contamination). What is the most likely cause and how do you fix it?",
+      options: [
+        "The randomization algorithm has a bug and assigns random assignments.",
+        "Network effects or SUTVA violation: users in the control group are influenced by treated users (e.g., they see promoted prices on a shared device, household sharing, or social sharing). Fix: switch to cluster-level randomization (randomize by household, device fingerprint, or geographic cluster) to prevent cross-contamination between experimental units.",
+        "The A/B test framework does not support pricing experiments.",
+        "Increase the test sample size to dilute the contamination effect.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Stable Unit Treatment Value Assumption (SUTVA) requires that a unit\'s outcome depends only on its own treatment, not others\'. Household sharing violates SUTVA: if user A (treatment) sees a discounted price and tells user B (control) about it, user B\'s behavior is contaminated. Cluster-level randomization (randomize households, not users) eliminates this: all members of a household are in the same arm. This reduces statistical power (fewer independent units) but eliminates bias from contamination.",
+      hints: [
+        "SUTVA violation: user B\'s outcome depends on user A\'s treatment assignment. Fix: randomize clusters, not individuals.",
+        "For household or social products, always check for contamination before interpreting A/B results.",
+      ],
+    },
+    {
+      id: "q-prod-kp47-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Multi-armed bandit algorithms (e.g., Thompson Sampling, UCB) are always preferable to fixed-allocation A/B testing for ML model evaluation because they reduce regret during the experiment.",
+      options: ["True", "False"],
+      correctAnswer: "False",
+      explanation:
+        "Bandits and A/B tests serve different purposes: bandits minimize regret during exploration by routing more traffic to better-performing arms — optimal when exploration cost is high (users exposed to bad recommendations incur real loss). A/B tests with fixed allocation provide cleaner statistical inference (uncontaminated by adaptive sampling bias) and are preferred when: (1) you need unbiased causal estimates; (2) secondary metric analysis is needed; (3) novelty effects must be controlled for. For model evaluation (not optimization), A/B tests are often preferred for their clean statistical properties.",
+      hints: [
+        "Bandits optimize for regret minimization during the experiment; A/B tests optimize for clean statistical inference after it.",
+        "Adaptive sampling (bandit) biases the data toward the currently-winning arm, making secondary metric analysis harder.",
+      ],
+    },
+  ],
+
+  "serving-infrastructure": [
+    {
+      id: "q-prod-kp48-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "A production NLP model serving system receives requests with variable text lengths (50-2,000 tokens). Dynamic batching groups requests together before GPU inference. What is the primary challenge of dynamic batching with variable-length inputs?",
+      options: [
+        "Dynamic batching requires synchronous requests — it cannot handle async traffic.",
+        "Padding inefficiency: to batch sequences of different lengths, shorter sequences must be padded to the longest sequence in the batch, wasting compute on padding tokens. Mitigation: bucket requests by length (group 50-200 token requests together, 200-500 token requests together) and use attention masks to ignore padding in the model computation.",
+        "Dynamic batching is only possible with transformer models, not RNNs.",
+        "Variable-length inputs prevent dynamic batching — all inputs must be the same length.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Variable-length batching: a batch containing a 50-token and a 2,000-token sequence must pad the short sequence to 2,000 tokens — wasting 97.5% of compute on that sequence. Bucketing reduces waste: group requests into length buckets (e.g., <=128, <=512, <=2048 tokens), batch within buckets, and accept slightly longer wait times for under-full buckets. Triton Inference Server and TensorRT-LLM implement this automatically.",
+      hints: [
+        "A 50-token sequence padded to 2,000 tokens wastes 97.5% of the compute allocated to it.",
+        "Length bucketing: group similar-length sequences together to minimize padding waste within each batch.",
+      ],
+    },
+    {
+      id: "q-prod-kp48-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A recommendation serving system uses a Redis cache to store pre-computed model scores keyed by user_id. Cache hit rate is 40%. Users complain about stale recommendations. What is the correct approach to balance freshness and latency?",
+      options: [
+        "Disable caching — staleness is unacceptable for recommendations.",
+        "Implement TTL-based cache invalidation (scores expire after N minutes, tuned to the business staleness tolerance), proactive cache warming for high-traffic users (compute scores before the cache expires and push to Redis), and a stale-while-revalidate approach: serve cached scores instantly but trigger an async background recomputation that updates the cache for the next request.",
+        "Increase Redis memory to cache all users indefinitely.",
+        "Switch from Redis to a disk-based cache with slower eviction.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Cache freshness management: (1) TTL expires stale entries automatically — set TTL based on how quickly recommendations meaningfully change (e.g., 30 minutes for product recommendations, 5 minutes for news); (2) proactive warming prevents cold misses for power users by pre-computing before TTL expiry; (3) stale-while-revalidate pattern: serve the stale cache hit immediately for low latency, trigger async recomputation in the background so the next request gets fresh scores. This achieves near-100% cache hit rate with bounded staleness.",
+      hints: [
+        "Stale-while-revalidate: serve cached (possibly stale) score now, update cache async for the next request.",
+        "TTL should match the rate of meaningful change: trending news needs short TTLs; stable user demographics can have long TTLs.",
+      ],
+    },
+    {
+      id: "q-prod-kp48-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Hardware accelerators like Google TPUs and NVIDIA A100s provide the most benefit for ML inference workloads that are compute-bound (large matrix multiplications in transformer attention and feed-forward layers), not memory-bandwidth-bound operations.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Accelerator efficiency: TPUs and A100s excel at compute-bound operations — they achieve 312 TFLOPS (A100 FP16) for matrix multiplications that fully utilize their tensor cores. Memory-bandwidth-bound operations (small elementwise ops, layer norm on small tensors) underutilize the compute units because data movement is the bottleneck. For efficient accelerator utilization, maximize the proportion of time spent on large matrix multiplications (kernel fusion, larger batch sizes, longer sequences) to keep tensor cores busy.",
+      hints: [
+        "A100 peak: 312 TFLOPS compute vs. 2 TB/s memory bandwidth. Large matmul hits the compute roof; small ops hit the bandwidth roof.",
+        "Wider models (more parameters per layer) are more compute-efficient on accelerators than narrow deep models.",
+      ],
+    },
+  ],
+
+  "online-vs-offline-features": [
+    {
+      id: "q-prod-kp49-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "A fraud detection model uses two types of features: user account age (computed from account creation date) and number of transactions in the last 5 minutes. Which features are online vs. offline features, and why?",
+      options: [
+        "Both are online features since they are used at prediction time.",
+        "Account age is an offline feature (changes slowly, can be pre-computed and materialized hourly with minimal staleness impact) stored in the online feature store via batch materialization. Number of transactions in the last 5 minutes is a pure online feature (must be computed in real time from streaming data via Flink or Spark Streaming — cannot be pre-materialized since it changes every second).",
+        "Account age is offline; transaction count is online. Offline features are not used at serving time.",
+        "Both are offline features since they are computed from historical data.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Feature classification by freshness requirements: account age (changes daily) can be batch-computed and materialized to Redis hourly — at inference, Redis lookup (sub-millisecond) returns a value at most 1 hour stale, which is acceptable. Transaction count in 5 minutes (changes every second) cannot be materialized — it must be computed in real time from the event stream. The feature store must support both: pre-materialized batch features (served from Redis) and on-demand streaming features (served from a Flink application or computed at request time).",
+      hints: [
+        "If a feature\'s value changes faster than your materialization frequency, it cannot be pre-materialized — it is a pure online feature.",
+        "Account age hourly staleness: acceptable (changes once per day). Transaction count hourly staleness: unacceptable (changes every second).",
+      ],
+    },
+    {
+      id: "q-prod-kp49-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A feature pipeline computes the 30-day moving average of a user\'s spending. In training, this is computed over historical transaction logs. At serving time, the feature store computes it from the past 30 days of real-time data. After 6 months in production, the model\'s precision on high-value transactions degrades significantly. What is the most likely cause?",
+      options: [
+        "The model\'s feature weights drift over time due to model decay.",
+        "Training-serving temporal skew: the training 30-day window included transactions from 6+ months ago with different spending patterns; the serving window reflects current spending behavior. If macroeconomic conditions or product changes shifted spending patterns, the model was trained on a different distribution than it now serves. Retraining on recent data (using the same lookback window) should resolve this.",
+        "The feature store Redis cache is returning stale values for the 30-day average.",
+        "Precision degradation is caused by model weight corruption in the serving infrastructure.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Temporal training-serving skew: the model was trained on historical 30-day averages computed over a period with different base spending rates. Now, the same feature computation produces different value distributions because the underlying spending behavior changed. The feature definition is correct; the training data is stale. Diagnosis: compare the training-time feature distribution to the current serving-time distribution — if they diverged significantly, retraining on recent data with the same 30-day lookback is the fix.",
+      hints: [
+        "Compare the training-time feature distribution to the current serving-time distribution — significant divergence = temporal skew.",
+        "The feature computation is correct, but the model was trained when the same feature had different values due to different base rates.",
+      ],
+    },
+    {
+      id: "q-prod-kp49-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Point-in-time correct feature retrieval for training data means joining feature values as they existed at the time of each training example, preventing future feature values from leaking into the training set.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Point-in-time (PIT) correctness in feature retrieval: for a training example with timestamp T, the feature values used should be those that were available at time T, not the current values. Feature stores (Feast, Tecton, Hopsworks) implement PIT joins that look up the most recent feature value before time T for each entity. Without PIT joins, a training example from T=2024-01-01 might use feature values from T=2024-06-01 — future information leaking into training, causing an overly optimistic offline AUC.",
+      hints: [
+        "PIT join: for each training label at time T, look up feature value at the most recent timestamp <= T.",
+        "Without PIT correctness, your training data contains future feature values — a severe form of feature leakage.",
+      ],
+    },
+  ],
 };
 
 registerQuestions(questions);

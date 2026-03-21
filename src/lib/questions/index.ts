@@ -1502,6 +1502,342 @@ const questionOverrides: Record<string, QuestionOverride> = {
     ],
     correctAnswer: 0,
   },
+  "q-tr-kp7-1": {
+    question:
+      "A scaling law says loss is proportional to N^-0.076. If model size increases from 1B to 10B parameters, the loss is multiplied by approximately:",
+    options: ["0.84", "0.50", "0.10", "1.00"],
+    correctAnswer: 0,
+  },
+  "q-tr-kp6-2": {
+    type: "multiple-choice",
+    question:
+      "For the same d_model, increasing vocabulary size from 50,000 tokens to 100,000 tokens makes the embedding table:",
+    options: [
+      "About 2x larger",
+      "About 4x larger",
+      "The same size",
+      "Smaller because larger vocabularies use shorter sequences",
+    ],
+    correctAnswer: 0,
+  },
+  "q-dl-kp15-2": {
+    question:
+      "In a residual block H(x) = F(x) + x, the skip connection gives the gradient a direct identity path in addition to the residual branch.",
+    correctAnswer: "true",
+  },
+  "q-tr-kp30-3": {
+    question:
+      "In tensor-parallel systems, which collective operation sums partial tensors across all GPUs and returns the summed result to every GPU?",
+    options: ["All-reduce", "All-gather", "Broadcast", "Scatter"],
+    correctAnswer: 0,
+  },
+  "q-tr-kp14-3": {
+    question:
+      "What limits the speedup of self-speculative decoding compared with using a separate small draft model?",
+    options: [
+      "It still relies on the full target-model backbone to produce draft tokens",
+      "It changes the target model's output distribution",
+      "It only works for models smaller than 7B",
+      "It requires labeled multi-token targets",
+    ],
+    correctAnswer: 0,
+  },
+  "q-tr-kp1-1": {
+    question: "Why does scaled dot-product attention divide by sqrt(d_k)?",
+    options: [
+      "To keep attention logits from growing too large and saturating the softmax",
+      "To make each attention row sum to 1",
+      "To match the dimension of the value vectors",
+      "To apply the causal mask",
+    ],
+    correctAnswer: 0,
+  },
+  "q-tr-kp5-1": {
+    question:
+      "In the original transformer learning-rate schedule, when does the learning rate reach its maximum?",
+    options: [
+      "At step 1",
+      "At step = warmup_steps",
+      "At step = 2 * warmup_steps",
+      "It never reaches a maximum",
+    ],
+    correctAnswer: 1,
+  },
+  "q-dl-kp9-1": {
+    question:
+      "For cross-entropy loss L = -log(p_correct), what is the loss when p_correct = 0.01?",
+    options: ["0.01", "1.0", "4.6", "100"],
+    correctAnswer: 2,
+  },
+  "q-tab-kp35-1": {
+    question:
+      "Production labels arrive 30 days late. Which method can detect feature drift before labels are available?",
+    options: [
+      "Compare training and production feature distributions with PSI, KS, or chi-squared tests",
+      "Compute AUROC on the production set",
+      "Tune the classification threshold on production data",
+      "Measure training loss on the original training set",
+    ],
+    correctAnswer: 0,
+  },
+  "q-tab-kp26-2": {
+    question:
+      "You are predicting loan default at origination. Which feature is target leakage?",
+    options: [
+      "Applicant income at origination",
+      "Credit score at origination",
+      "Number of missed payments in the 90 days after origination",
+      "Debt-to-income ratio at origination",
+    ],
+    correctAnswer: 2,
+  },
+  "q-tab-kp11-3": {
+    question:
+      "For a gradient-boosted tree model, why is TreeSHAP usually preferred over KernelSHAP?",
+    options: [
+      "TreeSHAP uses the tree structure to compute exact SHAP values efficiently",
+      "TreeSHAP works only for classification, while KernelSHAP works for regression",
+      "TreeSHAP removes low-importance features before explaining the model",
+      "TreeSHAP gives only global explanations, while KernelSHAP gives only local explanations",
+    ],
+    correctAnswer: 0,
+  },
+  "q-opt-kp4-2": {
+    question:
+      "A cosine annealing schedule without warm restarts decreases the learning rate smoothly from a maximum to a minimum along a cosine curve.",
+    correctAnswer: "true",
+  },
+  "q-opt-kp35-3": {
+    question:
+      "What is the main advantage of variance-reduction methods like SVRG over plain SGD on finite-sum objectives?",
+    options: [
+      "They guarantee the global minimum for non-convex problems",
+      "They reduce gradient noise by correcting stochastic gradients with reference information, which can speed convergence",
+      "They remove the need for any full-gradient computation",
+      "They remove the need for learning-rate tuning",
+    ],
+    correctAnswer: 1,
+  },
+  "q-opt-kp36-1": {
+    question:
+      "Why do zeroth-order gradient estimators become expensive in high dimensions?",
+    options: [
+      "They require Hessian-vector products at every step",
+      "Their gradient estimates get noisier as dimension grows, so they need many more function evaluations",
+      "They can optimize only convex objectives",
+      "They cannot use random directions in high dimensions",
+    ],
+    correctAnswer: 1,
+  },
+  "q-opt-kp37-3": {
+    question:
+      "For strongly convex objectives, what convergence rate is typical for SGD with a decaying learning rate eta_t = O(1/t)?",
+    options: ["O(log t / t)", "O(1/sqrt(t))", "O(1/t^2)", "O(1)"],
+    correctAnswer: 0,
+  },
+  "q-opt-kp40-3": {
+    question:
+      "What is the practical goal of orthogonalizing a matrix-valued update in Muon?",
+    options: [
+      "To make the update zero so only momentum changes the weights",
+      "To spread the update more evenly across the matrix's directions instead of letting a few large directions dominate",
+      "To force the weight matrix itself to stay exactly orthogonal after every step",
+      "To turn a dense gradient into a sparse gradient",
+    ],
+    correctAnswer: 1,
+  },
+  "q-hc-kp4-3": {
+    question: "How are clinical-note de-identification systems usually evaluated?",
+    options: [
+      "BLEU on the redacted note text",
+      "Precision, recall, and F1 on predicted PHI spans",
+      "AUROC for classifying whether a note contains PHI",
+      "Word error rate after redaction",
+    ],
+    correctAnswer: 1,
+  },
+  "q-hc-kp7-3": {
+    question: "What does GDT_TS measure in protein structure prediction?",
+    options: [
+      "Average percentage of C-alpha atoms within 1, 2, 4, and 8 angstroms of the reference structure",
+      "Per-residue confidence assigned by the model",
+      "RMSD of all heavy atoms after alignment",
+      "Sequence identity to the nearest template",
+    ],
+    correctAnswer: 0,
+  },
+  "q-hc-kp8-3": {
+    question: "What is a common limitation of standard GWAS analyses?",
+    options: [
+      "They test one variant at a time, so variant interactions can be missed",
+      "They cannot use case-control data",
+      "They require every significant variant to change a protein sequence",
+      "They directly prove causation for each significant variant",
+    ],
+    correctAnswer: 0,
+  },
+  "q-hc-kp27-3": {
+    question:
+      "Which evaluation setup checks whether synthetic health data is useful for training a model that will be used on real patients?",
+    options: [
+      "Train on real, test on synthetic (TRTS)",
+      "Train on synthetic, test on real (TSTR)",
+      "Compare average record length only",
+      "Compute BLEU between real and synthetic records",
+    ],
+    correctAnswer: 1,
+  },
+  "q-sciml-kp1-3": {
+    question: "Why are adaptive loss weights used in PINNs?",
+    options: [
+      "To keep boundary, residual, and data losses learning at similar speeds",
+      "To remove the need for boundary conditions",
+      "To make automatic differentiation unnecessary",
+      "To turn the PINN into a mesh-based solver",
+    ],
+    correctAnswer: 0,
+  },
+  "q-sciml-kp25-3": {
+    question: "Why add conservation constraints to an ML climate model?",
+    options: [
+      "To reduce long-rollout drift by keeping mass and energy physically consistent",
+      "To remove the need for training data",
+      "To guarantee the model works at any spatial resolution",
+      "To make forecasts independent of initial conditions",
+    ],
+    correctAnswer: 0,
+  },
+  "q-sciml-kp36-3": {
+    question: "What does a-posteriori instability mean for an ML turbulence model?",
+    options: [
+      "It predicts stresses well on frozen validation inputs but destabilizes the CFD solver when used inside the simulation loop",
+      "Its training loss oscillates and fails to converge",
+      "It can model only laminar flows",
+      "It requires double-precision hardware to run",
+    ],
+    correctAnswer: 0,
+  },
+  "q-sciml-kp40-3": {
+    question:
+      "In DreamFusion-style SDS, what signal from the diffusion model is used to update the 3D scene?",
+    options: [
+      "A denoising direction that pushes rendered views toward images the diffusion model considers likely for the prompt",
+      "Pixelwise error against labeled target photos",
+      "A classification score for the rendered object",
+      "Exact 3D supervision from a reference mesh",
+    ],
+    correctAnswer: 0,
+  },
+  "q-adapt-kp4-3": {
+    question:
+      "In the Ben-David adaptation bound, which term does DANN try to reduce with its domain classifier?",
+    options: [
+      "Source task loss",
+      "The divergence between source and target feature distributions",
+      "The irreducible joint error lambda*",
+      "The entropy of target labels",
+    ],
+    correctAnswer: 1,
+  },
+  "q-ssl-kp4-3": {
+    question: "Why does SimCLR typically benefit from very large batch sizes?",
+    options: [
+      "Each example sees many in-batch negatives in the contrastive loss",
+      "Large batches make the projection head unnecessary",
+      "Large batches reduce the need for image augmentations",
+      "Linear probing only works after large-batch pre-training",
+    ],
+    correctAnswer: 0,
+  },
+  "q-ssl-kp38-2": {
+    question:
+      "Which statement best describes SSL pre-training for molecular GNNs?",
+    options: [
+      "Several objectives are common in practice; masking, context prediction, and contrastive learning can all work well",
+      "Context prediction is the only objective that transfers reliably",
+      "Contrastive learning has fully replaced masking-based methods",
+      "Most molecular GNNs are pre-trained by reconstructing exact 3D coordinates",
+    ],
+    correctAnswer: 0,
+  },
+  "q-cv-kp13-2": {
+    question: "What does the brightness constancy assumption say in optical flow?",
+    options: [
+      "The same scene point keeps approximately the same intensity between consecutive frames",
+      "The whole image keeps the same average brightness across frames",
+      "All objects move at constant speed",
+      "Neighboring pixels always have identical brightness",
+    ],
+    correctAnswer: 0,
+  },
+  "q-cv-kp13-3": {
+    question:
+      "Dense optical flow assigns a 2D motion vector to each pixel in the image.",
+    correctAnswer: "true",
+  },
+  "q-msd-kp1-3": {
+    question:
+      "A model replica can handle 100 concurrent requests. If p99 latency is 80 ms, about how many replicas are needed to serve 10,000 QPS?",
+    options: ["1", "8", "80", "125"],
+    correctAnswer: 1,
+  },
+  "q-msd-kp1-6": {
+    question:
+      "99.9% availability over a 30-day month allows about how much downtime?",
+    options: ["4.3 minutes", "43 minutes", "4.3 hours", "43 hours"],
+    correctAnswer: 1,
+  },
+  "q-msd-kp2-3": {
+    question:
+      "A fraud model must catch at least 80% of fraud. Which offline metric best matches that requirement?",
+    options: [
+      "Accuracy",
+      "Precision at 80% recall",
+      "Mean squared error",
+      "R^2",
+    ],
+    correctAnswer: 1,
+  },
+  "q-msd-kp5-6": {
+    question:
+      "A mobile model search produced four candidates: A (92% accuracy, 20 ms), B (94%, 35 ms), C (92%, 28 ms), and D (91%, 18 ms). Which candidate is Pareto-dominated?",
+    options: ["A", "B", "C", "D"],
+    correctAnswer: 2,
+  },
+  "q-msd-kp7-6": {
+    question:
+      "A serving pipeline has four sequential steps: retrieval 5 ms, feature fetch 10 ms, reranking 20 ms, and post-processing 2 ms. If you can cut exactly one step in half, which change reduces end-to-end latency the most?",
+    options: [
+      "Cut retrieval from 5 ms to 2.5 ms",
+      "Cut feature fetch from 10 ms to 5 ms",
+      "Cut reranking from 20 ms to 10 ms",
+      "Cut post-processing from 2 ms to 1 ms",
+    ],
+    correctAnswer: 2,
+  },
+  "q-msd-kp10-3": {
+    question:
+      "Fraud rate is 0.5%. What accuracy does a model get by predicting 'not fraud' for every transaction?",
+    options: ["50%", "95%", "99.5%", "100%"],
+    correctAnswer: 2,
+  },
+  "q-msd-kp13-1": {
+    question:
+      "A moderation system handles 100,000 posts per second. Harmful rate is 0.1%. Recall is 85%, and precision is 99%. About how many false positives does it produce per second?",
+    options: ["About 1", "About 15", "About 85", "About 1,000"],
+    correctAnswer: 0,
+  },
+  "q-msd-kp14-6": {
+    question:
+      "Scoring one record pair takes 0.1 ms. About how long would it take to score 50 billion pairs on one machine?",
+    options: [
+      "About 58 minutes",
+      "About 58 hours",
+      "About 58 days",
+      "About 58 years",
+    ],
+    correctAnswer: 2,
+  },
 };
 
 function normalizeText(text: string): string {
