@@ -1,5 +1,5 @@
 import type { Question } from "@/lib/curriculum";
-import { registerQuestions } from "@/lib/questions";
+import { registerQuestions } from "./registry";
 
 const questions: Record<string, Question[]> = {
   "requirements-ml": [
@@ -1684,573 +1684,582 @@ const questions: Record<string, Question[]> = {
     },
   ],
 
-  "feature-store-design-v2": [
+  "real-time-ml-systems": [
     {
-      id: "q-msd-kp15-1",
+      id: "q-msd-rt1-1",
       type: "multiple-choice",
-      difficulty: "medium",
-      question:
-        "Which of the following is the primary challenge that a feature store solves in ML systems?",
-      options: [
-        "Reducing model training time by using faster hardware.",
-        "Ensuring consistency between features used during training and serving (training-serving skew).",
-        "Automatically selecting the best model architecture for a given task.",
-        "Compressing model weights for efficient deployment.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "Training-serving skew — where features computed differently at training vs. serving time — is one of the most common and damaging ML bugs. Feature stores solve this by providing a single source of truth: features are computed once, stored, and retrieved by both training pipelines and serving infrastructure, guaranteeing consistency.",
-      hints: [
-        "A feature store has both an offline store (for training) and an online store (low-latency serving).",
-        "Training-serving skew can silently degrade model performance without any error.",
-      ],
-    },
-    {
-      id: "q-msd-kp15-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "A feature store's online store (e.g., Redis) and offline store (e.g., Parquet on S3) can be kept in sync using a materialization job that periodically writes computed features to both stores.",
-      options: ["True", "False"],
-      correctAnswer: "True",
-      explanation:
-        "Materialization jobs compute features from raw data sources and write them to both online (low-latency key-value store like Redis or DynamoDB) and offline (columnar storage like Parquet or Delta Lake) stores. This dual-write approach ensures that the same feature values used during training are available at serving time with sub-millisecond latency.",
-      hints: [
-        "Feast, Tecton, and Hopsworks all implement this dual-store pattern.",
-        "Point-in-time correct joins prevent future data leakage when retrieving offline features for training.",
-      ],
-    },
-    {
-      id: "q-msd-kp15-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "A recommendation system computes user embeddings nightly and item embeddings in real-time. Which feature store architecture best supports this mixed latency requirement?",
-      options: [
-        "Store all features in an online store (Redis) — nightly batch jobs update user embeddings.",
-        "Store all features offline only and batch-materialize before each serving request.",
-        "Use a hybrid architecture: batch-materialize user embeddings to the online store nightly; compute item embeddings on-demand and cache with short TTL.",
-        "Compute all features on-demand at serving time to avoid staleness.",
-      ],
-      correctAnswer: 2,
-      explanation:
-        "Hybrid feature stores are standard in production recommendation systems. User embeddings change slowly (daily recompute is sufficient) and should be pre-materialized to an online store for O(1) retrieval. Item features (price, inventory, freshness) change rapidly and require real-time computation or short-TTL caching. On-demand computation of all features at serving time introduces unacceptable latency at scale.",
-      hints: [
-        "User features: high cardinality, slow-changing → batch materialization.",
-        "Item features: often real-time (price, availability) → on-demand or short TTL cache.",
-      ],
-    },
-  ],
-  "data-pipeline-design": [
-    {
-      id: "q-msd-kp16-1",
-      type: "multiple-choice",
-      difficulty: "medium",
-      question:
-        "In a Lambda architecture for ML feature pipelines, what are the two layers and their respective roles?",
-      options: [
-        "Batch layer (historical accuracy) and speed layer (low-latency recent data); results are merged at serving time.",
-        "Training layer (feature engineering) and serving layer (inference); features flow unidirectionally.",
-        "Storage layer (data lake) and compute layer (Spark); storage feeds compute.",
-        "Online layer (real-time features) and offline layer (batch features); they use separate feature stores.",
-      ],
-      correctAnswer: 0,
-      explanation:
-        "Lambda architecture uses a batch layer for accurate, high-latency processing of all historical data (e.g., daily Spark jobs) and a speed layer for low-latency processing of recent data (e.g., Kafka Streams). At query time, results from both layers are merged to provide a complete, near-real-time view. This architecture trades complexity (two codebases) for flexibility in handling late-arriving data.",
-      hints: [
-        "Kappa architecture simplifies Lambda by using only a streaming layer — replay the stream for batch reprocessing.",
-        "The serving layer in Lambda merges batch views and real-time views on read.",
-      ],
-    },
-    {
-      id: "q-msd-kp16-2",
-      type: "true-false",
       difficulty: "easy",
       question:
-        "In a data pipeline for ML, idempotency means that running the pipeline multiple times with the same input produces the same output without side effects.",
-      options: ["True", "False"],
-      correctAnswer: "True",
-      explanation:
-        "Idempotency is a critical property for reliable ML data pipelines. It ensures that retries (due to failures) or reruns (due to bugs) produce correct results without duplicating data or corrupting state. Common patterns include using upserts instead of inserts, writing to immutable partitions, and using deterministic transformations.",
-      hints: [
-        "Non-idempotent pipelines can cause data duplication on retry — a common production incident.",
-        "Write to a staging location first, then atomically move/promote to the final destination.",
-      ],
-    },
-    {
-      id: "q-msd-kp16-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "A fraud detection pipeline must process 50,000 transactions/second with feature computation latency under 5ms. Which architecture is most appropriate?",
+        "A streaming inference system must score user events (clicks, purchases) within 50 ms of the event arriving. Which architecture component is MOST critical to achieving this latency?",
       options: [
-        "Apache Spark Structured Streaming with micro-batches every 100ms.",
-        "Kafka Streams with stateful windowed aggregations, precomputed features in Redis, real-time scoring via gRPC.",
-        "Nightly batch Spark jobs that precompute all features and load them into a relational database.",
-        "REST API polling with a feature computation service called at transaction time.",
+        "A large transformer model running on GPU for maximum accuracy.",
+        "A pre-materialized feature store (Redis) serving pre-computed features with sub-millisecond point-lookup latency, paired with a lightweight scoring model.",
+        "A relational database (PostgreSQL) with indexed event logs for feature retrieval.",
+        "A Spark Streaming job that recomputes all user features on each event.",
       ],
       correctAnswer: 1,
       explanation:
-        "At 50,000 TPS with 5ms latency requirement, Kafka Streams is ideal: it processes events as they arrive (not micro-batches), supports stateful aggregations (windowed transaction counts per user), and integrates with Redis for precomputed user-level features (average spend, velocity signals). gRPC for scoring adds minimal overhead vs. REST. Spark micro-batches at 100ms intervals would violate the 5ms latency requirement.",
+        "The dominant latency component in streaming inference is feature retrieval, not model scoring. A Redis online store delivers pre-computed features in <1 ms; a lightweight model (GBDT or shallow NN) scores in <5 ms. This leaves 40+ ms for network and orchestration. Spark Streaming micro-batches cannot meet 50 ms SLOs, and PostgreSQL query latency is 5–50 ms per query — too slow when multiple features are needed.",
       hints: [
-        "50,000 TPS × 5ms latency → need sub-millisecond feature retrieval, not computation.",
-        "Precompute slow-changing features (e.g., 30-day spend average) in Redis; compute fast features (e.g., transaction count in last 60s) in Kafka Streams.",
-      ],
-    },
-  ],
-  "model-serving-design": [
-    {
-      id: "q-msd-kp17-1",
-      type: "multiple-choice",
-      difficulty: "medium",
-      question:
-        "What is the key trade-off between synchronous (request-response) and asynchronous (queue-based) model serving architectures?",
-      options: [
-        "Synchronous serving is always faster; asynchronous serving is always more scalable.",
-        "Synchronous serving provides immediate results with tight latency SLAs; asynchronous serving decouples producers from consumers, enabling load leveling but introducing result delivery complexity.",
-        "Asynchronous serving is only suitable for batch predictions; synchronous serving handles real-time use cases.",
-        "Synchronous serving requires more GPU resources because it cannot batch requests.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "Synchronous serving is required when callers need immediate results (e.g., search ranking, fraud detection). Asynchronous serving (via queues like Kafka or SQS) decouples the request rate from the processing rate — ideal for high-throughput, latency-tolerant use cases (e.g., document processing, video transcription). Asynchronous patterns require result delivery mechanisms (callbacks, polling, WebSockets) that add complexity.",
-      hints: [
-        "Use async when: workload is bursty, processing is slow, clients can tolerate delay.",
-        "Async enables better GPU utilization through dynamic batching of queued requests.",
+        "Feature retrieval latency typically dominates inference latency in real-time ML systems.",
+        "Redis GET: ~0.1 ms. PostgreSQL point lookup: 5–20 ms. Choose accordingly.",
       ],
     },
     {
-      id: "q-msd-kp17-2",
+      id: "q-msd-rt1-2",
       type: "true-false",
       difficulty: "medium",
       question:
-        "Dynamic batching in model serving (e.g., TensorRT-LLM, Triton Inference Server) improves GPU throughput by grouping multiple inference requests into a single forward pass, at the cost of increased latency for individual requests.",
+        "Edge deployment of ML models (running inference on the device rather than a server) always requires re-training the model from scratch because edge hardware lacks the compute used in training.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: "False",
       explanation:
-        "Dynamic batching collects incoming requests over a configurable wait window and combines them into a single batch for GPU inference. This dramatically improves GPU utilization (GPUs are parallelism engines — a batch of 32 is much faster than 32 sequential single requests) but adds queuing latency. The batch size and wait time are key configuration parameters that trade throughput for latency.",
+        "Edge deployment uses post-training compression techniques (quantization, pruning, knowledge distillation) applied to a pre-trained server-side model. TensorFlow Lite, ONNX Runtime Mobile, and PyTorch Mobile convert trained models to edge-optimized formats without retraining. Quantization-aware training (QAT) is an optional fine-tuning step that starts from pre-trained weights, not random initialization.",
       hints: [
-        "A GPU running batch_size=1 inference uses a fraction of its CUDA cores.",
-        "Triton's dynamic batching can be configured with max_queue_delay_microseconds.",
+        "TFLite and CoreML take existing model weights and convert/optimize them for edge hardware.",
+        "Quantization-aware training fine-tunes an existing model — it is not a full re-train from scratch.",
       ],
     },
     {
-      id: "q-msd-kp17-3",
+      id: "q-msd-rt1-3",
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "A large language model serving system must handle 10,000 concurrent users with variable prompt lengths (100-2000 tokens) and response lengths (50-500 tokens). Which serving optimization is MOST critical for throughput?",
+        "A real-time recommendation system has a p99 latency SLA of 80 ms end-to-end. Profiling shows: ANN retrieval 15 ms, feature fetch (Redis) 12 ms, model inference 30 ms, response serialization 5 ms. Total p50 is 62 ms but p99 is 130 ms. What is the MOST likely cause and the correct mitigation?",
       options: [
-        "Increasing batch size to 512 regardless of sequence length.",
-        "Using continuous batching (iteration-level scheduling) with paged KV cache to maximize GPU memory utilization.",
-        "Deploying separate model instances for short and long sequences.",
-        "Using FP32 precision to avoid quantization errors affecting long sequences.",
+        "The model inference is too slow at p99 — replace the model with a smaller one.",
+        "Tail latency amplification: at p99, sequential steps compound slow tails (GC pause, Redis eviction, network jitter). Mitigation: hedged requests to the feature store, per-step timeouts with cached fallbacks, and request-level retries with backoff.",
+        "The ANN retrieval step needs more replicas to reduce p99.",
+        "Response serialization at 5 ms is the bottleneck — switch from JSON to protobuf.",
       ],
       correctAnswer: 1,
       explanation:
-        "For LLM serving with variable sequence lengths, continuous batching (vLLM's approach) is the key innovation. Traditional static batching must wait for the longest sequence in a batch to finish before starting new requests. Continuous batching adds new requests as soon as any sequence completes, maximizing GPU utilization. Paged KV cache (PagedAttention) manages memory efficiently for variable-length sequences, avoiding memory waste from fixed-size KV caches.",
+        "p99 spikes in sequential multi-step pipelines arise from tail latency amplification: even if each step's p99 is acceptable individually, the combination of independent slow-tail probabilities means a 4-step pipeline has a compounded probability of a slow response. Hedged requests (speculative execution) and per-step timeouts with cached fallbacks are the standard mitigations.",
       hints: [
-        "vLLM's PagedAttention achieves near-zero memory waste by managing KV cache like virtual memory pages.",
-        "Continuous batching can improve throughput 20-30× over naive static batching for LLMs.",
+        "Tail latency amplification: k sequential steps each with P(slow)=0.01 gives P(at least one slow)=1-(0.99^k).",
+        "Hedged requests: send the same feature fetch to two Redis replicas simultaneously; use whichever responds first.",
       ],
     },
   ],
-  "ab-testing-design": [
+
+  "ml-data-flywheel": [
     {
-      id: "q-msd-kp18-1",
+      id: "q-msd-dfw1-1",
       type: "multiple-choice",
-      difficulty: "medium",
-      question:
-        "In an A/B testing system for ML models, what is the purpose of 'holdback' groups?",
-      options: [
-        "Holdback groups receive the new model; control groups receive the baseline.",
-        "A small percentage of users is held back on the old experience long-term to measure cumulative and novelty effects that might bias short-term experiments.",
-        "Holdback groups are used for data quality validation before experiments begin.",
-        "Holdback groups ensure that sensitive user segments are excluded from experiments.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "Holdback groups (also called holdout groups) are long-running control groups that continue receiving the old experience while the rest of the user base receives the new feature. They're used to measure long-term effects (after novelty effects subside), detect permanent vs. temporary improvements, and quantify the cumulative value of shipped features over time. Without holdbacks, short-term experiment gains may not reflect steady-state performance.",
-      hints: [
-        "Novelty effect: users may engage more with any change initially, inflating metrics.",
-        "Holdbacks can run for weeks or months to detect long-term behavioral changes.",
-      ],
-    },
-    {
-      id: "q-msd-kp18-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "In an ML model A/B test, using page views as the randomization unit (instead of user IDs) can cause Simpson's Paradox and inflate false positive rates.",
-      options: ["True", "False"],
-      correctAnswer: "True",
-      explanation:
-        "When randomizing by page views rather than users, the same user can be in both treatment and control groups across different sessions. This violates the independence assumption of standard statistical tests, leading to inflated false positive rates. Additionally, heavy users (who generate more page views) are overrepresented in the analysis. User-level randomization ensures each user has a single, consistent treatment assignment throughout the experiment.",
-      hints: [
-        "The unit of randomization must match the unit of analysis in significance tests.",
-        "Cookie-based randomization can also cause issues when users clear cookies or use multiple devices.",
-      ],
-    },
-    {
-      id: "q-msd-kp18-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "An e-commerce platform runs 200 A/B experiments simultaneously. With α=0.05, what is the expected number of false positives, and how should the experimentation system address this?",
-      options: [
-        "0 false positives — each experiment controls its own α independently.",
-        "10 false positives (200 × 0.05); use Bonferroni correction: α_corrected = 0.05/200 = 0.00025.",
-        "10 false positives (200 × 0.05); use sequential testing or Bayesian methods with FDR control (e.g., Benjamini-Hochberg at FDR=0.05).",
-        "40 false positives — the multiple comparison problem inflates each individual experiment's error rate.",
-      ],
-      correctAnswer: 2,
-      explanation:
-        "With 200 simultaneous experiments at α=0.05, you expect ~10 false positives (type I errors) even with no real effects. Bonferroni correction is too conservative for independent experiments (loses statistical power). The Benjamini-Hochberg procedure controls the False Discovery Rate (FDR) — the expected fraction of discoveries that are false — which is more appropriate for large-scale experimentation. Sequential testing (e.g., always-valid p-values) also addresses peeking problems.",
-      hints: [
-        "Family-Wise Error Rate (FWER) control: probability of ANY false positive. Bonferroni controls FWER.",
-        "False Discovery Rate (FDR) control: fraction of discoveries that are false. BH procedure controls FDR.",
-      ],
-    },
-  ],
-  "ml-platform-design": [
-    {
-      id: "q-msd-kp19-1",
-      type: "multiple-choice",
-      difficulty: "medium",
-      question:
-        "Which of the following best describes the role of an ML platform in an organization?",
-      options: [
-        "An ML platform trains and deploys models autonomously without human intervention.",
-        "An ML platform provides shared infrastructure, tooling, and abstractions that enable ML practitioners to efficiently develop, train, evaluate, and deploy models at scale.",
-        "An ML platform is primarily a data storage solution optimized for training datasets.",
-        "An ML platform replaces the need for dedicated ML engineering teams.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "ML platforms (like Uber's Michelangelo, Airbnb's Bighead, or open-source alternatives like MLflow + Kubeflow) provide shared infrastructure that multiplies ML team productivity. Key components include: experiment tracking, feature stores, model training orchestration, model registry, serving infrastructure, and monitoring. The platform abstracts infrastructure complexity so practitioners focus on ML work rather than DevOps.",
-      hints: [
-        "MLOps platforms reduce the time from model idea to production from months to days.",
-        "Key platform principle: golden path — make the right thing easy and the wrong thing hard.",
-      ],
-    },
-    {
-      id: "q-msd-kp19-2",
-      type: "true-false",
       difficulty: "easy",
       question:
-        "A model registry is a centralized repository that stores trained model artifacts, metadata, and versioning information, enabling teams to track which model version is deployed in each environment.",
-      options: ["True", "False"],
-      correctAnswer: "True",
-      explanation:
-        "Model registries (e.g., MLflow Model Registry, Weights & Biases Model Registry) provide a governance layer for ML models. They store: model artifacts (weights, preprocessing code), metadata (training metrics, dataset versions, hyperparameters), stage transitions (Staging → Production), and approval workflows. This enables reproducibility, rollback capability, and audit trails for model deployments.",
-      hints: [
-        "Without a model registry, tracking which model version is in production requires manual documentation.",
-        "Model registry stages: Registered → Staging → Production → Archived.",
-      ],
-    },
-    {
-      id: "q-msd-kp19-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "When designing an ML platform for a 500-person data science organization, which architectural decision has the highest impact on platform adoption?",
+        "A data flywheel in ML systems refers to a virtuous cycle where a better model attracts more users, generating more data, which enables training an even better model. Which design pattern MOST directly creates this flywheel?",
       options: [
-        "Choosing the fastest training hardware (H100 GPUs vs. A100s).",
-        "Providing a Python SDK with sensible defaults that requires minimal configuration while exposing advanced options for power users — following a 'progressive disclosure' design pattern.",
-        "Mandating a single ML framework (PyTorch) to reduce support burden.",
-        "Building a custom UI for all ML workflows to avoid vendor lock-in.",
+        "Deploying the model on the largest GPU cluster available.",
+        "Logging all user interactions (implicit feedback) and using them as training signal for the next model iteration, so more usage directly produces more training data.",
+        "Running frequent A/B experiments to compare model variants.",
+        "Hiring more data annotators to produce labeled training data faster.",
       ],
       correctAnswer: 1,
       explanation:
-        "Platform adoption is driven by developer experience. A Python SDK with progressive disclosure enables beginners to get started in minutes (sensible defaults, minimal boilerplate) while experts can customize every aspect. Forcing a single framework (option C) blocks teams with existing investments. Custom UIs (option D) have high build/maintenance costs and often lag commercial tools. Hardware choice (option A) affects training speed but not adoption of the platform itself.",
+        "The data flywheel is driven by implicit signal collection: every user interaction (click, purchase, dwell time, skip) becomes a training example for the next model. This means the model improves as usage grows, which makes it more useful, attracting more users. The key design requirement is that the logging infrastructure captures all relevant user signals and feeds them back into the training pipeline automatically.",
       hints: [
-        "Stripe's API design philosophy: make simple things simple, complex things possible.",
-        "The best ML platform is the one practitioners actually use — UX trumps features.",
-      ],
-    },
-  ],
-  "recommendation-system-design": [
-    {
-      id: "q-msd-kp20-1",
-      type: "multiple-choice",
-      difficulty: "medium",
-      question:
-        "In a two-stage recommendation system (retrieval + ranking), what is the primary role of each stage?",
-      options: [
-        "Retrieval: trains the recommendation model; Ranking: deploys and serves the model.",
-        "Retrieval: quickly narrows millions of candidates to hundreds using a lightweight model; Ranking: applies a complex model to score and order those candidates.",
-        "Retrieval: collects user interaction data; Ranking: processes and stores the data in a feature store.",
-        "Retrieval: filters out inappropriate content; Ranking: personalizes results for each user.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "Two-stage recommendation systems decouple scalability from accuracy. The retrieval stage (also called candidate generation) uses lightweight models (ANN search over embeddings, collaborative filtering) to reduce the candidate space from millions to hundreds in milliseconds. The ranking stage applies expensive models (deep neural nets, gradient boosted trees) that can use rich features and complex interactions, optimizing a precise ranking objective over the manageable candidate set.",
-      hints: [
-        "Retrieval: optimize for recall (don't miss good items); Ranking: optimize for precision (order them correctly).",
-        "YouTube's recommendation system popularized the two-tower neural network for retrieval.",
+        "Implicit feedback (clicks, purchases) scales with usage and requires no human labeling cost.",
+        "The flywheel only turns if the feedback loop is closed: user signal → training data → better model → more users.",
       ],
     },
     {
-      id: "q-msd-kp20-2",
+      id: "q-msd-dfw1-2",
       type: "true-false",
       difficulty: "medium",
       question:
-        "Collaborative filtering recommendation systems suffer from the 'cold start' problem because they cannot make recommendations for new users or new items without interaction history.",
+        "Implicit feedback signals (e.g., clicks, dwell time, purchase completions) are always an unbiased proxy for user satisfaction and can be used directly as training labels without any preprocessing.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: "False",
       explanation:
-        "Pure collaborative filtering relies on user-item interaction data (clicks, purchases, ratings) to learn user and item representations. New users (no history) and new items (no interactions) cannot be represented in the learned embedding space. Solutions include: content-based features for new items, onboarding flows to gather initial preferences, hybrid models that combine collaborative and content-based filtering, and exploration strategies (bandit algorithms).",
+        "Implicit signals are noisy and biased. Position bias means top-ranked items receive more clicks regardless of quality. Exposure bias means items never shown have zero clicks despite potential quality. Preprocessing steps — inverse propensity scoring (IPS) for position bias, exploration to counter exposure bias, and negative sampling strategies — are required before these signals become reliable training labels.",
       hints: [
-        "User cold start: use demographic features, onboarding questionnaires, or popular items.",
-        "Item cold start: use item content features (text, images) until enough interactions accumulate.",
+        "A click at rank 1 and a click at rank 10 are not equally strong signals of relevance.",
+        "Exposure bias: the model never sees signal for items it never recommends — creating a filter bubble.",
       ],
     },
     {
-      id: "q-msd-kp20-3",
+      id: "q-msd-dfw1-3",
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "A music streaming service wants to recommend songs to 100M users from a catalog of 50M songs. The system must retrieve top-100 candidates in under 50ms. Which retrieval approach is most appropriate?",
+        "A marketplace app collects 50 million user interactions per day as implicit feedback. Which data flywheel design problem is MOST critical to address?",
       options: [
-        "Exact nearest neighbor search over all 50M song embeddings — O(n) is too slow, but GPU acceleration makes it feasible.",
-        "Approximate Nearest Neighbor (ANN) search using HNSW or IVF-PQ index over precomputed song embeddings, with user embeddings computed or retrieved in real-time.",
-        "Matrix factorization with explicit SVD decomposition computed at query time.",
-        "Collaborative filtering with inverted index lookup: retrieve all users who liked the seed items.",
+        "Storage cost — 50M events/day is too large to store.",
+        "Feedback loop bias: the current model controls which items users see, so training on its logs reinforces existing decisions. Items the model underranked have no signal, and any model biases are amplified in the next iteration.",
+        "Label noise — implicit signals have too much noise for supervised learning.",
+        "Latency — 50M events/day cannot be processed in real-time.",
       ],
       correctAnswer: 1,
       explanation:
-        "For 50M items at 50ms latency, Approximate Nearest Neighbor search is the standard solution. HNSW (Hierarchical Navigable Small World) and IVF-PQ (Inverted File Index with Product Quantization) reduce search complexity from O(n) to O(log n) or O(√n) while maintaining ~95%+ recall. Libraries like FAISS (Facebook AI Similarity Search) or ScaNN (Google) implement these efficiently. User embeddings are precomputed and cached in a feature store.",
+        "The feedback loop bias is the most critical problem: the model only generates training signal for items it chooses to show. Items suppressed by the current model never get clicks and are permanently disadvantaged in future training runs. Mitigations: exploration (ε-greedy or Thompson sampling to expose non-top-ranked items), off-policy correction (IPS weighting), and counterfactual evaluation techniques.",
       hints: [
-        "FAISS with IVF-PQ can search 1B vectors in ~10ms on a single GPU.",
-        "Product Quantization compresses 128-dim float32 embeddings from 512 bytes to 8-32 bytes, fitting huge indexes in RAM.",
+        "If the model always shows item A and never item B, item A gets clicks and item B gets zero — even if B is better.",
+        "The fix requires deliberate exploration: occasionally showing non-top-ranked items to collect unbiased signal.",
       ],
     },
   ],
-  "fraud-detection-design-v2": [
+
+  "ml-personalization": [
     {
-      id: "q-msd-kp21-1",
+      id: "q-msd-pers1-1",
       type: "multiple-choice",
-      difficulty: "medium",
-      question:
-        "What makes fraud detection a particularly challenging ML problem compared to standard binary classification?",
-      options: [
-        "Fraud detection requires processing images and text simultaneously.",
-        "Class imbalance (fraud rate ~0.1-1%), adversarial adaptation (fraudsters adjust behavior), strict latency requirements (<100ms), and high asymmetric costs (false negatives > false positives).",
-        "Fraud labels are unavailable, requiring fully unsupervised learning.",
-        "The feature space changes every day, requiring daily model retraining.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "Fraud detection combines multiple hard challenges: (1) Extreme class imbalance (1 fraud per 1000 transactions) requiring specialized sampling, cost-sensitive learning, or anomaly detection approaches; (2) Adversarial dynamics — fraudsters reverse-engineer and evade detection systems; (3) Real-time scoring (decisions must be made before authorizing transactions, typically <100ms); (4) Asymmetric costs — missing fraud (false negative) is far more expensive than a false alarm (false positive).",
-      hints: [
-        "Precision-recall tradeoff: at low fraud rates, high precision (few false alarms) often conflicts with high recall (catching all fraud).",
-        "Graph-based fraud detection (finding fraud rings) adds another dimension beyond per-transaction features.",
-      ],
-    },
-    {
-      id: "q-msd-kp21-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "In a fraud detection system, using future data to compute features used to predict past fraud events (e.g., a user's total transactions in the next 7 days) is called data leakage and will cause the model to appear much more accurate in offline evaluation than it is in production.",
-      options: ["True", "False"],
-      correctAnswer: "True",
-      explanation:
-        "Data leakage is especially dangerous in fraud detection because labels are often assigned retrospectively (a charge-back occurs weeks after the transaction). If future information (e.g., account eventual outcome, future transaction velocity) leaks into training features, the model learns patterns that don't exist at prediction time, leading to dramatically inflated offline metrics. Point-in-time correct feature retrieval from a feature store prevents this leakage.",
-      hints: [
-        "Always ask: at prediction time (transaction T), what information would realistically be available?",
-        "A 'too good to be true' offline AUC (>0.99) is often a sign of data leakage.",
-      ],
-    },
-    {
-      id: "q-msd-kp21-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "A payment company's fraud model achieves 95% AUC-ROC on offline evaluation but only 70% AUC in production. What is the MOST likely cause?",
-      options: [
-        "The model is underfitting — it needs more parameters.",
-        "The evaluation dataset has different class balance than production.",
-        "Data leakage during feature engineering, concept drift (fraudsters adapted), or training-serving skew in feature computation.",
-        "The GPU inference hardware is too slow, causing stale predictions.",
-      ],
-      correctAnswer: 2,
-      explanation:
-        "A 25 percentage point drop from offline to production AUC is a severe performance gap with three likely causes: (1) Data leakage — features computed with future information inflated offline metrics; (2) Concept drift — fraudsters detected and bypassed the model's decision boundary (especially likely if deployment took months); (3) Training-serving skew — features computed differently between training (batch SQL) and serving (real-time API), causing distribution mismatch. Debugging requires shadow mode deployment and feature distribution monitoring.",
-      hints: [
-        "Compare feature distributions between training data and live serving traffic to detect skew.",
-        "Fraud concept drift can be dramatic — a fraud ring can shift behavior within days of model deployment.",
-      ],
-    },
-  ],
-  "search-system-design": [
-    {
-      id: "q-msd-kp22-1",
-      type: "multiple-choice",
-      difficulty: "medium",
-      question:
-        "What is the difference between sparse retrieval (BM25) and dense retrieval (bi-encoder embeddings) in a search system?",
-      options: [
-        "Sparse retrieval uses neural networks; dense retrieval uses rule-based keyword matching.",
-        "Sparse retrieval matches query and document via overlapping terms (TF-IDF weighting); dense retrieval encodes query and document into dense vectors and retrieves by vector similarity, enabling semantic matching beyond exact keyword overlap.",
-        "Sparse retrieval is more accurate; dense retrieval is faster.",
-        "Dense retrieval requires labeled data; sparse retrieval is fully unsupervised.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "BM25 (sparse retrieval) ranks documents by term frequency and inverse document frequency, excelling at exact keyword matches but failing on synonyms and paraphrases. Dense retrieval (bi-encoders like DPR, E5, BGE) encodes queries and documents into continuous vector spaces where semantic similarity can be measured. Dense retrieval handles 'car' vs. 'automobile' but may miss important exact-match signals. Hybrid search (BM25 + dense) typically outperforms either alone.",
-      hints: [
-        "BM25 is the baseline — hard to beat without substantial annotated data for training dense retrievers.",
-        "Reciprocal Rank Fusion (RRF) is a simple but effective way to combine sparse and dense retrieval rankings.",
-      ],
-    },
-    {
-      id: "q-msd-kp22-2",
-      type: "true-false",
       difficulty: "easy",
       question:
-        "In a search system, learning-to-rank (LTR) models are trained to predict the relevance of query-document pairs using features derived from both the query and the document.",
-      options: ["True", "False"],
-      correctAnswer: "True",
-      explanation:
-        "Learning-to-rank (LambdaMART, RankNet, LambdaRank) trains models to optimize ranking metrics (NDCG, MAP) using query-document features: BM25 score, click-through rates, document freshness, PageRank, query-document semantic similarity, etc. LTR models are typically trained on implicit feedback (clicks) or explicit judgments (human annotators rating relevance). They rerank candidates retrieved by a first-stage retrieval system.",
-      hints: [
-        "Pointwise LTR: treat as regression on relevance score. Pairwise: optimize order of document pairs. Listwise: optimize full ranking.",
-        "Offline metrics (NDCG) must be validated against online metrics (click-through rate, session length).",
-      ],
-    },
-    {
-      id: "q-msd-kp22-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "A legal document search system must retrieve relevant case law from 100M documents with high recall (missing relevant cases has severe consequences). The query latency budget is 500ms. Which architecture best meets these requirements?",
+        "In a personalization system, a user embedding captures the user's latent preferences. Which statement correctly describes how user embeddings are used at inference time?",
       options: [
-        "BM25-only retrieval — reliable, no training data needed, high recall for exact legal terms.",
-        "Dense-only retrieval with FAISS ANN search — captures semantic legal concepts beyond exact citation matches.",
-        "Hybrid retrieval: BM25 for exact legal citations and statutes + dense retrieval for conceptual similarity, followed by cross-encoder reranking for precision, with query expansion using legal ontologies.",
-        "Re-read all 100M documents for every query using a cross-encoder — maximum accuracy.",
-      ],
-      correctAnswer: 2,
-      explanation:
-        "Legal search requires high recall (can't miss relevant precedents) and must handle both exact citation retrieval (§1983, Roe v. Wade) and conceptual similarity (cases about similar legal issues phrased differently). Hybrid retrieval + cross-encoder reranking is the state-of-the-art approach: BM25 catches exact matches; dense retrieval catches semantic matches; cross-encoders (which jointly encode query+document) provide high-precision reranking within 500ms. Legal ontologies (WordNet for law, case citation graphs) improve query expansion.",
-      hints: [
-        "Cross-encoders are 100× slower than bi-encoders but significantly more accurate — use for reranking, not retrieval.",
-        "In legal domains, recall is often more important than precision — judges would rather review more cases than miss relevant ones.",
-      ],
-    },
-  ],
-  "model-monitoring-design": [
-    {
-      id: "q-msd-kp23-1",
-      type: "multiple-choice",
-      difficulty: "medium",
-      question:
-        "What is the difference between data drift and concept drift in production ML monitoring?",
-      options: [
-        "Data drift refers to changes in model accuracy; concept drift refers to changes in input features.",
-        "Data drift is a change in the statistical distribution of input features (P(X) changes); concept drift is a change in the relationship between inputs and labels (P(Y|X) changes).",
-        "Data drift is detected by monitoring model outputs; concept drift is detected by monitoring input features.",
-        "Data drift affects only batch models; concept drift affects only real-time models.",
+        "The user embedding is recomputed from scratch on every request by re-running the full model.",
+        "A pre-computed user embedding is retrieved from the online feature store and used directly as input features to the ranking or retrieval model, avoiding recomputation at request time.",
+        "User embeddings are computed by asking users to fill out explicit preference surveys.",
+        "User embeddings are only used during training and are not available at serving time.",
       ],
       correctAnswer: 1,
       explanation:
-        "Data drift (also called feature drift or covariate shift) occurs when input feature distributions change — e.g., a new user demographic segment starts using the product. Concept drift occurs when the true mapping from inputs to labels changes — e.g., COVID changed what products people buy, making pre-COVID purchase prediction models invalid. Both degrade model performance but require different responses: data drift may require retraining; concept drift requires new training data reflecting the new relationship.",
+        "User embeddings are expensive to compute (requiring a pass over the user's interaction history) and change slowly. Production systems pre-compute embeddings in a batch job (hourly, daily) and materialize them to an online feature store (Redis). At serving time, the embedding is fetched with a sub-millisecond point lookup and passed directly to the model, separating the expensive embedding computation from the latency-sensitive serving path.",
       hints: [
-        "Data drift: P(X) changes but P(Y|X) stays the same. You may still be able to use the old model.",
-        "Concept drift: P(Y|X) changes. The old model is learning a relationship that no longer exists.",
+        "Recomputing a user embedding from scratch at request time would add hundreds of milliseconds — unacceptable for real-time serving.",
+        "Pre-compute slow-changing features; compute fast-changing features (session signals) in real-time.",
       ],
     },
     {
-      id: "q-msd-kp23-2",
+      id: "q-msd-pers1-2",
       type: "true-false",
       difficulty: "medium",
       question:
-        "Population Stability Index (PSI) is a metric commonly used in production ML monitoring to detect distributional shift in input features, with PSI < 0.1 indicating no significant shift.",
+        "Session context (the sequence of items a user interacted with in the current browsing session) is more informative than long-term user embeddings for predicting the user's NEXT action within the same session.",
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "PSI measures how much a distribution has shifted between a reference (training) and current (production) population. PSI < 0.1: no significant change; 0.1 ≤ PSI < 0.2: moderate shift (investigate); PSI ≥ 0.2: significant shift (model likely needs retraining). PSI is computed as Σ (actual% - expected%) × ln(actual%/expected%) over histogram bins. It's commonly used in financial ML for regulatory compliance monitoring.",
+        "Within a session, user intent is highly specific and transient. A user browsing running shoes in the current session has a strong immediate intent that may differ entirely from their long-term profile. Session-aware models (transformers over recent interaction sequences, e.g., BERT4Rec, SASRec) capture this short-term context and outperform long-term embedding models for next-item prediction within a session. Long-term embeddings are valuable for the first item shown at session start.",
       hints: [
-        "PSI is symmetric: it treats the reference and current distribution equally.",
-        "KL divergence is a similar metric but is asymmetric and unbounded; PSI is bounded and interpretable.",
+        "Session context captures current intent; long-term embeddings capture stable preferences — both are needed.",
+        "SASRec and BERT4Rec use self-attention over item sequences to capture session dynamics.",
       ],
     },
     {
-      id: "q-msd-kp23-3",
+      id: "q-msd-pers1-3",
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "A content moderation model shows PSI = 0.35 (significant input drift) but business metrics (false positive rate, false negative rate) have not changed. What should you do?",
+        "A new user signs up for a fintech app (zero history). The personalization system must immediately serve relevant financial product recommendations. Which cold-start strategy is MOST effective?",
       options: [
-        "Immediately retrain the model — PSI = 0.35 always requires retraining.",
-        "Do nothing — business metrics are fine, so the model is performing well despite input drift.",
-        "Investigate the drift source: segment PSI by feature and by content category; check if the model is robust to this specific shift; deploy shadow evaluation with labeled recent data to confirm performance.",
-        "Roll back to the previous model version to avoid drift risk.",
-      ],
-      correctAnswer: 2,
-      explanation:
-        "PSI is a leading indicator, not a direct measure of performance. Significant input drift doesn't always cause performance degradation — the model may be robust to this specific distribution shift. The correct approach is: (1) segment PSI to identify which features are drifting and which content categories are affected; (2) if ground truth is available (human labels, appeals data), compute actual precision/recall on recent data; (3) if the drift is in low-importance features or the model is robust to this shift, retraining may not be necessary. Acting on PSI alone without confirming performance impact wastes resources.",
-      hints: [
-        "PSI is a proxy metric — ground truth performance metrics are the ultimate arbiter.",
-        "Segment drift analysis: is drift concentrated in a specific user segment or feature? That context drives the response.",
-      ],
-    },
-  ],
-  "nlp-system-design": [
-    {
-      id: "q-msd-kp24-1",
-      type: "multiple-choice",
-      difficulty: "medium",
-      question:
-        "When designing an NLP system for entity extraction from medical records, why is domain-specific pre-training or fine-tuning preferred over using a general-purpose LLM off-the-shelf?",
-      options: [
-        "General-purpose LLMs cannot process text longer than 512 tokens.",
-        "Medical entity extraction requires recognizing specialized terminology (drug names, ICD codes, anatomical terms) where domain-specific models (BioBERT, ClinicalBERT) outperform general models trained on web text.",
-        "General-purpose LLMs are too expensive to run at scale; domain-specific models are always smaller.",
-        "Domain-specific models are easier to fine-tune because they have fewer parameters.",
+        "Show globally most popular products — simple and requires no user data.",
+        "Use a multi-armed bandit (e.g., Thompson Sampling) initialized with population-level priors segmented by onboarding signals (age, income range, stated goals), updated with each new user interaction during the session.",
+        "Wait 30 days before personalizing — collect enough data first.",
+        "Use the most recently popular products in the user's geographic region.",
       ],
       correctAnswer: 1,
       explanation:
-        "Medical text contains specialized vocabulary, abbreviations, and context that differ significantly from general web text. BioBERT (pre-trained on PubMed abstracts) and ClinicalBERT (pre-trained on MIMIC clinical notes) learn domain-specific token representations and contextual patterns. For entity extraction, these models consistently outperform general-purpose BERT variants on biomedical NER benchmarks (BioNLP, n2c2). Large LLMs can be competitive with few-shot prompting but domain-specific fine-tuned models typically win on precision-critical clinical tasks.",
+        "Cold-start personalization requires balancing exploration (learning user preferences) with exploitation (recommending products likely to be relevant). Thompson Sampling initialized with population priors derived from similar users segmented by onboarding signals provides personalized starting recommendations and rapidly updates posterior beliefs as the user interacts, avoiding purely random exploration.",
       hints: [
-        "BERT pre-trained on Wikipedia never sees 'CABG' (coronary artery bypass graft) or 'q.d.' (once daily).",
-        "Domain adaptation via continued pre-training on domain text improves downstream NER significantly.",
+        "Thompson Sampling: maintain a Beta distribution over each item's click probability; sample from it to select items; update on each interaction.",
+        "Onboarding signals (age, income, stated goal) allow segmenting the population prior — 25-year-old investor vs. 55-year-old retiree need different priors.",
       ],
     },
+  ],
+
+  "multi-modal-system-design": [
     {
-      id: "q-msd-kp24-2",
-      type: "true-false",
+      id: "q-msd-mm1-1",
+      type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Retrieval-Augmented Generation (RAG) systems reduce LLM hallucination by grounding model responses in retrieved documents from a knowledge base, making them useful for question-answering systems over private or frequently-updated information.",
-      options: ["True", "False"],
-      correctAnswer: "True",
-      explanation:
-        "RAG systems combine a retrieval component (dense or sparse) that fetches relevant context from a knowledge base with a generative LLM that synthesizes the retrieved information into a response. This addresses two key LLM limitations: (1) knowledge cutoff — the retrieved documents can be updated without retraining; (2) hallucination — grounding responses in source documents reduces confabulation and enables citations. RAG is particularly valuable for enterprise Q&A over proprietary data that can't be included in pre-training.",
-      hints: [
-        "RAG vs. fine-tuning: RAG updates knowledge at retrieval time; fine-tuning embeds knowledge in weights.",
-        "RAG challenges: retrieval quality bottlenecks generation quality — garbage in, garbage out.",
-      ],
-    },
-    {
-      id: "q-msd-kp24-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "A customer service NLP system processes 1M messages/day and must route tickets to the correct team (<30 categories) with >95% accuracy and <500ms latency. Which architecture is most appropriate?",
+        "In a vision-language model serving system (e.g., a product search that accepts both image and text queries), what is the primary architectural challenge compared to a text-only system?",
       options: [
-        "GPT-4 with few-shot prompting for each message — maximum accuracy, flexible categories.",
-        "Fine-tuned BERT-base classifier with category hierarchy and confidence thresholds; escalate low-confidence predictions to a more expensive model or human review.",
-        "Rule-based keyword matching — interpretable, fast, and sufficient for routing tasks.",
-        "Train a custom transformer from scratch on historical ticket data — avoids licensing costs.",
+        "Vision-language models cannot be deployed in the cloud.",
+        "The system must encode queries from two different modalities into a shared embedding space, requiring modality-specific encoders and a fusion mechanism, with significantly higher compute per request due to image encoding.",
+        "Image queries always produce lower quality results than text queries.",
+        "Multi-modal systems require separate databases for images and text.",
       ],
       correctAnswer: 1,
       explanation:
-        "For 1M messages/day with strict latency and accuracy requirements, fine-tuned BERT-base (or DistilBERT for speed) is the optimal choice: (1) >95% accuracy is achievable on routing with a few thousand labeled examples; (2) inference is 10-50ms, well within 500ms budget; (3) confidence thresholds enable intelligent escalation — route uncertain predictions to GPT-4 or humans (covering ~5% of traffic); (4) cost is sustainable at scale (GPT-4 for 1M messages/day would cost tens of thousands of dollars). Category hierarchies improve accuracy for similar classes.",
+        "Vision-language systems face two unique challenges: (1) modality gap — images and text live in different feature spaces that must be aligned (via contrastive training like CLIP); (2) compute asymmetry — image encoding is typically 5–10× more expensive than text encoding (ViT-L processes 224×224 images through 24 attention layers). The serving architecture often pre-encodes gallery images offline to avoid on-the-fly encoding at query time.",
       hints: [
-        "GPT-4 API cost at 1M messages/day: ~$5,000-20,000/day depending on message length.",
-        "Fine-tuned DistilBERT: ~50MB model, <10ms inference — easily handles 1M/day on a single GPU.",
+        "CLIP pre-encodes all gallery images offline; at query time only the query (text or image) is encoded in real time.",
+        "Image encoder (ViT-L): ~50 ms. Text encoder (BERT-base): ~5 ms. The asymmetry drives architectural decisions.",
+      ],
+    },
+    {
+      id: "q-msd-mm1-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "In a multi-modal retrieval system (text + image), late fusion (encoding each modality independently then combining embeddings) always outperforms early fusion (concatenating raw features before encoding) in retrieval quality.",
+      options: ["True", "False"],
+      correctAnswer: "False",
+      explanation:
+        "Late fusion and early fusion have different trade-offs. Late fusion (separate encoders per modality, then combine embeddings) is computationally efficient because gallery modalities can be pre-encoded offline. Early fusion can capture richer cross-modal interactions but requires joint encoding at query time — making it infeasible for retrieval over large galleries. Cross-encoders (early fusion) are reserved for reranking small candidate sets where quality trumps latency.",
+      hints: [
+        "Late fusion: pre-encode gallery offline → ANN search at query time. Early fusion: cannot pre-encode — requires joint encoding at query time.",
+        "For retrieval scale (millions of items), late fusion is the practical choice; early fusion wins on accuracy for reranking.",
+      ],
+    },
+    {
+      id: "q-msd-mm1-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A fashion e-commerce platform builds a visual similarity search: users upload a clothing image and receive visually similar products from a catalog of 10 million items. Which serving pipeline is correct?",
+      options: [
+        "At query time: encode the uploaded image + encode all 10M catalog images → compute all cosine similarities → return top-k.",
+        "Offline: encode all 10M catalog images and index in an ANN index (FAISS/HNSW). At query time: encode the user's uploaded image → ANN search over pre-indexed catalog → return top-k. Re-rank with a cross-modal reranker if needed.",
+        "Train a classifier with 10M output classes (one per item) and predict the closest item class.",
+        "Use perceptual hashing (pHash) to find visually identical items — no ML model required.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The standard vision similarity search pipeline: (1) offline: encode all catalog images with a vision backbone (ViT, ResNet) and build an ANN index (FAISS IVF-PQ) — 10M × 512-dim embeddings in FP16 ≈ 10 GB; (2) online: encode the query image (50–100 ms for ViT-L), ANN search returns top-1000 in <10 ms. Computing all 10M similarities at query time would take seconds. A 10M-class classifier cannot generalize to new catalog items without retraining.",
+      hints: [
+        "10M cosine similarities × ~1 µs each = 10 seconds. ANN search: O(log n) = milliseconds.",
+        "New catalog items only need to be encoded and added to the ANN index — no model retraining required.",
+      ],
+    },
+  ],
+
+  "geospatial-ml-systems": [
+    {
+      id: "q-msd-geo1-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "A ride-sharing app needs to find all available drivers within 2 km of a user's location in real time. Which spatial indexing technique is MOST appropriate for this point-radius query at scale?",
+      options: [
+        "Linear scan of all driver GPS coordinates — O(n) but always correct.",
+        "Geohash-based spatial index: encode driver locations as geohash strings and query neighboring geohash cells that intersect the 2 km radius.",
+        "Inverted index on city name — group drivers by city for fast lookup.",
+        "B-tree index on latitude and longitude — standard database indexing handles spatial queries.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Geohash encodes 2D (lat/lon) coordinates into a 1D string with hierarchical prefix properties: nearby locations share long common prefixes. A geohash of length 7 covers ~153m × 153m cells. To find drivers within 2 km, query the geohash cell of the user plus its 8 neighbors. Redis GEO commands (GEOSEARCH) implement this natively with sub-millisecond radius queries. B-tree indexes on lat/lon are inefficient for radius queries because lat and lon are indexed independently in 1D.",
+      hints: [
+        "Geohash length 6 ≈ 1.2 km × 0.6 km cells. Length 7 ≈ 153 m × 153 m. Choose based on query radius.",
+        "Redis GEOSEARCH command: geohash-based spatial index built into Redis — sub-millisecond radius queries.",
+      ],
+    },
+    {
+      id: "q-msd-geo1-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Training a geospatial ML model (e.g., predicting demand by location) with raw GPS coordinates (latitude, longitude) as features is equivalent in quality to using spatial embeddings or geohash encodings.",
+      options: ["True", "False"],
+      correctAnswer: "False",
+      explanation:
+        "Raw (lat, lon) coordinates are poor ML features because they lack spatial locality properties for models: lat=37.7749 and lat=37.7750 are neighbors but their difference carries no semantic meaning without knowing the coordinate system. Geohash or H3 hexagonal indexing creates categorical spatial features that capture neighborhood structure. Location embeddings (trained on spatial co-occurrence) further capture semantic relationships like 'downtown area' or 'airport zone'. Additionally, raw coordinates don't generalize across cities.",
+      hints: [
+        "H3 hexagonal indexing (Uber's open-source library) provides multi-resolution spatial features at up to 15 resolutions.",
+        "Raw (lat, lon) require feature engineering to expose spatial structure to ML models.",
+      ],
+    },
+    {
+      id: "q-msd-geo1-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A mapping application collects GPS traces from millions of users to improve road quality predictions. Which privacy-preserving mechanism protects individual location privacy while still enabling accurate aggregate ML training?",
+      options: [
+        "Store all raw GPS traces — location data is not personally identifiable.",
+        "Apply local differential privacy (LDP) with calibrated noise added to GPS coordinates on-device before transmission, ensuring individual traces cannot be reverse-engineered while aggregate statistics remain accurate for training.",
+        "Delete GPS data after 24 hours to limit exposure.",
+        "Anonymize GPS data by removing timestamps — location without time is not personally identifiable.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "GPS traces are highly sensitive — research shows 4 spatiotemporal points uniquely identify 95% of individuals. Local differential privacy (LDP) adds calibrated noise to location reports on the device before transmission, providing mathematical privacy guarantees. The ε parameter controls the privacy-accuracy trade-off. Apple uses LDP for keyboard usage stats; Google uses it for Chrome histogram collection. Removing timestamps does not prevent re-identification from location patterns (home/work inference).",
+      hints: [
+        "LDP: noise is added on-device. Central DP: noise is added server-side after collection. LDP provides stronger user privacy guarantees.",
+        "With ε=1, LDP randomizes ~37% of reports — the aggregate over millions of users still converges accurately.",
+      ],
+    },
+  ],
+
+  "time-series-ml-systems": [
+    {
+      id: "q-msd-ts1-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "A demand forecasting model for a retail chain shows consistently high errors in December. The model was trained on 3 years of daily sales data. What is the MOST likely cause?",
+      options: [
+        "The model architecture is too small to capture seasonal patterns.",
+        "Insufficient seasonality data: with only 3 Decembers in the training set, the model cannot reliably learn the holiday demand spike. Adding explicit seasonal features (month-of-year, days-until-holiday, is_holiday indicator) corrects this.",
+        "The evaluation metric is wrong — use RMSE instead of MAE.",
+        "The model is overfitting to the training years and cannot generalize.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "With 3 years of data, the model has seen December only 3 times — insufficient to learn its statistical behavior robustly. Adding explicit seasonal features (Fourier terms for yearly seasonality, holiday indicators, days-before/after holidays) encodes domain knowledge directly and greatly improves generalization for rare seasonal patterns. Prophet, N-BEATS, and TFT all use explicit seasonality decomposition for this reason.",
+      hints: [
+        "3 years → 3 Decembers → the model has 3 training samples for the most important retail month.",
+        "Fourier features (sin/cos of day-of-year) provide smooth seasonality encoding that generalizes across years.",
+      ],
+    },
+    {
+      id: "q-msd-ts1-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "In time-series forecasting, concept drift (the relationship between features and the target changing over time) is fully addressed by retraining the model on the most recent data window and discarding all older training data.",
+      options: ["True", "False"],
+      correctAnswer: "False",
+      explanation:
+        "Discarding all historical data risks losing important recurring patterns (e.g., seasonal trends). The correct approach uses a combination of: (1) recency weighting — exponentially decaying sample weights give more influence to recent data without discarding old data; (2) rolling window retraining — use the most recent N time steps as the primary training window; (3) concept drift detection algorithms (ADWIN, Page-Hinkley) to trigger model updates when drift is detected.",
+      hints: [
+        "Exponential decay weights: recent data matters more but historical patterns (seasonality) still contribute.",
+        "ADWIN (Adaptive Windowing) statistically detects when the data distribution has changed and triggers retraining.",
+      ],
+    },
+    {
+      id: "q-msd-ts1-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A logistics company needs multi-step demand forecasting: predict demand 1 day, 7 days, and 30 days ahead simultaneously. Which modeling approach best handles multi-horizon forecasting without accumulating prediction error?",
+      options: [
+        "Recursive (autoregressive) forecasting: predict 1-day ahead, feed the prediction as input, predict the next day, repeat 30 times.",
+        "Direct multi-output forecasting: train a single model with multiple output heads (one per forecast horizon), predicting all horizons simultaneously from the same input features without feeding predictions back as inputs.",
+        "Train 30 separate models, one for each forecast horizon, independently.",
+        "Use the 1-day model for all horizons by taking the prediction at day 1 and scaling by the horizon.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Recursive forecasting accumulates error: each 1-step prediction error compounds over 30 steps, leading to large errors at the 30-day horizon. Direct multi-output forecasting trains one model with multiple output heads predicting all horizons simultaneously from the current input — no error accumulation. Temporal Fusion Transformer (TFT) and N-HiTS are direct multi-horizon architectures widely used in production forecasting.",
+      hints: [
+        "Recursive forecasting error at step k grows approximately as k × σ_1 for independent errors.",
+        "Direct forecasting: all output heads are trained jointly from the same features, with no error accumulation across steps.",
+      ],
+    },
+  ],
+
+  "llm-system-design": [
+    {
+      id: "q-msd-llm1-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "A company builds a customer service chatbot using an LLM API. Which system design pattern MOST reduces API cost at scale while maintaining response quality?",
+      options: [
+        "Increase the max_tokens parameter to ensure complete responses.",
+        "Implement semantic caching: embed incoming user queries, search a vector database for semantically similar past queries, and return the cached LLM response if cosine similarity exceeds a threshold (e.g., 0.95).",
+        "Use a larger model for all queries to reduce retries.",
+        "Log all queries but do not cache — caching LLM responses introduces staleness.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Semantic caching reduces LLM API calls by identifying near-duplicate queries and serving cached responses. For customer service chatbots, many queries are paraphrases of the same question ('How do I reset my password?' / 'I forgot my password'). By embedding queries and finding semantically similar ones (using FAISS or Pinecone), cached responses can serve 20–40% of queries without an API call. GPTCache implements this pattern.",
+      hints: [
+        "Customer service queries have high repetition — password reset, billing, and shipping inquiries dominate.",
+        "Semantic cache hit rate depends on similarity threshold: too high = low hit rate; too low = wrong responses.",
+      ],
+    },
+    {
+      id: "q-msd-llm1-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Prompt versioning and management at scale (tracking which prompt template generated each LLM response in production) is unnecessary operational overhead because prompt changes are small text edits that do not significantly affect system behavior.",
+      options: ["True", "False"],
+      correctAnswer: "False",
+      explanation:
+        "Prompt changes in production LLM systems are equivalent to code changes — they directly affect model behavior, output quality, and safety. A single word change in a system prompt can dramatically alter LLM outputs. Prompt versioning is required for: debugging regressions, A/B testing prompt variants, audit trails in regulated industries, and rollback when a prompt change causes issues. Tools like LangSmith and PromptLayer enable prompt versioning.",
+      hints: [
+        "A prompt is the model's 'code' at inference time — changing it is as impactful as changing model weights.",
+        "Without prompt versioning, a customer complaint about bad LLM output cannot be reproduced or debugged.",
+      ],
+    },
+    {
+      id: "q-msd-llm1-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "An LLM API serving system handles 10,000 concurrent requests with highly variable output lengths (10–2000 tokens). The system uses static batching. Which problem does static batching create, and what replaces it?",
+      options: [
+        "GPU memory fragmentation — static batching wastes memory. Replace with unified memory.",
+        "GPU utilization collapse: when the longest sequence in a batch finishes last, all other GPU slots sit idle. Continuous batching (iteration-level scheduling, used in vLLM) adds new requests as sequences complete, eliminating idle time and improving throughput by 5–20×.",
+        "Network bandwidth saturation — static batching requires too many tokens to be transferred. Replace with token streaming.",
+        "Cache invalidation overhead — replace with request-level KV cache pinning.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "In static batching, a batch of 32 requests must all finish before new requests start. If 31 requests finish in 100 tokens but 1 runs for 2000 tokens, 31 GPU slots are idle for 1900 tokens worth of generation time — approximately 95% GPU waste for those slots. Continuous batching (vLLM's key innovation) schedules at the token generation step: when any sequence reaches EOS or max_tokens, its slot is immediately replaced by a new waiting request.",
+      hints: [
+        "Idle GPU in static batching: slots that finished early wait for the slowest sequence in the batch.",
+        "vLLM introduced PagedAttention + continuous batching in 2023, showing 23× throughput improvement over naive serving.",
+      ],
+    },
+  ],
+
+  "ml-fairness-systems": [
+    {
+      id: "q-msd-fair1-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "A hiring algorithm ranks job applicants and is found to recommend men at a 2× higher rate than equally qualified women. Which fairness criterion is violated and what is the simplest post-processing fix?",
+      options: [
+        "Calibration is violated — apply Platt scaling to recalibrate scores.",
+        "Demographic parity is violated (men and women are not recommended at equal rates). Post-processing fix: apply separate score thresholds per gender group, tuning each threshold to achieve equal positive prediction rates across groups.",
+        "Individual fairness is violated — rank candidates purely by individual qualifications.",
+        "Accuracy parity is violated — retrain the model on balanced data.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Demographic parity (statistical parity) requires equal positive prediction rates across demographic groups. The simplest post-processing fix is group-specific thresholds: if the model scores women lower on average due to historical bias in training data, lower the threshold for women to equalize recommendation rates. This does not require retraining. More sophisticated approaches include reweighting training examples or adversarial debiasing.",
+      hints: [
+        "Post-processing is the cheapest fairness fix: adjust thresholds after training without modifying the model.",
+        "Demographic parity does not require equal accuracy — it requires equal positive prediction rates.",
+      ],
+    },
+    {
+      id: "q-msd-fair1-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "It is mathematically possible to simultaneously satisfy demographic parity (equal positive rates across groups), equalized odds (equal TPR and FPR across groups), and calibration (predicted probabilities match observed rates) when base rates differ between groups.",
+      options: ["True", "False"],
+      correctAnswer: "False",
+      explanation:
+        "Chouldechova's impossibility theorem (2017) proves that when group base rates differ, it is mathematically impossible to simultaneously satisfy calibration, equal positive predictive value, and equal false positive rates. The fairness impossibility result means practitioners must choose which fairness criteria to prioritize based on the application domain — there is no single correct fairness definition that applies universally.",
+      hints: [
+        "Chouldechova (2017) proved the fairness impossibility theorem — satisfying all fairness criteria simultaneously is impossible when base rates differ.",
+        "Practitioners must choose which fairness criterion matters most for their specific application and stakeholders.",
+      ],
+    },
+    {
+      id: "q-msd-fair1-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A credit scoring model is required by regulation to achieve equalized odds (equal TPR and FPR) across racial groups while maintaining overall AUC above 0.80. How is this constraint enforced in a production ML system?",
+      options: [
+        "Add race as an explicit feature so the model can learn group-specific patterns.",
+        "Apply constrained optimization during training: add fairness constraints as Lagrange multipliers to the loss function (e.g., |TPR_group_A − TPR_group_B| ≤ ε), and monitor fairness metrics in production with automated alerts when constraints are violated.",
+        "Retrain the model separately for each racial group — separate models guarantee fairness.",
+        "Apply a uniform score multiplier to all members of the disadvantaged group.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Equalized odds constraints can be enforced during training using Lagrangian relaxation (Agarwal et al., Reductions Approach to Fairness): the fairness constraint is added as a penalty term to the training loss. Fairlearn and IBM AIF360 implement this. In production, fairness metrics (TPR and FPR by group) must be monitored continuously — distribution shifts can violate constraints without model retraining. Using race as a feature is legally prohibited under ECOA in US credit scoring.",
+      hints: [
+        "Fairlearn (Microsoft) and AIF360 (IBM) implement constrained optimization for equalized odds.",
+        "Production fairness monitoring: compute TPR and FPR by demographic group on a rolling window of recent decisions.",
+      ],
+    },
+  ],
+
+  "distributed-training-design": [
+    {
+      id: "q-msd-dt1-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "In distributed deep learning training, what is the key difference between a parameter server architecture and ring-AllReduce?",
+      options: [
+        "Parameter servers are used for small models; ring-AllReduce is used for large models.",
+        "In parameter server (PS) architecture, gradient aggregation is centralized through PS nodes creating a bandwidth bottleneck; in ring-AllReduce, each worker communicates only with its two neighbors in a logical ring, aggregating gradients in a decentralized, bandwidth-efficient manner.",
+        "Parameter servers run on CPUs; ring-AllReduce runs exclusively on GPUs.",
+        "Ring-AllReduce requires more total communication volume than parameter servers.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Parameter server architecture: all workers send gradients to central PS nodes, which aggregate and broadcast updated parameters — the PS nodes become network bottlenecks as worker count grows. Ring-AllReduce: workers are arranged in a logical ring; each worker communicates with only its two neighbors in 2(N-1) steps, with near-optimal bandwidth utilization regardless of N. Ring-AllReduce (used by Horovod, PyTorch DDP) scales linearly and is the standard for data-parallel training.",
+      hints: [
+        "PS bottleneck: if N=100 workers each send gradients to 1 PS node, the PS needs 100× the bandwidth of one worker.",
+        "Ring-AllReduce: bandwidth per worker is constant regardless of N — it scales perfectly.",
+      ],
+    },
+    {
+      id: "q-msd-dt1-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Gradient compression techniques (e.g., Top-K sparsification, 1-bit quantization of gradients) can reduce communication volume in distributed training by 10–100× with minimal impact on final model accuracy.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Gradient sparsification selects only the largest K% of gradient values for communication, transmitting ~1% of the full gradient with error feedback (storing unshared gradients and adding them to the next step). 1-bit SGD quantizes gradient values to ±1, reducing communication to 32× fewer bits. Studies show these techniques achieve near-identical final accuracy to full-precision AllReduce, because small gradients contribute minimally to model updates and error feedback ensures no gradient information is permanently lost.",
+      hints: [
+        "Top-K sparsification: send only the K largest gradient elements. Error feedback: accumulate unsent gradients and add them next step.",
+        "Communication bandwidth, not compute, is often the bottleneck in large distributed training — compression is critical.",
+      ],
+    },
+    {
+      id: "q-msd-dt1-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A distributed training job runs on 64 GPUs across 8 nodes. After 6 hours of training, one GPU fails. Which fault tolerance design ensures the job continues without restarting from the beginning?",
+      options: [
+        "Stop the job, replace the GPU, and restart training from epoch 0.",
+        "Implement periodic checkpointing (e.g., every 30 minutes) with elastic training (TorchElastic): on failure, the remaining 63 GPUs re-partition the data and model, load the latest checkpoint, and continue training — losing at most 30 minutes of work.",
+        "Use synchronous training — synchronous updates automatically handle GPU failures without checkpointing.",
+        "Assign the failed GPU's work to the CPU on the same node as a fallback.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Synchronous distributed training requires all workers to participate in each AllReduce step; a single GPU failure stalls the entire job. Fault tolerance requires: (1) periodic checkpointing (model weights, optimizer state, RNG state, training step); (2) elastic training (TorchElastic, DeepSpeed elasticity) that allows job continuation with N-1 workers after a failure, re-sharding the data parallelism automatically; (3) spot/preemptible instance handling in cloud deployments.",
+      hints: [
+        "Checkpointing interval = max acceptable restart cost. Every 30 minutes: lose at most 30 min of training.",
+        "TorchElastic: workers register with a rendezvous backend; on worker failure, surviving workers reform the group and continue.",
+      ],
+    },
+  ],
+
+  "ml-experiment-platform": [
+    {
+      id: "q-msd-exp1-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "An ML team runs 200 hyperparameter search trials simultaneously on a shared GPU cluster. Which hyperparameter search strategy is MOST sample-efficient (finds good hyperparameters with the fewest trials)?",
+      options: [
+        "Grid search: exhaustively search all combinations of hyperparameter values.",
+        "Bayesian optimization (e.g., TPE, Gaussian Process): use a probabilistic surrogate model of the objective function to select the next trial based on expected improvement, learning from previous trial results.",
+        "Random search: sample hyperparameters uniformly at random from the search space.",
+        "Manual search: have experienced ML engineers guess promising hyperparameter values.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Bayesian optimization is the most sample-efficient hyperparameter search strategy: it builds a probabilistic model (surrogate) of the objective function and uses acquisition functions (Expected Improvement, Upper Confidence Bound) to select the next trial that is most likely to improve upon the best known result. This converges to good hyperparameters in 50–100 trials vs. 1000+ for grid search. Optuna (TPE), Ray Tune (BOHB), and Weights & Biases Sweeps implement this.",
+      hints: [
+        "Grid search: exponential in number of hyperparameters. Bayesian: learns which regions are promising and focuses there.",
+        "Bergstra & Bengio (2012): random search outperforms grid search; Bayesian optimization outperforms random search.",
+      ],
+    },
+    {
+      id: "q-msd-exp1-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Successive Halving and Hyperband early-stopping algorithms improve hyperparameter search efficiency by terminating unpromising trials early based on intermediate validation metrics, allowing more total configurations to be explored within a fixed compute budget.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Successive Halving allocates a small resource budget (e.g., 10 epochs) to all N configurations, keeps the top 1/η fraction, doubles resources, and repeats until one configuration remains. Hyperband runs multiple Successive Halving brackets with different initial resource allocations to balance exploration vs. exploitation. This adaptive resource allocation allows exploring 10–100× more configurations than full training within the same compute budget. Ray Tune and Optuna implement Hyperband natively.",
+      hints: [
+        "Successive Halving: start with N configs at 1 epoch each. Keep top N/3 → train to 3 epochs. Keep top N/9 → train to 9 epochs.",
+        "Hyperband eliminates the choice of starting resources in Successive Halving by running multiple brackets simultaneously.",
+      ],
+    },
+    {
+      id: "q-msd-exp1-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "An ML experiment platform must manage 10,000 parallel hyperparameter trials across a shared GPU cluster. Which design ensures fair resource allocation and prevents any single experiment from monopolizing the cluster?",
+      options: [
+        "First-come, first-served scheduling — simple and predictable.",
+        "A multi-level priority scheduler: trials are grouped by experiment with per-experiment GPU quotas enforced by a resource manager (e.g., Kubernetes resource limits + fair-share scheduling via YARN or Slurm with preemption). High-priority experiments receive guaranteed quota; exploratory experiments receive best-effort scheduling.",
+        "Run all trials sequentially on a single large GPU node — avoids scheduling complexity.",
+        "Allow researchers to manually reserve GPU blocks for their experiments.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Fair resource allocation in a shared ML cluster requires: (1) per-experiment GPU quotas; (2) priority tiers (production training > HPO > exploration); (3) preemption (low-priority jobs are suspended when high-priority jobs need resources); (4) gang scheduling for distributed training (all workers of one trial must start simultaneously). Kubernetes + Volcano or Slurm with fairshare scheduling implement this. First-come, first-served allows early-submitted experiments to monopolize resources.",
+      hints: [
+        "Fair-share scheduling: compute each team's fair share of cluster resources over time and prioritize teams below their share.",
+        "Gang scheduling for distributed training: schedule all N workers of a trial simultaneously to avoid deadlock.",
       ],
     },
   ],
