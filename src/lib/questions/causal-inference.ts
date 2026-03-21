@@ -17,7 +17,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "This is a classic example of confounding. Hot weather independently increases both ice cream consumption and swimming activity (which raises drowning risk). There is no direct causal link between ice cream and drowning — the correlation is entirely spurious.\n\nFormally, if $T$ = ice cream sales, $Y$ = drowning rate, and $Z$ = temperature, then:\n\\[P(Y,T) \\neq P(Y)P(T)\\] but\n\\[P(Y,T|Z) = P(Y|Z)P(T|Z)\\]\n\nConditioning on $Z$ (temperature) renders $T$ and $Y$ independent, confirming that temperature is a common cause.",
+        "**Step 1**: Identify the observed correlation and the need for a causal explanation.\nThis is a classic example of confounding. Hot weather independently increases both ice cream consumption and swimming activity (which raises drowning risk). There is no direct causal link between ice cream and drowning — the correlation is entirely spurious.\n\n**Step 2**: Formalize the common cause structure using probability notation.\nFormally, if $T$ = ice cream sales, $Y$ = drowning rate, and $Z$ = temperature, then:\n\\[P(Y,T) \\neq P(Y)P(T)\\] but\n\\[P(Y,T|Z) = P(Y|Z)P(T|Z)\\]\n\n**Step 3**: Verify that conditioning on the common cause renders the variables independent.\nConditioning on $Z$ (temperature) renders $T$ and $Y$ independent, confirming that temperature is a common cause.",
       hints: [
         "Ask: is there a third variable that could independently cause both phenomena?",
         "Hot summers drive both behaviors — this is the classic confounder or common cause pattern.",
@@ -51,7 +51,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The key distinction is randomization. In an RCT, random assignment ensures:\n\\[T \\perp (Y(0), Y(1), X)\\] — treatment is independent of both potential outcomes and all covariates.\n\nIn an observational study, selection into treatment is non-random:\n\\[T \\not\\perp (Y(0), Y(1))\\] — treated and control groups may differ systematically.\n\nThis means $E[Y|T=1] - E[Y|T=0]$ equals the ATE in an RCT, but is generally biased in observational data unless we adjust for confounders $X$.",
+        "**Step 1**: Understand the role of randomization in an RCT.\nThe key distinction is randomization. In an RCT, random assignment ensures:\n\\[T \\perp (Y(0), Y(1), X)\\] — treatment is independent of both potential outcomes and all covariates.\n\n**Step 2**: Recognize the selection bias in observational studies.\nIn an observational study, selection into treatment is non-random:\n\\[T \\not\\perp (Y(0), Y(1))\\] — treated and control groups may differ systematically.\n\n**Step 3**: Compare the estimands in RCTs vs. observational studies.\nThis means $E[Y|T=1] - E[Y|T=0]$ equals the ATE in an RCT, but is generally biased in observational data unless we adjust for confounders $X$.",
       hints: [
         "What does randomization break in the causal graph between treatment and outcome?",
         "Think about why patients who choose surgery may differ systematically from those who choose medication.",
@@ -94,7 +94,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "SUTVA has two components:\n\n1. **No interference**: The potential outcome of unit $i$ does not depend on the treatment received by other units:\n\\[Y_i(t_1, t_2, \\dots) = Y_i(t_i) \\quad \\text{for all } t_{-i}\\]\n\n2. **No hidden versions of treatment**: There is only one version of the treatment, so $Y_i(1)$ is well-defined.\n\nViolations occur in network experiments (interference via spillovers) or when treatment implementation varies across contexts.",
+        "**Step 1**: State the first component of SUTVA — no interference.\nSUTVA has two components:\n\n1. **No interference**: The potential outcome of unit $i$ does not depend on the treatment received by other units:\n\\[Y_i(t_1, t_2, \\dots) = Y_i(t_i) \\quad \\text{for all } t_{-i}\\]\n\n**Step 2**: State the second component — no hidden versions of treatment.\n2. **No hidden versions of treatment**: There is only one version of the treatment, so $Y_i(1)$ is well-defined.\n\n**Step 3**: Recognize when SUTVA is violated.\nViolations occur in network experiments (interference via spillovers) or when treatment implementation varies across contexts.",
       hints: [
         "SUTVA is required to define individual potential outcomes $Y_i(t)$ unambiguously.",
         "Vaccine trials may violate the interference assumption through herd immunity effects.",
@@ -114,7 +114,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Under strong ignorability (unconfoundedness + common support), the ATE is identified by the **regression adjustment estimator**:\n\\[\n\\text{ATE} = E_X\\bigl[ E[Y \\mid T=1, X] - E[Y \\mid T=0, X] \\bigr]\n\\]\n\nThe naive difference $E[Y|T=1] - E[Y|T=0]$ is biased if confounders $X$ are not conditioned on:\n\\[\nE[Y \\mid T=1] - E[Y \\mid T=0] = \\underbrace{\\text{ATE}}_{\\text{if } T \\perp X} + \\underbrace{\\text{bias}}_{\\text{if } T \\not\\perp X}\n\\]\n\nThis is the basis for methods like inverse propensity weighting and doubly robust estimation.",
+        "**Step 1**: Identify the regression adjustment estimator under strong ignorability.\nUnder strong ignorability (unconfoundedness + common support), the ATE is identified by the **regression adjustment estimator**:\n\\[\n\\text{ATE} = E_X\\bigl[ E[Y \\mid T=1, X] - E[Y \\mid T=0, X] \\bigr]\n\\]\n\n**Step 2**: Understand why the naive difference is biased without conditioning on $X$.\nThe naive difference $E[Y|T=1] - E[Y|T=0]$ is biased if confounders $X$ are not conditioned on:\n\\[\nE[Y \\mid T=1] - E[Y \\mid T=0] = \\underbrace{\\text{ATE}}_{\\text{if } T \\perp X} + \\underbrace{\\text{bias}}_{\\text{if } T \\not\\perp X}\n\\]\n\n**Step 3**: Recognize this as the foundation for modern causal inference methods.\nThis is the basis for methods like inverse propensity weighting and doubly robust estimation.",
       hints: [
         "Strong ignorability says treatment assignment is as good as random conditional on $X$.",
         "The adjustment formula integrates out the conditioning on $X$ to get the marginal ATE.",
@@ -194,7 +194,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "An arrow $X \\to Y$ in a causal DAG encodes the claim that $X$ is a **direct cause** of $Y$ relative to the other variables in the graph. This is an **interventional** claim:\n\\[P(Y \\mid do(X=x)) \\neq P(Y)\\] if $X$ is a cause of $Y$.\n\nCorrelation alone does not justify drawing an arrow — the direction reflects the causal mechanism, not mere association.",
+        "**Step 1**: Understand what an arrow represents in a causal DAG.\nAn arrow $X \\to Y$ in a causal DAG encodes the claim that $X$ is a **direct cause** of $Y$ relative to the other variables in the graph. This is an **interventional** claim:\n\\[P(Y \\mid do(X=x)) \\neq P(Y)\\] if $X$ is a cause of $Y$.\n\n**Step 2**: Recognize that correlation does not imply causation.\nCorrelation alone does not justify drawing an arrow — the direction reflects the causal mechanism, not mere association.",
       hints: [
         "Causal arrows encode mechanism, not mere association.",
         "The acyclic in DAG means causes cannot be their own effects (no feedback loops in the static model).",
