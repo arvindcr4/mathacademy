@@ -427,13 +427,13 @@ const questions: Record<string, Question[]> = {
       options: ["\$P \\propto v\$", "\$P \\propto v^2\$", "\$P \\propto v^3\$", "\$P \\propto \\sqrt{v}\$"],
       correctAnswer: 2,
       explanation:
-        "Wind power follows from the kinetic energy flux through a turbine rotor. The power extracted from the wind is:\n\n" +
+        "**Step 1** Wind power follows from the kinetic energy flux through a turbine rotor. The power extracted from the wind is:\n\n" +
         "\\[P = \\frac{1}{2} \\eta \\rho A v^3\\]\n\n" +
-        "where:\n" +
+        "**Step 2** where the key variables are:\n" +
         "\\[- \\eta = \\text{blade efficiency (Betz limit } \\approx 0.59\\text{)}\\]" +
         "\\[- \\rho = \\text{air density }(\\approx 1.225\\text{ kg/m}^3)\\]" +
         "\\[- A = \\text{rotor swept area } = \\pi r^2\\]\n\n" +
-        "The \$v^3\$ scaling means small forecast errors amplify dramatically: a 10% error in wind speed leads to a ~33% error in power output. This makes accurate wind forecasting critical for grid integration.",
+        "**Step 3** The \$v^3\$ scaling means small forecast errors amplify dramatically: a 10% error in wind speed leads to a ~33% error in power output. This makes accurate wind forecasting critical for grid integration.",
       hints: [
         "Wind power comes from the kinetic energy of moving air. Kinetic energy is \$KE = \\frac{1}{2}mv^2\$. Power is energy per unit time. What additional factor of \$v\$ appears when you consider mass flow rate through the turbine?",
         "The kinetic energy equation involves \$v^2\$; power is energy per time. When you account for how much air mass flows through the turbine per second (which itself is proportional to \$v\$), what power do you get?",
@@ -623,13 +623,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Electricity prices are stochastic with temporal dependencies:\n\n" +
+        "**Step 1** Electricity prices are stochastic with temporal dependencies:\n\n" +
         "\\[p_t \\sim \\mathcal{N}(\\mu_t, \\sigma_t^2), \\quad \\mu_t = f(p_{t-1}, p_{t-2}, \\ldots)\\]\n\n" +
-        "A stochastic MDP incorporates price uncertainty directly into the state:\n\n" +
+        "**Step 2** A stochastic MDP incorporates price uncertainty directly into the state:\n\n" +
         "\\[s_t = \\{\\text{SoC}_t, \\; \\hat{p}_{t:t+H}, \\; \\text{scenario index } k\\}\\]\n\n" +
         "where \$\\hat{p}_{t:t+H}\$ represents a price scenario tree. The agent learns a policy that is robust across scenarios:\n\n" +
         "\\[\\pi^* = \\arg\\max_\\pi \\mathbb{E}\\left[\\sum_t r(s_t, a_t)\\right]\\]\n\n" +
-        "This is critical because:\n" +
+        "**Step 3** This is critical because:\n" +
         "\\[- \\text{Deterministic MPC assumes perfect foresight - fails in practice}\\]" +
         "\\[- \\text{Greedy optimization ignores future price trajectories}\\]" +
         "\\[- \\text{Stochastic MDP learns risk-aware policies across diverse scenarios}\\]\n\n" +
@@ -923,13 +923,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Scope 3 covers all indirect emissions in the value chain:\n\n" +
+        "**Step 1** Scope 3 covers all indirect emissions in the value chain:\n\n" +
         "\\[\\text{Scope 3 categories:}\\]" +
         "\\[- \\text{Purchased goods and services}\\]" +
         "\\[- \\text{Employee commuting and business travel}\\]" +
         "\\[- \\text{Product use by customers}\\]" +
         "\\[- \\text{End-of-life treatment of sold products}\\]\n\n" +
-        "The challenge is data collection from thousands of entities with varying reporting quality:\n\n" +
+        "**Step 2** The challenge is data collection from thousands of entities with varying reporting quality:\n\n" +
         "\\[\\text{Scope 3}_{\\text{company}} = \\sum_{\\text{suppliers } j} E_j \\cdot T_{ij}\\]\n\n" +
         "where \$E_j\$ is supplier \$j\$'s emissions and \$T_{ij}\$ is the contribution of supplier \$j\$'s input to product \$i\$. A manufacturer's Scope 3 can be 10x larger than Scopes 1+2 combined.",
       hints: [
@@ -1073,9 +1073,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Net-zero pathways involve fundamental trade-offs across multiple objectives:\n\n" +
+        "**Step 1** Net-zero pathways involve fundamental trade-offs across multiple objectives:\n\n" +
         "\\[\\min \\; \\{ \\text{Cost}, \\; \\text{Emissions}, \\; \\text{Land use}, \\; \\text{Equity} \\}\\]\n\n" +
-        "Key trade-offs:\n" +
+        "**Step 2** Key trade-offs:\n" +
         "\\[- \\text{Bioenergy (low-carbon but land-intensive)} \\Leftrightarrow \\text{Food security, Biodiversity}\\]" +
         "\\[- \\text{Rapid decarbonization} \\Leftrightarrow \\text{Economic disruption, Equity (just transition)}\\]" +
         "\\[- \\text{Energy independence} \\Leftrightarrow \\text{Cost minimization}\\]\n\n" +
@@ -1146,9 +1146,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Domain shift occurs when the statistical distribution of image values differs between training and test data:\n\n" +
+        "**Step 1** Domain shift occurs when the statistical distribution of image values differs between training and test data:\n\n" +
         "\\[P_{\\text{train}}(I, y) \\neq P_{\\text{test}}(I, y)\\]\n\n" +
-        "For satellite sensors, key differences:\n\n" +
+        "**Step 2** For satellite sensors, key differences:\n\n" +
         "\\[\\begin{array}{c|c|c} \\text{Property} & \\text{Sentinel-2} & \\text{Planet}\\\\ \\hline \\text{Spatial resolution} & 10\\text{ m} & 3\\text{ m}\\\\ \\text{Spectral bands} & 13\\; (\\text{VNIR/SWIR}) & 4\\; (\\text{RGB/NIR}) \\\\ \\text{Radiometric calibration} & \\text{ESA calibrated} & \\text{Planet calibrated} \\end{array}\\]\n\n" +
         "These differences cause spectral and spatial characteristics to differ, leading to distribution shift that degrades model performance when transferring between sensors.",
       hints: [
@@ -1286,12 +1286,12 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CCDC models each pixel's temporal trajectory as a harmonic regression with seasonal components:\n\n" +
+        "**Step 1** CCDC models each pixel's temporal trajectory as a harmonic regression with seasonal components:\n\n" +
         "\\[\\text{NDVI}(t) = \\sum_{k=0}^{K} \\left[ a_k \\cos\\left(\\frac{2\\pi k t}{T}\\right) + b_k \\sin\\left(\\frac{2\\pi k t}{T}\\right) \\right] + \\epsilon\\]\n\n" +
         "where \$T\$ is the annual cycle period. This captures:\n" +
         "\\[- \\text{Seasonal vegetation phenology}\\]" +
         "\\[- \\text{Baseline vegetation condition}\\]\n\n" +
-        "When a change occurs (deforestation, flooding), the observed trajectory deviates significantly from the fitted harmonic model. CCDC detects this as a 'break' in the model residuals:\n\n" +
+        "**Step 2** When a change occurs (deforestation, flooding), the observed trajectory deviates significantly from the fitted harmonic model. CCDC detects this as a 'break' in the model residuals:\n\n" +
         "\\[|\\text{NDVI}_{\\text{observed}}(t) - \\text{NDVI}_{\\text{fitted}}(t)| > \\tau \\Rightarrow \\text{change detected}\\]",
       hints: [
         "Vegetation has strong seasonal cycles (green-up in spring, senescence in fall). What type of mathematical model captures these periodic cycles?",
@@ -1426,10 +1426,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The Rothermel model encodes the physics of fire spread:\n\n" +
+        "**Step 1** The Rothermel model encodes the physics of fire spread:\n\n" +
         "\\[R = \\frac{I_{\\text{R}}}{\\rho_b \\epsilon \\delta Q} \\cdot \\phi_w \\cdot \\phi_s\\]\n\n" +
         "where \$\\phi_w\$ and \$\\phi_s\$ are wind and slope factors. Purely data-driven models may violate these physical constraints (e.g., predict fire spreading faster uphill than downhill).\n\n" +
-        "Physics-informed neural networks (PINNs) embed these as loss terms:\n\n" +
+        "**Step 2** Physics-informed neural networks (PINNs) embed these as loss terms:\n\n" +
         "\\[\\mathcal{L}_{\\text{total}} = \\mathcal{L}_{\\text{data}} + \\lambda \\mathcal{L}_{\\text{physics}}\\]\n\n" +
         "where \$\\mathcal{L}_{\\text{physics}}\$ penalizes violations of the Rothermel equations. This regularizes the model especially in data-sparse regions.",
       hints: [
@@ -1564,11 +1564,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Standard RL uses exploration (trial-and-error) to learn:\n\n" +
+        "**Step 1** Standard RL uses exploration (trial-and-error) to learn:\n\n" +
         "\\[a_t = \\pi_\\theta(s_t) + \\epsilon \\quad \\text{(additive exploration noise)}\\]\n\n" +
         "In simulation, unsafe exploration has no consequences. In an occupied building:\n\n" +
         "\\[\\text{Unsafe action: set temperature to 35°C in summer} \\Rightarrow \\text{occupant discomfort, potential heat stroke}\\]\n\n" +
-        "Safe RL addresses this via:\n" +
+        "**Step 2** Safe RL addresses this via:\n" +
         "\\[- \\text{Constrained RL: } \\pi \\text{ constrained to safe state-action space}\\]" +
         "\\[- \\text{Model-based RL: simulate before acting in real world}\\]" +
         "\\[- \\text{Penalty method: large reward penalty for unsafe actions}\\]\n\n" +
