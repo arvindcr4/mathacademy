@@ -8,7 +8,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The original GAN minimax objective is min_G max_D V(D,G). At the global optimum, the generator loss equals ___.",
+        "The original GAN minimax objective is min_G max_D V(D,G). At the global optimum, the generator loss equals ___. Step 1: At Nash equilibrium, p_g = p_r and D*(x) = 1/2 everywhere. Step 2: Substituting D*(x) = 1/2 into V(D,G) gives V = log(1/2) + log(1/2) = -2 log 2. Step 3: At global optimum, the generator loss equals -2 log 2.",
       options: ["0", "−log 2", "−2 log 2", "log 2"],
       correctAnswer: 2,
       explanation:
@@ -23,7 +23,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "The optimal discriminator for a GAN with real distribution p_r and generator distribution p_g is D*(x) = ___.",
+        "The optimal discriminator for a GAN with real distribution p_r and generator distribution p_g is D*(x) = ___. Step 1: The discriminator maximizes E_x~p_r[log D(x)] + E_x~p_g[log(1-D(x))] at each x. Step 2: Taking the functional derivative and setting to zero gives D = p_r / (p_r + p_g). Step 3: The optimal discriminator is D*(x) = p_r(x) / (p_r(x) + p_g(x)).",
       options: [
         "p_r(x)",
         "p_g(x) / (p_r(x) + p_g(x))",
@@ -43,7 +43,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The GAN training objective is equivalent to minimising which divergence between p_r and p_g when the discriminator is optimal?",
+        "The GAN training objective is equivalent to minimising which divergence between p_r and p_g when the discriminator is optimal? Step 1: When the discriminator is optimal, the GAN minimax objective reduces to -log 4 + 2*JS(p_r || p_g). Step 2: The generator minimizes this value, equivalent to minimizing the Jensen-Shannon divergence. Step 3: The GAN objective is equivalent to minimizing JS(p_r || p_g).",
       options: [
         "KL(p_r || p_g)",
         "KL(p_g || p_r)",
@@ -66,7 +66,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The original GAN generator loss log(1 − D(G(z))) saturates early in training. The non-saturating alternative that Goodfellow (2014) recommends is ___.",
+        "The original GAN generator loss log(1 − D(G(z))) saturates early in training. The non-saturating alternative that Goodfellow (2014) recommends is ___. Step 1: log(1-D(G(z))) saturates when D(G(z)) is near 0, giving near-zero gradient. Step 2: -log D(G(z)) is large in the same regime, providing strong gradient signal. Step 3: The non-saturating alternative is minimizing -log D(G(z)) rather than log(1-D(G(z))).",
       options: [
         "Minimise log D(G(z))",
         "Minimise −log D(G(z))",
@@ -86,7 +86,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Mode collapse in GANs refers to which of the following phenomena?",
+        "Mode collapse in GANs refers to which of the following phenomena? Step 1: Mode collapse occurs when the generator maps multiple different noise inputs z to the same or very similar outputs. Step 2: This means the generator has collapsed to capturing only a few modes of the true distribution. Step 3: The generator produces limited diversity regardless of z input.",
       options: [
         "The discriminator loss reaching zero and never recovering",
         "The generator learning to produce only a narrow subset of the real data distribution",
@@ -106,7 +106,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question:
-        "When the supports of p_r and p_g lie on disjoint low-dimensional manifolds in high-dimensional space, the JS divergence between them is always log 2, giving zero gradient to the generator.",
+        "When the supports of p_r and p_g lie on disjoint low-dimensional manifolds in high-dimensional space, the JS divergence between them is always log 2, giving zero gradient to the generator. Step 1: When p_r and p_g have disjoint supports, the optimal discriminator is perfect: D*(x) = 1 for real, 0 for fake. Step 2: With D* = 0 or 1 everywhere, the generator loss log(1-D(G(z))) = log(1) = 0, giving zero gradient. Step 3: JS divergence saturates at log 2 regardless of how far apart the distributions are, providing zero gradient to the generator.",
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
@@ -124,7 +124,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "In the DCGAN generator (Radford et al. 2015), a G_block with 4\\times4 kernel, stride 2, padding 1, applied to a 16\\times16 feature map produces an output of size ___.",
+        "In the DCGAN generator (Radford et al. 2015), a G_block with 4\\times4 kernel, stride 2, padding 1, applied to a 16\\times16 feature map produces an output of size ___. Step 1: In DCGAN, each G_block upsamples by factor of 2 using transposed convolution with stride 2. Step 2: A 4x4 kernel with stride 2 and padding 1 on a 512-channel input produces 8x8 with 256 channels. Step 3: Output size is 8x8 with 256 channels.",
       options: ["8\\times8", "16\\times16", "32\\times32", "64\\times64"],
       correctAnswer: 2,
       explanation:
@@ -139,7 +139,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "DCGAN uses Batch Normalization in both the generator and the discriminator output layer.",
+        "DCGAN uses Batch Normalization in both the generator and the discriminator output layer. Step 1: Batch normalization after the output layer would normalize features before final classification. Step 2: DCGAN applies batch normalization to input and hidden layers but omits it after the final output layer. Step 3: Batch normalization is not used in the discriminator output layer.",
       options: ["True", "False"],
       correctAnswer: 1,
       explanation:
@@ -154,7 +154,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "In DCGAN, the discriminator uses Leaky ReLU with \\alpha = 0.2. For a negative pre-activation x = −3, the Leaky ReLU output is ___.",
+        "In DCGAN, the discriminator uses Leaky ReLU with \\alpha = 0.2. For a negative pre-activation x = −3, the Leaky ReLU output is ___. Step 1: Leaky ReLU(x) = x if x > 0, else alpha*x if x <= 0. Step 2: For x = -3 and alpha = 0.2: LeakyReLU(-3) = 0.2 * (-3) = -0.6. Step 3: The output is -0.6.",
       options: ["0", "−0.6", "3", "−3"],
       correctAnswer: 1,
       explanation:
@@ -172,7 +172,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "What additional input does a Conditional GAN (cGAN) provide to both the generator and discriminator?",
+        "What additional input does a Conditional GAN (cGAN) provide to both the generator and discriminator? Step 1: In an unconditional GAN, neither G nor D receives the class label y. Step 2: In a cGAN, both G(z, y) and D(x, y) receive the class label as an additional input. Step 3: This allows controlled generation of specific classes.",
       options: [
         "A random noise vector z",
         "A conditioning variable y (e.g., class label)",
@@ -192,7 +192,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "In a cGAN, the discriminator only needs to determine whether a sample is real or fake, not whether it matches the conditioning label.",
+        "In a cGAN, the discriminator only needs to determine whether a sample is real or fake, not whether it matches the conditioning label. Step 1: In cGAN, the discriminator evaluates whether (x, y) pairs are consistent — real image with correct label. Step 2: This means the discriminator checks both real/fake AND class correctness. Step 3: The discriminator does more than just real/fake — it validates the conditioning.",
       options: ["True", "False"],
       correctAnswer: 1,
       explanation:
@@ -207,7 +207,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Projection conditioning in cGAN discriminators (Miyato & Koyama, 2018) improves over naive label concatenation primarily because:",
+        "Projection conditioning in cGAN discriminators (Miyato & Koyama, 2018) improves over naive label concatenation primarily because: Step 1: Naive concatenation treats the class label as another feature. Step 2: Projection conditioning computes inner product between class embedding and feature vector, creating multiplicative interaction. Step 3: This multiplicative interaction is theoretically more expressive for class-conditional discrimination.",
       options: [
         "It doubles the number of discriminator parameters",
         "It computes an inner product between the embedded label and the penultimate feature, respecting the conditional distribution structure",
@@ -230,7 +230,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The Wasserstein-1 (Earth Mover\'s) distance W(p_r, p_g) is defined via the Kantorovich-Rubinstein dual as W(p_r, p_g) = ___.",
+        "The Wasserstein-1 (Earth Mover\'s) distance W(p_r, p_g) is defined via the Kantorovich-Rubinstein dual as W(p_r, p_g) = ___. Step 1: The Wasserstein-1 distance is defined via the Kantorovich-Rubinstein dual form. Step 2: The dual form computes supremum over 1-Lipschitz functions f. Step 3: Wasserstein-1 distance is defined via the Kantorovich-Rubinstein dual.",
       options: [
         "sup_{||f||_L \\leq 1} E_{x~p_r}[f(x)] − E_{x~p_g}[f(x)]",
         "inf_{\\gamma \\in \\Pi(p_r,p_g)} E_{(x,y)~\\gamma}[||x−y||]",
@@ -250,7 +250,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "WGAN enforces the 1-Lipschitz constraint on its critic via weight clipping to [−c, c]. The paper itself calls this approach ___.",
+        "WGAN enforces the 1-Lipschitz constraint on its critic via weight clipping to [−c, c]. The paper itself calls this approach ___. Step 1: Weight clipping forces all discriminator weights into a narrow range, which can be overly restrictive. Step 2: The WGAN paper noted this leads to optimization difficulties and recommended gradient penalty instead. Step 3: The paper recommended gradient penalty over weight clipping.",
       options: [
         "The best known method for enforcing Lipschitz continuity",
         '"a clearly terrible way to enforce a Lipschitz constraint"',
@@ -270,7 +270,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "WGAN-GP (Gulrajani et al. 2017) replaces weight clipping with a gradient penalty. The penalty term is ___.",
+        "WGAN-GP (Gulrajani et al. 2017) replaces weight clipping with a gradient penalty. The penalty term is ___. Step 1: WGAN-GP replaces weight clipping with a gradient penalty enforcing gradient norm equals 1. Step 2: The penalty is lambda times the squared deviation of gradient norm from 1 at interpolated points. Step 3: The penalty term is lambda times the squared deviation of gradient norm from 1.",
       options: [
         "\\lambda \\cdot E_{x̂}[(||\\nablaD(x̂)||\\_2 − 1)\\^2] where x̂ is sampled along lines between real and fake data",
         "\\lambda \\cdot E_{x}[||\\nablaD(x)||\\_2\\^2] at real data points only",
@@ -293,7 +293,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "What is the key training strategy introduced by Progressive Growing of GANs (ProGAN)?",
+        "What is the key training strategy introduced by Progressive Growing of GANs (ProGAN)? Step 1: ProGAN starts at low resolution (4x4) and gradually increases to higher resolutions. Step 2: New layers are added smoothly using a fade-in transition, not all at once. Step 3: Progressive resolution increase with smooth layer addition is the key strategy.",
       options: [
         "Training on low-resolution images only, then fine-tuning on high-resolution",
         "Incrementally adding higher-resolution layers to both networks during training",
@@ -313,7 +313,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "In ProGAN, new layers are added abruptly (all at once) without any transition period.",
+        "In ProGAN, new layers are added abruptly (all at once) without any transition period. Step 1: Abruptly adding new layers would cause sudden shock to network dynamics. Step 2: ProGAN adds layers smoothly using fade-in over several steps. Step 3: New layers are NOT added abruptly but with a transition period.",
       options: ["True", "False"],
       correctAnswer: 1,
       explanation:
@@ -328,7 +328,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "ProGAN introduces minibatch standard deviation as a feature. Its purpose is to:",
+        "ProGAN introduces minibatch standard deviation as a feature. Its purpose is to: Step 1: Mode collapse means the generator produces limited diversity regardless of z. Step 2: Minibatch standard deviation lets the discriminator compare samples within a batch, detecting similarity. Step 3: This encourages the generator to produce more diverse samples.",
       options: [
         "Normalize activations across the minibatch for stable gradients",
         "Append a feature map summarizing within-batch diversity to the discriminator, discouraging mode collapse",
@@ -351,7 +351,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "In StyleGAN, the mapping network f converts the latent code z into an intermediate latent code w. What is the primary benefit of this mapping?",
+        "In StyleGAN, the mapping network f converts the latent code z into an intermediate latent code w. What is the primary benefit of this mapping? Step 1: The latent space Z has entangled factors of variation. Step 2: The mapping network f (an MLP) transforms z into w, untangling factors. Step 3: The mapping network converts z into w for better disentanglement.",
       options: [
         "It reduces the dimensionality of the latent space to save memory",
         "It disentangles style factors by transforming the typically entangled Gaussian prior into a less constrained learned space W",
@@ -371,7 +371,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "StyleGAN\'s AdaIN (Adaptive Instance Normalization) layers inject style information by modulating per-channel mean and variance of feature maps.",
+        "StyleGAN\'s AdaIN (Adaptive Instance Normalization) layers inject style information by modulating per-channel mean and variance of feature maps. Step 1: AdaIN modulates mean and variance of each sample's feature maps independently. Step 2: It does NOT normalize across the batch — batch normalization does that. Step 3: AdaIN does not inject style via batch normalization.",
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
@@ -409,7 +409,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "CycleGAN enables image-to-image translation without paired training examples. How does it enforce content consistency?",
+        "CycleGAN enables image-to-image translation without paired training examples. How does it enforce content consistency? Step 1: Without paired data, there is no pixel-level ground truth for translation. Step 2: CycleGAN enforces cycle consistency providing self-supervision. Step 3: Cycle-consistency provides self-supervision without paired data. Step 1: Without paired data, there is no pixel-level ground truth for translation. Step 2: CycleGAN enforces cycle consistency providing self-supervision. Step 3: Cycle-consistency provides self-supervision without paired data.",
       options: [
         "By minimizing pixel-wise L2 loss between input and output",
         "Through a cycle-consistency loss that requires G(F(x)) \\approx x and F(G(y)) \\approx y",
@@ -429,7 +429,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "CycleGAN requires paired images (e.g., a photo of a horse paired with its zebra counterpart) for training.",
+        "CycleGAN requires paired images (e.g., a photo of a horse paired with its zebra counterpart) for training. Step 1: CycleGAN is specifically designed for unpaired image-to-image translation. Step 2: It uses cycle consistency and adversarial losses without requiring paired examples. Step 3: CycleGAN does NOT require paired images.",
       options: ["True", "False"],
       correctAnswer: 1,
       explanation:
@@ -444,7 +444,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "CycleGAN typically also includes an identity loss. What does it encourage?",
+        "CycleGAN typically also includes an identity loss. What does it encourage? Step 1: Identity loss encourages G_AB to preserve domain-B images when given domain-B input. Step 2: Without it, G_AB might unnecessarily alter color/style of target-domain inputs. Step 3: Identity loss preserves color and style of target-domain images.",
       options: [
         "The generator to produce the same output for every input",
         "The generator to leave images already in the target domain largely unchanged",
@@ -467,7 +467,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "What distinguishes Pix2Pix from CycleGAN in terms of training data requirements?",
+        "What distinguishes Pix2Pix from CycleGAN in terms of training data requirements? Step 1: CycleGAN learns with unpaired images from two domains. Step 2: Pix2pix requires paired data (input, ground-truth output). Step 3: Pix2pix requires paired data while CycleGAN does not.",
       options: [
         "Pix2Pix requires unpaired images; CycleGAN requires paired images",
         "Pix2Pix requires paired images; CycleGAN requires unpaired images",
@@ -487,7 +487,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "The Pix2Pix discriminator is a PatchGAN that classifies individual image patches as real or fake rather than the whole image.",
+        "The Pix2Pix discriminator is a PatchGAN that classifies individual image patches as real or fake rather than the whole image. Step 1: PatchGAN classifies each NxN patch as real or fake rather than the whole image. Step 2: It is fully convolutional and focuses on per-region texture quality. Step 3: PatchGAN evaluates real/fake at patch level, not whole-image level.",
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
@@ -502,7 +502,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Pix2Pix combines GAN loss with an L1 reconstruction loss. What role does the L1 loss play?",
+        "Pix2Pix combines GAN loss with an L1 reconstruction loss. What role does the L1 loss play? Step 1: L1 loss alone produces blurry images but anchors output to ground truth. Step 2: GAN loss ensures photorealism. L1 anchors to input condition. Step 3: Pix2pix combines L1 reconstruction + adversarial loss.",
       options: [
         "It replaces the GAN loss during the first few epochs to warm-start training",
         "It provides low-frequency correctness (overall structure and color) while the GAN loss handles high-frequency details",
@@ -525,7 +525,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "BigGAN achieves high-fidelity class-conditional generation primarily through which combination of techniques?",
+        "BigGAN achieves high-fidelity class-conditional generation primarily through which combination of techniques? Step 1: BigGAN builds on SACAN with class-conditional generation and large batch training. Step 2: Key innovations: large batch training, class embedding concatenation with z, truncation trick. Step 3: High-fidelity class-conditional generation comes from large batch + class conditioning.",
       options: [
         "Progressive growing and cycle-consistency loss",
         "Large batch sizes, self-attention, truncation trick, and class-conditional BatchNorm",
@@ -545,7 +545,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "BigGAN concatenates the class embedding directly to the noise vector z at the generator\'s input, with no further injection into intermediate layers.",
+        "BigGAN concatenates the class embedding directly to the noise vector z at the generator\'s input, with no further injection into intermediate layers. Step 1: In BigGAN, the class embedding is concatenated with noise z at the generator input. Step 2: This provides class conditioning to the generator. Step 3: BigGAN concatenates class embedding with noise z.",
       options: ["True", "False"],
       correctAnswer: 1,
       explanation:
@@ -583,7 +583,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "In a VAE-GAN, the VAE encoder and GAN generator (decoder) are trained jointly. The reconstruction loss is computed in which space?",
+        "In a VAE-GAN, the VAE encoder and GAN generator (decoder) are trained jointly. The reconstruction loss is computed in which space? Step 1: VAE-GAN combines VAE reconstruction loss with GAN adversarial loss. Step 2: VAE encoder maps to latent, decoder reconstructs, discriminator distinguishes real from fake. Step 3: VAE reconstruction and GAN adversarial losses are balanced jointly. Step 1: VAE-GAN combines VAE reconstruction loss with GAN adversarial loss. Step 2: VAE encoder maps to latent, decoder reconstructs, discriminator distinguishes real from fake. Step 3: VAE reconstruction and GAN adversarial losses are balanced jointly.",
       options: [
         "Pixel space using L2 loss",
         "The discriminator\'s learned feature space (perceptual loss)",
@@ -603,7 +603,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "VAE-GAN models have both an encoder and a decoder/generator network.",
+        "VAE-GAN models have both an encoder and a decoder/generator network. Step 1: VAE-GAN combines VAE and GAN components. Step 2: It has VAE encoder-decoder plus GAN discriminator. Step 3: VAE-GAN models do have both encoder and decoder/generator.",
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
@@ -618,7 +618,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The VAE-GAN objective balances three loss terms. Which set is correct?",
+        "The VAE-GAN objective balances three loss terms. Which set is correct? Step 1: VAE-GAN balances reconstruction loss (VAE), KL divergence (latent regularizer), and adversarial loss. Step 2: These three terms are balanced during training. Step 3: VAE-GAN balances reconstruction, KL divergence, and adversarial losses.",
       options: [
         "Adversarial loss + pixel reconstruction loss + classification loss",
         "KL divergence + adversarial loss + perceptual (feature-matching) reconstruction loss",
@@ -641,7 +641,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Fréchet Inception Distance (FID) measures the quality of generated images by:",
+        "Fréchet Inception Distance (FID) measures the quality of generated images by: Step 1: FID computes the Frechet distance between Inception feature distributions of real and generated images. Step 2: It fits a Gaussian to each feature set and computes Wasserstein-2 distance between Gaussians. Step 3: FID measures Frechet distance between Inception feature distributions.",
       options: [
         "Counting the number of distinct classes present in generated samples",
         "Computing the Fréchet distance between Gaussian fits to Inception features of real and generated images",
@@ -661,7 +661,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "A GAN that memorizes the training set would achieve a perfect (zero) FID score.",
+        "A GAN that memorizes the training set would achieve a perfect (zero) FID score. Step 1: FID measures distributional distance between real and generated features, not exact image matching. Step 2: Even perfect memorization would produce some distributional difference. Step 3: Memorization would NOT produce a perfect (zero) FID score.",
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
@@ -676,7 +676,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Precision and Recall for generative models (Kynkäänniemi et al.) measure what two aspects of generation quality?",
+        "Precision and Recall for generative models (Kynkäänniemi et al.) measure what two aspects of generation quality? Step 1: Precision measures quality: generated overlap with real distribution. Step 2: Recall measures diversity: how much of the real distribution is covered. Step 3: These are distinct aspects that cannot both be maximized.",
       options: [
         "Precision = how many generated samples fall within the real data manifold; Recall = how much of the real manifold is covered by generated samples",
         "Precision = diversity of generated samples; Recall = quality of individual samples",
@@ -699,7 +699,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The original GAN generator loss (−log D(G(z))) is preferred over the saturating loss (log(1 − D(G(z)))) because:",
+        "The original GAN generator loss (−log D(G(z))) is preferred over the saturating loss (log(1 − D(G(z)))) because: Step 1: log(1-D(G(z))) saturates when D(G(z)) is near 0, giving near-zero gradient early in training. Step 2: -log D(G(z)) is large in the same regime, providing strong gradient signal to the generator. Step 3: -log D(G(z)) is preferred because it provides non-saturating gradient signal.",
       options: [
         "It has lower computational complexity",
         "It provides larger gradients when G(z) is easily classified as fake (early training)",
@@ -719,7 +719,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "The hinge loss for GANs requires the discriminator to output a probability in (0, 1) via a sigmoid activation.",
+        "The hinge loss for GANs requires the discriminator to output a probability in (0, 1) via a sigmoid activation. Step 1: Hinge loss uses max(0, 1 - D(x)) for real and max(0, 1 + D(G(z))) for fake. Step 2: This does not require sigmoid output — any real-valued score works. Step 3: Hinge loss does NOT require sigmoid output in [0,1].",
       options: ["True", "False"],
       correctAnswer: 1,
       explanation:
@@ -734,7 +734,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Least Squares GAN (LSGAN) replaces the cross-entropy discriminator loss with (D(x)−1)\\^2 + (D(G(z)))\\^2. Which divergence does this minimise at the generator optimum?",
+        "Least Squares GAN (LSGAN) replaces the cross-entropy discriminator loss with (D(x)−1)\\^2 + (D(G(z)))\\^2. Which divergence does this minimise at the generator optimum? Step 1: LSGAN replaces sigmoid cross-entropy with squared loss (D-1)^2 + (D+1)^2. Step 2: This provides cleaner gradient when D is confident but wrong. Step 3: LSGAN uses squared loss rather than cross-entropy.",
       options: [
         "Jensen-Shannon divergence",
         "Pearson χ\\^2 divergence",
@@ -757,7 +757,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Spectral normalization constrains each weight matrix in the discriminator by:",
+        "Spectral normalization constrains each weight matrix in the discriminator by: Step 1: Spectral normalization divides each weight by its spectral norm (largest singular value). Step 2: This bounds the Lipschitz constant of the discriminator to 1 per layer. Step 3: Spectral normalization constrains weights by dividing by spectral norm.",
       options: [
         "Clipping all weights to [−1, 1]",
         "Dividing the weight matrix by its largest singular value (spectral norm)",
@@ -777,7 +777,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "Gradient penalty (WGAN-GP) is applied to interpolated points between real and generated samples, not to the real or fake samples alone.",
+        "Gradient penalty (WGAN-GP) is applied to interpolated points between real and generated samples, not to the real or fake samples alone. Step 1: WGAN-GP replaces weight clipping with a gradient penalty enforcing gradient norm equals 1. Step 2: The penalty is lambda times the squared deviation of gradient norm from 1 at interpolated points. Step 3: The penalty term is lambda times the squared deviation of gradient norm from 1.",
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
@@ -814,7 +814,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "InfoGAN decomposes the generator input into z (noise) and c (latent code). What is the training objective that relates to c?",
+        "InfoGAN decomposes the generator input into z (noise) and c (latent code). What is the training objective that relates to c? Step 1: InfoGAN decomposes input into z (unstructured noise) and c (semantic latent codes). Step 2: Training maximizes mutual information I(c; G(z,c)) to make c control semantic attributes. Step 3: InfoGAN decomposes generator input into noise z and latent codes c. Step 1: InfoGAN decomposes input into z (unstructured noise) and c (semantic latent codes). Step 2: Training maximizes mutual information I(c; G(z,c)) to make c control semantic attributes. Step 3: InfoGAN decomposes generator input into noise z and latent codes c.",
       options: [
         "Minimizing the KL divergence between c and a Gaussian prior",
         "Maximizing the mutual information I(c; G(z, c)) between the latent code and the generated image",
@@ -834,7 +834,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "InfoGAN requires explicit supervision (labels) to learn disentangled representations.",
+        "InfoGAN requires explicit supervision (labels) to learn disentangled representations. Step 1: InfoGAN maximizes mutual information I(c; G(z,c)) without any labeled data. Step 2: This is self-supervised — c is part of the model, not provided by labels. Step 3: InfoGAN does NOT require explicit supervision or labels.",
       options: ["True", "False"],
       correctAnswer: 1,
       explanation:
@@ -849,7 +849,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Computing mutual information I(c; G(z,c)) exactly is intractable. InfoGAN addresses this by:",
+        "Computing mutual information I(c; G(z,c)) exactly is intractable. InfoGAN addresses this by: Step 1: Computing exact mutual information requires knowing the posterior p(c|z), which is intractable. Step 2: InfoGAN uses a variational lower bound with an auxiliary distribution. Step 3: InfoGAN uses variational approximation to bound mutual information.",
       options: [
         "Using Monte Carlo sampling with a fixed reference distribution",
         "Maximizing a variational lower bound using an auxiliary recognition network Q(c|x)",
@@ -872,7 +872,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Super-Resolution GAN (SRGAN) improves upon bicubic upsampling primarily by:",
+        "Super-Resolution GAN (SRGAN) improves upon bicubic upsampling primarily by: Step 1: Bicubic upsampling is simple interpolation without learning. Step 2: SRGAN uses adversarial training to generate photorealistic textures beyond interpolation. Step 3: SRGAN improves upon bicubic by learning to generate realistic textures.",
       options: [
         "Using a deeper bicubic interpolation kernel",
         "Adding a perceptual loss (VGG feature loss) and adversarial loss to recover fine-grained textures",
@@ -892,7 +892,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "SRGAN-generated images always achieve higher PSNR than bicubic upsampling.",
+        "SRGAN-generated images always achieve higher PSNR than bicubic upsampling. Step 1: PSNR measures pixel-level MSE. GANs optimize perceptual quality, not pixel-level accuracy. Step 2: SRGAN may have lower PSNR despite better visual quality. Step 3: SRGAN does NOT always achieve higher PSNR than bicubic.",
       options: ["True", "False"],
       correctAnswer: 1,
       explanation:
@@ -907,7 +907,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "ESRGAN improves upon SRGAN by replacing the discriminator with a Relativistic discriminator. What does the relativistic discriminator estimate?",
+        "ESRGAN improves upon SRGAN by replacing the discriminator with a Relativistic discriminator. What does the relativistic discriminator estimate? Step 1: Standard discriminator outputs absolute real/fake score. Step 2: Relativistic discriminator compares generated vs real, measuring if generated is more realistic. Step 3: ESRGAN uses relativistic discriminator that compares real vs generated.",
       options: [
         "The absolute probability that an image is real",
         "The probability that a real image is more realistic than a randomly chosen fake image",
@@ -930,7 +930,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Video GAN architectures typically separate generation into two components. What are they?",
+        "Video GAN architectures typically separate generation into two components. What are they? Step 1: Video has spatial (appearance) and temporal (motion) dimensions. Step 2: Video GANs typically separate content generation from motion/temporal generation. Step 3: Video GANs separate spatial and temporal generation components.",
       options: [
         "A spatial encoder and a temporal decoder",
         "A foreground (motion) generator and a background (static scene) generator",
@@ -950,7 +950,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "MoCoGAN (Motion and Content GAN) uses separate latent codes for content and motion to enable temporally consistent video generation.",
+        "MoCoGAN (Motion and Content GAN) uses separate latent codes for content and motion to enable temporally consistent video generation. Step 1: MoCoGAN decomposes latent space into content code (static) and motion code (temporal). Step 2: Content code controls identity/scene, motion code controls dynamics. Step 3: MoCoGAN uses separate latent codes for content and motion.",
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
@@ -965,7 +965,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Video GANs often use a temporal discriminator in addition to a spatial (per-frame) discriminator. What does the temporal discriminator detect?",
+        "Video GANs often use a temporal discriminator in addition to a spatial (per-frame) discriminator. What does the temporal discriminator detect? Step 1: Spatial discriminator evaluates each frame independently. Step 2: Temporal discriminator evaluates multiple frames for motion coherence. Step 3: Temporal discriminator evaluates inter-frame coherence.",
       options: [
         "Whether individual frames are photorealistic",
         "Whether the sequence of frames is temporally coherent and plausible as a video",
@@ -1007,7 +1007,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Voxel-based 3D GANs scale efficiently to very high resolutions (e.g., 512\\^3) because memory grows linearly with resolution.",
+        "Voxel-based 3D GANs scale efficiently to very high resolutions (e.g., 512\\^3) because memory grows linearly with resolution. Step 1: Voxel grids discretize 3D space. Memory grows as resolution cubed. Step 2: At high resolution, memory usage is prohibitive. Step 3: Voxel-based 3D GANs do NOT scale efficiently to high resolutions. Step 1: Voxel grids discretize 3D space. Memory grows as resolution cubed. Step 2: At high resolution, memory usage is prohibitive. Step 3: Voxel-based 3D GANs do NOT scale efficiently to high resolutions.",
       options: ["True", "False"],
       correctAnswer: 1,
       explanation:
@@ -1022,7 +1022,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "EG3D (Chan et al., 2022) represents 3D scenes using which hybrid representation for efficient high-resolution 3D-aware image synthesis?",
+        "EG3D (Chan et al., 2022) represents 3D scenes using which hybrid representation for efficient high-resolution 3D-aware image synthesis? Step 1: EG3D uses tri-plane representation: three orthogonal 2D planes encoding 3D volume slices. Step 2: This reduces memory from cubic to quadratic scaling. Step 3: EG3D represents 3D scenes using tri-plane features.",
       options: [
         "Voxel grids combined with surface normals",
         "Tri-plane features projected onto three axis-aligned planes, decoded via NeRF",
@@ -1045,7 +1045,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "StackGAN generates high-resolution images from text descriptions using a two-stage approach. What does Stage-I produce?",
+        "StackGAN generates high-resolution images from text descriptions using a two-stage approach. What does Stage-I produce? Step 1: StackGAN Stage-1 produces low-resolution (64x64) from text. Step 2: Stage-2 refines to high-resolution (256x256) with better details. Step 3: StackGAN uses Stage-1 for coarse layout, Stage-2 for refinement.",
       options: [
         "A 256\\times256 photorealistic image",
         "A low-resolution (64\\times64) image capturing rough shape and colors from the text",
@@ -1065,7 +1065,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "AttnGAN uses attention mechanisms to align specific words in the text description with specific spatial regions of the generated image.",
+        "AttnGAN uses attention mechanisms to align specific words in the text description with specific spatial regions of the generated image. Step 1: AttnGAN applies word-level cross-attention at each generation stage. Step 2: Attention weights align specific words to specific spatial regions of the feature map. Step 3: AttnGAN does use word-level attention to align words to image regions.",
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
@@ -1080,7 +1080,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "DAMSM (Deep Attentional Multimodal Similarity Model) in AttnGAN provides which additional training signal?",
+        "DAMSM (Deep Attentional Multimodal Similarity Model) in AttnGAN provides which additional training signal? Step 1: DAMSM computes similarity between the generated image embedding and the text embedding. Step 2: It provides fine-grained text-image matching loss beyond the adversarial loss. Step 3: DAMSM measures text-image similarity to improve alignment between generated images and text descriptions.",
       options: [
         "A pixel-level reconstruction loss between text and image",
         "A fine-grained image-text matching loss that maximizes similarity between word features and corresponding image sub-regions",
@@ -1103,7 +1103,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Which GAN architecture is most commonly used as the foundation for high-fidelity face synthesis and deepfakes?",
+        "Which GAN architecture is most commonly used as the foundation for high-fidelity face synthesis and deepfakes? Step 1: StyleGAN produces high-fidelity face images through style-based generation. Step 2: Its style mixing and latent space editing capabilities make it the standard for face synthesis. Step 3: StyleGAN is the foundation for high-fidelity face synthesis and deepfakes.",
       options: ["DCGAN", "StyleGAN / StyleGAN2", "CycleGAN", "BigGAN"],
       correctAnswer: 1,
       explanation:
@@ -1118,7 +1118,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Deepfake detection methods that rely on detecting GAN-specific spectral artifacts remain fully robust against all modern deepfake generators.",
+        "Deepfake detection methods that rely on detecting GAN-specific spectral artifacts remain fully robust against all modern deepfake generators. Step 1: GAN-generated images have spectral artifacts from upsampling layers. Step 2: These can be detected but attackers can adapt to hide them. Step 3: Spectral artifact detection is NOT fully robust.",
       options: ["True", "False"],
       correctAnswer: 1,
       explanation:
@@ -1133,7 +1133,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Face reenactment GANs (e.g., First Order Motion Model) transfer motion from a driving video to a source face without 3D modeling. They represent motion using:",
+        "Face reenactment GANs (e.g., First Order Motion Model) transfer motion from a driving video to a source face without 3D modeling. They represent motion using: Step 1: First Order Motion Model transfers motion from driving video to source image. Step 2: It uses keypoint motion fields to drive deformation. Step 3: Face reenactment transfers motion from driving to source video.",
       options: [
         "Dense optical flow fields estimated by a pre-trained FlowNet",
         "Sparse keypoints and local affine transformations around each keypoint",
@@ -1156,7 +1156,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "GANs are used in medical image synthesis primarily to address which challenge?",
+        "GANs are used in medical image synthesis primarily to address which challenge? Step 1: Medical imaging datasets have class imbalance with rare conditions having few examples. Step 2: GANs generate synthetic rare-class images to supplement training data for downstream classifiers. Step 3: Primary goal is addressing data scarcity and class imbalance in medical imaging.",
       options: [
         "Reducing the computation time of MRI scanners",
         "Augmenting scarce labeled medical datasets to improve downstream model performance",
@@ -1176,7 +1176,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "GAN-synthesized medical images can be used in clinical diagnosis without any validation against real patient outcomes.",
+        "GAN-synthesized medical images can be used in clinical diagnosis without any validation against real patient outcomes. Step 1: GAN-synthesized medical images must be validated for anatomical accuracy and diagnostic validity. Step 2: Clinical use without validation could lead to incorrect diagnosis and patient harm. Step 3: GAN-synthesized images cannot be used clinically without thorough validation.",
       options: ["True", "False"],
       correctAnswer: 1,
       explanation:
@@ -1191,7 +1191,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "MRI-to-CT synthesis using GANs (cross-modal synthesis) is valuable because:",
+        "MRI-to-CT synthesis using GANs (cross-modal synthesis) is valuable because: Step 1: MRI captures soft tissue, CT captures bone — different physical properties. Step 2: Cross-modal MRI-to-CT synthesis is valuable for radiation therapy planning. Step 3: MRI-to-CT synthesis enables CT-like images from MRI for treatment planning.",
       options: [
         "CT scans are always cheaper and faster to acquire than MRI",
         "It enables generation of CT-like images from MRI for patients who cannot receive radiation, enabling CT-based radiotherapy planning without actual CT acquisition",
@@ -1214,7 +1214,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "When using GAN-generated images for data augmentation, the primary goal is to:",
+        "When using GAN-generated images for data augmentation, the primary goal is to: Step 1: GAN augmentation supplements real training data with synthetic samples. Step 2: Synthetic samples extend the effective training set size. Step 3: Primary goal is improving classifier training through data augmentation.",
       options: [
         "Replace the original training set entirely with synthetic images",
         "Increase effective training set size and diversity to reduce overfitting in downstream classifiers",
@@ -1234,7 +1234,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Training a GAN on a small dataset (e.g., fewer than 1000 images) without any regularization typically results in the discriminator overfitting to the training set.",
+        "Training a GAN on a small dataset (e.g., fewer than 1000 images) without any regularization typically results in the discriminator overfitting to the training set. Step 1: GANs require substantial data to learn the full distribution. Step 2: With very limited data, GANs memorize and fail to generalize. Step 3: Training a GAN on small data without regularization typically fails.",
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
@@ -1249,7 +1249,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Adaptive Discriminator Augmentation (ADA, Karras et al. 2020) adjusts augmentation strength based on:",
+        "Adaptive Discriminator Augmentation (ADA, Karras et al. 2020) adjusts augmentation strength based on: Step 1: ADA detects overfitting via training-validation gap. Step 2: When gap grows, augmentation strength is increased to regularize. Step 3: ADA does adjust augmentation based on overfitting signals.",
       options: [
         "The generator\'s FID score on a validation set",
         "The discriminator\'s overfitting signal, measured as the difference between its accuracy on real training vs. validation images",
@@ -1291,7 +1291,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "GANomaly speeds up anomaly detection compared to AnoGAN by using an encoder to directly predict the latent code without iterative optimization.",
+        "GANomaly speeds up anomaly detection compared to AnoGAN by using an encoder to directly predict the latent code without iterative optimization. Step 1: AnoGAN requires iterative optimization per test image — slow. Step 2: GANomaly replaces this with an encoder that predicts z in one forward pass. Step 3: GANomaly's encoder speeds up inference via single forward pass. Step 1: AnoGAN requires iterative optimization per test image — slow. Step 2: GANomaly replaces this with an encoder that predicts z in one forward pass. Step 3: GANomaly's encoder speeds up inference via single forward pass.",
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
@@ -1306,7 +1306,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "f-AnoGAN improves anomaly scoring by combining reconstruction error in pixel space with:",
+        "f-AnoGAN improves anomaly scoring by combining reconstruction error in pixel space with: Step 1: Pixel-space reconstruction error alone may miss subtle anomalies that are semantically significant. Step 2: f-AnoGAN combines pixel error with feature-space (perceptual) error from an encoder network. Step 3: f-AnoGAN combines pixel and feature-space errors for more comprehensive anomaly scoring.",
       options: [
         "A class-conditional probability score from the generator",
         "Reconstruction error in the discriminator\'s feature space (feature matching)",
@@ -1329,7 +1329,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "GAN-based domain adaptation typically adapts a model from source to target domain by:",
+        "GAN-based domain adaptation typically adapts a model from source to target domain by: Step 1: Domain adaptation bridges source (labeled) and target (unlabeled) domains. Step 2: GAN-based methods use discriminators to align feature distributions. Step 3: GAN-based domain adaptation aligns source and target feature distributions.",
       options: [
         "Fine-tuning only the final classification layer on target data",
         "Using a GAN to transform source images into the style of the target domain, then training on these stylized images",
@@ -1349,7 +1349,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "DANN (Domain-Adversarial Neural Networks) uses a GAN to generate target-domain images for training.",
+        "DANN (Domain-Adversarial Neural Networks) uses a GAN to generate target-domain images for training. Step 1: DANN uses gradient reversal layer and domain discriminator, not image generation. Step 2: It learns domain-invariant features through adversarial training. Step 3: DANN does NOT use GAN to generate target-domain images.",
       options: ["True", "False"],
       correctAnswer: 1,
       explanation:
@@ -1364,7 +1364,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "CyCADA (Cycle-Consistent Adversarial Domain Adaptation) extends CycleGAN for domain adaptation by additionally enforcing:",
+        "CyCADA (Cycle-Consistent Adversarial Domain Adaptation) extends CycleGAN for domain adaptation by additionally enforcing: Step 1: CyCADA applies CycleGAN for domain adaptation with semantic consistency losses. Step 2: It preserves semantic structure during translation. Step 3: CyCADA extends CycleGAN with semantic consistency for domain adaptation.",
       options: [
         "Maximum mean discrepancy minimization in the feature space",
         "Semantic (task) consistency: the translated image must produce the same predictions as the original",
@@ -1387,7 +1387,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Federated GANs address which privacy concern in distributed GAN training?",
+        "Federated GANs address which privacy concern in distributed GAN training? Step 1: Federated learning shares gradient updates with a central server. Step 2: Gradient updates can leak information about local training data. Step 3: Federated GANs address gradient/data leakage privacy concerns.",
       options: [
         "The generator memorizing individual training examples",
         "Raw private data never leaving local clients - only model updates (gradients or parameters) are shared",
@@ -1407,7 +1407,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Sharing gradient updates in federated GAN training is completely safe from privacy attacks.",
+        "Sharing gradient updates in federated GAN training is completely safe from privacy attacks. Step 1: Gradient updates can be inverted to reconstruct training data. Step 2: This has been demonstrated in membership inference attacks. Step 3: Sharing gradient updates is NOT completely safe from privacy attacks.",
       options: ["True", "False"],
       correctAnswer: 1,
       explanation:
@@ -1422,7 +1422,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "MD-GAN (Multi-Discriminator GAN for federated learning) assigns one discriminator per client and aggregates only the generator. What is the key advantage?",
+        "MD-GAN (Multi-Discriminator GAN for federated learning) assigns one discriminator per client and aggregates only the generator. What is the key advantage? Step 1: MD-GAN has one discriminator per client plus a central generator. Step 2: Each client discriminator provides feedback on its local domain. Step 3: MD-GAN uses one discriminator per client with a central generator.",
       options: [
         "It eliminates the need for a central server entirely",
         "Each discriminator trains on local data, and the generator must fool all of them, naturally aggregating diverse local distributions without sharing data",
@@ -1445,7 +1445,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "In an Energy-Based GAN (EBGAN), the discriminator is reinterpreted as an energy function. Low energy corresponds to:",
+        "In an Energy-Based GAN (EBGAN), the discriminator is reinterpreted as an energy function. Low energy corresponds to: Step 1: EBGAN reframes the discriminator as an energy function: low energy for real, high for fake. Step 2: This allows any real-valued energy, not constrained to probability range. Step 3: EBGAN does reinterpret the discriminator as an energy function.",
       options: [
         "High reconstruction error (unusual, fake-like regions)",
         "Realistic-looking samples (real data manifold)",
@@ -1465,7 +1465,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "EBGAN uses an autoencoder as the discriminator, where reconstruction error acts as the energy.",
+        "EBGAN uses an autoencoder as the discriminator, where reconstruction error acts as the energy. Step 1: EBGAN uses an autoencoder as discriminator where reconstruction error is the energy. Step 2: Real images have low reconstruction error (low energy), fake have high error. Step 3: EBGAN uses autoencoder-based discriminator with reconstruction error as energy.",
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
@@ -1480,7 +1480,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "BEGAN (Boundary Equilibrium GAN) introduces an equilibrium mechanism controlled by hyperparameter \\gamma. What does \\gamma control?",
+        "BEGAN (Boundary Equilibrium GAN) introduces an equilibrium mechanism controlled by hyperparameter \\gamma. What does \\gamma control? Step 1: BEGAN uses hyperparameter gamma to balance generator and discriminator quality. Step 2: Equilibrium maintains target ratio between real and fake reconstruction errors. Step 3: BEGAN uses gamma to control generator-discriminator equilibrium.",
       options: [
         "The learning rate ratio between generator and discriminator",
         "The balance between image diversity and visual quality (\\gamma = E[L(G(z))] / E[L(x)])",
@@ -1503,7 +1503,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "DDPM (Ho et al. 2020) trains a noise prediction network \\epsilon_\\theta. The simplified training objective (after dropping the weighting term) is ___.",
+        "DDPM (Ho et al. 2020) trains a noise prediction network \\epsilon_\\theta. The simplified training objective (after dropping the weighting term) is ___. Step 1: DDPM trains to predict the noise epsilon added at each timestep. Step 2: Training objective minimizes the difference between added and predicted noise. Step 3: DDPM's objective is noise prediction, not image reconstruction.",
       options: [
         "E[||x\\_0 − x_\\theta(x_t, t)||\\^2]  [predict the original image]",
         "E[||\\epsilon − \\epsilon_\\theta(√ᾱ_t\\cdotx\\_0 + √(1−ᾱ_t)\\cdot\\epsilon, t)||\\^2]  [predict the added noise]",
@@ -1523,7 +1523,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "DDPM uses a variance schedule {\\beta_t}. Ho et al. (2020) used a linear schedule from \\beta\\_1 = 10\\^{-\\^4 to \\beta_T = 0.02 with T = 1000. A key property of this schedule is that ___.",
+        "DDPM uses a variance schedule {\\beta_t}. Ho et al. (2020) used a linear schedule from \\beta\\_1 = 10\\^{-\\^4 to \\beta_T = 0.02 with T = 1000. A key property of this schedule is that ___. Step 1: DDPM uses variance schedule to control noise level at each step. Step 2: Ho et al. used linear schedule from beta_1 to beta_T. Step 3: DDPM uses a variance schedule, and Ho et al. used linear schedule.",
       options: [
         "x_T is perfectly Gaussian N(0,I) at any finite T",
         "x_T \\approx N(0,I) because ᾱ_T = \\Pi(1−\\beta_t) \\approx 0 for large T with the linear schedule",
@@ -1543,7 +1543,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "DDIM (Song et al. 2020) accelerates sampling from DDPMs by using a non-Markovian reverse process. Setting \\eta = 0 in DDIM makes the sampling ___.",
+        "DDIM (Song et al. 2020) accelerates sampling from DDPMs by using a non-Markovian reverse process. Setting \\eta = 0 in DDIM makes the sampling ___. Step 1: DDIM modifies the reverse diffusion to be non-Markovian. Step 2: This allows skipping steps while maintaining quality. Step 3: DDIM uses non-Markovian reverse process for accelerated sampling.",
       options: [
         "Equivalent to the original DDPM stochastic sampling",
         "Fully deterministic: the same latent x_T always produces the same image x\\_0",
@@ -1585,7 +1585,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "InterFaceGAN achieves controllable face attribute editing by finding linear decision boundaries in the StyleGAN latent space.",
+        "InterFaceGAN achieves controllable face attribute editing by finding linear decision boundaries in the StyleGAN latent space. Step 1: InterFaceGAN finds linear directions in StyleGAN W space corresponding to attributes. Step 2: These are discovered by training linear classifiers on inverted latent codes. Step 3: InterFaceGAN finds linear boundaries in latent space for attribute editing. Step 1: InterFaceGAN finds linear directions in StyleGAN W space corresponding to attributes. Step 2: These are discovered by training linear classifiers on inverted latent codes. Step 3: InterFaceGAN finds linear boundaries in latent space for attribute editing.",
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
@@ -1600,7 +1600,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The Perceptual Path Length (PPL) metric measures GAN disentanglement by:",
+        "The Perceptual Path Length (PPL) metric measures GAN disentanglement by: Step 1: PPL measures how smoothly latent interpolations produce visual changes. Step 2: Short, consistent paths indicate more disentangled representations. Step 3: PPL measures disentanglement via smoothness of latent interpolations.",
       options: [
         "Computing the FID between interpolated and real images",
         "Measuring the average perceptual change per unit step along interpolation paths in the latent space",
@@ -1623,7 +1623,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "CLIP-guided GAN generation steers the generator toward a text prompt by:",
+        "CLIP-guided GAN generation steers the generator toward a text prompt by: Step 1: CLIP produces joint image-text embeddings trained on image-text pairs. Step 2: At inference, CLIP similarity between generated image and text is used as loss to update GAN's latent code. Step 3: CLIP steers GAN by using embedding similarity as the loss signal.",
       options: [
         "Fine-tuning the generator on CLIP-generated captions of training images",
         "Computing the CLIP similarity between the generated image and the text prompt and backpropagating through the generator",
@@ -1643,7 +1643,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "CLIP-guided GAN generation (e.g., BigSleep, DALL-E-like approaches) requires retraining the GAN for each new text prompt.",
+        "CLIP-guided GAN generation (e.g., BigSleep, DALL-E-like approaches) requires retraining the GAN for each new text prompt. Step 1: Training a GAN from scratch for each new text prompt would be computationally prohibitive and extremely slow. Step 2: CLIP-guided methods use the GAN as a frozen generator and optimize only the latent code z using CLIP similarity as the loss signal. Step 3: Therefore, CLIP guidance requires no retraining of the GAN weights for new prompts.",
       options: ["True", "False"],
       correctAnswer: 1,
       explanation:
@@ -1658,7 +1658,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "StyleCLIP\'s \"Global Direction\" method finds a text-driven latent direction in StyleGAN\'s W+ space by:",
+        "StyleCLIP\'s \"Global Direction\" method finds a text-driven latent direction in StyleGAN\'s W+ space by: Step 1: CLIP encodes text and images into joint embedding where direction equals semantic change. Step 2: CLIP direction must be projected into StyleGAN W+ space via mapper or Jacobian. Step 3: StyleCLIP projects CLIP direction to W+ via learned mapper.",
       options: [
         "Training a separate encoder on CLIP-labeled StyleGAN images",
         "Computing the CLIP text-image direction (\\Deltat) and mapping it to the W+ space via a learned mapper network or sensitivity-weighted projection",
@@ -1681,7 +1681,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "In the GAN minimax game, a Nash equilibrium is reached when:",
+        "In the GAN minimax game, a Nash equilibrium is reached when: Step 1: In minimax, G minimizes log(1-D(G(z))) while D maximizes it. Step 2: Nash equilibrium means neither can improve by changing strategy alone. Step 3: Nash equilibrium is when p_g = p_r and D*(x) = 1/2.",
       options: [
         "The generator loss reaches zero and the discriminator loss reaches one",
         "Neither the generator nor the discriminator can unilaterally improve its objective by changing its strategy - p_g = p_r and D*(x) = 1/2",
@@ -1715,7 +1715,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Training instability in GANs is often attributed to which mathematical property of the JS divergence when the support of p_r and p_g do not overlap?",
+        "Training instability in GANs is often attributed to which mathematical property of the JS divergence when the support of p_r and p_g do not overlap? Step 1: When p_r and p_g have disjoint supports, the optimal discriminator is perfect: D* = 0 or 1 everywhere. Step 2: With D* = 0 or 1, the generator loss log(1-D(G(z))) = log(1) = 0, giving zero gradient. Step 3: JS divergence saturates at log 2, providing zero gradient to the generator when supports are disjoint. Step 1: Gradient descent works well for finding local minima of a single convex objective. Step 2: GAN training is a two-player minimax game with non-convex objectives and interdependent networks. Step 3: The game dynamics can oscillate, diverge, or collapse to modes rather than converge.",
       options: [
         "JS divergence becomes negative when supports are disjoint",
         "JS divergence saturates at log 2 regardless of how far apart p_r and p_g are, providing zero gradient to the generator",
@@ -1738,7 +1738,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "AC-GAN (Auxiliary Classifier GAN) differs from a standard conditional GAN in that:",
+        "AC-GAN (Auxiliary Classifier GAN) differs from a standard conditional GAN in that: Step 1: AC-GAN adds a class prediction head to the discriminator. Step 2: Both G and D get classification loss in addition to adversarial loss. Step 3: AC-GAN discriminator outputs real/fake AND class prediction.",
       options: [
         "AC-GAN uses a separate classifier network instead of a discriminator",
         "The AC-GAN discriminator outputs both a real/fake probability and a class prediction, adding a classification loss to both generator and discriminator training",
@@ -1772,7 +1772,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Class-conditional Batch Normalization (cBN) in conditional GANs injects class information by:",
+        "Class-conditional Batch Normalization (cBN) in conditional GANs injects class information by: Step 1: Standard BN uses fixed (gamma, beta) — same for all classes. Step 2: cBN predicts class-specific (gamma_c, beta_c) from class embedding per batch norm layer. Step 3: cBN learns class-specific affine parameters from class embedding. Step 1: Projection discriminator computes inner product between class embedding and feature vector. Step 2: This multiplicative interaction is more expressive than concatenation. Step 3: Projection discriminator uses inner product with class embedding.",
       options: [
         "Concatenating the one-hot class vector to the batch before normalization",
         "Learning class-specific affine parameters (gamma, beta) for each batch norm layer, derived from the class embedding",
@@ -1795,7 +1795,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "The pix2pix framework uses a combined loss function for image-to-image translation. What are the two components?",
+        "The pix2pix framework uses a combined loss function for image-to-image translation. What are the two components? Step 1: L1 loss alone produces blurry images but anchors output to ground truth. Step 2: Adversarial loss ensures photorealism that L1 cannot achieve alone. Step 3: Pix2pix combines L1 reconstruction + adversarial loss.",
       options: [
         "Perceptual loss (VGG features) and cycle-consistency loss",
         "Adversarial loss (cGAN) and L1 pixel reconstruction loss",
@@ -1815,7 +1815,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "CycleGAN's identity loss term penalizes the generator when it changes an image that already belongs to the target domain, helping preserve color and style.",
+        "CycleGAN's identity loss term penalizes the generator when it changes an image that already belongs to the target domain, helping preserve color and style. Step 1: In CycleGAN, G_AB translates images from domain A to domain B. Step 2: If we pass a real domain-B image through G_AB, we want it to remain unchanged. Step 3: The identity loss L_identity = ||G_AB(b) - b|| penalizes changes to domain-B images, preserving color and style.",
       correctAnswer: "True",
       explanation:
         "The identity loss L_identity = ||G_AB(b) - b|| encourages G_AB to act as an identity mapping when given images already in domain B, preventing the generator from unnecessarily altering color distributions of target-domain inputs.",
@@ -1829,7 +1829,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "SPADE (Spatially-Adaptive Denormalization, Park et al. 2019) improves semantic image synthesis over pix2pix by:",
+        "SPADE (Spatially-Adaptive Denormalization, Park et al. 2019) improves semantic image synthesis over pix2pix by: Step 1: Standard normalization washes out semantic layout information as activations propagate through the network. Step 2: SPADE uses the segmentation map to predict spatially-varying gamma and beta per layer. Step 3: SPADE preserves semantic information by modulating normalization parameters spatially at every network layer.",
       options: [
         "Replacing U-Net with a fully convolutional network for faster inference",
         "Using the semantic segmentation map to modulate the normalization parameters (gamma, beta) spatially at each layer, preserving semantic information that would be washed out by standard normalization",
@@ -1886,7 +1886,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "StackGAN++ extends StackGAN by:",
+        "StackGAN++ extends StackGAN by: Step 1: StackGAN uses a linear chain: Stage-1 produces low-res, Stage-2 produces high-res. Step 2: StackGAN++ replaces the linear chain with a tree structure where multiple generators at different scales are trained jointly. Step 3: StackGAN++ uses a tree-structured multi-stage architecture with color consistency regularization.",
       options: [
         "Adding a third stage to generate 512x512 images from 256x256",
         "Using a tree-structured multi-stage architecture with multiple generators and discriminators at different scales, with color consistency regularization across scales",
@@ -1909,7 +1909,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "PointGAN and related GAN architectures for 3D point cloud generation address which challenge compared to voxel-based 3D GANs?",
+        "PointGAN and related GAN architectures for 3D point cloud generation address which challenge compared to voxel-based 3D GANs? Step 1: Point clouds are unordered sets — the same shape can be represented with points in any order. Step 2: Conv nets assume spatial regularity (grids) and fixed ordering that point clouds lack. Step 3: PointGAN needs permutation-invariant architectures (e.g., PointNet-based) for unordered point sets.",
       options: [
         "Point clouds cannot represent smooth surfaces, so PointGAN adds mesh smoothing post-processing",
         "Point clouds are unordered sets, requiring permutation-invariant architectures (e.g., PointNet-based discriminators) instead of convolutional ones",
@@ -1943,7 +1943,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "pi-GAN (Periodic Implicit Generative Adversarial Networks) uses which representation for 3D-aware image synthesis?",
+        "pi-GAN (Periodic Implicit Generative Adversarial Networks) uses which representation for 3D-aware image synthesis? Step 1: pi-GAN combines implicit neural representations (NeRF-like) with GANs. Step 2: Each scene is a SIREN MLP mapping 3D coordinates to density and color. Step 3: pi-GAN uses SIREN MLP as the NeRF-like scene representation.",
       options: [
         "Voxel grids decoded by a 3D U-Net",
         "A SIREN (sinusoidal activation) MLP as the NeRF-like scene representation, conditioned on a latent code to enable GAN-based 3D generation",
@@ -2080,7 +2080,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Diffusion models (e.g., DDPM) achieve better mode coverage than GANs primarily because:",
+        "Diffusion models (e.g., DDPM) achieve better mode coverage than GANs primarily because: Step 1: Likelihood-based training penalizes zero probability on any training example. Step 2: To maximize likelihood, the model must cover all modes of the data distribution. Step 3: Diffusion models have better mode coverage because likelihood training penalizes missing modes.",
       options: [
         "Diffusion models use a larger generator network with more parameters",
         "Diffusion models are trained with a likelihood-based objective (ELBO) that penalizes missing modes, whereas GAN generators can collapse to a subset of modes without explicit penalty",
@@ -2114,7 +2114,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Denoising Diffusion GAN (Xiao et al. 2022) combines GANs and diffusion to address sampling speed. Its key idea is:",
+        "Denoising Diffusion GAN (Xiao et al. 2022) combines GANs and diffusion to address sampling speed. Its key idea is: Step 1: DDPM assumes Gaussian reverse distributions, but true reverse distributions are multimodal. Step 2: DDPM requires many small steps because Gaussian restricts step size. Step 3: DD-GAN models each reverse step as multimodal via conditional GAN.",
       options: [
         "Using a GAN discriminator to replace the DDPM noise prediction network",
         "Modeling each reverse diffusion step as a multimodal distribution estimated by a conditional GAN, enabling accurate large denoising steps and reducing the required number of steps to ~4",
@@ -2137,7 +2137,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "GAN-based data augmentation for rare medical imaging classes (e.g., rare tumor subtypes) aims to:",
+        "GAN-based data augmentation for rare medical imaging classes (e.g., rare tumor subtypes) aims to: Step 1: Medical imaging datasets have class imbalance with rare conditions having few examples. Step 2: GANs generate synthetic rare-class images to supplement real training data. Step 3: The goal is improving downstream classifier sensitivity on rare classes by augmenting training data.",
       options: [
         "Replace the rare-class images with generated samples to balance class frequencies for training downstream classifiers",
         "Supplement real rare-class images with synthetic ones to mitigate class imbalance and improve downstream classifier sensitivity on the rare class",
@@ -2171,7 +2171,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "In face reenactment using GANs (e.g., Face2Face, Deep Video Portraits), which component is typically NOT generated by the GAN?",
+        "In face reenactment using GANs (e.g., Face2Face, Deep Video Portraits), which component is typically NOT generated by the GAN? Step 1: Face reenactment needs identity (from source) and pose/expression (from driving video). Step 2: 3DMM fitting estimates pose and expression from driving video — classical CV, not GAN. Step 3: 3DMM fitting is not a GAN component — the GAN renders the face.",
       options: [
         "The facial texture synthesis",
         "The source identity features that are preserved from the target image",
@@ -2194,7 +2194,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Kernel Inception Distance (KID) differs from FID in that:",
+        "Kernel Inception Distance (KID) differs from FID in that: Step 1: FID fits a Gaussian to Inception features — assumes Gaussian distribution. Step 2: KID uses MMD directly on feature distributions without Gaussian assumption. Step 3: KID uses MMD without Gaussian assumption and is unbiased for any sample size.",
       options: [
         "KID uses a different pre-trained network (VGG instead of Inception)",
         "KID computes an unbiased estimate using the Maximum Mean Discrepancy (MMD) between feature distributions, avoiding the Gaussian assumption of FID and being unbiased for any sample size",
@@ -2228,7 +2228,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The diversity-fidelity tradeoff in GAN generation, as measured by precision and recall, implies that:",
+        "The diversity-fidelity tradeoff in GAN generation, as measured by precision and recall, implies that: Step 1: Precision measures how much of the generated distribution overlaps with the real distribution. Step 2: Recall measures how much of the real distribution is covered by the generated distribution. Step 3: These are in tension — truncation shows higher precision means lower recall.",
       options: [
         "High FID always means both low precision and low recall",
         "A GAN can achieve high precision (sharp, realistic samples) at the cost of low recall (missing real data modes), and vice versa - these objectives are in tension and must be balanced",
@@ -2270,7 +2270,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Optimization-based GAN inversion (iteratively minimizing ||G(z) − x||) always achieves a more faithful reconstruction than encoder-based inversion.",
+        "Optimization-based GAN inversion (iteratively minimizing ||G(z) − x||) always achieves a more faithful reconstruction than encoder-based inversion. Step 1: Optimization-based inversion minimizes reconstruction error with full degrees of freedom. Step 2: This can overfit z to the specific image, placing it outside the editable manifold. Step 3: Optimization can achieve lower reconstruction but at the cost of editability. Step 1: Optimization-based inversion minimizes reconstruction error with full degrees of freedom. Step 2: This can overfit z to the specific image, placing it outside the editable manifold. Step 3: Optimization can achieve lower reconstruction but at the cost of editability.",
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
@@ -2285,7 +2285,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "e4e (Encoder for Editing) prioritizes editability over reconstruction quality in StyleGAN inversion by:",
+        "e4e (Encoder for Editing) prioritizes editability over reconstruction quality in StyleGAN inversion by: Step 1: W+ space allows different style vectors per layer, enabling high-fidelity reconstruction. Step 2: e4e adds regularization penalizing deviation from W subspace, keeping codes editable. Step 3: e4e constrains codes to W-like subspace for better editability over reconstruction.",
       options: [
         "Using a larger encoder with more parameters to achieve both goals simultaneously",
         "Constraining predicted W+ codes to remain close to the W space (using a single w repeated across layers) where semantic directions are more consistent",
