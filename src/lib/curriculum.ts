@@ -1546,6 +1546,88 @@ export const courses: Course[] = [
       },
     ]
   },
+  // RECOMMENDER SYSTEMS & RANKING
+  {
+    id: 'recommender-systems',
+    slug: 'recommender-systems',
+    name: 'Recommender Systems & Ranking',
+    description: 'Collaborative filtering, deep learning recommenders, and learning-to-rank for search and feeds.',
+    topics: [
+      {
+        id: 'collaborative-filtering',
+        name: 'Collaborative Filtering',
+        description: 'Matrix factorization, user-item embeddings, and memory-based CF.',
+        knowledgePoints: [
+          { id: 'rs-kp-1', slug: 'user-item-cf', name: 'User-Based & Item-Based Collaborative Filtering' },
+          { id: 'rs-kp-2', slug: 'matrix-factorization', name: 'Matrix Factorization (SVD, ALS)' },
+          { id: 'rs-kp-3', slug: 'implicit-feedback', name: 'Implicit Feedback & BPR' },
+          { id: 'rs-kp-4', slug: 'neural-cf', name: 'Neural Collaborative Filtering (NCF)' },
+          { id: 'rs-kp-5', slug: 'variational-autoencoders-cf', name: 'VAE for Collaborative Filtering (Mult-VAE)' },
+        ]
+      },
+      {
+        id: 'content-based-filtering',
+        name: 'Content-Based & Hybrid Methods',
+        description: 'Feature-based recommendations, hybrid systems, and contextual bandits.',
+        knowledgePoints: [
+          { id: 'rs-kp-6', slug: 'content-based-filtering', name: 'Content-Based Filtering & TF-IDF Profiles' },
+          { id: 'rs-kp-7', slug: 'wide-deep', name: 'Wide & Deep Learning (Google Play)' },
+          { id: 'rs-kp-8', slug: 'contextual-bandits-rec', name: 'Contextual Bandits for Recommendations' },
+          { id: 'rs-kp-9', slug: 'knowledge-graph-rec', name: 'Knowledge Graph Recommendations (KGAT)' },
+          { id: 'rs-kp-10', slug: 'hybrid-recommendation', name: 'Hybrid Recommender Systems' },
+        ]
+      },
+      {
+        id: 'sequential-recommendations',
+        name: 'Sequential & Session-Based Recommendations',
+        description: 'RNN, attention, and transformer models for sequential user behavior.',
+        knowledgePoints: [
+          { id: 'rs-kp-11', slug: 'gru4rec', name: 'GRU4Rec & RNN-Based Session Recommendations' },
+          { id: 'rs-kp-12', slug: 'bert4rec', name: 'BERT4Rec & Self-Supervised Sequential Modeling' },
+          { id: 'rs-kp-13', slug: 'sasrec', name: 'SASRec & Self-Attentive Sequential Recommendations' },
+          { id: 'rs-kp-14', slug: 'session-based-gnn', name: 'Session-Based GNN Recommendations (SR-GNN)' },
+          { id: 'rs-kp-15', slug: 'llm-recommendations', name: 'LLM-Based Recommendations (P5, TALLRec)' },
+        ]
+      },
+      {
+        id: 'learning-to-rank',
+        name: 'Learning to Rank',
+        description: 'Pointwise, pairwise, listwise ranking methods for search and retrieval.',
+        knowledgePoints: [
+          { id: 'rs-kp-16', slug: 'ranknet', name: 'RankNet & Pairwise Learning-to-Rank' },
+          { id: 'rs-kp-17', slug: 'lambdarank', name: 'LambdaRank & LambdaMART' },
+          { id: 'rs-kp-18', slug: 'listwise-ranking', name: 'ListNet, ListMLE & Listwise Approaches' },
+          { id: 'rs-kp-19', slug: 'neural-ranking', name: 'Neural Ranking (DSSM, BERT Re-ranker)' },
+          { id: 'rs-kp-20', slug: 'ndcg-map', name: 'NDCG, MAP & Ranking Evaluation Metrics' },
+        ]
+      },
+      {
+        id: 'industry-recommenders',
+        name: 'Industry Recommender Architectures',
+        description: 'Two-tower models, retrieval-ranking pipelines, and production rec systems.',
+        knowledgePoints: [
+          { id: 'rs-kp-21', slug: 'two-tower-model', name: 'Two-Tower Models & ANN Retrieval' },
+          { id: 'rs-kp-22', slug: 'multi-stage-ranking', name: 'Multi-Stage Ranking Pipelines' },
+          { id: 'rs-kp-23', slug: 'mmoe-pgates', name: 'MMoE & Multi-Task Recommendation' },
+          { id: 'rs-kp-24', slug: 'dlrm', name: 'DLRM & Facebook Recommendation Architecture' },
+          { id: 'rs-kp-25', slug: 'feature-cross', name: 'Feature Crossing (DeepFM, xDeepFM)' },
+        ]
+      },
+      {
+        id: 'rec-system-challenges',
+        name: 'Recommender System Challenges',
+        description: 'Cold start, filter bubbles, diversity, and online learning.',
+        knowledgePoints: [
+          { id: 'rs-kp-26', slug: 'cold-start', name: 'Cold Start Problem & Solutions' },
+          { id: 'rs-kp-27', slug: 'diversity-serendipity', name: 'Diversity, Serendipity & Beyond Accuracy' },
+          { id: 'rs-kp-28', slug: 'filter-bubble', name: 'Filter Bubbles, Bias & Fairness in Recs' },
+          { id: 'rs-kp-29', slug: 'online-learning-rec', name: 'Online Learning & Real-Time Personalization' },
+          { id: 'rs-kp-30', slug: 'causal-recommendation', name: 'Causal Recommendation & Debiasing' },
+        ]
+      },
+    ]
+  },
+
   // MULTIMODAL LEARNING & FOUNDATION MODELS
   {
     id: 'multimodal-learning',
