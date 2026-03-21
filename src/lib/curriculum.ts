@@ -1546,6 +1546,88 @@ export const courses: Course[] = [
       },
     ]
   },
+  // ADVANCED OPTIMIZATION FOR ML
+  {
+    id: 'advanced-optimization-ml',
+    slug: 'advanced-optimization-ml',
+    name: 'Advanced Optimization for ML',
+    description: 'Deep dive into optimization algorithms, convergence theory, and training dynamics for modern ML.',
+    topics: [
+      {
+        id: 'sgd-variants',
+        name: 'SGD & First-Order Optimizers',
+        description: 'Momentum, Adam, and adaptive learning rate methods.',
+        knowledgePoints: [
+          { id: 'aopt-kp-1', slug: 'sgd-momentum', name: 'SGD with Momentum & Nesterov Acceleration' },
+          { id: 'aopt-kp-2', slug: 'adam-optimizer', name: 'Adam, AdaMax & Adaptive Gradient Methods' },
+          { id: 'aopt-kp-3', slug: 'adamw', name: 'AdamW & Weight Decay Decoupling' },
+          { id: 'aopt-kp-4', slug: 'adagrad-rmsprop', name: 'Adagrad, RMSprop & Per-Parameter Learning Rates' },
+          { id: 'aopt-kp-5', slug: 'lion-optimizer', name: 'Lion, Sophia & Next-Gen Optimizers' },
+        ]
+      },
+      {
+        id: 'learning-rate-schedules',
+        name: 'Learning Rate Scheduling',
+        description: 'Warmup, cosine annealing, cyclic schedules, and learning rate finding.',
+        knowledgePoints: [
+          { id: 'aopt-kp-6', slug: 'lr-warmup', name: 'Learning Rate Warmup & Linear Warmup' },
+          { id: 'aopt-kp-7', slug: 'cosine-annealing', name: 'Cosine Annealing & Restarts (SGDR)' },
+          { id: 'aopt-kp-8', slug: 'cyclic-lr', name: 'Cyclic Learning Rates & Super-Convergence' },
+          { id: 'aopt-kp-9', slug: 'lr-finder', name: 'Learning Rate Finder (Smith & Touvron)' },
+          { id: 'aopt-kp-10', slug: 'polynomial-lr', name: 'Polynomial & Exponential Decay Schedules' },
+        ]
+      },
+      {
+        id: 'loss-landscapes',
+        name: 'Loss Landscapes & Convergence',
+        description: 'Saddle points, loss landscape visualization, and convergence theory.',
+        knowledgePoints: [
+          { id: 'aopt-kp-11', slug: 'loss-landscape-viz', name: 'Loss Landscape Visualization & Flatness' },
+          { id: 'aopt-kp-12', slug: 'saddle-points', name: 'Saddle Points & Escaping via Noise' },
+          { id: 'aopt-kp-13', slug: 'sharp-flat-minima', name: 'Sharp vs Flat Minima & Generalization' },
+          { id: 'aopt-kp-14', slug: 'neural-tangent-kernel', name: 'Neural Tangent Kernel (NTK) Theory' },
+          { id: 'aopt-kp-15', slug: 'convergence-rate', name: 'Convergence Rates & Regret Bounds' },
+        ]
+      },
+      {
+        id: 'second-order-methods',
+        name: 'Second-Order & Curvature Methods',
+        description: 'K-FAC, Shampoo, and practical second-order optimization.',
+        knowledgePoints: [
+          { id: 'aopt-kp-16', slug: 'newton-method', name: 'Newton Method & Quasi-Newton (L-BFGS)' },
+          { id: 'aopt-kp-17', slug: 'kfac', name: 'K-FAC & Kronecker-Factored Curvature' },
+          { id: 'aopt-kp-18', slug: 'shampoo', name: 'Shampoo & Distributed Second-Order Optimization' },
+          { id: 'aopt-kp-19', slug: 'natural-gradient', name: 'Natural Gradient & Fisher Information Matrix' },
+          { id: 'aopt-kp-20', slug: 'hessian-free', name: 'Hessian-Free Optimization & Conjugate Gradient' },
+        ]
+      },
+      {
+        id: 'distributed-optimization',
+        name: 'Distributed & Parallel Optimization',
+        description: 'Data parallelism, gradient communication, and distributed training.',
+        knowledgePoints: [
+          { id: 'aopt-kp-21', slug: 'data-parallel-ddp', name: 'Data Parallel & DistributedDataParallel (DDP)' },
+          { id: 'aopt-kp-22', slug: 'gradient-compression', name: 'Gradient Compression & Communication Reduction' },
+          { id: 'aopt-kp-23', slug: 'federated-opt', name: 'Federated Optimization (FedAvg, FedOpt)' },
+          { id: 'aopt-kp-24', slug: 'zero-optimizer', name: 'ZeRO Optimizer & Sharded Training' },
+          { id: 'aopt-kp-25', slug: 'async-sgd', name: 'Asynchronous SGD & Staleness Handling' },
+        ]
+      },
+      {
+        id: 'regularization-training',
+        name: 'Regularization & Training Tricks',
+        description: 'Dropout, normalization, gradient clipping, and training stability.',
+        knowledgePoints: [
+          { id: 'aopt-kp-26', slug: 'dropout-variants', name: 'Dropout, DropConnect & Stochastic Depth' },
+          { id: 'aopt-kp-27', slug: 'batch-layer-norm', name: 'Batch Norm vs Layer Norm vs RMS Norm' },
+          { id: 'aopt-kp-28', slug: 'gradient-clipping-opt', name: 'Gradient Clipping & Gradient Scaling (AMP)' },
+          { id: 'aopt-kp-29', slug: 'ema-training', name: 'Exponential Moving Average (EMA) for Training' },
+          { id: 'aopt-kp-30', slug: 'sam-optimizer', name: 'SAM: Sharpness-Aware Minimization' },
+        ]
+      },
+    ]
+  },
+
   // PRODUCTION ML & LLM ENGINEERING
   {
     id: 'production-ml-engineering',
