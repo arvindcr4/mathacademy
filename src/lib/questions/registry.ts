@@ -2247,6 +2247,30 @@ const questionOverrides: Record<string, QuestionOverride> = {
     ],
     correctAnswer: 1,
   },
+  "q-blo-2": {
+    type: "multiple-choice",
+    question: "LeetCode's tree array representation lists nodes in what order?",
+    options: ["Level order", "Inorder", "Preorder", "Postorder"],
+    correctAnswer: 0,
+  },
+  "q-blo-4": {
+    question:
+      "In BFS grouped by level, what tells you how many nodes to process for the current level?",
+    options: ["The queue size", "The current depth", "The front node's value", "The tree height"],
+    correctAnswer: 0,
+  },
+  "q-blo-5": {
+    question:
+      "In a simple zigzag BFS, which levels do you reverse after collecting them left to right?",
+    options: ["Odd-numbered levels", "Even-numbered levels", "Every level", "No levels"],
+    correctAnswer: 0,
+  },
+  "q-lca-4": {
+    question:
+      "In BST LCA, if p and q lie on opposite sides of the current node, what do you return?",
+    options: ["The current node", "Its left child", "Its right child", "The parent of the current node"],
+    correctAnswer: 0,
+  },
 };
 
 // ── Hint generation helpers ─────────────────────────────────────────────────
