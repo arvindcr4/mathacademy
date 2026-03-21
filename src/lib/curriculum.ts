@@ -1546,12 +1546,104 @@ export const courses: Course[] = [
       },
     ]
   },
+  // FINANCIAL ML & ALGORITHMIC TRADING
+  {
+    id: 'financial-ml',
+    slug: 'financial-ml',
+    name: 'Financial ML & Algorithmic Trading',
+    description: 'Quantitative finance, ML for trading, risk modeling, and financial time series.',
+    category: 'fine-tuning',
+    icon: '💹',
+    color: '#10b981',
+    topicCount: 6,
+    estimatedHours: 30,
+    topics: [
+      {
+        id: 'market-prediction',
+        name: 'Market Prediction & Factor Models',
+        description: 'Predicting asset returns, factor exposure, and alpha generation.',
+        knowledgePoints: [
+          { id: 'fin-kp-1', slug: 'return-prediction', name: 'Return Prediction & Asset Pricing Anomalies' },
+          { id: 'fin-kp-2', slug: 'factor-models', name: 'ML Factor Models (CAPM, Fama-French, PCA)' },
+          { id: 'fin-kp-3', slug: 'alpha-generation', name: 'Alpha Generation & Signal Discovery' },
+          { id: 'fin-kp-4', slug: 'regime-detection', name: 'Market Regime Detection & HMM' },
+          { id: 'fin-kp-5', slug: 'cross-sectional-ml', name: 'Cross-Sectional Return Prediction' },
+        ]
+      },
+      {
+        id: 'algo-trading',
+        name: 'Algorithmic Trading & Execution',
+        description: 'Order execution, market microstructure, and high-frequency trading ML.',
+        knowledgePoints: [
+          { id: 'fin-kp-6', slug: 'execution-algorithms', name: 'Execution Algorithms (VWAP, TWAP, IS)' },
+          { id: 'fin-kp-7', slug: 'market-microstructure', name: 'Market Microstructure & Adverse Selection' },
+          { id: 'fin-kp-8', slug: 'rl-trading', name: 'RL for Optimal Execution & Market Making' },
+          { id: 'fin-kp-9', slug: 'hft-ml', name: 'High-Frequency Trading & Latency Arbitrage' },
+          { id: 'fin-kp-10', slug: 'limit-order-book', name: 'Limit Order Book Modeling with Deep Learning' },
+        ]
+      },
+      {
+        id: 'risk-modeling',
+        name: 'Risk Modeling & Portfolio Optimization',
+        description: 'VaR, CVaR, covariance estimation, and portfolio construction.',
+        knowledgePoints: [
+          { id: 'fin-kp-11', slug: 'var-cvar', name: 'VaR, CVaR & Tail Risk Estimation' },
+          { id: 'fin-kp-12', slug: 'covariance-shrinkage', name: 'Covariance Matrix Estimation & Ledoit-Wolf' },
+          { id: 'fin-kp-13', slug: 'portfolio-optimization', name: 'Modern Portfolio Theory & Black-Litterman' },
+          { id: 'fin-kp-14', slug: 'stress-testing', name: 'Stress Testing & Scenario Analysis' },
+          { id: 'fin-kp-15', slug: 'ml-risk-models', name: 'ML Risk Factor Models & PnL Attribution' },
+        ]
+      },
+      {
+        id: 'nlp-finance',
+        name: 'NLP for Finance',
+        description: 'Earnings call analysis, sentiment, and LLMs for finance.',
+        knowledgePoints: [
+          { id: 'fin-kp-16', slug: 'earnings-nlp', name: 'Earnings Call NLP & Conference Analysis' },
+          { id: 'fin-kp-17', slug: 'finbert', name: 'FinBERT & Financial Sentiment Analysis' },
+          { id: 'fin-kp-18', slug: 'news-impact', name: 'News Impact on Markets & Event Studies' },
+          { id: 'fin-kp-19', slug: 'llm-finance', name: 'LLMs for Finance (BloombergGPT, FinGPT)' },
+          { id: 'fin-kp-20', slug: 'sec-filing-analysis', name: 'SEC Filing Analysis & Financial Reporting' },
+        ]
+      },
+      {
+        id: 'credit-scoring',
+        name: 'Credit Scoring & Lending AI',
+        description: 'Credit models, alternative data, and fair lending.',
+        knowledgePoints: [
+          { id: 'fin-kp-21', slug: 'credit-scoring-models', name: 'Credit Scoring Models (Logistic to GBM)' },
+          { id: 'fin-kp-22', slug: 'alternative-data', name: 'Alternative Data for Credit (Telco, Social)' },
+          { id: 'fin-kp-23', slug: 'pd-lgd-ead', name: 'PD, LGD & EAD Modeling' },
+          { id: 'fin-kp-24', slug: 'fair-lending', name: 'Fair Lending & ECOA Compliance' },
+          { id: 'fin-kp-25', slug: 'mortgage-ml', name: 'Mortgage Prepayment & Default Prediction' },
+        ]
+      },
+      {
+        id: 'derivatives-quant',
+        name: 'Derivatives & Quantitative Methods',
+        description: 'Options pricing, volatility modeling, and neural network Greeks.',
+        knowledgePoints: [
+          { id: 'fin-kp-26', slug: 'options-pricing-ml', name: 'Options Pricing & Neural Network Black-Scholes' },
+          { id: 'fin-kp-27', slug: 'volatility-surface', name: 'Volatility Surface Modeling & Calibration' },
+          { id: 'fin-kp-28', slug: 'deep-hedging', name: 'Deep Hedging & Reinforcement Learning' },
+          { id: 'fin-kp-29', slug: 'xva-ml', name: 'XVA Computation & Monte Carlo ML' },
+          { id: 'fin-kp-30', slug: 'crypto-ml', name: 'Crypto Markets & DeFi ML' },
+        ]
+      },
+    ]
+  },
+
   // AI FOR HEALTHCARE & DRUG DISCOVERY
   {
     id: 'ai-healthcare',
     slug: 'ai-healthcare',
     name: 'AI for Healthcare & Drug Discovery',
     description: 'Medical imaging AI, clinical NLP, drug discovery, and healthcare AI deployment.',
+    category: 'fine-tuning',
+    icon: '🏥',
+    color: '#f43f5e',
+    topicCount: 6,
+    estimatedHours: 30,
     topics: [
       {
         id: 'medical-imaging-ai',
@@ -1634,6 +1726,11 @@ export const courses: Course[] = [
     slug: 'scientific-ml',
     name: 'Scientific ML & Physics-Informed Neural Networks',
     description: 'Neural networks for scientific computing: PINNs, neural operators, and ML for PDEs.',
+    category: 'fine-tuning',
+    icon: '🔬',
+    color: '#06b6d4',
+    topicCount: 6,
+    estimatedHours: 30,
     topics: [
       {
         id: 'pinns',
@@ -1716,6 +1813,11 @@ export const courses: Course[] = [
     slug: 'generative-adversarial-networks',
     name: 'Generative Adversarial Networks',
     description: 'GAN theory, training stability, advanced architectures, and applications in image synthesis.',
+    category: 'fine-tuning',
+    icon: '🎭',
+    color: '#ec4899',
+    topicCount: 6,
+    estimatedHours: 30,
     topics: [
       {
         id: 'gan-foundations',
@@ -1804,6 +1906,11 @@ export const courses: Course[] = [
     slug: 'domain-adaptation-advanced',
     name: 'Advanced Domain Adaptation & Transfer Learning',
     description: 'Deep transfer learning, domain adaptation theory, UDA, and cross-domain generalization.',
+    category: 'fine-tuning',
+    icon: '🔄',
+    color: '#8b5cf6',
+    topicCount: 6,
+    estimatedHours: 30,
     topics: [
       {
         id: 'transfer-learning-theory',
@@ -1892,6 +1999,11 @@ export const courses: Course[] = [
     slug: 'ml-system-design',
     name: 'ML System Design for Interviews',
     description: 'Design ML systems end-to-end: feature stores, recommendation engines, search, and fraud detection.',
+    category: 'software-engineering',
+    icon: '🏗️',
+    color: '#f59e0b',
+    topicCount: 6,
+    estimatedHours: 30,
     topics: [
       {
         id: 'ml-system-fundamentals',
@@ -2073,6 +2185,11 @@ export const courses: Course[] = [
     slug: 'tabular-ml',
     name: 'Applied ML for Tabular Data',
     description: 'Tree-based methods, gradient boosting, feature engineering, and deep learning for tabular data.',
+    category: 'fine-tuning',
+    icon: '📊',
+    color: '#10b981',
+    topicCount: 6,
+    estimatedHours: 30,
     topics: [
       {
         id: 'tree-based-methods',
@@ -2161,6 +2278,11 @@ export const courses: Course[] = [
     slug: 'ml-evaluation-benchmarking',
     name: 'Evaluation & Benchmarking of ML Systems',
     description: 'Statistical evaluation methods, LLM benchmarks, and robust ML model assessment.',
+    category: 'fine-tuning',
+    icon: '📏',
+    color: '#6366f1',
+    topicCount: 6,
+    estimatedHours: 30,
     topics: [
       {
         id: 'statistical-evaluation',
@@ -2249,6 +2371,11 @@ export const courses: Course[] = [
     slug: 'data-centric-ai',
     name: 'Data-Centric AI & Dataset Engineering',
     description: 'Improve ML by improving data: labeling, augmentation, data quality, and dataset curation at scale.',
+    category: 'fine-tuning',
+    icon: '🗄️',
+    color: '#14b8a6',
+    topicCount: 6,
+    estimatedHours: 30,
     topics: [
       {
         id: 'data-labeling',
@@ -2337,6 +2464,11 @@ export const courses: Course[] = [
     slug: 'advanced-optimization-ml',
     name: 'Advanced Optimization for ML',
     description: 'Deep dive into optimization algorithms, convergence theory, and training dynamics for modern ML.',
+    category: 'fine-tuning',
+    icon: '⚡',
+    color: '#f97316',
+    topicCount: 6,
+    estimatedHours: 30,
     topics: [
       {
         id: 'sgd-variants',
@@ -2425,6 +2557,11 @@ export const courses: Course[] = [
     slug: 'production-ml-engineering',
     name: 'Production ML & LLM Engineering',
     description: 'Advanced deployment patterns, LLM ops, real-time inference systems, and production-grade ML.',
+    category: 'fine-tuning',
+    icon: '🚀',
+    color: '#64748b',
+    topicCount: 6,
+    estimatedHours: 30,
     topics: [
       {
         id: 'llm-serving-patterns',
@@ -2513,6 +2650,11 @@ export const courses: Course[] = [
     slug: 'meta-learning',
     name: 'Meta-Learning & Few-Shot Learning',
     description: 'Learning to learn: MAML, prototypical networks, and rapid adaptation from few examples.',
+    category: 'fine-tuning',
+    icon: '🧠',
+    color: '#a855f7',
+    topicCount: 6,
+    estimatedHours: 30,
     topics: [
       {
         id: 'few-shot-foundations',
@@ -2601,6 +2743,11 @@ export const courses: Course[] = [
     slug: 'self-supervised-learning',
     name: 'Self-Supervised & Contrastive Learning',
     description: 'Learn representations without labels: contrastive learning, masked autoencoders, and SSL foundations.',
+    category: 'fine-tuning',
+    icon: '🔍',
+    color: '#3b82f6',
+    topicCount: 6,
+    estimatedHours: 30,
     topics: [
       {
         id: 'ssl-foundations',
@@ -2689,6 +2836,11 @@ export const courses: Course[] = [
     slug: 'ml-safety-interpretability',
     name: 'ML Safety, Interpretability & Robustness',
     description: 'Explainable AI, adversarial robustness, fairness, and building trustworthy ML systems.',
+    category: 'fine-tuning',
+    icon: '🛡️',
+    color: '#ef4444',
+    topicCount: 6,
+    estimatedHours: 30,
     topics: [
       {
         id: 'interpretability-methods',
