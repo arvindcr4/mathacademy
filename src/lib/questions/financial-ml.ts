@@ -1793,7 +1793,7 @@ Object.assign(questions, {
         "CVaR (Conditional Value at Risk) is a coherent risk measure while VaR is not, because CVaR satisfies sub-additivity: CVaR(A+B) is at most CVaR(A) + CVaR(B), ensuring that diversification is always rewarded.",
       correctAnswer: "True",
       explanation:
-        "Artzner et al. (1999) defined coherent risk measures via four axioms: monotonicity, sub-additivity, homogeneity, and translation invariance. VaR fails sub-additivity in general (VaR(A+B) can exceed VaR(A) + VaR(B) for non-normal distributions). CVaR satisfies all four axioms, making it a coherent measure suitable for portfolio optimization.",
+        "**Step 1:** Understand coherent risk measures. Artzner et al. (1999) defined coherent risk measures via four axioms: monotonicity, sub-additivity, homogeneity, and translation invariance. VaR fails sub-additivity in general (VaR(A+B) can exceed VaR(A) + VaR(B) for non-normal distributions). CVaR satisfies all four axioms, making it a coherent measure suitable for portfolio optimization.",
       hints: [
         "Sub-additivity violation for VaR: two bonds each with 1% default probability — their combined VaR can exceed the sum.",
         "CVaR is the expected loss in the tail region — averaging over extreme outcomes satisfies sub-additivity.",
@@ -1813,7 +1813,7 @@ Object.assign(questions, {
       ],
       correctAnswer: 1,
       explanation:
-        "The Cholesky method for correlated sampling: if Z is a vector of i.i.d. N(0,1) variables and L is the lower triangular Cholesky factor of the covariance matrix (sigma = L * L^T), then r = L * Z has covariance L * I * L^T = sigma. Multiplying by sigma directly is incorrect — you need the matrix square root, not sigma itself.",
+        "**Step 1:** Understand the Cholesky method. The Cholesky method for correlated sampling: if Z is a vector of i.i.d. N(0,1) variables and L is the lower triangular Cholesky factor of the covariance matrix (sigma = L * L^T), then r = L * Z has covariance L * I * L^T = sigma. Multiplying by sigma directly is incorrect — you need the matrix square root, not sigma itself.",
       hints: [
         "Cholesky: L * L^T = sigma where L is lower triangular. Then r = mu + L * Z gives Cov(r) = sigma.",
         "Multiplying by sigma directly is wrong: you need the square root of the covariance matrix, not sigma itself.",
@@ -1837,7 +1837,7 @@ Object.assign(questions, {
       ],
       correctAnswer: 1,
       explanation:
-        "Regulators (OCC, CFPB, FDIC) require lenders to provide adverse action notices explaining why an applicant was denied. A scorecard can directly state individual feature contributions. GBMs cannot produce such simple reason codes without post-hoc approximation (SHAP values), which may not satisfy strict regulatory interpretability requirements.",
+        "**Step 1:** Understand regulatory requirements. Regulators (OCC, CFPB, FDIC) require lenders to provide adverse action notices explaining why an applicant was denied. A scorecard can directly state individual feature contributions. GBMs cannot produce such simple reason codes without post-hoc approximation (SHAP values), which may not satisfy strict regulatory interpretability requirements.",
       hints: [
         "Adverse action notice requires feature-level attribution: 'denied due to these specific reasons'.",
         "A scorecard's contribution for each feature is explicit and invariant across applicants — easy to audit and explain.",
@@ -1851,7 +1851,7 @@ Object.assign(questions, {
         "Fair lending laws in the US (ECOA and FHA) can be violated by a credit model even if race, gender, and other protected characteristics are not included as explicit model features, if the model produces disparate impact on protected classes.",
       correctAnswer: "True",
       explanation:
-        "Disparate impact doctrine holds that facially neutral practices that disproportionately harm protected groups are discriminatory absent business necessity justification. Proxy variables (zip code, social network features) correlated with race can produce disparate impact even without explicit race inputs. ML models must be tested for disparate impact across protected classes under the 80% rule.",
+        "**Step 1:** Understand disparate impact doctrine. Disparate impact doctrine holds that facially neutral practices that disproportionately harm protected groups are discriminatory absent business necessity justification. Proxy variables (zip code, social network features) correlated with race can produce disparate impact even without explicit race inputs. ML models must be tested for disparate impact across protected classes under the 80% rule.",
       hints: [
         "The four-fifths rule: if the approval rate for a protected group is less than 80% of the highest group's rate, disparate impact is flagged.",
         "Zip code is highly correlated with race due to residential segregation — using it can create disparate impact.",
@@ -1871,7 +1871,7 @@ Object.assign(questions, {
       ],
       correctAnswer: 2,
       explanation:
-        "SR 11-7 requires: purpose/theory documentation, data lineage, assumptions and limitations, validation results, and ongoing performance monitoring. It does NOT require performance guarantees — such guarantees are impossible since future data distributions can shift. Model validation must be performed by an independent team including out-of-time testing and sensitivity analysis.",
+        "**Step 1:** Understand SR 11-7 requirements. SR 11-7 requires: purpose/theory documentation, data lineage, assumptions and limitations, validation results, and ongoing performance monitoring. It does NOT require performance guarantees — such guarantees are impossible since future data distributions can shift. Model validation must be performed by an independent team including out-of-time testing and sensitivity analysis.",
       hints: [
         "SR 11-7 is about process and rigor, not about promising performance outcomes.",
         "Validation must include out-of-time testing, stress testing, and sensitivity analysis performed by an independent team.",
@@ -1895,7 +1895,7 @@ Object.assign(questions, {
       ],
       correctAnswer: 1,
       explanation:
-        "Telematics research consistently identifies hard braking frequency as a top predictor of accident risk: it captures aggressive driving behavior, poor following distance, and slow reaction to hazards. It is causal (aggressive braking is a risk behavior) rather than a mere proxy, making it both predictive and legally defensible in most jurisdictions.",
+        "**Step 1:** Understand telematics for insurance. Telematics research consistently identifies hard braking frequency as a top predictor of accident risk: it captures aggressive driving behavior, poor following distance, and slow reaction to hazards. It is causal (aggressive braking is a risk behavior) rather than a mere proxy, making it both predictive and legally defensible in most jurisdictions.",
       hints: [
         "Exposure (miles driven) explains when accidents can happen; hard braking explains how likely they are given exposure.",
         "Hard braking is directly observable and available in real time from accelerometers — ideal for UBI scoring.",
@@ -1909,7 +1909,7 @@ Object.assign(questions, {
         "Insurance claims fraud detection is a highly imbalanced classification problem where fraudulent claims typically represent less than 5% of all claims, requiring techniques such as oversampling, undersampling, or cost-sensitive learning to achieve useful fraud detection rates.",
       correctAnswer: "True",
       explanation:
-        "Fraud rates of 1-5% mean a naive model predicting all claims as legitimate achieves 95%+ accuracy but detects no fraud. SMOTE (Synthetic Minority Over-sampling Technique) generates synthetic fraud examples to balance training data; cost-sensitive learning assigns higher misclassification cost to missed fraud cases. Precision-recall curves are more informative than ROC curves for this imbalanced setting.",
+        "**Step 1:** Understand fraud detection challenges. Fraud rates of 1-5% mean a naive model predicting all claims as legitimate achieves 95%+ accuracy but detects no fraud. SMOTE (Synthetic Minority Over-sampling Technique) generates synthetic fraud examples to balance training data; cost-sensitive learning assigns higher misclassification cost to missed fraud cases. Precision-recall curves are more informative than ROC curves for this imbalanced setting.",
       hints: [
         "A model with 99% accuracy but 0% fraud recall is useless for fraud detection despite high accuracy.",
         "SMOTE creates synthetic minority class examples by interpolating between existing minority samples in feature space.",
@@ -1929,7 +1929,7 @@ Object.assign(questions, {
       ],
       correctAnswer: 1,
       explanation:
-        "Insurance pricing uses multiplicative rating factors (base rate times age factor times vehicle factor). A log-link GLM models log(E[Y]) = X*beta, equivalent to a multiplicative structure on expected loss. OLS models additive structure and can predict negative losses. Tweedie distributions handle the right-skewed, zero-inflated nature of insurance loss data.",
+        "**Step 1:** Understand GLM for insurance. Insurance pricing uses multiplicative rating factors (base rate times age factor times vehicle factor). A log-link GLM models log(E[Y]) = X*beta, equivalent to a multiplicative structure on expected loss. OLS models additive structure and can predict negative losses. Tweedie distributions handle the right-skewed, zero-inflated nature of insurance loss data.",
       hints: [
         "Multiplicative tariff: premium = base * f_age * f_vehicle * f_region. Log-link GLM models exactly this structure.",
         "Insurance losses are non-negative and right-skewed — Gaussian OLS is inappropriate; Tweedie handles zero-inflated positives.",
@@ -1953,7 +1953,7 @@ Object.assign(questions, {
       ],
       correctAnswer: 1,
       explanation:
-        "Grinold's Fundamental Law: IR = IC times sqrt(Breadth). An IC of 0.05 applied across 500 stocks per month (breadth = 6000 trades per year) gives IR = 0.05 times sqrt(6000) approximately 3.87 — an excellent information ratio. Low IC is expected because markets incorporate obvious signals; persistent small IC from novel signals is very valuable when applied at scale.",
+        "**Step 1:** Understand the Fundamental Law. Grinold's Fundamental Law: IR = IC times sqrt(Breadth). An IC of 0.05 applied across 500 stocks per month (breadth = 6000 trades per year) gives IR = 0.05 times sqrt(6000) approximately 3.87 — an excellent information ratio. Low IC is expected because markets incorporate obvious signals; persistent small IC from novel signals is very valuable when applied at scale.",
       hints: [
         "Fundamental Law: IR = IC times sqrt(N), where N is the number of independent bets per year.",
         "IC = 0.05 means signals are barely better than random, but systematic application at high breadth amplifies even tiny edges.",
@@ -1967,7 +1967,7 @@ Object.assign(questions, {
         "Signal decay (alpha decay) refers to the decrease in predictive power of a trading signal as the holding period increases. Momentum signals typically have longer alpha decay (weeks to months) while microstructure signals decay within seconds to minutes.",
       correctAnswer: "True",
       explanation:
-        "Alpha decay depends on how quickly arbitrageurs can detect and trade against a signal. Microstructure signals (order flow imbalance, bid-ask spread) are observable by many HFT participants and decay in milliseconds to minutes. Momentum signals from slower price discovery mechanisms persist for weeks to months. Optimal holding period should match signal half-life.",
+        "**Step 1:** Understand signal decay. Alpha decay depends on how quickly arbitrageurs can detect and trade against a signal. Microstructure signals (order flow imbalance, bid-ask spread) are observable by many HFT participants and decay in milliseconds to minutes. Momentum signals from slower price discovery mechanisms persist for weeks to months. Optimal holding period should match signal half-life.",
       hints: [
         "Signal half-life = time until IC decays to half its peak value. Match rebalancing frequency to the signal half-life.",
         "Overstaying a signal past its half-life means holding a position with no longer positive expected alpha.",
@@ -1987,7 +1987,7 @@ Object.assign(questions, {
       ],
       correctAnswer: 1,
       explanation:
-        "t-stat = 1.8 corresponds to p-value approximately 0.075 — not significant at 95%. With 60 monthly observations, the standard error of the alpha estimate is large. Harvey, Liu, and Zhu (2016) argue that given the multiple comparison problem in quant research, a minimum t-stat of 3.0 should be required for credible alphas.",
+        "**Step 1:** Understand statistical significance. t-stat = 1.8 corresponds to p-value approximately 0.075 — not significant at 95%. With 60 monthly observations, the standard error of the alpha estimate is large. Harvey, Liu, and Zhu (2016) argue that given the multiple comparison problem in quant research, a minimum t-stat of 3.0 should be required for credible alphas.",
       hints: [
         "t-stat less than 2 means the p-value exceeds 5% — conventional threshold for statistical significance is not met.",
         "Harvey et al. (2016): with thousands of strategies tested historically, the threshold for a real alpha should be t-stat greater than 3.0.",
@@ -2103,7 +2103,7 @@ Object.assign(questions, {
       ],
       correctAnswer: 1,
       explanation:
-        "Regime detection latency is the key practical problem: HMMs detect regime changes with delay after they occur. During a crash, by the time the model confidently labels it a bear regime, the portfolio may have already suffered significant drawdown. The backtest using hindsight-optimal regime labels overstates real-time performance by assuming perfect regime knowledge.",
+        "**Step 1:** Understand regime detection latency. Regime detection latency is the key practical problem: HMMs detect regime changes with delay after they occur. During a crash, by the time the model confidently labels it a bear regime, the portfolio may have already suffered significant drawdown. The backtest using hindsight-optimal regime labels overstates real-time performance by assuming perfect regime knowledge.",
       hints: [
         "In live trading, the regime can only be known in real time with some lag — but the backtest assumes perfect real-time regime knowledge.",
         "HMM smoothed probabilities (using future data) look cleaner than filtered probabilities (real-time) which are noisier and lag.",
@@ -2127,7 +2127,7 @@ Object.assign(questions, {
       ],
       correctAnswer: 1,
       explanation:
-        "Berg, Kolbel, and Rigobon (2022) documented that ESG provider disagreement stems from scope differences (which issues to include), measurement differences (how to measure the same issue), and weighting differences (how much each issue matters). There is no universal standard, unlike financial data which follows GAAP/IFRS.",
+        "**Step 1:** Understand ESG provider disagreement. Berg, Kolbel, and Rigobon (2022) documented that ESG provider disagreement stems from scope differences (which issues to include), measurement differences (how to measure the same issue), and weighting differences (how much each issue matters). There is no universal standard, unlike financial data which follows GAAP/IFRS.",
       hints: [
         "Unlike financial metrics such as EPS and P/E with standardized accounting rules, ESG has no GAAP equivalent.",
         "Berg et al. (2022) decomposed ESG provider disagreement into scope, measurement, and weighting components.",
@@ -2141,7 +2141,7 @@ Object.assign(questions, {
         "Satellite imagery and natural language processing of corporate disclosures are examples of alternative data sources used to independently estimate ESG metrics, reducing reliance on self-reported corporate data that may be subject to greenwashing.",
       correctAnswer: "True",
       explanation:
-        "Greenwashing risk: companies control their own ESG disclosures and have incentives to overstate environmental and social performance. Satellite imagery can measure actual carbon emissions, land use, and deforestation; NLP of regulatory filings, news, and NGO reports can identify discrepancies between corporate claims and third-party observations.",
+        "**Step 1:** Understand greenwashing risk. Greenwashing risk: companies control their own ESG disclosures and have incentives to overstate environmental and social performance. Satellite imagery can measure actual carbon emissions, land use, and deforestation; NLP of regulatory filings, news, and NGO reports can identify discrepancies between corporate claims and third-party observations.",
       hints: [
         "Satellite data measures actual methane flares, ship traffic, factory activity — not what companies report.",
         "NLP of 10-K filings versus sustainability reports: inconsistencies between disclosure documents can signal greenwashing.",
@@ -2161,7 +2161,7 @@ Object.assign(questions, {
       ],
       correctAnswer: 1,
       explanation:
-        "Point-in-time ESG data is critical: data providers frequently revise historical scores as they refine methodologies, add new metrics, or receive corrected company disclosures. Using the current database for historical backtesting introduces look-ahead bias — the model is trained on scores that were not available to investors at the historical decision point.",
+        "**Step 1:** Understand point-in-time ESG data. Point-in-time ESG data is critical: data providers frequently revise historical scores as they refine methodologies, add new metrics, or receive corrected company disclosures. Using the current database for historical backtesting introduces look-ahead bias — the model is trained on scores that were not available to investors at the historical decision point.",
       hints: [
         "ESG providers silently revise historical scores — a company's 2018 score in today's database may differ from what was published in 2018.",
         "Point-in-time data: use only the score actually published on each historical date, not the current database value.",
@@ -2185,7 +2185,7 @@ Object.assign(questions, {
       ],
       correctAnswer: 1,
       explanation:
-        "NVT = Market Cap / Daily Transaction Volume (30-day moving average). Just as P/E compares price to earnings power, NVT compares network value to transaction throughput. A high NVT suggests the market cap is high relative to actual usage, potentially indicating overvaluation. Woo (2017) introduced NVT as a fundamental on-chain valuation tool.",
+        "**Step 1:** Understand NVT ratio. NVT = Market Cap / Daily Transaction Volume (30-day moving average). Just as P/E compares price to earnings power, NVT compares network value to transaction throughput. A high NVT suggests the market cap is high relative to actual usage, potentially indicating overvaluation. Woo (2017) introduced NVT as a fundamental on-chain valuation tool.",
       hints: [
         "P/E = Price divided by Earnings. NVT = Market Cap divided by Transaction Volume. Both compare price to a measure of fundamental value generation.",
         "High NVT = expensive relative to current network usage; low NVT = potentially undervalued or transitioning to higher usage.",
@@ -2199,7 +2199,7 @@ Object.assign(questions, {
         "Miner revenue and miner selling behavior are useful on-chain features for predicting Bitcoin price movements because miners have high fixed costs (electricity, hardware) and may be forced to sell holdings when prices fall below their break-even cost, creating predictable supply pressure.",
       correctAnswer: "True",
       explanation:
-        "Bitcoin mining economics: miners earn block rewards and transaction fees but have ongoing electricity costs. When BTC price falls near miners' cost of production, economically stressed miners must sell reserves to fund operations. The Puell Multiple (daily miner revenue divided by 365-day moving average of daily revenue) has shown predictive power at historical price inflection points.",
+        "**Step 1:** Understand Bitcoin mining economics. Bitcoin mining economics: miners earn block rewards and transaction fees but have ongoing electricity costs. When BTC price falls near miners' cost of production, economically stressed miners must sell reserves to fund operations. The Puell Multiple (daily miner revenue divided by 365-day moving average of daily revenue) has shown predictive power at historical price inflection points.",
       hints: [
         "Miner cost floor: below a certain price, mining is unprofitable and miners sell holdings to survive.",
         "Puell Multiple extremes have historically coincided with Bitcoin price inflection points in academic research.",
@@ -2219,7 +2219,7 @@ Object.assign(questions, {
       ],
       correctAnswer: 1,
       explanation:
-        "TVL double-counting via recursive leverage is well-documented in DeFi: deposit 100 ETH, borrow 80 ETH worth of stablecoins, deposit those stablecoins in another protocol — TVL shows 180 ETH equivalent locked, but only 100 ETH is underlying capital. TVL also mechanically rises with token price appreciation, creating a false signal of growing adoption.",
+        "**Step 1:** Understand TVL double-counting. TVL double-counting via recursive leverage is well-documented in DeFi: deposit 100 ETH, borrow 80 ETH worth of stablecoins, deposit those stablecoins in another protocol — TVL shows 180 ETH equivalent locked, but only 100 ETH is underlying capital. TVL also mechanically rises with token price appreciation, creating a false signal of growing adoption.",
       hints: [
         "Recursive lending: deposit A, borrow B, deposit B, borrow C — each cycle adds to TVL but underlying capital is the same.",
         "TVL also rises when token prices rise (more USD value of same locked tokens) — not reflecting new capital inflows.",
@@ -2243,7 +2243,7 @@ Object.assign(questions, {
       ],
       correctAnswer: 1,
       explanation:
-        "For an at-the-money option (S = K), as T approaches 0: d1 = (ln(S/K) + (r + sigma^2/2)T) / (sigma * sqrt(T)) approaches 0 since ln(S/K) = 0. N(d1) approaches N(0) = 0.5. Economically: with zero time remaining, an at-the-money option has a 50% probability of expiring in-the-money.",
+        "**Step 1:** Understand ATM delta derivation. For an at-the-money option (S = K), as T approaches 0: d1 = (ln(S/K) + (r + sigma^2/2)T) / (sigma * sqrt(T)) approaches 0 since ln(S/K) = 0. N(d1) approaches N(0) = 0.5. Economically: with zero time remaining, an at-the-money option has a 50% probability of expiring in-the-money.",
       hints: [
         "For S = K (at-the-money): d1 = (r + sigma^2/2) * sqrt(T) / sigma, which approaches 0 as T approaches 0.",
         "N(0) = 0.5 exactly. Delta for ATM short-dated options converges to 0.5.",
@@ -2257,7 +2257,7 @@ Object.assign(questions, {
         "Neural networks trained to estimate option Greeks (delta, gamma, vega) can produce more accurate Greeks than finite-difference estimation from noisy market prices, because the network learns a smooth function of inputs and analytical differentiation via autograd avoids numerical differentiation noise.",
       correctAnswer: "True",
       explanation:
-        "Market price-based finite differences amplify noise: (V(S+h) - V(S-h)) divided by 2h is noisy because market prices include bid-ask spread and microstructure noise. A neural network trained on option prices learns a smooth surface; automatic differentiation through the network gives analytical Greeks of the fitted surface, avoiding numerical differentiation noise.",
+        "**Step 1:** Understand neural network Greeks advantages. Market price-based finite differences amplify noise: (V(S+h) - V(S-h)) divided by 2h is noisy because market prices include bid-ask spread and microstructure noise. A neural network trained on option prices learns a smooth surface; automatic differentiation through the network gives analytical Greeks of the fitted surface, avoiding numerical differentiation noise.",
       hints: [
         "Finite difference delta from noisy prices amplifies noise: dividing a small price difference by a small h.",
         "Neural network Greeks: fit a smooth surface V_theta, then compute the partial derivative analytically via autograd.",
@@ -2277,7 +2277,7 @@ Object.assign(questions, {
       ],
       correctAnswer: 1,
       explanation:
-        "Arbitrage conditions: (1) Calendar spread no-arb: total implied variance w(k,T) = sigma_impl^2 * T must be non-decreasing in T for each strike k. (2) Butterfly no-arb: the local volatility derived via Dupire's formula must be non-negative everywhere. These conditions are enforced via penalty terms or monotone and convex network architectures in arbitrage-free neural vol surface models.",
+        "**Step 1:** Understand arbitrage conditions. Arbitrage conditions: (1) Calendar spread no-arb: total implied variance w(k,T) = sigma_impl^2 * T must be non-decreasing in T for each strike k. (2) Butterfly no-arb: the local volatility derived via Dupire's formula must be non-negative everywhere. These conditions are enforced via penalty terms or monotone and convex network architectures in arbitrage-free neural vol surface models.",
       hints: [
         "Calendar spread: selling a near-dated option and buying a far-dated option of same strike should not give free money — requires w non-decreasing in T.",
         "Butterfly no-arb: the call price surface must be convex in strike — enforced via non-negative second derivative penalties.",
@@ -2301,7 +2301,7 @@ Object.assign(questions, {
       ],
       correctAnswer: 1,
       explanation:
-        "Standard k-fold randomly shuffles observations into folds, so training data can include future observations relative to test data. For financial time series, this introduces look-ahead bias: the model effectively sees future information during training. Walk-forward validation maintains strict temporal ordering: train on past, test on future, maintaining realistic evaluation conditions.",
+        "**Step 1:** Understand walk-forward validation. Standard k-fold randomly shuffles observations into folds, so training data can include future observations relative to test data. For financial time series, this introduces look-ahead bias: the model effectively sees future information during training. Walk-forward validation maintains strict temporal ordering: train on past, test on future, maintaining realistic evaluation conditions.",
       hints: [
         "K-fold shuffling: a training fold may contain 2022 observations while a test fold contains 2020 data — look-ahead bias.",
         "Walk-forward: at each step, training data is always earlier than test data — no future information contaminates training.",
@@ -2315,7 +2315,7 @@ Object.assign(questions, {
         "Look-ahead bias in financial backtesting occurs when a strategy uses information at time t that was not actually available until time t+k, such as using end-of-day closing prices to determine trades that are placed at the start of that same day's trading session.",
       correctAnswer: "True",
       explanation:
-        "Look-ahead bias is a pervasive backtesting error: (1) using closing price to generate a signal, then assuming the position was entered at that same closing price; (2) using financial data reported with delay (earnings announced after close, used as if available at open); (3) using survivor-biased index constituents. Each form makes the backtest appear better than live trading.",
+        "**Step 1:** Understand look-ahead bias forms. Look-ahead bias is a pervasive backtesting error: (1) using closing price to generate a signal, then assuming the position was entered at that same closing price; (2) using financial data reported with delay (earnings announced after close, used as if available at open); (3) using survivor-biased index constituents. Each form makes the backtest appear better than live trading.",
       hints: [
         "Classic look-ahead: use today's close price to generate signal, assume filled at today's close. In reality, signal can only be acted on at tomorrow's open.",
         "Delayed reporting bias: Q4 earnings are often published in February; using them as available in December creates look-ahead bias.",
@@ -2335,7 +2335,7 @@ Object.assign(questions, {
       ],
       correctAnswer: 1,
       explanation:
-        "Transaction cost modeling: two-way turnover of 200% times 10 bps one-way cost = 200 bps = 2% return drag per year. If gross Sharpe = 2.5 with 20% return and 8% vol: net return = 18%, net Sharpe = 18/8 = 2.25. Market impact (price impact from large orders) must also be modeled separately — for high-capacity strategies, market impact often dominates fixed transaction costs.",
+        "**Step 1:** Understand transaction cost modeling. Transaction cost modeling: two-way turnover of 200% times 10 bps one-way cost = 200 bps = 2% return drag per year. If gross Sharpe = 2.5 with 20% return and 8% vol: net return = 18%, net Sharpe = 18/8 = 2.25. Market impact (price impact from large orders) must also be modeled separately — for high-capacity strategies, market impact often dominates fixed transaction costs.",
       hints: [
         "Cost drag = annual turnover (two-way) times cost per unit of turnover. Keep units consistent in percent.",
         "Market impact adds to transaction cost beyond the bid-ask spread — larger orders move prices adversely.",
