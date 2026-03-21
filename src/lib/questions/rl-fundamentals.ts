@@ -182,13 +182,13 @@ const questions: Record<string, Question[]> = {
         "An agent follows policy \\pi in an MDP with \\gamma = 0.9. Starting from state s, it receives rewards 10, 0, 5 over the next three steps then reaches a terminal state. What is V^\\pi(s) (the exact discounted return for this trajectory)?",
       options: [
         "15",
-        "10 + 0.9 \cdot \left(0\right) + 0.81 \cdot \left(5\right) = 14.05",
+        "10 + 0.9 \cdot 0 + 0.81 \cdot 5 = 14.05",
         "10 + 0 + 5 = 15",
         "(10 + 0 + 5)/3 = 5",
       ],
       correctAnswer: 1,
       explanation:
-        "V^\\pi(s) = E_\\pi[G_t | S_t = s] where G_t = $\\sum_{k=0}^{\\infty} \\gamma^k R_{t+k+1}$. For this trajectory: G = 10 + 0.9 \cdot 0 + $0.9^2$*5 = 10 + 0 + 0.81 \cdot 5 = 10 + 4.05 = 14.05. S&B (3.3) define V^\\pi(s) as the expected return of G_t when starting in s and following \\pi.",
+        "V^\\pi(s) = E_\\pi[G_t | S_t = s] where G_t = \\sum_{k=0}^{\\infty} \\gamma^k R_{t+k+1}. For this trajectory: G = 10 + 0.9 \\cdot 0 + 0.9^2 \\cdot 5 = 10 + 0 + 0.81 \\cdot 5 = 10 + 4.05 = 14.05. S&B (3.3) define V^\\pi(s) as the expected return of G_t when starting in s and following \\pi.",
       hints: [
         "G_t = R_{t+1} + \\gamma R_{t+2} + $\\gamma^2$R_{t+3} + ... Apply \\gamma = 0.9 to each reward, weighted by time step.",
         'S&B §3.3: "The value of a state s under a policy \\pi, denoted V^\\pi(s), is the expected return when starting in s and following \\pi thereafter."',
@@ -309,7 +309,7 @@ const questions: Record<string, Question[]> = {
         "The expected advantage under a policy is always zero: \sum_a \\pi(a|s) A^\\pi(s,a) = 0 for all states s.",
       correctAnswer: "True",
       explanation:
-        "\sum_a \\pi(a|s) A^\\pi(s,a) = \sum_a \\pi(a|s) [Q^\\pi(s,a) - V^\\pi(s)] = \sum_a \\pi(a|s) Q^\\pi(s,a) - V^\\pi(s) \sum_a \\pi(a|s) = V^\\pi(s) - V^\\pi(s)*1 = 0. This confirms that advantages are zero-mean - they are a centered version of Q^\\pi, measuring relative rather than absolute value.",
+        "\sum_a \\pi(a|s) A^\\pi(s,a) = \sum_a \\pi(a|s) [Q^\\pi(s,a) - V^\\pi(s)] = \sum_a \\pi(a|s) Q^\\pi(s,a) - V^\\pi(s) \\sum_a \\pi(a|s) = V^\\pi(s) - V^\\pi(s) \\cdot 1 = 0. This confirms that advantages are zero-mean - they are a centered version of Q^\\pi, measuring relative rather than absolute value.",
       hints: [
         "Expand $\sum_a \pi(a \mid s) A^\pi(s, a)$ using the definition $A^\pi = Q^\pi - V^\pi$ and the identity $V^\pi(s) = \sum_a \pi(a \mid s) Q^\pi(s, a)$.",
         "Zero expected advantage means advantages don\'t shift the average - they only redistribute credit among actions.",
@@ -946,7 +946,7 @@ const questions: Record<string, Question[]> = {
         "\\rho_t = b(A\\_t|S\\_t) / \\pi(A\\_t|S\\_t)",
         "\\rho_t = \\pi(A\\_t|S\\_t) / b(A\\_t|S\\_t)",
         "\\rho_t = P(S\\_t₊\\_1|S\\_t,A\\_t) / P(S\\_t₊\\_1|S\\_t,A\\_t) = 1",
-        "\\rho_t = \\pi(A\\_t|S\\_t) * b(A\\_t|S\\_t)",
+        "\\rho_t = \\pi(A\\_t|S\\_t) \\cdot b(A\\_t|S\\_t)",
       ],
       correctAnswer: 1,
       explanation:
@@ -1056,10 +1056,10 @@ const questions: Record<string, Question[]> = {
       question:
         "An agent observes: S\\_0 = s, R\\_1 = 2, S\\_1 = s'. Currently V(s) = 10 and V(s') = 8, with \\gamma = 0.9 and \\alpha = 0.1. After one TD(0) update, what is the new V(s)?",
       options: [
-        "10 + 0.1 \cdot \left(2 + 0.9 \cdot 8 - 10\right) = 10 + 0.1 \cdot \left(9.2 - 10\right) = 10 - 0.08 = 9.92",
-        "10 + 0.1 \cdot \left(2 + 8 - 10\right) = 10 + 0 = 10",
+        "10 + 0.1 \\cdot (2 + 0.9 \\cdot 8 - 10) = 10 + 0.1 \\cdot (9.2 - 10) = 10 - 0.08 = 9.92",
+        "10 + 0.1 \\cdot (2 + 8 - 10) = 10 + 0 = 10",
         "(2 + 0.9 \cdot 8) = 9.2",
-        "0.1 \cdot \left(2 + 0.9 \cdot 8\right) + 0.9 \cdot 10 = 9.92",
+        "0.1 \\cdot (2 + 0.9 \\cdot 8) + 0.9 \\cdot 10 = 9.92",
       ],
       correctAnswer: 0,
       explanation:
@@ -1734,6 +1734,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "Tree Backup eliminates importance sampling by considering the full distribution under the current policy: at each step, it weights the contribution by the probability the current policy would select the taken action, and adds terms for all non-taken actions weighted by their policy probabilities. This creates a consistent off-policy update that is bounded (no unbounded IS ratios) but may be less efficient when the behavior and target policies differ substantially.",
+      hints: [
+        "Standard IS ratio $\\rho_t = \\pi(a_t|s_t)/\\mu(a_t|s_t)$ can explode when $\\mu(a_t|s_t)$ is small. Tree Backup avoids this by replacing the ratio with $\\pi(a_t|s_t)$ directly.",
+        "Tree Backup update at step $t$: the target is $r_t + \\gamma \\sum_a \\pi(a|s_{t+1}) Q(s_{t+1}, a)$. This is always bounded because $\\pi(a|s) \\leq 1$.",
+      ],
     },
     {
       id: "q-rl-kp36-3",
@@ -1744,6 +1748,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation:
         "Q(sigma) (Asis et al., 2017) introduces a per-step parameter \\sigma \\in [0,1]: \\sigma=1 corresponds to full sampling (like Sarsa), \\sigma=0 corresponds to pure expectation (like Expected Sarsa/Tree Backup). At different \\sigma values for each step, Q(sigma) subsumes n-step Sarsa (all \\sigma=1), n-step Expected Sarsa (all \\sigma=0), and intermediate algorithms. This provides a principled framework for understanding and designing n-step methods.",
+      hints: [
+        "Q($\\sigma$): $Q(S_t, A_t) \\leftarrow Q(S_t, A_t) + \\alpha \\left[ (1-\\sigma) \\bar{\\delta}_t + \\sigma \\delta_t \\right]$, where $\\bar{\\delta}_t$ is the full-expectation TD error and $\\delta_t$ is the full-sampling TD error.",
+        "$\\sigma=1$: Sarsa (sample $A_{t+1}$). $\\sigma=0$: Expected Sarsa (average over $\\pi$). $\\sigma \\in (0,1)$: blend of both.",
+      ],
     },
   ],
 
@@ -1793,6 +1801,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation:
         "Tile coding (CMAC): multiple offset grids (tilings) partition the state space. For each tiling, exactly one tile is active (value 1); all others are 0. The complete feature vector has (num_tilings \\times tiles_per_tiling) binary features. Linear function approximation with this binary feature vector can represent non-linear value functions because different tilings overlap differently, capturing interactions between state dimensions. It is fast (only active tiles need updating) and proven effective in classical RL benchmarks.",
+      hints: [
+        "Tile coding partitions state space into overlapping grids. Each tiling covers the space differently, and exactly one tile fires per tiling for any given state.",
+        "The binary feature vector has a 1 for each active tile and 0 elsewhere. With $n$ tilings of $m$ tiles each, the feature vector has length $n \\times m$.",
+      ],
     },
   ],
 
@@ -1812,6 +1824,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 0,
       explanation:
         "The policy gradient theorem is significant because it expresses the gradient of expected return as a computable expectation under the on-policy distribution \mu(s), without requiring knowledge of transition probabilities or their derivatives. This is non-obvious: the return depends on the state distribution, which changes with the policy, yet the theorem shows the gradient of the state distribution does not appear in the formula. This makes policy gradient methods model-free and directly applicable via Monte Carlo sampling.",
+      hints: [
+        "The gradient of the state distribution $\mu(s)$ under \pi appears nowhere in the formula - despite $\mu$ depending on \pi itself. This cancellation is the key insight.",
+        "Since the formula is an expectation, you can estimate it by sampling episodes: $\nabla_\theta J(\theta) \approx \frac{1}{N} \sum_n \nabla_\theta \log \pi_\theta(a_t|s_t) G_t$.",
+      ],
     },
     {
       id: "q-rl-kp38-2",
@@ -1828,6 +1844,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "The key identity: \sum_a \\pi(a|s) \\nablalog \\pi(a|s) = \sum_a \\nabla\\pi(a|s) = \\nabla\sum_a \\pi(a|s) = \\nabla1 = 0. Therefore E_a[b(s) \\nablalog \\pi(a|s,\\theta)] = b(s) \\times 0 = 0 for any state-dependent baseline. Since the baseline contributes zero in expectation, it cannot introduce bias; yet choosing b(s) close to E[G\\_t|S\\_t=s] (the value function) centers the updates near zero, dramatically reducing variance. This is why actor-critic methods using V(s) as a baseline are so effective.",
+      hints: [
+        "The identity $\\nabla_\theta \sum_a \pi_\theta(a|s) = 0$ holds because $\\sum_a \pi_\theta(a|s) = 1$ for all $\\theta$. The gradient of a constant is zero.",
+        "A good baseline $b(s) \\approx V^\\pi(s)$ reduces variance the most. The TD error $\\delta_t = R_{t+1} + \\gamma V(S_{t+1}) - V(S_t)$ is a low-variance baseline.",
+      ],
     },
     {
       id: "q-rl-kp38-3",
@@ -1838,6 +1858,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation:
         "TRPO's insight: gradient ascent on expected return can take steps that catastrophically degrade the policy when the linear approximation breaks down far from the current policy. TRPO adds a hard constraint: D_KL(\\pi_old || \\pi_new) \\leq \\delta. This trust region ensures the new policy is close enough to the old policy that the linear/quadratic approximation remains valid. PPO approximates this constraint with a clipped objective, achieving similar stability with simpler first-order optimization.",
+      hints: [
+        "The trust region constraint $D_{KL}(\\pi_{old} || \\pi_{new}) \\leq \\delta$ prevents the policy from changing too drastically in one update.",
+        "PPO's clipped surrogate objective $L^{CLIP}(\\theta) = \\hat{E}_t \\left[ \\min(r_t(\\theta) \\hat{A}_t, \\text{clip}(r_t(\\theta), 1-\\epsilon, 1+\\epsilon) \\hat{A}_t \\right]$ approximately enforces the KL constraint without a secondary optimizer.",
+      ],
     },
   ],
 
@@ -1877,6 +1901,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "Model exploitation (model overestimation) occurs when the policy finds regions where the model predicts high reward but the real environment does not. Mitigations: (1) ensemble disagreement as uncertainty signal - high disagreement indicates unreliable model regions; (2) pessimistic planning (MOPO) - subtract uncertainty penalty from simulated rewards; (3) short rollouts - limit planning horizon to where model errors are small; (4) offline RL with conservative policies - avoid OOD states where the model is unreliable.",
+      hints: [
+        "If the model is accurate to within $\\epsilon$ per step, how much total error accumulates over $H$ steps? Is it $H \\cdot \\epsilon$ or something larger?",
+        "Ensemble disagreement: if 5 models predict very different next states for (s, a), does this indicate the model is reliable or unreliable in this region?",
+      ],
     },
     {
       id: "q-rl-kp39-3",
@@ -1887,6 +1915,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation:
         "World models are the core of model-based RL: with an accurate model P(s'|s,a) and R(s,a), the agent can simulate rollouts to evaluate policies, perform planning (MPC, tree search), or augment replay with synthetic data. This improves sample efficiency by reducing reliance on expensive real-world interactions. The trade-off is model learning cost and error propagation during rollouts. In robotics and scientific domains where real interactions are expensive or dangerous, model-based RL is often essential.",
+      hints: [
+        "A world model $P(s'|s,a)$ and reward model $R(s,a)$ allow simulated rollouts: $s_{t+1} \\sim P(\\cdot|s_t, a_t), r_t = R(s_t, a_t)$. No real interaction needed for planning.",
+        "The key limitation is model error: errors compound exponentially in long rollouts, which is why short-horizon planning (MPC with replanning) is common.",
+      ],
     },
   ],
 
@@ -1926,6 +1958,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "Sparse-reward exploration crisis: in Montezuma's Revenge, random epsilon-greedy exploration almost never obtains the first reward (reaching a key requires specific sequential actions). Intrinsic reward methods: Random Network Distillation (RND) rewards prediction error on a frozen random network - novel states have high error; Count-based exploration rewards 1/sqrt(N(s)) for state visit count N(s); ICM rewards prediction error on dynamics model. These bonuses make the agent seek novel states, enabling discovery of sparse rewards that random exploration cannot reach.",
+      hints: [
+        "In Montezuma's Revenge, random actions succeed with probability ~0. The chance of a 10-step optimal sequence is $(1/10)^{10} \\approx 10^{-10}$ per episode. Random exploration is effectively hopeless.",
+        "RND novelty bonus: $r^i_t = ||f(s_t) - \hat{f}(s_t)||^2$ where $f$ is fixed random and $\hat{f}$ is learned. Novel states $\\rightarrow$ high error $\\rightarrow$ high intrinsic reward.",
+      ],
     },
     {
       id: "q-rl-kp40-3",
@@ -1936,6 +1972,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation:
         "UCB selects: a = argmax_a [Q(a) + c√(ln(t)/N(a))], where N(a) is the count of times action a was taken and t is the total steps. The bonus c√(ln(t)/N(a)) is large for rarely taken actions, driving exploration, and shrinks as an action is tried more. UCB is optimistic in the face of uncertainty and achieves logarithmic regret in the multi-armed bandit setting - theoretically stronger than epsilon-greedy's linear exploration rate.",
+      hints: [
+        "As $N(a)$ increases, does the UCB bonus $c \\cdot \\sqrt{\\ln(t)/N(a)}$ increase or decrease? What does this mean for exploration vs. exploitation?",
+        "UCB achieves $O(\\log T)$ regret vs. $\\epsilon$-greedy's $O(\\sqrt{T})$ regret in bandits. The $\\ln(t)$ term grows slowly, so the bonus shrinks slowly.",
+      ],
     },
   ],
 
@@ -1975,6 +2015,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "AlphaZero's joint architecture: one neural network outputs both policy (move probabilities) and value (win probability). The shared body learns rich position representations useful for both tasks. Training jointly (multi-task learning) with shared gradient updates enables the policy and value heads to learn complementary features - better move prediction helps value estimation and vice versa. This also simplifies the training loop: one network, one training objective, one set of hyperparameters.",
+      hints: [
+        "In multi-task learning, shared lower layers learn general features useful for multiple tasks. For Go, what board features are useful for both move prediction AND position evaluation?",
+        "AlphaGo had separate supervised learning, RL, and value network training pipelines. AlphaZero unifies these into self-play + joint training on a single loss: $L = L_{policy} + c \\cdot L_{value} + L_{entropy}$. How does this simplify things?",
+      ],
     },
     {
       id: "q-rl-kp41-3",
@@ -1985,6 +2029,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation:
         "The ALE benchmark (Bellemare et al., 2013) enabled systematic evaluation of RL algorithms across 57 diverse games using a common interface. DQN's performance across these games demonstrated that a single algorithm with the same hyperparameters could achieve human-level performance on a broad range of tasks - previously considered impossible. The benchmark enabled fair comparison across algorithms and drove rapid RL progress from 2013 to 2020.",
+      hints: [
+        "The ALE provides 57 games with the same state (screen pixels) and action (joystick) interface. What was remarkable about DQN's results?",
+        "Before the ALE, each game required a specialized algorithm. What does DQN's cross-game performance suggest about the generality of deep RL?",
+      ],
     },
   ],
 
@@ -2024,6 +2072,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "CQL's regularization: min_\\theta \\alpha(E_{s~D}[log \sum_a exp(Q_\\theta(s,a))] - E_{(s,a)~D}[Q_\\theta(s,a)]) + standard Bellman loss. The first term (softmax of Q over all actions) pushes down Q-values for unseen actions; the second term (Q at data actions) pulls them up. The result is a conservative Q-function that lower bounds the true Q, ensuring the greedy policy derived from CQL Q-values is safer than one derived from a Q-function with OOD overestimation.",
+      hints: [
+        "CQL regularizer: $E_{s \\sim D}[\\log \\sum_a e^{Q(s,a)}] - E_{(s,a) \\sim D}[Q(s,a)]$. For unseen actions, the first term remains large (the $\\log \\sum_a$ includes OOD actions); for seen actions, the second term pulls Q up. Net effect: lower Q for OOD actions.",
+        "Pessimism about OOD actions means: if $a$ was never seen in $D$, CQL assigns it a low Q-value, preventing the greedy policy from selecting it.",
+      ],
     },
     {
       id: "q-rl-kp42-3",
@@ -2034,6 +2086,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation:
         "Policy improvement from suboptimal data: offline RL algorithms can extract better behaviors than the data-collecting behavior policy by combining observations across many trajectories to identify which actions lead to better outcomes. For example, a dataset of medium-quality demonstrations may contain some instances where an agent accidentally took a good action sequence - offline RL can learn to replicate these better actions while avoiding bad ones seen in other trajectories. This is why offline RL is valuable for real-world settings where safe online exploration is costly.",
+      hints: [
+        "Even a random policy generates some trajectories that are locally optimal. Offline RL can identify and generalize from these lucky sequences.",
+        "The key requirement: the dataset must contain enough diversity to identify good actions, even if each individual trajectory is suboptimal.",
+      ],
     },
   ],
 
@@ -2122,6 +2178,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "DPO's insight: the RLHF objective's optimal solution can be expressed directly in terms of the language model's probabilities - the reward model is implicitly reparameterized by the model itself. This allows deriving a loss function on preference pairs (chosen, rejected) that directly fine-tunes the LM without RL: L_DPO = -E[log \\sigma(\\beta log(\\pi_\\theta(y_w|x)/\\pi_ref(y_w|x)) - \\beta log(\\pi_\\theta(y_l|x)/\\pi_ref(y_l|x)))]. Benefits: no separate reward model, no PPO instability, simpler training, comparable or better results than RLHF-PPO.",
+      hints: [
+        "DPO derives: $\\pi^*(y|x) \\propto \\pi_{ref}(y|x) \\exp(r^*(x,y)/\\beta)$. The reward $r^*$ is implicitly defined by the reference policy and the preference data.",
+        "PPO requires: (1) reward model training, (2) PPO fine-tuning with clipping. DPO reduces this to a single binary cross-entropy loss on preference pairs.",
+      ],
     },
     {
       id: "q-rl-kp44-3",
@@ -2132,6 +2192,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation:
         "Reward hacking (Goodhart's Law applied to RLHF): the reward model is an imperfect proxy for human preferences. A sufficiently capable LLM finds inputs that score highly on the reward model but do not represent genuinely good outputs - e.g., very long but padded responses if the reward model overvalues length, or confident-sounding but incorrect answers. The KL penalty in PPO limits but does not eliminate this. Ongoing research in constitutional AI, iterative RLHF, and improved reward modeling addresses this challenge.",
+      hints: [
+        "Goodhart's Law: when a measure becomes a target, it ceases to be a good measure. The reward model is a proxy for human preferences - optimizing it too hard causes the proxy-target gap to dominate.",
+        "The KL penalty $\\beta \\cdot D_{KL}(\\pi_\\theta || \\pi_{ref})$ constrains how far $\\pi_\\theta$ can drift from the base model, but cannot prevent the model from finding inputs that score well on the reward model but violate human intent.",
+      ],
     },
   ],
 
@@ -2171,6 +2235,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "Layered safety for deployment: RL with constraints is statistically safe in expectation but may violate constraints in specific states. A control barrier function (CBF) safety filter provides hard safety guarantees: it computes the minimum intervention needed to keep the system in a provably safe set, overriding the RL policy only when necessary. Training with a conservative margin (80% of the constraint budget) provides slack to accommodate model errors. This defense-in-depth approach is standard in safety-critical robotics.",
+      hints: [
+        "CBF safety filter: given current state $x$, CBF $h(x)$ defines a safe set $\{x : h(x) \\geq 0\\}$. The CBF derivative constraint $\\dot{h} \\geq -\\alpha h$ ensures $h(x) \\geq 0$ is invariant (once safe, stays safe).",
+        "Defense-in-depth: (1) conservative training margin accounts for residual model errors; (2) CBF at runtime provides a hard guarantee independent of the RL policy's accuracy. No single layer is perfect; together they cover each other's failure modes.",
+      ],
     },
     {
       id: "q-rl-kp45-3",
@@ -2181,6 +2249,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation:
         "Naive reward shaping can cause misalignment: adding intermediate rewards for subgoals that seem helpful may inadvertently create a locally optimal policy that maximizes shaped rewards without achieving the true objective (reward hacking). Potential-based reward shaping (Ng et al., 1999) provides a safe form: adding F(s,a,s') = \\gamma\\Phi(s') - \\Phi(s) for any potential function \\Phi preserves the set of optimal policies. Non-potential-based shaping risks changing which policies are optimal.",
+      hints: [
+        "Potential-based shaping $F(s,a,s') = \\gamma \\Phi(s') - \\Phi(s)$ preserves optimal policies because it does not change the relative ordering of state-action values.",
+        "If you add a constant $c$ to all rewards, the optimal policy is unchanged. Naive shaping effectively changes rewards by different amounts in different states, which CAN change the optimal policy.",
+      ],
     },
   ],
 };
