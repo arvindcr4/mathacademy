@@ -397,8 +397,8 @@ const questions: Record<string, Question[]> = {
       question:
         "The Bellman operator T^\\pi is a \\gamma-contraction in the sup-norm. This means that for any two value functions V and U:",
       options: [
-        "‖T^\\pi V - T^\\pi U‖_\\infty \\leq \\gamma‖V - U‖_\\infty",
-        "‖T^\\pi V - V*‖_\\infty \\leq \\gamma for all V",
+        "\|T^\\pi V - T^\\pi U\|_\\infty \\leq \\gamma\|V - U\|_\\infty",
+        "\|T^\\pi V - V*\|_\\infty \\leq \\gamma for all V",
         "T^\\pi always produces a value function with smaller L2-norm than V",
         "Applying T^\\pi reduces the number of states in the MDP",
       ],
@@ -429,16 +429,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "With \\gamma = 0.9, starting from an arbitrary V\\_0, after k = 10 iterations of policy evaluation, the sup-norm error ‖V_k - V^\\pi‖_\\infty is bounded by:",
+        "With \\gamma = 0.9, starting from an arbitrary V\\_0, after k = 10 iterations of policy evaluation, the sup-norm error \|V_k - V^\\pi\|_\\infty is bounded by:",
       options: [
-        "0.9^10 * ‖V\\_0 - V^\\pi‖_\\infty \approx 0.349 * ‖V\\_0 - V^\\pi‖_\\infty",
-        "0.1 \cdot k * ‖V\\_0 - V^\\pi‖_\\infty = 1.0 * ‖V\\_0 - V^\\pi‖_\\infty",
-        "(0.9/k) * ‖V\\_0 - V^\\pi‖_\\infty = 0.09 * ‖V\\_0 - V^\\pi‖_\\infty",
-        "‖V\\_0 - V^\\pi‖_\\infty / (1 - 0.9^k)",
+        "0.9^10 * \|V\\_0 - V^\\pi\|_\\infty \approx 0.349 * \|V\\_0 - V^\\pi\|_\\infty",
+        "0.1 \cdot k * \|V\\_0 - V^\\pi\|_\\infty = 1.0 * \|V\\_0 - V^\\pi\|_\\infty",
+        "(0.9/k) * \|V\\_0 - V^\\pi\|_\\infty = 0.09 * \|V\\_0 - V^\\pi\|_\\infty",
+        "\|V\\_0 - V^\\pi\|_\\infty / (1 - 0.9^k)",
       ],
       correctAnswer: 0,
       explanation:
-        "Each application of T^\\pi multiplies the error by at most \\gamma. After k applications: ‖V_k - V^\\pi‖_\\infty \\leq \\gamma^k * ‖V\\_0 - V^\\pi‖_\\infty. With \\gamma = 0.9 and k = 10: 0.9^10 \approx 0.349. This geometric decay is why policy evaluation converges reliably: after 100 iterations with \\gamma = 0.9, the error is at most 0.9^100 \approx 2.66 \\times 10\\^{-⁵⁵ the initial error.",
+        "Each application of T^\\pi multiplies the error by at most \\gamma. After k applications: \|V_k - V^\\pi\|_\\infty \\leq \\gamma^k * \|V\\_0 - V^\\pi\|_\\infty. With \\gamma = 0.9 and k = 10: 0.9^10 \approx 0.349. This geometric decay is why policy evaluation converges reliably: after 100 iterations with \\gamma = 0.9, the error is at most 0.9^100 \approx 2.66 \\times 10\\^{-⁵⁵ the initial error.",
       hints: [
         "The contraction factor \\gamma is applied once per iteration. After k iterations it has been applied k times: \\gamma \\times \\gamma \\times … \\times \\gamma = \\gamma^k.",
         "With $\gamma = 0.9$: $0.9^{10} \approx 0.35$, $0.9^{20} \approx 0.12$, $0.9^{100} \approx 2.7 \times 10^{-5}$. The convergence is geometric, not linear.",
@@ -476,7 +476,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The convergence proof for iterative policy evaluation requires \\gamma < 1 OR that the policy guarantees eventual termination (episodic tasks). With \\gamma = 1 in a continuing (non-terminating) task, the Bellman operator is not a contraction - the sup-norm of V can grow without bound, and the algorithm may diverge or fail to converge.",
       hints: [
-        "The contraction argument uses \\gamma < 1 explicitly: ‖T^\\pi V - T^\\pi U‖_\\infty \\leq \\gamma‖V - U‖_\\infty. At \\gamma = 1, the right side equals ‖V - U‖_\\infty - no contraction.",
+        "The contraction argument uses \\gamma < 1 explicitly: \|T^\\pi V - T^\\pi U\|_\\infty \\leq \\gamma\|V - U\|_\\infty. At \\gamma = 1, the right side equals \|V - U\|_\\infty - no contraction.",
         "Consider a policy that cycles between two states with reward +1 each step and \\gamma = 1: the return is infinite and V^\\pi is not well-defined.",
       ],
     },
@@ -688,9 +688,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Both T^\\pi (expectation) and T* (optimality) are \\gamma-contractions: ‖T^\\pi V - T^\\pi U‖_\\infty \\leq \\gamma‖V - U‖_\\infty and ‖T* V - T* U‖_\\infty \\leq \\gamma‖V - U‖_\\infty. By the Banach fixed-point theorem, repeated application converges geometrically to the unique fixed point (V^\\pi or V* respectively). The discount factor \\gamma < 1 is what ensures this contraction.",
+        "Both T^\\pi (expectation) and T* (optimality) are \\gamma-contractions: \|T^\\pi V - T^\\pi U\|_\\infty \\leq \\gamma\|V - U\|_\\infty and \|T* V - T* U\|_\\infty \\leq \\gamma\|V - U\|_\\infty. By the Banach fixed-point theorem, repeated application converges geometrically to the unique fixed point (V^\\pi or V* respectively). The discount factor \\gamma < 1 is what ensures this contraction.",
       hints: [
-        "The proof that T* is a contraction appears in Puterman\'s book and is referenced by Sutton & Barto. The bound |max_a f(a) - max_a g(a)| \\leq ‖V - U‖_\\infty is the key step.",
+        "The proof that T* is a contraction appears in Puterman\'s book and is referenced by Sutton & Barto. The bound |max_a f(a) - max_a g(a)| \\leq \|V - U\|_\\infty is the key step.",
         "If \\gamma = 1, the contraction argument breaks. This is why \\gamma < 1 (or guaranteed termination) is required.",
       ],
     },
@@ -761,7 +761,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Sutton & Barto §4.5 prove that asynchronous DP converges to V* under the condition that all states continue to receive updates. The contraction property of the Bellman operator holds regardless of update order - what matters is that no state\'s value becomes permanently stale. This justifies focusing updates on "important" states.',
       hints: [
-        "The contraction argument: each update to V(s) strictly reduces the error ‖V(s) - V\cdot (s)‖ by a factor involving \\gamma.",
+        "The contraction argument: each update to V(s) strictly reduces the error \|V(s) - V\cdot (s)\| by a factor involving \\gamma.",
         "If a state $s$ is never updated, $V(s)$ never converges to $V^\cdot (s)$ - hence the requirement that all states are updated infinitely often.",
       ],
     },
@@ -1387,7 +1387,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "First, let's recall the proof strategy for showing $T^*$ is a contraction: we need to bound $\|T^* V - T^* U\|_\\infty \\leq \\gamma \|V - U\|_\\infty$. The key difficulty is that $T^*$ uses a $\\max$ over actions, unlike $T^\\pi$ which uses an expectation.\n\nStep-by-step: for any states $s$, define $f(a) = \\sum_{s'} P(s'|s,a)[R + \\gamma V(s')]$ and $g(a) = \\sum_{s'} P(s'|s,a)[R + \\gamma U(s')]$. Then $\|T^* V - T^* U\|_\\infty = \\max_s |\\max_a f(a) - \\max_a g(a)|$. A fundamental inequality from real analysis states: $|\\max_a f(a) - \\max_a g(a)| \\leq \\max_a |f(a) - g(a)|$. Applying this and the triangle inequality gives $|f(a) - g(a)| \\leq \\gamma \\cdot \\max_{s'}|V(s') - U(s')|$. Taking $\\max_s \\max_a$ yields $\|T^* V - T^* U\|_\\infty \\leq \\gamma \\|V - U\|_\\infty$.\n\nTherefore, $T^*$ is a $\\gamma$-contraction. By the Banach fixed-point theorem, it has a unique fixed point. Substituting $T^* V = V$ gives exactly the Bellman optimality equation, so that fixed point is $V^*$.",
       hints: [
-        "Key inequality: |max f - max g| \\leq max |f - g|. Apply this to bound ‖T\cdot V - T\cdot U‖_\\infty.",
+        "Key inequality: |max f - max g| \\leq max |f - g|. Apply this to bound \|T\cdot V - T\cdot U\|_\\infty.",
         "Both T^\\pi and T* are \\gamma-contractions but with different fixed points: T^\\pi \\to V^\\pi, T* \\to V*.",
       ],
     },
