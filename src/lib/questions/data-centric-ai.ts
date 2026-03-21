@@ -1625,6 +1625,40 @@ const questions: Record<string, Question[]> = {
         "The bandwidth b and band size r tradeoff: more bands (larger b) → higher recall (find more near-duplicates) but more false positives. Larger band size r → higher precision but lower recall.",
       ],
     },
+    {
+      id: "q-dc-kp15-7",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "When scraping social media data for training an NLP model, including usernames, email addresses, and phone numbers in the training corpus is acceptable as long as the data was scraped from publicly visible posts.",
+      correctAnswer: "False",
+      explanation:
+        "Publicly visible ≠ appropriate for inclusion in AI training data. Regulatory and ethical constraints: (1) GDPR (EU): personal data (names, emails, phone numbers) requires a lawful basis for processing. Training an ML model on personal data constitutes processing and requires consent or legitimate interest — scraping public posts does not automatically establish consent. (2) CCPA (California): consumers have the right to opt out of sale of personal information. (3) Practical risks: models can memorize and regurgitate personal data at inference time — a user could ask the model for 'John Smith\'s email' and get a real email from training data. (4) Ethical norm: users posting publicly do not expect their contact details to be extracted for AI training at scale. Standard practice: scrub PII (personally identifiable information) before training using regex patterns, named entity recognizers, or dedicated PII detection tools (Microsoft Presidio, Amazon Comprehend PII).",
+      hints: [
+        "PII in training data creates privacy risk not just during training but at inference: language models can memorize and reproduce rare strings (email addresses, phone numbers) that appear multiple times in training data.",
+        "The 'publicness' defense is weakening legally: GDPR enforcement actions (e.g., Clearview AI) have found that scraping publicly visible data at scale without consent violates privacy law in many jurisdictions.",
+      ],
+    },
+    {
+      id: "q-dc-kp1-6",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "A production ML system for loan approval achieves 88% accuracy overall but only 71% accuracy on applicants from rural zip codes, which make up 8% of the test set. The data-centric explanation for this gap is most likely:",
+      options: [
+        "The model architecture is too simple to capture rural feature patterns",
+        "The training data underrepresents rural applicants, so the model has learned poor features for that slice; collecting and labeling more rural applicant examples or applying targeted augmentation would address the gap without changing the model",
+        "Rural applicants have higher inherent default rates, making them harder to predict",
+        "The accuracy metric is inappropriate for imbalanced subgroups; AUC should be used instead",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Slice-based performance gaps almost always trace to training data underrepresentation. If rural applicants are 8% of test data, they are likely an even smaller fraction of training data (or may have been systematically undersampled). With few training examples from a subgroup: (1) the model does not learn the decision boundary for that subgroup\'s feature distribution, (2) any label noise in the small rural subset has an outsized impact, (3) the validation set likely did not trigger retraining for this gap because aggregate accuracy (88%) looked good. Data-centric solutions: (a) collect more rural applicant training examples (targeted data collection), (b) apply synthetic oversampling (SMOTE) to the rural slice, (c) apply higher loss weighting for rural examples. These address the root cause (data insufficiency for the slice) rather than masking it with a more complex model.",
+      hints: [
+        "The 8% test slice with 17-point accuracy gap represents a major failure mode. If rural loans are a key business segment, this gap has direct financial and fairness implications.",
+        "Systematic slice analysis before deployment would have caught this. A slice accuracy report (accuracy per zip code decile, per income bracket, per demographics) is standard practice in responsible ML.",
+      ],
+    },
   ],
 };
 
