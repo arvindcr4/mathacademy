@@ -1,5 +1,4 @@
 import type { Question } from "@/lib/curriculum";
-import { registerQuestions } from "./registry";
 
 const questions: Record<string, Question[]> = {
   // ── cv-kp-26: Robustness & Adversarial Examples ───────────────────────────

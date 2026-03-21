@@ -467,11 +467,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In few-shot settings, some parameters encode shared representations (low learning rate optimal) while others are task-specific heads (high learning rate optimal). Per-parameter rates let the meta-learner implicitly discover and exploit this structure.\n\nConsider a ConvNet backbone + linear head: the backbone parameters encode general visual features useful across tasks (small \\alpha_j ensures these useful features aren't disrupted by task adaptation), while the head parameters are specific to each task's classification boundaries (large \\alpha_j allows rapid task-specific adjustment). A scalar \\alpha cannot simultaneously be small for the backbone and large for the head - per-parameter \\alpha_j resolves this tension. Empirically, Meta-SGD often outperforms MAML on regression tasks where different output dimensions require different adaptation speeds.",
+        "**Step 1:** In few-shot settings, some parameters encode shared representations (low learning rate optimal) while others are task-specific heads (high learning rate optimal). Per-parameter rates let the meta-learner implicitly discover and exploit this structure.\n\n**Step 2:** Consider a ConvNet backbone + linear head: the backbone parameters encode general visual features useful across tasks (small $\\alpha_j$ ensures these useful features aren't disrupted by task adaptation), while the head parameters are specific to each task's classification boundaries (large $\\alpha_j$ allows rapid task-specific adjustment).\n\n**Step 3:** A scalar $\\alpha$ cannot simultaneously be small for the backbone and large for the head — per-parameter $\\alpha_j$ resolves this tension. Empirically, Meta-SGD often outperforms MAML on regression tasks where different output dimensions require different adaptation speeds.",
       hints: [
         "Think about which layers in a neural network are task-specific vs. generally useful across tasks.",
         "A backbone feature extractor might need small updates; a task-specific head might need large ones.",
-        "The elementwise update \\theta'_j = \\theta_j + \\alpha_j \\cdot (\\nabla\mathcal{L})_j lets \\alpha_j be negative for some parameters (reversing gradient direction) and positive for others.",
       ],
     },
   ],

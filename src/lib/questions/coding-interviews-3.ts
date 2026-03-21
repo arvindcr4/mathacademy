@@ -30,7 +30,7 @@ const questions: Record<string, Question[]> = {
       options: ["4", "5", "6", "7"],
       correctAnswer: 1,
       explanation:
-        "We build up using the recurrence $dp[i] = dp[i-1] + dp[i-2]$:\n\n$$\\begin{align}\ndp[1] &= 1 \\quad &\\text{(just 1)}\\\\\ndp[2] &= dp[1] + dp[0] = 1 + 1 = 2 \\quad &\\text{(1+1 or 2)}\\\\\ndp[3] &= dp[2] + dp[1] = 2 + 1 = 3 \\quad &\\text{(1+1+1, 1+2, 2+1)}\\\\\ndp[4] &= dp[3] + dp[2] = 3 + 2 = 5\\n\\end{align}$$\n\nThe five valid sequences are: $(1,1,1,1)$, $(1,1,2)$, $(1,2,1)$, $(2,1,1)$, and $(2,2)$.",
+        "We build up using the recurrence $dp[i] = dp[i-1] + dp[i-2]$:\n\n$$\\begin{align}\ndp[1] &= 1 \\quad &\\text{(just 1)}\\\[5pt]\ndp[2] &= dp[1] + dp[0] = 1 + 1 = 2 \\quad &\\text{(1+1 or 2)}\\\[5pt]\ndp[3] &= dp[2] + dp[1] = 2 + 1 = 3 \\quad &\\text{(1+1+1, 1+2, 2+1)}\\\[5pt]\ndp[4] &= dp[3] + dp[2] = 3 + 2 = 5\\n\\end{align}$$\n\nThe five valid sequences are: $(1,1,1,1)$, $(1,1,2)$, $(1,2,1)$, $(2,1,1)$, and $(2,2)$.",
       hints: [
         "Build the values from the bottom up: $dp[1] = 1, dp[2] = 2, dp[3] = 3, \\dots$",
         "Use $dp[4] = dp[3] + dp[2]$ or enumerate all five valid sequences manually.",
@@ -71,7 +71,7 @@ const questions: Record<string, Question[]> = {
       options: ["5", "6", "7", "8"],
       correctAnswer: 2,
       explanation:
-        "With step sizes 1, 2, and 3, the recurrence extends to use the previous three states:\n\n$$\\begin{align}\ndp[4] &= dp[3] + dp[2] + dp[1]\\\\\n\\text{where: } &dp[1] = 1 \\text{ (only } 1)\\n&dp[2] = 2 \\text{ (1+1 or } 2)\\n&dp[3] = 4 \\text{ (1+1+1, 1+2, 2+1, or } 3)\n\\end{align}$$\n\nTherefore:\n$$dp[4] = 4 + 2 + 1 = 7$$\n\nThe seven sequences are: $(1,1,1,1)$, $(1,1,2)$, $(1,2,1)$, $(2,1,1)$, $(2,2)$, $(1,3)$, and $(3,1)$.",
+        "With step sizes 1, 2, and 3, the recurrence extends to use the previous three states:\n\n$$\\begin{align}\ndp[4] &= dp[3] + dp[2] + dp[1]\\\[5pt]\n\\text{where: } &dp[1] = 1 \\text{ (only } 1)\\n&dp[2] = 2 \\text{ (1+1 or } 2)\\n&dp[3] = 4 \\text{ (1+1+1, 1+2, 2+1, or } 3)\n\\end{align}$$\n\nTherefore:\n$$dp[4] = 4 + 2 + 1 = 7$$\n\nThe seven sequences are: $(1,1,1,1)$, $(1,1,2)$, $(1,2,1)$, $(2,1,1)$, $(2,2)$, $(1,3)$, and $(3,1)$.",
       hints: [
         "With step sizes 1, 2, and 3, the recurrence uses the previous three states: $dp[i] = dp[i-1] + dp[i-2] + dp[i-3]$.",
         "Use $dp[4] = dp[3] + dp[2] + dp[1]$ with base values $dp[1] = 1, dp[2] = 2, dp[3] = 4$.",
@@ -90,7 +90,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The recurrence $dp[i] = dp[i-1] + dp[i-2]$ only requires the two most recent values. We can replace the full array with two variables:\n\n$$\\begin{align}\n\\text{prev1} &= dp[i-1] \\quad \\text{(previous state)}\\\\\n\\text{prev2} &= dp[i-2] \\quad \\text{(state before that)}\\\\\n\\text{current} &= \\text{prev1} + \\text{prev2}\\n\\end{align}$$\n\nAfter computing each $dp[i]$, we shift: $\\text{prev2} \\leftarrow \\text{prev1}$, $\\text{prev1} \\leftarrow \\text{current}$. This uses $O(1)$ space.",
+        "The recurrence $dp[i] = dp[i-1] + dp[i-2]$ only requires the two most recent values. We can replace the full array with two variables:\n\n$$\\begin{align}\n\\text{prev1} &= dp[i-1] \\quad \\text{(previous state)}\\\[5pt]\n\\text{prev2} &= dp[i-2] \\quad \\text{(state before that)}\\\[5pt]\n\\text{current} &= \\text{prev1} + \\text{prev2}\\n\\end{align}$$\n\nAfter computing each $dp[i]$, we shift: $\\text{prev2} \\leftarrow \\text{prev1}$, $\\text{prev1} \\leftarrow \\text{current}$. This uses $O(1)$ space.",
       hints: [
         "Look at how many previous DP values the recurrence actually needs at any step.",
         "If only the last two states matter, why keep the full table?",
@@ -100,7 +100,7 @@ const questions: Record<string, Question[]> = {
 
   "coin-change": [
     {
-      id: "q-cc-1",
+      id: "q-ci-cc-1",
       type: "multiple-choice",
       difficulty: "medium",
       question: "What is the recurrence relation for the minimum coin change problem?",
@@ -120,14 +120,14 @@ const questions: Record<string, Question[]> = {
       ],
     },
     {
-      id: "q-cc-2",
+      id: "q-ci-cc-2",
       type: "multiple-choice",
       difficulty: "medium",
       question: "For coins [1, 2, 5] and target amount = 11, what is the minimum number of coins needed?",
       options: ["2", "3", "5", "11"],
       correctAnswer: 1,
       explanation:
-        "We compute $dp$ bottom-up:\n\n$$\\begin{align}\ndp[0] &= 0\\\\\ndp[1] &= \\min(dp[1], dp[0]+1) = 1\\\\\ndp[2] &= \\min(dp[2], dp[1]+1, dp[0]+1) = 1\\\\\n&\\vdots\\\\\ndp[5] &= 1\\quad \\text{(coin: 5)}\\\\\ndp[11] &= 3\\quad \\text{(5 + 5 + 1)}\n\\end{align}$$\n\nOptimal: $11 = 5 + 5 + 1$ using only 3 coins. Other decompositions like $2+2+2+2+2+1 = 6$ coins are worse.",
+        "We compute $dp$ bottom-up:\n\n$$\\begin{align}\ndp[0] &= 0\\\[5pt]\ndp[1] &= \\min(dp[1], dp[0]+1) = 1\\\[5pt]\ndp[2] &= \\min(dp[2], dp[1]+1, dp[0]+1) = 1\\\[5pt]\n&\\vdots\\\[5pt]\ndp[5] &= 1\\quad \\text{(coin: 5)}\\\[5pt]\ndp[11] &= 3\\quad \\text{(5 + 5 + 1)}\n\\end{align}$$\n\nOptimal: $11 = 5 + 5 + 1$ using only 3 coins. Other decompositions like $2+2+2+2+2+1 = 6$ coins are worse.",
       hints: [
         "Try to form 11 with the fewest pieces, not just any decomposition.",
         "Two 5s and one 1 reach 11 using only three coins.",
@@ -135,7 +135,7 @@ const questions: Record<string, Question[]> = {
       ],
     },
     {
-      id: "q-cc-3",
+      id: "q-ci-cc-3",
       type: "true-false",
       difficulty: "easy",
       question: "In the coin change DP formulation, $dp[i]$ represents the minimum number of coins needed to make amount $i$.",
@@ -170,7 +170,7 @@ const questions: Record<string, Question[]> = {
       options: ["O(amount)", "O(amount \\times coins)", "O(coins)", "O(2^amount)"],
       correctAnswer: 1,
       explanation:
-        "We use a two-dimensional DP with dimensions $(\\text{amount} + 1) \\times (\\text{number of coins})$:\n\n$$\\begin{align}\n\\text{for } i &= 1 \\text{ to } \\text{amount}:\\n\\quad \\text{for each coin } c:\\\\\n\\quad\\quad dp[i] = \\min(dp[i], dp[i-c] + 1)\n\\end{align}$$\n\nThis gives $O(\\text{amount} \\times \\text{len(coins)})$ time complexity.",
+        "We use a two-dimensional DP with dimensions $(\\text{amount} + 1) \\times (\\text{number of coins})$:\n\n$$\\begin{align}\n\\text{for } i &= 1 \\text{ to } \\text{amount}:\\n\\quad \\text{for each coin } c:\\\[5pt]\n\\quad\\quad dp[i] = \\min(dp[i], dp[i-c] + 1)\n\\end{align}$$\n\nThis gives $O(\\text{amount} \\times \\text{len(coins)})$ time complexity.",
       hints: [
         "There is one dimension for amounts (1 to target) and one for coin types.",
         "At each amount, you check every available coin.",
@@ -239,7 +239,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The recurrence $dp[i] = \\max(dp[i-1], dp[i-2] + \\text{nums}[i])$ only requires the two most recent values. We can use two variables instead of an array:\n\n$$\\begin{align}\n\\text{prev1} &= dp[i-1] \\quad &(\\text{current max up to } i-1)\\\\\n\\text{prev2} &= dp[i-2] \\quad &(\\text{max up to } i-2)\\\\\n\\text{curr} &= \\max(\\text{prev1},\\; \\text{prev2} + \\text{nums}[i])\n\\end{align}$$\n\nAfter each step: $\\text{prev2} \\leftarrow \\text{prev1}$, $\\text{prev1} \\leftarrow \\text{curr}$. Space: $O(1)$.",
+        "The recurrence $dp[i] = \\max(dp[i-1], dp[i-2] + \\text{nums}[i])$ only requires the two most recent values. We can use two variables instead of an array:\n\n$$\\begin{align}\n\\text{prev1} &= dp[i-1] \\quad &(\\text{current max up to } i-1)\\\[5pt]\n\\text{prev2} &= dp[i-2] \\quad &(\\text{max up to } i-2)\\\[5pt]\n\\text{curr} &= \\max(\\text{prev1},\\; \\text{prev2} + \\text{nums}[i])\n\\end{align}$$\n\nAfter each step: $\\text{prev2} \\leftarrow \\text{prev1}$, $\\text{prev1} \\leftarrow \\text{curr}$. Space: $O(1)$.",
       hints: [
         "The recurrence only references the previous two answers.",
         "Rolling values for $dp[i-1]$ and $dp[i-2]$ are enough to compute $dp[i]$.",
@@ -258,7 +258,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 3,
       explanation:
-        "Base cases for 0-indexed $\\text{nums}$:\n\n$$\\begin{align}\ndp[0] &= \\text{nums}[0] \\quad &(\\text{only house 0 can be robbed})\\\\\ndp[1] &= \\max(\\text{nums}[0],\\; \\text{nums}[1]) \\quad &(\\text{rob house 0 or house 1, not both})\n\\end{align}$$\n\nFor $n = 1$: answer is $\\text{nums}[0]$. For $n = 2$: answer is $\\max(\\text{nums}[0], \\text{nums}[1])$.",
+        "Base cases for 0-indexed $\\text{nums}$:\n\n$$\\begin{align}\ndp[0] &= \\text{nums}[0] \\quad &(\\text{only house 0 can be robbed})\\\[5pt]\ndp[1] &= \\max(\\text{nums}[0],\\; \\text{nums}[1]) \\quad &(\\text{rob house 0 or house 1, not both})\n\\end{align}$$\n\nFor $n = 1$: answer is $\\text{nums}[0]$. For $n = 2$: answer is $\\max(\\text{nums}[0], \\text{nums}[1])$.",
       hints: [
         "Start by solving the one-house and two-house cases.",
         "With two adjacent houses, you must choose the larger value because you cannot rob both.",
@@ -542,7 +542,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "We factor 360 step by step:\n\n$$\\begin{align}\n360 &= 36 \\times 10 = (6 \\times 6) \\times (2 \\times 5)\\\\\n     &= (2 \\times 3) \\times (2 \\times 3) \\times 2 \\times 5\\\\\n     &= 2^3 \\times 3^2 \\times 5\n\\end{align}$$\n\nAlternatively: $360 = 8 \\times 45 = 2^3 \\times (9 \\times 5) = 2^3 \\times 3^2 \\times 5$.",
+        "We factor 360 step by step:\n\n$$\\begin{align}\n360 &= 36 \\times 10 = (6 \\times 6) \\times (2 \\times 5)\\\[5pt]\n     &= (2 \\times 3) \\times (2 \\times 3) \\times 2 \\times 5\\\\\n     &= 2^3 \\times 3^2 \\times 5\n\\end{align}$$\n\nAlternatively: $360 = 8 \\times 45 = 2^3 \\times (9 \\times 5) = 2^3 \\times 3^2 \\times 5$.",
       hints: [
         "Break 360 into prime factors systematically.",
         "Look for powers of 2: $360 = 8 \\times 45 = 2^3 \\times 45$.",
@@ -648,7 +648,7 @@ const questions: Record<string, Question[]> = {
       options: ["6", "8", "12", "24"],
       correctAnswer: 0,
       explanation:
-        "Applying the Euclidean algorithm:\n\n$$\\begin{align}\n\\gcd(48, 18) &= \\gcd(18, 48 \\bmod 18) = \\gcd(18, 12)\\\\\n\\gcd(18, 12) &= \\gcd(12, 18 \\bmod 12) = \\gcd(12, 6)\\\\\n\\gcd(12, 6) &= \\gcd(6, 12 \\bmod 6) = \\gcd(6, 0) = 6\n\\end{align}$$\n\nOr by factoring: $48 = 2^4 \\cdot 3$ and $18 = 2 \\cdot 3^2$, so $\\gcd = 2 \\cdot 3 = 6$.",
+        "Applying the Euclidean algorithm:\n\n$$\\begin{align}\n\\gcd(48, 18) &= \\gcd(18, 48 \\bmod 18) = \\gcd(18, 12)\\\[5pt]\n\\gcd(18, 12) &= \\gcd(12, 18 \\bmod 12) = \\gcd(12, 6)\\\\\n\\gcd(12, 6) &= \\gcd(6, 12 \\bmod 6) = \\gcd(6, 0) = 6\n\\end{align}$$\n\nOr by factoring: $48 = 2^4 \\cdot 3$ and $18 = 2 \\cdot 3^2$, so $\\gcd = 2 \\cdot 3 = 6$.",
       hints: [
         "Apply the Euclidean algorithm step by step.",
         "$\\gcd(48, 18) = \\gcd(18, 12) = \\gcd(12, 6) = 6$.",
@@ -740,7 +740,7 @@ const questions: Record<string, Question[]> = {
       options: ["2", "3", "5", "1"],
       correctAnswer: 0,
       explanation:
-        "Using repeated squaring (fast exponentiation):\n\n1. First reduce the base: $17 \\equiv 3 \\pmod{7}$\n\n2. Square repeatedly, reducing mod 7:\n$$\\begin{align}\n3^1 &\\equiv 3 \\pmod{7}\\\\\n3^2 = 9 &\\equiv 2 \\pmod{7}\\\\\n3^4 = (3^2)^2 \\equiv 2^2 = 4 \\pmod{7}\\\\\n3^5 = 3^4 \\times 3 \\equiv 4 \\times 3 = 12 \\equiv 5 \\pmod{7}\n\\end{align}$$\n\nAnswer: **5**.",
+        "Using repeated squaring (fast exponentiation):\n\n1. First reduce the base: $17 \\equiv 3 \\pmod{7}$\n\n2. Square repeatedly, reducing mod 7:\n$$\\begin{align}\n3^1 &\\equiv 3 \\pmod{7}\\\[5pt]\n3^2 = 9 &\\equiv 2 \\pmod{7}\\\[5pt]\n3^4 = (3^2)^2 \\equiv 2^2 = 4 \\pmod{7}\\\\\n3^5 = 3^4 \\times 3 \\equiv 4 \\times 3 = 12 \\equiv 5 \\pmod{7}\n\\end{align}$$\n\nAnswer: **5**.",
       hints: [
         "Reduce the base first: $17 \\equiv 3 \\pmod{7}$.",
         "Use repeated squaring: $3^5 = 3^4 \\times 3$.",
@@ -1236,7 +1236,7 @@ const questions: Record<string, Question[]> = {
 }`,
       correctAnswer: 0,
       explanation:
-        "Modified binary search: at each step, determine which half is sorted, then check if target lies in that half.\n\n$$\\begin{align}\n\\text{mid} &= (\\text{left} + \\text{right}) / 2\\\\\n\\text{If } \\text{nums}[\\text{left}] &\\leq \\text{nums}[\\text{mid}]:\\n&\\quad \\text{left half is sorted}\\n&\\quad \\text{check if target } \\in [\\text{nums}[\\text{left}], \\text{nums}[\\text{mid}]]\\n\\text{Else}:\\n&\\quad \\text{right half is sorted}\\n&\\quad \\text{check if target } \\in (\\text{nums}[\\text{mid}], \\text{nums}[\\text{right}]]\n\\end{align}$$",
+        "Modified binary search: at each step, determine which half is sorted, then check if target lies in that half.\n\n$$\\begin{align}\n\\text{mid} &= (\\text{left} + \\text{right}) / 2\\\[5pt]\n\\text{If } \\text{nums}[\\text{left}] &\\leq \\text{nums}[\\text{mid}]:\\n&\\quad \\text{left half is sorted}\\n&\\quad \\text{check if target } \\in [\\text{nums}[\\text{left}], \\text{nums}[\\text{mid}]]\\n\\text{Else}:\\n&\\quad \\text{right half is sorted}\\n&\\quad \\text{check if target } \\in (\\text{nums}[\\text{mid}], \\text{nums}[\\text{right}]]\n\\end{align}$$",
       hints: [
         "At each step, check which half $[\\text{left}, \\text{mid}]$ or $[\\text{mid}, \\text{right}]$ is normally sorted.",
         "Compare target with the boundaries of the sorted half to decide which half to search.",
@@ -1268,7 +1268,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "The invariant keeps the answer in $[\\text{left}, \\text{right}]$:\n\n$$\\begin{align}\nP(\\text{left} - 1) &= \\text{false} \\quad (\\text{everything before left fails})\\\\\nP(\\text{right} + 1) &= \\text{true} \\quad (\\text{everything after right succeeds})\n\\end{align}$$\n\nEach mid-point check narrows the interval until $\\text{left} = \\text{right}$, which is the answer.",
+        "The invariant keeps the answer in $[\\text{left}, \\text{right}]$:\n\n$$\\begin{align}\nP(\\text{left} - 1) &= \\text{false} \\quad (\\text{everything before left fails})\\\[5pt]\nP(\\text{right} + 1) &= \\text{true} \\quad (\\text{everything after right succeeds})\n\\end{align}$$\n\nEach mid-point check narrows the interval until $\\text{left} = \\text{right}$, which is the answer.",
       hints: [
         "Think of the array as FFFF...TTTT. The answer is the first T.",
         "The invariant ensures $[\\text{left}, \\text{right}]$ always contains the first T.",
@@ -1317,7 +1317,7 @@ const questions: Record<string, Question[]> = {
       question: "Merge sort is a stable sorting algorithm.",
       correctAnswer: "True",
       explanation:
-        "Merge sort is **stable** because during the merge step, when we have equal elements from both halves, we always take the element from the **left half first**:\n\n$$\\begin{align}\n\\text{Merge}(L, R):\\n&\\text{while } L \\text{ and } R \\text{ not empty:}\\\\\n&\\quad \\text{if } L[0] \\leq R[0]: \\text{ take from } L\\n&\\quad \\text{else}: \\text{ take from } R\n\\end{align}$$\n\nThe $\\leq$ comparison ensures that equal elements from the left subarray are placed before those from the right, preserving their original relative order.",
+        "Merge sort is **stable** because during the merge step, when we have equal elements from both halves, we always take the element from the **left half first**:\n\n$$\\begin{align}\n\\text{Merge}(L, R):\\n&\\text{while } L \\text{ and } R \\text{ not empty:}\\\[5pt]\n&\\quad \\text{if } L[0] \\leq R[0]: \\text{ take from } L\\n&\\quad \\text{else}: \\text{ take from } R\n\\end{align}$$\n\nThe $\\leq$ comparison ensures that equal elements from the left subarray are placed before those from the right, preserving their original relative order.",
       hints: [
         "Equal elements maintain their original relative order.",
         "When both halves have equal elements, take from the left half first to maintain stability.",
@@ -1333,7 +1333,7 @@ const questions: Record<string, Question[]> = {
 }`,
       correctAnswer: 0,
       explanation:
-        "During the merge step, when we take an element from the right half before an element from the left half, all remaining elements in the left half form inversions with that element:\n\n$$\\begin{align}\n\\text{while merging:}\\\\\n&\\text{if } L[i] \\leq R[j]:\\n&\\quad \\text{take } L[i]\\n&\\text{else}:\\n&\\quad \\text{take } R[j]\\n&\\quad \\text{inversions += remaining elements in } L\\n&\\quad (L[i...end] \\text{ are all > } R[j])\n\\end{align}$$",
+        "During the merge step, when we take an element from the right half before an element from the left half, all remaining elements in the left half form inversions with that element:\n\n$$\\begin{align}\n\\text{while merging:}\\\[5pt]\n&\\text{if } L[i] \\leq R[j]:\\n&\\quad \\text{take } L[i]\\n&\\text{else}:\\n&\\quad \\text{take } R[j]\\n&\\quad \\text{inversions += remaining elements in } L\\n&\\quad (L[i...end] \\text{ are all > } R[j])\n\\end{align}$$",
       hints: [
         "Count inversions when the left element is greater than the right element during merge.",
         "When you take from the right half, add the count of remaining left elements to the inversion total.",
@@ -2001,7 +2001,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "The bitwise NOT operator $\\sim$ computes the **one's complement** (invert all bits).\n\nFor a 32-bit integer:\n$$\\begin{align}\n5 &\\text{ (in binary)} = 0000\\;0000\\;0000\\;0000\\;0000\\;0000\\;0000\\;0101\\\\\n\\sim 5 &\\text{ (invert all bits)} = 1111\\;1111\\;1111\\;1111\\;1111\\;1111\\;1111\\;1010\\\\\n     &\\text{ (two's complement)} = -6\n\\end{align}$$\n\n**Identity**: $\\sim x = -(x + 1)$",
+        "The bitwise NOT operator $\\sim$ computes the **one's complement** (invert all bits).\n\nFor a 32-bit integer:\n$$\\begin{align}\n5 &\\text{ (in binary)} = 0000\\;0000\\;0000\\;0000\\;0000\\;0000\\;0000\\;0101\\\[5pt]\n\\sim 5 &\\text{ (invert all bits)} = 1111\\;1111\\;1111\\;1111\\;1111\\;1111\\;1111\\;1010\\\\\n     &\\text{ (two's complement)} = -6\n\\end{align}$$\n\n**Identity**: $\\sim x = -(x + 1)$",
       hints: [
         "~ is bitwise NOT (one's complement).",
         "In two's complement representation, inverting all bits of 5 gives -6.",
@@ -2044,7 +2044,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "XOR swap works using three XOR operations:\n\n$$\\begin{align}\na &= a \\oplus b \\quad &(\\text{now } a \\text{ holds } a \\oplus b)\\\\\nb &= a \\oplus b \\quad &(\\text{now } b = (a \\oplus b) \\oplus b = a)\\\\\na &= a \\oplus b \\quad &(\\text{now } a = (a \\oplus b) \\oplus a = b)\n\\end{align}$$\n\n**Caution**: This fails if $a$ and $b$ point to the same memory location (e.g., `swap(x, x)` gives 0).",
+        "XOR swap works using three XOR operations:\n\n$$\\begin{align}\na &= a \\oplus b \\quad &(\\text{now } a \\text{ holds } a \\oplus b)\\\[5pt]\nb &= a \\oplus b \\quad &(\\text{now } b = (a \\oplus b) \\oplus b = a)\\\\\na &= a \\oplus b \\quad &(\\text{now } a = (a \\oplus b) \\oplus a = b)\n\\end{align}$$\n\n**Caution**: This fails if $a$ and $b$ point to the same memory location (e.g., `swap(x, x)` gives 0).",
       hints: [
         "Three XOR operations in sequence: $a = a \\oplus b$, $b = a \\oplus b$, $a = a \\oplus b$.",
         "All properties of XOR ($a \\oplus a = 0$, $a \\oplus 0 = a$, commutativity, associativity) make this work.",
@@ -2063,7 +2063,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Brian Kernighan's algorithm uses the fact that $n \\; \\& \\; (n-1)$ **clears the lowest set bit** each iteration:\n\n$$\\begin{align}\nn = 12 &= 1100_2\\\\\nn \\; \\& \\; 11 &= 1000_2 \\quad \\text{(cleared bit 2)}\\\\\nn \\; \\& \\; 7  &= 0000_2 \\quad \\text{(cleared bit 3)}\n\\end{align}$$\n\nTwo iterations $\\Rightarrow$ two set bits. Time: $O(k)$ where $k$ = number of set bits.",
+        "Brian Kernighan's algorithm uses the fact that $n \\; \[5pt]& \\; (n-1)$ **clears the lowest set bit** each iteration:\n\n$$\\begin{align}\nn = 12 &= 1100_2\\\[5pt]\nn \\; \[5pt]& \\; 11 &= 1000_2 \\quad \\text{(cleared bit 2)}\\\\\nn \\; \\& \\; 7  &= 0000_2 \\quad \\text{(cleared bit 3)}\n\\end{align}$$\n\nTwo iterations $\\Rightarrow$ two set bits. Time: $O(k)$ where $k$ = number of set bits.",
       hints: [
         "$n \\; \\& \\; (n-1)$ clears the lowest set bit.",
         "Count how many operations until $n$ becomes 0.",
@@ -2182,7 +2182,7 @@ const questions: Record<string, Question[]> = {
       options: ["0", "16", "32", "8"],
       correctAnswer: 0,
       explanation:
-        "The operation $n \\; \\& \\; (n-1)$ **clears the lowest set bit**.\n\nFor $n = 16 = 10000_2$:\n$$\\begin{align}\nn     &= 10000_2\\\\\nn-1   &= 01111_2\\\\\n\\hline\nn\\&(n-1) &= 00000_2 = 0\n\\end{align}$$\n\nThis property is fundamental for many bit manipulation algorithms.",
+        "The operation $n \\; \[5pt]& \\; (n-1)$ **clears the lowest set bit**.\n\nFor $n = 16 = 10000_2$:\n$$\\begin{align}\nn     &= 10000_2\\\\\nn-1   &= 01111_2\\\\\n\\hline\nn\\&(n-1) &= 00000_2 = 0\n\\end{align}$$\n\nThis property is fundamental for many bit manipulation algorithms.",
       hints: [
         "Write $n = 16$ and $n-1 = 15$ in binary.",
         "$n \\; \\& \\; (n-1)$ clears the lowest set bit.",
@@ -2284,7 +2284,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Brian Kernighan's algorithm counts the number of set bits (1s) in a binary number.\n\nThe key operation $n \\; \\& \\; (n-1)$ **clears the lowest set bit**:\n$$\\begin{align}\nn = 12 = 1100_2\\\\\nn-1 = 11 = 1011_2\\\\\nn \\; \\& \\; (n-1) = 1000_2\n\\end{align}$$\n\nBy looping until $n = 0$, counting iterations gives the number of set bits.\n\nTime complexity: $O(k)$ where $k$ is the number of set bits (at most $O(\\log n)$ for an $n$-bit number).",
+        "Brian Kernighan's algorithm counts the number of set bits (1s) in a binary number.\n\nThe key operation $n \\; \[5pt]& \\; (n-1)$ **clears the lowest set bit**:\n$$\\begin{align}\nn = 12 = 1100_2\\\\\nn-1 = 11 = 1011_2\\\\\nn \\; \\& \\; (n-1) = 1000_2\n\\end{align}$$\n\nBy looping until $n = 0$, counting iterations gives the number of set bits.\n\nTime complexity: $O(k)$ where $k$ is the number of set bits (at most $O(\\log n)$ for an $n$-bit number).",
       hints: [
         "$n \\; \\& \\; (n-1)$ clears the lowest set bit.",
         "Loop until $n$ becomes 0, counting iterations.",
@@ -2298,7 +2298,7 @@ const questions: Record<string, Question[]> = {
       options: ["1", "2", "4", "8"],
       correctAnswer: 2,
       explanation:
-        "For $n = 15 = 1111_2$:\n\n$$\\begin{align}\nn = 15 = 1111_2 &\\xrightarrow{n\\&=n-1} 1110_2 \\quad (1)$\\\\\n1110_2 &\\xrightarrow{n\\&=n-1} 1100_2 \\quad (2)$\\\\\n1100_2 &\\xrightarrow{n\\&=n-1} 1000_2 \\quad (3)$\\\\\n1000_2 &\\xrightarrow{n\\&=n-1} 0000_2 \\quad (4)$\n\\end{align}$$\n\nFour iterations, so $\\text{countBits}(15) = 4$. Indeed, $15$ has four 1-bits.",
+        "For $n = 15 = 1111_2$:\n\n$$\\begin{align}\nn = 15 = 1111_2 &\\xrightarrow{n\[5pt]&=n-1} 1110_2 \\quad (1)$\\\[5pt]\n1110_2 &\\xrightarrow{n\[5pt]&=n-1} 1100_2 \\quad (2)$\\\\\n1100_2 &\\xrightarrow{n\\&=n-1} 1000_2 \\quad (3)$\\\\\n1000_2 &\\xrightarrow{n\\&=n-1} 0000_2 \\quad (4)$\n\\end{align}$$\n\nFour iterations, so $\\text{countBits}(15) = 4$. Indeed, $15$ has four 1-bits.",
       hints: [
         "$15 = 1111_2$ has four 1-bits.",
         "Each $n \\; \\& \\; (n-1)$ clears one set bit.",

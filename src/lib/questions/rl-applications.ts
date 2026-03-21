@@ -556,7 +556,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A positive advantage A^\\pi(s,a) > 0 means action a was better than average in state s. The policy gradient update \\nabla_\\theta log \\pi_\\theta(a|s) \\cdot A^\\pi(s,a) increases the probability of action a proportionally to how much better it was than average.",
+        "The advantage function $A^\\pi(s,a) = Q^\\pi(s,a) - V^\\pi(s)$ measures how much better action $a$ is compared to the average action in state $s$.\n\n**Step 1.** $V^\\pi(s) = E_{a \\sim \\pi}[Q^\\pi(s,a)]$ is the average Q-value under the current policy. If $V^\\pi(s) = 10$ and $Q^\\pi(s,a) = 15$, then $A^\\pi(s,a) = 5 > 0$: action $a$ is 5 units better than average.\n\n**Step 2.** The policy gradient with advantage becomes:\n\\[\\nabla_\\theta J(\\theta) \\approx E[\\nabla_\\theta \\log \\pi_\\theta(a|s) \\cdot A^\\pi(s,a)].\\]\n\n**Step 3.** When $A^\\pi(s,a) > 0$: the gradient points in the direction that increases $\\pi_\\theta(a|s)$, making action $a$ more likely. When $A^\\pi(s,a) < 0$: the gradient points away from action $a$, making it less likely. The advantage provides a baseline, so actions better than average are reinforced and actions worse than average are suppressed.",
       hints: [
         "The gradient \\nabla_\\theta log \\pi_\\theta(a|s) points in the direction that increases the probability of a.",
         "When is this gradient multiplied by a positive vs. negative scalar?",
@@ -612,7 +612,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The one-step TD error is a biased but low-variance estimate of the advantage. The bias arises because V(s') is an approximation, not the true value - but bootstrapping dramatically reduces variance compared to using the full Monte Carlo advantage.",
+        "The advantage function is $A^\\pi(s,a) = Q^\\pi(s,a) - V^\\pi(s)$. We would ideally compute this using Monte Carlo returns, but that has high variance. The one-step TD error provides an alternative.\n\n**Step 1.** The one-step TD error is:\n\\[\\delta = r + \\gamma V(s') - V(s).\\]\nThis uses bootstrapping: instead of the full return $G_t$, it uses $r + \\gamma V(s')$ as a one-step estimate.\n\n**Step 2.** Relating $\\delta$ to the advantage: if $V(s')$ were exact, then $r + \\gamma V(s') \\approx Q^\\pi(s,a)$, so $\\delta \\approx Q^\\pi(s,a) - V(s) = A^\\pi(s,a)$. In that case, $\\delta$ would be an unbiased estimate of the advantage.\n\n**Step 3.** In practice, $V(s')$ is an approximation (learned by function approximation), so $\\delta$ is biased: the bias comes from the error in $V(s')$. However, bootstrapping dramatically reduces variance compared to Monte Carlo, at the cost of some bias. This bias-variance tradeoff is fundamental to TD methods.",
       hints: [
         "If V(s') were exact, would \\delta be an unbiased estimate of Q(s,a) − V(s)?",
         "Bootstrapping trades bias for variance reduction - what is the source of the bias?",
@@ -783,7 +783,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "For a policy with millions of parameters, the Fisher information matrix F is |\\theta|\\times|\\theta| - storing and inverting it is O(|\\theta|\\^2) in space and O(|\\theta|\\^3) in time. Conjugate gradient computes F\\^{-1}g using only matrix-vector products Fv, which can be computed efficiently.",
+        "Computing the natural gradient requires solving the linear system $F(\\theta) \\mathbf{v} = \\nabla_\\theta J(\\theta)$ for $\\mathbf{v} = F(\\theta)^{-1} \\nabla_\\theta J(\\theta)$.\n\n**Step 1.** The Fisher information matrix $F(\\theta)$ has size $|\\theta| \\times |\\theta|$ where $|\\theta|$ is the number of parameters. For a policy with 1 million parameters, this matrix has $10^{12}$ entries - requiring terabytes of storage just to hold it, let alone invert.\n\n**Step 2.** Direct inversion of $F(\\theta)$ costs $O(|\\theta|^3)$ in time. With 1M parameters, this is $10^{18}$ operations - completely infeasible.\n\n**Step 3.** Conjugate gradient sidesteps these problems by solving $F\\mathbf{v} = \\nabla J$ without ever forming $F$ explicitly. It only needs to compute matrix-vector products $F \\cdot \\mathbf{v}$, which are $O(|\\theta|^2)$ each, and converges in $O(|\\theta|)$ iterations. For a 1M-parameter network, this means ~1M operations per iteration instead of $10^{18}$ for direct inversion.",
       hints: [
         "How large is the Fisher information matrix for a network with 1M parameters?",
         "Conjugate gradient finds F\\^{-1}g without ever explicitly forming F.",

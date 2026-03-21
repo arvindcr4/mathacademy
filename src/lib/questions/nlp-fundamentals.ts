@@ -507,10 +507,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'This classic example (Jurafsky & Martin) illustrates lexical ambiguity. "Bank" has multiple word senses: financial institution vs. river bank. Static embeddings (Word2Vec, GloVe) assign a single vector to "bank" that blurs these senses. Contextualised models (BERT) produce different vectors for "bank" depending on whether nearby words are financial (deposits, tuition) or geographic (river, shore), directly addressing this polysemy problem.',
+        'Aspect-based sentiment analysis (ABSA) operates at a finer granularity than document-level sentiment. Rather than assigning one overall sentiment label to an entire review, ABSA identifies specific aspects of the subject and extracts the sentiment expressed toward each one. In the sentence "The food was excellent but the service was painfully slow," the two aspects are food and service, with sentiments positive and negative respectively. Document-level sentiment would typically assign a mixed or neutral label to the whole sentence, losing this nuance. ABSA requires detecting both the aspect targets (food, service) and their associated sentiment-bearing words (excellent, slow), enabling a more granular and informative analysis of opinions.',
       hints: [
-        "Static embeddings assign one vector per word form regardless of context - what problem arises for words with two very different meanings?",
-        "BERT\'s key innovation over Word2Vec is producing context-sensitive representations. Why would that help here?",
+        "Document-level sentiment gives one label to the whole text. What information gets lost when you cannot say \"the food was great but the service was terrible\"?",
+        "ABSA extracts (aspect, sentiment) pairs. What are the two aspects in this review, and which sentiment word goes with which aspect?",
       ],
     },
     {
@@ -565,10 +565,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'The distributional hypothesis (Firth, 1957; Harris, 1954) states that words in similar contexts have similar meanings. Skip-Gram operationalises this: it trains a model to predict which words tend to co-occur within a window of k words. Words that appear in similar contexts - "king" and "queen" both appearing near "throne", "crown", "reign" - end up with similar embedding vectors. The famous analogy king − man + woman \\approx queen emerges because these regularities are captured in the vector space.',
+        'A CRF (Conditional Random Field) models the joint probability of an entire label sequence given the input, rather than predicting each label independently. This matters because sequence labeling tasks like NER have structural constraints: for example, an I-PER tag cannot follow a B-LOC tag since a person entity cannot be inside a location entity. The CRF transition matrix learns these invalid patterns and penalises them during decoding. Finding the highest-scoring label sequence is done exactly via the Viterbi algorithm, which efficiently searches over all possible label sequences and returns the globally optimal one. A simple softmax at each token would make independent decisions and could produce sequences like B-LOC I-PER, which violate BIO constraints and introduce errors that propagate through the output.',
       hints: [
-        '"You shall know a word by the company it keeps" (Firth, 1957) - this is the core idea Skip-Gram exploits.',
-        'If "doctor" and "physician" appear near the same context words (patient, hospital, treatment), what should their vectors look like?',
+        "What is wrong with predicting each label independently? Can a softmax predictor produce an invalid tag sequence like B-LOC followed by I-PER?",
+        "The CRF transition matrix learns which tag-to-tag transitions are valid. If I-PER can only follow B-PER or I-PER (not B-LOC), where does this constraint come from?",
       ],
     },
     {
