@@ -46,7 +46,97 @@ export const categories = [
 ]
 
 export const courses: Course[] = [
-  // REINFORCEMENT LEARNING
+  {
+    id: 'gemini-multimodal',
+    slug: 'gemini-multimodal',
+    name: 'Google Gemini & Multimodal AI',
+    description: 'Master the Gemini ecosystem, multimodal foundation models, and the Gemini API.',
+    category: 'software-engineering',
+    icon: '✨',
+    color: '#4285F4',
+    topicCount: 6,
+    estimatedHours: 15,
+    topics: [
+      {
+        id: 'gemini-architecture',
+        slug: 'gemini-architecture',
+        name: 'Gemini Architecture',
+        description: 'Understand the native multimodal architecture of Gemini models.',
+        knowledgePoints: [
+          { id: 'gem-kp-1', slug: 'gemini-nano', name: 'Gemini Nano & Edge AI' },
+          { id: 'gem-kp-2', slug: 'gemini-flash', name: 'Gemini Flash & Efficiency' },
+          { id: 'gem-kp-3', slug: 'gemini-pro', name: 'Gemini Pro & Reasoning' },
+          { id: 'gem-kp-4', slug: 'gemini-ultra', name: 'Gemini Ultra Capabilities' },
+          { id: 'gem-kp-5', slug: 'native-multimodality', name: 'Native Multimodal Training' }
+        ]
+      },
+      {
+        id: 'prompting-gemini',
+        slug: 'prompting-gemini',
+        name: 'Prompting Gemini',
+        description: 'Best practices for writing effective prompts for Gemini models.',
+        knowledgePoints: [
+          { id: 'gem-kp-6', slug: 'system-instructions', name: 'System Instructions' },
+          { id: 'gem-kp-7', slug: 'multimodal-prompting', name: 'Multimodal Interleaved Prompts' },
+          { id: 'gem-kp-8', slug: 'few-shot-gemini', name: 'Few-Shot Examples in Gemini' },
+          { id: 'gem-kp-9', slug: 'context-caching', name: 'Context Caching Strategies' },
+          { id: 'gem-kp-10', slug: 'json-schema-gemini', name: 'Structured JSON Outputs' }
+        ]
+      },
+      {
+        id: 'gemini-api',
+        slug: 'gemini-api',
+        name: 'Gemini API Fundamentals',
+        description: 'Core concepts for integrating the Gemini API into applications.',
+        knowledgePoints: [
+          { id: 'gem-kp-11', slug: 'gemini-api-auth', name: 'Authentication & Setup' },
+          { id: 'gem-kp-12', slug: 'generate-content', name: 'generateContent Method' },
+          { id: 'gem-kp-13', slug: 'streaming-responses', name: 'Streaming Responses' },
+          { id: 'gem-kp-14', slug: 'token-counting', name: 'Token Counting & Limits' },
+          { id: 'gem-kp-15', slug: 'safety-settings', name: 'Configuring Safety Settings' }
+        ]
+      },
+      {
+        id: 'multimodal-generation',
+        slug: 'multimodal-generation',
+        name: 'Multimodal Generation',
+        description: 'Working with images, audio, and video using Gemini.',
+        knowledgePoints: [
+          { id: 'gem-kp-16', slug: 'image-understanding', name: 'Image Understanding & VQA' },
+          { id: 'gem-kp-17', slug: 'video-processing', name: 'Video Processing & Summarization' },
+          { id: 'gem-kp-18', slug: 'audio-transcription', name: 'Audio Transcription & Analysis' },
+          { id: 'gem-kp-19', slug: 'file-api', name: 'Using the Gemini File API' },
+          { id: 'gem-kp-20', slug: 'document-qa', name: 'Document QA & PDF Parsing' }
+        ]
+      },
+      {
+        id: 'function-calling',
+        slug: 'function-calling',
+        name: 'Function Calling & Tools',
+        description: 'Enable Gemini to interact with external APIs and systems.',
+        knowledgePoints: [
+          { id: 'gem-kp-21', slug: 'tool-declarations', name: 'Declaring Functions (Tools)' },
+          { id: 'gem-kp-22', slug: 'function-execution', name: 'Handling Function Calls' },
+          { id: 'gem-kp-23', slug: 'parallel-function-calling', name: 'Parallel Function Calling' },
+          { id: 'gem-kp-24', slug: 'google-search-grounding', name: 'Grounding with Google Search' },
+          { id: 'gem-kp-25', slug: 'code-execution', name: 'Code Execution Tool' }
+        ]
+      },
+      {
+        id: 'advanced-gemini',
+        slug: 'advanced-gemini',
+        name: 'Advanced Gemini Workflows',
+        description: 'Complex architectures and optimizations with Gemini.',
+        knowledgePoints: [
+          { id: 'gem-kp-26', slug: 'gemini-agents', name: 'Building Agentic Workflows' },
+          { id: 'gem-kp-27', slug: 'rag-with-gemini', name: 'RAG with Gemini & Vertex Vector Search' },
+          { id: 'gem-kp-28', slug: 'model-tuning', name: 'Tuning Gemini Models' },
+          { id: 'gem-kp-29', slug: 'evaluating-gemini', name: 'Evaluating Gemini Responses' },
+          { id: 'gem-kp-30', slug: 'vertex-vs-aistudio', name: 'Vertex AI vs. Google AI Studio' }
+        ]
+      }
+    ]
+  },  // REINFORCEMENT LEARNING
   {
     id: 'rl-fundamentals',
     slug: 'rl-fundamentals',
@@ -116,6 +206,7 @@ export const courses: Course[] = [
           ] },
           { id: 'kp-40', slug: 'bellman-operator', name: 'Bellman Backup Operator (T operator)', questions: [
             { id: 'q-bb-1', type: 'multiple-choice', difficulty: 'hard', question: 'What does the Bellman backup operator T do?', options: ['Selects actions for the policy', 'Transforms value functions by taking expected next state values', 'Updates the learning rate', 'Normalizes rewards'], correctAnswer: 1, explanation: '(T v)(s) = max_a Σ_{s\',r} P(s\',r|s,a)[r + γv(s\')] - it backs up values from successor states.' },
+          ] },
         ]
       },
       {
@@ -182,6 +273,7 @@ export const courses: Course[] = [
           ] },
           { id: 'kp-44', slug: 'glie', name: 'GLIE: Greedy in the Limit of Exploration', questions: [
             { id: 'q-glie-1', type: 'multiple-choice', difficulty: 'medium', question: 'GLIE requires that:', options: ['All state-action pairs are visited finitely', 'All state-action pairs are visited infinitely often', 'ε stays constant', 'Only greedy actions are taken'], correctAnswer: 1, explanation: 'GLIE requires infinite exploration (all pairs visited i.o.) and greedy limit, ensuring convergence to optimal π*.' },
+          ] },
         ]
       },
       {
@@ -207,6 +299,7 @@ export const courses: Course[] = [
           { id: 'kp-17', slug: 'eligibility-traces', name: 'Eligibility Traces', questions: [
             { id: 'q-et-1', type: 'multiple-choice', difficulty: 'hard', question: 'Eligibility traces combine MC and TD by:', options: ['Using a trace that decays over time', 'Updating all states proportionally to their eligibility', 'Storing returns for future use', 'Computing TD errors at each step'], correctAnswer: 1, explanation: 'Eligibility traces E(s) decay (λ^t) but accumulate (on each visit), enabling updates to affect many past states.' },
             { id: 'q-et-2', type: 'true-false', difficulty: 'medium', question: 'λ=0 reduces to TD(0), λ=1 reduces to MC.', correctAnswer: 'true', explanation: 'λ encodes how far back traces reach: λ=0 (TD(0)) to λ=1 (MC-like). λ controls the bias-variance tradeoff.' },
+          ] },
         ]
       },
       {
@@ -690,6 +783,18 @@ export const courses: Course[] = [
           { id: 'ci-kp-32', slug: 'decode-ways', name: 'Decode Ways' },
           { id: 'ci-kp-33', slug: 'dp-0-1-knapsack', name: '0/1 Knapsack Problem' },
         ] },
+      { id: 'advanced-dynamic-programming', slug: 'advanced-dynamic-programming', name: 'Advanced Dynamic Programming', description: 'State compression, tree DP, interval DP, digit DP, and more.', knowledgePoints: [
+          { id: 'ci-kp-70', slug: 'dp-state-compression', name: 'DP State Compression' },
+          { id: 'ci-kp-71', slug: 'dp-tree-dp', name: 'DP on Trees (Tree DP with Rerooting)' },
+          { id: 'ci-kp-72', slug: 'dp-intervals', name: 'DP on Intervals (Interval DP)' },
+          { id: 'ci-kp-73', slug: 'dp-graphs', name: 'DP on Graphs (DAG DP)' },
+          { id: 'ci-kp-74', slug: 'dp-digit', name: 'Digit DP' },
+          { id: 'ci-kp-75', slug: 'dp-probability', name: 'Probability DP' },
+          { id: 'ci-kp-76', slug: 'dp-games', name: 'Game Theory DP' },
+          { id: 'ci-kp-77', slug: 'dp-optimization', name: 'DP Optimization (Divide & Conquer, Knuth, Monotone Queue)' },
+          { id: 'ci-kp-78', slug: 'dp-strings', name: 'DP on Strings (Edit Distance, LCS)' },
+          { id: 'ci-kp-79', slug: 'dp-bitmask', name: 'Bitmask DP (TSP, Hamiltonian Path)' },
+        ] },
       { id: 'sorting-searching', slug: 'sorting-searching', name: 'Sorting & Searching', description: 'Binary search, quicksort, mergesort, and more.', knowledgePoints: [
           { id: 'ci-kp-34', slug: 'binary-search', name: 'Binary Search' },
           { id: 'ci-kp-35', slug: 'search-rotated-array', name: 'Search in Rotated Sorted Array' },
@@ -699,11 +804,16 @@ export const courses: Course[] = [
           { id: 'ci-kp-39', slug: 'quickselect', name: 'Kth Largest Element (QuickSelect)' },
         ] },
       { id: 'hash-tables', slug: 'hash-tables', name: 'Hash Tables', description: 'Hashing, collision resolution, and applications.', knowledgePoints: [
-          { id: 'ci-kp-40', slug: 'hash-map-implementation', name: 'Implement Hash Map' },
-          { id: 'ci-kp-41', slug: 'hash-set-implementation', name: 'Implement Hash Set' },
-          { id: 'ci-kp-42', slug: 'first-unique-char', name: 'First Unique Character' },
-          { id: 'ci-kp-43', slug: 'group-anagrams', name: 'Group Anagrams' },
-          { id: 'ci-kp-44', slug: 'valid-sudoku', name: 'Valid Sudoku' },
+          { id: 'ci-kp-40', slug: 'hash-function', name: 'Hash Function Design' },
+          { id: 'ci-kp-41', slug: 'hash-map-implementation', name: 'Implement Hash Map' },
+          { id: 'ci-kp-42', slug: 'hash-collision', name: 'Collision Resolution' },
+          { id: 'ci-kp-43', slug: 'two-sum-hash', name: 'Two Sum with Hash' },
+          { id: 'ci-kp-44', slug: 'anagram-grouping', name: 'Group Anagrams' },
+          { id: 'ci-kp-95', slug: 'hash-substring', name: 'Longest Substring Without Repeat' },
+          { id: 'ci-kp-96', slug: 'hash-cache', name: 'LRU Cache' },
+          { id: 'ci-kp-97', slug: 'hash-counting', name: 'Frequency Counting' },
+          { id: 'ci-kp-98', slug: 'hash-bloom', name: 'Bloom Filter' },
+          { id: 'ci-kp-99', slug: 'consistent-hashing', name: 'Consistent Hashing' },
         ] },
       { id: 'recursion', slug: 'recursion', name: 'Recursion', description: 'Backtracking, divide & conquer, and recursion trees.', knowledgePoints: [
           { id: 'ci-kp-45', slug: 'fibonacci-number', name: 'Fibonacci Number' },

@@ -1533,6 +1533,230 @@ const questions: Record<string, Question[]> = {
     },
   ],
 
+
+
+  // ── HASH TABLES ────────────────────────────────────────────────────
+  'hash-function': [
+    {
+      id: 'q-hash-func-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'What is the primary purpose of a hash function?',
+      options: ['Encrypt data', 'Map keys to array indices', 'Sort data', 'Compress data'],
+      correctAnswer: 1,
+      explanation: 'Hash functions map keys to array indices for O(1) average-case lookup time.',
+      hints: ['Think about what constant-time operation we want', 'Arrays give O(1) by index, we want O(1) by key'],
+    },
+    {
+      id: 'q-hash-func-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'A good hash function should distribute keys uniformly across array slots.',
+      correctAnswer: 'true',
+      explanation: 'Uniform distribution minimizes collisions and ensures balanced load across buckets.',
+      hints: ['What happens if many keys hash to the same index?', 'Think about collision probability'],
+    },
+  ],
+
+  'hash-map-implementation': [
+    {
+      id: 'q-hash-map-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'What is the time complexity of hash map lookup in the average case?',
+      options: ['O(1)', 'O(log n)', 'O(n)', 'O(n log n)'],
+      correctAnswer: 0,
+      explanation: 'Hash map provides O(1) average-case lookup by computing hash and accessing index directly.',
+      hints: ['What does the hash function give us?', 'Direct array access is constant time'],
+    },
+    {
+      id: 'q-hash-map-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Hash maps use separate chaining to handle collisions.',
+      correctAnswer: 'true',
+      explanation: 'Separate chaining stores colliding elements in a linked list at each bucket index.',
+      hints: ['What data structure holds colliding entries?', 'Think of a list at each bucket'],
+    },
+  ],
+
+  'hash-collision': [
+    {
+      id: 'q-col-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'What is a collision in hash tables?',
+      options: ['Two keys mapping to same index', 'Key not found error', 'Hash function failure', 'Memory overflow'],
+      correctAnswer: 0,
+      explanation: 'A collision occurs when two different keys produce the same hash value and map to the same array index.',
+      hints: ['Think about the pigeonhole principle', 'What happens when n keys > m slots?'],
+    },
+    {
+      id: 'q-col-2',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Which collision resolution strategy uses a linked list at each bucket?',
+      options: ['Linear probing', 'Quadratic probing', 'Separate chaining', 'Double hashing'],
+      correctAnswer: 2,
+      explanation: 'Separate chaining stores colliding elements in a linked list at each bucket index.',
+      hints: ['Think of a chain of elements at each slot', 'What data structure grows at each bucket?'],
+    },
+  ],
+
+  'two-sum-hash': [
+    {
+      id: 'q-two-sum-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'What hash structure is used in the optimal Two Sum solution?',
+      options: ['Hash set', 'Hash map', 'Stack', 'Queue'],
+      correctAnswer: 1,
+      explanation: 'Hash map stores (value -> index) pairs, allowing O(1) lookup for complement (target - nums[i]).',
+      hints: ['We need to find complement', 'What lets us check if complement exists?'],
+    },
+    {
+      id: 'q-two-sum-2',
+      type: 'true-false',
+      difficulty: 'easy',
+      question: 'Two Sum with hash map runs in O(n) time with O(n) space.',
+      correctAnswer: 'true',
+      explanation: 'Single pass O(n), hash map stores up to n elements O(n) space.',
+      hints: ['How many passes through the array?', 'What auxiliary storage do we need?'],
+    },
+  ],
+
+  'anagram-grouping': [
+    {
+      id: 'q-ana-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'What canonical form is used to identify anagram groups?',
+      options: ['Sorted string', 'Character count map', 'First character', 'String length'],
+      correctAnswer: 0,
+      explanation: 'Sorting an anagram produces the same string, e.g., "eat" and "ate" both sort to "aet".',
+      hints: ['What do all anagrams share?', 'Sorting rearranges to canonical order'],
+    },
+    {
+      id: 'q-ana-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Grouping anagrams using sorting has O(n * k log k) time complexity where k is max string length.',
+      correctAnswer: 'true',
+      explanation: 'Sorting each string costs O(k log k), done for n strings gives O(n * k log k).',
+      hints: ['Cost to sort one string', 'Applied to n strings'],
+    },
+  ],
+
+  'hash-substring': [
+    {
+      id: 'q-sub-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'What data structure sliding window technique finds longest substring without repeating characters?',
+      options: ['Stack', 'Queue', 'Hash set', 'Tree'],
+      correctAnswer: 2,
+      explanation: 'Hash set stores characters in current window, allowing O(1) lookup for duplicates.',
+      hints: ['We need to track characters in window', 'What gives constant-time membership check?'],
+    },
+    {
+      id: 'q-sub-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'The sliding window expands by moving right pointer and contracts by moving left pointer.',
+      correctAnswer: 'true',
+      explanation: 'Window grows when adding new character, shrinks when duplicate is found.',
+      hints: ['Think of the window as having two boundaries', 'When do we adjust each?'],
+    },
+  ],
+
+  'hash-cache': [
+    {
+      id: 'q-cache-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'What is the core principle of LRU (Least Recently Used) cache?',
+      options: ['Remove oldest by timestamp', 'Remove most frequently used', 'Remove largest item', 'Remove newest'],
+      correctAnswer: 0,
+      explanation: 'LRU evicts the least recently accessed item when capacity is reached.',
+      hints: ['What item should we remove when full?', 'Think about recency of access'],
+    },
+    {
+      id: 'q-cache-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Hash map alone can implement LRU cache efficiently.',
+      correctAnswer: 'false',
+      explanation: 'Hash map gives O(1) access but not O(1) eviction ordering. Need a data structure for recency (doubly linked list).',
+      hints: ['What ordering do we need?', 'Can hash map maintain order?'],
+    },
+  ],
+
+  'hash-counting': [
+    {
+      id: 'q-count-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'What is the key operation in frequency counting with hash maps?',
+      options: ['Increment count on each occurrence', 'Store all values', 'Sort the elements', 'Binary search'],
+      correctAnswer: 0,
+      explanation: 'Hash map stores element -> count, incrementing on each encounter gives frequency.',
+      hints: ['We want to count occurrences', 'What operation for each element?'],
+    },
+    {
+      id: 'q-count-2',
+      type: 'true-false',
+      difficulty: 'easy',
+      question: 'Finding majority element (appears > n/2 times) can use hash map counting.',
+      correctAnswer: 'true',
+      explanation: 'Count all elements, any with count > n/2 is majority.',
+      hints: ['Can we track counts for all elements?', 'What threshold defines majority?'],
+    },
+  ],
+
+  'hash-bloom': [
+    {
+      id: 'q-bloom-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'What is a Bloom filter?',
+      options: ['Exact set membership structure', 'Probabilistic data structure', 'Sorted array', 'Balanced tree'],
+      correctAnswer: 1,
+      explanation: 'Bloom filter is a probabilistic structure that can return false positives but never false negatives.',
+      hints: ['Can it ever say "no" when element was added?', 'What can it guarantee?'],
+    },
+    {
+      id: 'q-bloom-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'A Bloom filter can have false positives but not false negatives.',
+      correctAnswer: 'true',
+      explanation: 'May say "probably yes" when element not in set, but never says "no" when it is.',
+      hints: ['What error type is possible?', 'What error is impossible?'],
+    },
+  ],
+
+  'consistent-hashing': [
+    {
+      id: 'q-consist-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'What problem does consistent hashing solve?',
+      options: ['Hash collision handling', 'Data redistribution when adding/removing servers', 'Cache invalidation', 'Load balancing algorithms'],
+      correctAnswer: 1,
+      explanation: 'Consistent hashing minimizes data movement when servers are added or removed.',
+      hints: ['What changes when you add a server?', 'How much data needs to move?'],
+    },
+    {
+      id: 'q-consist-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'In consistent hashing, only K/n keys are remapped when adding a new server.',
+      correctAnswer: 'true',
+      explanation: 'Unlike mod-N hashing which remaps all keys, consistent hashing only remaps K/n keys.',
+      hints: ['What fraction of the ring changes?', 'How does this compare to mod-N?'],
+    },
+  ],
+
 }
 
 registerQuestions(questions)
