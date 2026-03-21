@@ -1,5 +1,5 @@
 import type { Question } from "@/lib/curriculum";
-import { registerQuestions } from "@/lib/questions";
+import { registerQuestions } from "./registry";
 
 const questions: Record<string, Question[]> = {
   "ml-pipelines": [
@@ -462,11 +462,19 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "PagedAttention stores KV cache in fixed-size, non-contiguous memory pages (inspired by OS virtual memory), dramatically reducing fragmentation and enabling higher concurrent batch sizes. Standard allocation: reserve max_seq_len × n_layers × KV_size per request (e.g., 8192 tokens × 80 layers × 2 × 128 = 16.8 GB) even if the request is only 100 tokens long. PagedAttention: allocate 16-token pages on-demand, return them to the pool when done. This achieves >90% GPU memory utilization vs. 60-70% with standard allocation, enabling 2-4x higher batch sizes and throughput.",
+        "PagedAttention stores the KV cache in fixed-size, non-contiguous memory pages (inspired by OS virtual memory), dramatically reducing internal fragmentation and enabling higher concurrent batch sizes.\n\n" +
+        "Standard KV cache allocation pre-reserves the maximum sequence length per request upfront:\n" +
+        "\\[ \\text{Memory per request} = n_{\\text{layers}} \\times 2 \\times d_{\\text{head}} \\times n_{\\text{max\\_tokens}} \\]\n" +
+        "For example, with 80 layers, 128 attention heads, and max 8192 tokens:\n" +
+        "\\[ 80 \\times 2 \\times 128 \\times 8192 \\approx 16.8 \\text{ GB per request} \\]\n" +
+        "Even if the actual request is only 100 tokens long, the full 16.8 GB is reserved — wasting >99% of the allocated memory.\n\n" +
+        "PagedAttention allocates 16-token cache blocks on-demand from a shared memory pool:\n" +
+        "\\[ \\text{Memory per request} = 80 \\times 2 \\times 128 \\times n_{\\text{actual\\_tokens}} \\]\n" +
+        "When a sequence completes, its pages are returned to the pool for reuse. This achieves >90% GPU memory utilization vs. 60-70% with standard allocation, enabling 2-4x higher batch sizes and throughput.",
       hints: [
-        "Traditional KV cache pre-allocates max_seq_length per request — catastrophic fragmentation when sequences are short.",
-        "OS virtual memory pages (4KB) inspired PagedAttention's 16-token cache blocks.",
-        "Higher batch size = more samples processed per GPU kernel launch = higher throughput.",
+        "Standard KV cache pre-allocates the maximum sequence length per request — catastrophic fragmentation when actual sequences are much shorter than max.",
+        "PagedAttention's 16-token cache blocks are inspired by OS virtual memory pages (typically 4KB).",
+        "Higher batch size means more samples are processed per GPU kernel launch, directly increasing throughput.",
       ],
     },
   ],
@@ -830,20 +838,25 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "In a canaryary deployment, what percentage of traffic is typically sent to the new model version initially?",
+        "In a canary deployment of a machine learning model, what percentage of production traffic is typically routed to the new (canary) version initially?",
       options: [
-        "50%",
-        "100%",
-        "A small percentage, typically 1–5%",
-        "0% (canary is only for offline evaluation)",
+        "50% of traffic, to ensure statistical significance quickly",
+        "100% of traffic, so all users benefit from the new model simultaneously",
+        "A small fraction, typically 1–5%, to limit potential user impact if the canary has issues",
+        "0% of traffic; a canary is evaluated entirely through shadow mode before any live traffic",
       ],
       correctAnswer: 2,
       explanation:
-        "Canary deployments start by routing a small traffic slice (1–5%) to the new version, limiting blast radius if issues arise before gradually increasing traffic as confidence grows. Standard progression: 1% → 5% → 20% → 50% → 100%, with monitoring gates at each stage. The 1% initial slice is chosen to be large enough for statistical significance (at 1M DAU, 1% = 10K users) but small enough to limit user impact if the canary fails.",
+        "Canary deployments start by routing a small traffic slice (1-5%) to the new version, limiting the blast radius if issues arise, then progressively increase traffic as confidence grows.\n\n" +
+        "A standard traffic progression with monitoring gates:\n" +
+        "\\[ 1\\% \\rightarrow 5\\% \\rightarrow 20\\% \\rightarrow 50\\% \\rightarrow 100\\% \\]\n\n" +
+        "The initial 1% slice is chosen to be large enough for meaningful statistical evaluation but small enough to limit user impact if the canary fails. For a product with 1 million daily active users:\n" +
+        "\\[ \\text{1\\% of 1M DAU} = 10{,}000 \\text{ users} \\]\n\n" +
+        "If the canary fails, 10,000 users are affected. If the full rollout had proceeded instead, 1,000,000 users would be at risk. The canary acts as a real-world test with limited exposure — the \"canary in a coal mine\" principle applied to production ML.",
       hints: [
-        "The goal is to limit exposure to potential failures — the canary's job is to catch regressions before they affect all users.",
-        '"Canary in a coal mine" — a small sentinel exposed first to detect danger.',
-        "At 10M DAU, 1% canary = 100K users. If the canary fails, 100K users are affected vs. 10M if full rollout.",
+        "The canary's purpose is to catch regressions before they affect all users — the initial traffic fraction is chosen to balance statistical relevance against blast radius.",
+        "A canary deployment is distinct from a shadow deployment: in a canary, users are actually served by the new model (not just silently evaluated).",
+        "At 10M DAU, a 1% canary covers 100K users — sufficient for detecting meaningful metric regressions within hours.",
       ],
     },
     {
@@ -995,10 +1008,15 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A flexible 6-hour window allows absorbing Spot interruptions with retries from the last checkpoint. This combination typically cuts cost by 60–90% versus On-Demand with minimal development overhead.",
+        "A flexible 6-hour completion window is the enabling condition that makes Spot instances viable for batch workloads. The reasoning:\n\n" +
+        "AWS Spot instances are discounted by 60-90% compared to On-Demand prices, but come with a 2-minute interruption warning when AWS needs the capacity back. Without a time window, an interruption midway through a 10-hour job would be catastrophic. With a 6-hour window, even if an interruption occurs at hour 5, the job can resume from the last checkpoint in under 1 hour — comfortably within the deadline.\n\n" +
+        "The checkpoint interval is the key parameter: save state every \\(T\\) minutes such that the worst-case reprocessing time after an interruption is acceptable:\n" +
+        "\\[ T \\leq \\frac{\\text{acceptable\\\_rework\\\_time}}{\\text{checkpoint\\ overhead}} \\]\n\n" +
+        "Typical practice: checkpoint to S3 every 5-10 minutes, consuming ~1-2% of total job time in checkpoint I/O but limiting worst-case reprocessing to under 10 minutes. This transforms Spot interruptions from job failures into minor delays.",
       hints: [
-        "Flexibility in completion time is the key resource enabling Spot usage.",
-        "Checkpointing transforms interruptions from failures into minor delays.",
+        "The flexible completion window is the key enabler — it gives the job enough time to recover from an interruption and still finish on schedule.",
+        "Checkpointing changes the failure mode from \"complete job loss\" to \"small additional delay,\" making Spot instances viable for critical batch workloads.",
+        "A checkpoint interval of 5-10 minutes with checkpointing to S3 is a common production pattern for Spot-based batch training.",
       ],
     },
   ],
@@ -1600,10 +1618,15 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Chinchilla (Hoffmann et al., 2022) found the compute-optimal ratio is ~20 training tokens per model parameter, meaning prior large models (e.g., Gopher) were overtrained on too little data relative to their size.",
+        "Chinchilla scaling laws (Hoffmann et al., 2022) determine the optimal allocation of compute budget between model size and training data. For a fixed compute budget \\(C\\), the optimal model has:\n\n" +
+        "\\[ N^* \\propto C^{0.5} \\quad \\text{and} \\quad D^* \\propto C^{0.5} \\]\n\n" +
+        "where \\(N\\) is the number of parameters and \\(D\\) is the number of training tokens. This implies the optimal ratio is approximately:\n" +
+        "\\[ \\frac{D^*}{N^*} \\approx 20 \\]\n\n" +
+        "That is, for every parameter in the model, approximately 20 tokens of training data are compute-optimally allocated. Prior large models like Gopher (280B parameters, 300B tokens) were significantly undertrained relative to this ratio — they had too few tokens per parameter. Chinchilla showed that a model half the size of Gopher, trained on twice the data, would match its performance at a fraction of the inference cost.",
       hints: [
-        "Chinchilla showed that prior models were too large relative to their training data.",
-        "Compute optimality means the best model quality for a fixed compute budget.",
+        "Chinchilla's key finding: prior large language models were significantly undertrained relative to their size — they had too few training tokens per parameter.",
+        "The compute-optimal ratio \\(D/N \\approx 20\\) means a 10B parameter model should be trained on ~200B tokens for maximum efficiency.",
+        "This has major inference cost implications: a model trained to Chinchilla-optimal ratios requires significantly less compute to serve at the same quality level.",
       ],
     },
     {
@@ -1671,10 +1694,15 @@ const questions: Record<string, Question[]> = {
         "Distributed tracing (e.g., with Jaeger or Zipkin) provides visibility into the latency contribution of each microservice hop in a multi-service ML inference pipeline.",
       correctAnswer: "True",
       explanation:
-        "Distributed tracing propagates a trace context across service calls, recording spans for each hop, allowing engineers to identify which service in a chain is responsible for latency anomalies.",
+        "Distributed tracing works by propagating a trace context (a unique trace ID and span ID) through all service calls in a request chain. Each service records a span — a structured log capturing:\n\n" +
+        "\\[ \\text{span} = \\{ \\text{service\\_name}, \\; \\text{start\\_time}, \\; \\text{end\\_time}, \\; \\text{parent\\_span\\_id} \\} \\]\n\n" +
+        "When an inference request arrives, it may pass through: feature retrieval (Redis) → model inference (Triton) → post-processing → client. Each hop creates a child span referencing its parent, forming a trace tree:\n" +
+        "\\[ \\text{trace} = \\text{span\\_A} \\rightarrow \\text{span\\_B} \\rightarrow \\text{span\\_C} \\]\n\n" +
+        "By examining individual span durations, engineers identify which specific service in the chain is responsible for latency anomalies — not just that latency is elevated, but precisely where.",
       hints: [
-        "A single inference request may touch feature serving, model serving, and post-processing services.",
-        "Metrics tell you something is slow; traces tell you where.",
+        "A single inference request in an ML system typically traverses multiple services: feature store, model server, and post-processing — each contributes a span to the trace.",
+        "Metrics (e.g., Prometheus) tell you latency is elevated; distributed traces tell you which specific service in the call chain is responsible.",
+        "Trace context is propagated via HTTP headers (e.g., W3C TraceContext or B3 headers in Zipkin) through all synchronous service calls.",
       ],
     },
     {

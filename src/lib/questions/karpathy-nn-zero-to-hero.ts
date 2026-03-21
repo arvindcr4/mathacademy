@@ -1745,8 +1745,7 @@ registerQuestions({
         "It allows the model to attend to different representation subspaces (e.g., syntax vs semantics) at different positions simultaneously.",
         "It allows the model to process multiple batches at once.",
       ],
-      correctAnswer:
-        "It allows the model to attend to different representation subspaces (e.g., syntax vs semantics) at different positions simultaneously.",
+      correctAnswer: 2,
       explanation:
         "By splitting the Queries, Keys, and Values into multiple heads, the model can learn multiple independent attention patterns. For instance, one head might look for pronouns, while another looks for rhyming words.",
       hints: [
@@ -1905,8 +1904,7 @@ registerQuestions({
         "It computes exact attention in a hardware-aware manner, using tiling and recomputation to minimize memory reads/writes between GPU HBM and SRAM.",
         "It runs exclusively on the CPU.",
       ],
-      correctAnswer:
-        "It computes exact attention in a hardware-aware manner, using tiling and recomputation to minimize memory reads/writes between GPU HBM and SRAM.",
+      correctAnswer: 2,
       explanation:
         "Standard attention materializes a massive NxN attention matrix in slow GPU HBM. FlashAttention avoids this by processing the attention block by block (tiling) entirely in fast SRAM, yielding exact results with massive speedups.",
       hints: [

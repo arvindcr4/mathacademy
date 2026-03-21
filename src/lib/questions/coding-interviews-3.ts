@@ -206,7 +206,7 @@ const questions: Record<string, Question[]> = {
         "We compute using $dp[i] = \\max(dp[i-1], dp[i-2] + \\text{nums}[i])$:\n\n$$\\begin{align}\ndp[0] &= 2\\n\\text{dp[1]} &= \\max(2, 7) = 7\\n\\text{dp[2]} &= \\max(7, 2 + 9) = 11\\n\\text{dp[3]} &= \\max(11, 7 + 3) = 11\\n\\text{dp[4]} &= \\max(11, 11 + 1) = 12\n\\end{align}$$\n\nRobbing houses 0, 2, and 4: $2 + 9 + 1 = 12$. Alternative: houses 1 and 3 give $7 + 3 = 10$.",
       hints: [
         "Try the best non-adjacent combinations explicitly.",
-        "Houses 0, 2, and 4 give $2 + 9 + 1 = 12$.",
+        "Compute $dp[4]$ step by step to find the maximum amount.",
       ],
     },
     {
@@ -289,7 +289,7 @@ const questions: Record<string, Question[]> = {
         "The Longest Increasing Subsequence (LIS) is $[2, 3, 7, 18]$ or $[2, 3, 7, 101]$, both of length **4**.\n\nStep-by-step:\n- $10$: $\\text{tails} = [10]$\n- $9$: $\\text{tails} = [9]$ (replace 10)\n- $2$: $\\text{tails} = [2]$\n- $5$: $\\text{tails} = [2, 5]$\n- $3$: $\\text{tails} = [2, 3]$\n- $7$: $\\text{tails} = [2, 3, 7]$\n- $101$: $\\text{tails} = [2, 3, 7, 101]$\n- $18$: $\\text{tails} = [2, 3, 7, 18]$ (replace 101)\n\nLength = 4.",
       hints: [
         "The subsequence must be increasing but does not need to be contiguous.",
-        "One valid LIS is $[2, 3, 7, 18]$.",
+        "The LIS is a strictly increasing subsequence — look for the longest one.",
       ],
     },
     {
@@ -690,7 +690,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The Euclidean algorithm's complexity is $O(\\log \\min(a, b))$ because:\n\n- Each step reduces the pair $(a, b)$ to $(b, a \\bmod b)$\n- When $a > b$, we have $a \\bmod b < a/2$\n- Therefore the numbers decrease by at least half every two steps\n- The number of steps is bounded by $2 \\cdot \\log_2 \\min(a, b) = O(\\log \\min(a, b))$",
       hints: [
-        "In each step, the remainder is strictly less than half of the larger number.",
+        "When $a > b$, we have $a \bmod b < b \leq a/2$.",
         "How many times can a number be halved before becoming 0 or 1?",
       ],
     },
@@ -1317,7 +1317,7 @@ const questions: Record<string, Question[]> = {
         "Merge sort is **stable** because during the merge step, when we have equal elements from both halves, we always take the element from the **left half first**:\n\n$$\\begin{align}\n\\text{Merge}(L, R):\\n&\\text{while } L \\text{ and } R \\text{ not empty:}\\\\\n&\\quad \\text{if } L[0] \\leq R[0]: \\text{ take from } L\\n&\\quad \\text{else}: \\text{ take from } R\n\\end{align}$$\n\nThe $\\leq$ comparison ensures that equal elements from the left subarray are placed before those from the right, preserving their original relative order.",
       hints: [
         "Equal elements maintain their original relative order.",
-        "Left subarray elements are preferred when elements are equal during merge.",
+        "When both halves have equal elements, take from the left half first to maintain stability.",
       ],
     },
     {

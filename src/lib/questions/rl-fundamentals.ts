@@ -1,5 +1,5 @@
 import type { Question } from "@/lib/curriculum";
-import { registerQuestions } from "@/lib/questions";
+import { registerQuestions } from "./registry";
 
 const questions: Record<string, Question[]> = {
   "policy-definition": [
@@ -17,7 +17,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Per Sutton & Barto (Chapter 3), a policy π is a mapping from each state s ∈ S and action a ∈ A(s) to the probability π(a|s) of taking action a when in state s. It fully specifies the agent\'s behavior at every state.",
+        "Per Sutton & Barto (Chapter 3), a policy $\\pi$ is a mapping from each state $s \\in S$ and action $a \\in A(s)$ to the probability $\\pi(a|s)$ of taking action a when in state s. It fully specifies the agent's behavior at every state.",
       hints: [
         'Sutton & Barto write: "A policy is a mapping from states to probabilities of selecting each possible action."',
         "A stochastic policy assigns a probability to every action; a deterministic policy assigns probability 1 to one action and 0 to all others.",
@@ -65,19 +65,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Spinning Up distinguishes two types of policies. A deterministic policy μ(s) and a stochastic policy π(a|s). What is the key structural difference in their outputs?",
+        "Spinning Up distinguishes two types of policies. A deterministic policy $\\mu(s)$ and a stochastic policy $\\pi(a|s)$. What is the key structural difference in their outputs?",
       options: [
-        "μ(s) outputs a single action; π(a|s) outputs a probability distribution over actions",
-        "μ(s) is always optimal; π(a|s) is only used for exploration",
-        "μ(s) requires a discrete action space; π(a|s) works only in continuous spaces",
-        "μ(s) uses neural networks; π(a|s) uses lookup tables",
+        "$\\mu(s)$ outputs a single action; $\\pi(a|s)$ outputs a probability distribution over actions",
+        "$\\mu(s)$ is always optimal; $\\pi(a|s)$ is only used for exploration",
+        "$\\mu(s)$ requires a discrete action space; $\\pi(a|s)$ works only in continuous spaces",
+        "$\\mu(s)$ uses neural networks; $\\pi(a|s)$ uses lookup tables",
       ],
       correctAnswer: 0,
       explanation:
-        "A deterministic policy μ: S → A outputs one specific action per state. A stochastic policy π: S × A → [0,1] outputs a probability distribution over actions, satisfying Σ_a π(a|s) = 1. Deterministic policies are a special case with all probability mass on one action.",
+        "A deterministic policy $\\mu: S \\to A$ outputs one specific action per state. A stochastic policy $\\pi: S \\times A \\to [0,1]$ outputs a probability distribution over actions, satisfying $\\sum_a \\pi(a|s) = 1$. Deterministic policies are a special case with all probability mass on one action.",
       hints: [
-        "Think about what you need to execute each policy: μ(s) gives you an action directly; π(a|s) requires sampling.",
-        "Spinning Up notes that deterministic policies are written μ(s) = a, while stochastic ones satisfy π(a|s) = P[A=a|S=s].",
+        "Think about what you need to execute each policy: $\\mu(s)$ gives you an action directly; $\\pi(a|s)$ requires sampling.",
+        "Spinning Up notes that deterministic policies are written $\\mu(s) = a$, while stochastic ones satisfy $\\pi(a|s) = P[A=a|S=s]$.",
       ],
     },
     {
@@ -122,7 +122,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Sutton & Barto (§3.6) define the optimal policy π* as the policy satisfying V^{π*}(s) ≥ V^π(s) for all s ∈ S and all policies π. In words, π* is the policy that:",
+        "Sutton & Barto (§3.6) define the optimal policy $\\pi^*$ as the policy satisfying $V^{\\pi^*}(s) \\geq V^\\pi(s)$ for all $s \\in S$ and all policies $\\pi$. In words, $\\pi^*$ is the policy that:",
       options: [
         "Reaches any terminal state in the fewest possible steps",
         "Maximizes the expected discounted return simultaneously from every state",
@@ -142,13 +142,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "For a finite MDP with γ = 0.9, if V*(s₀) = 50 and we follow a suboptimal policy π from s₀ with V^π(s₀) = 45, then the policy improvement theorem guarantees that the greedy policy π' w.r.t. V^π satisfies V^{π'}(s₀) ≥ 45.",
+        "For a finite MDP with $\\gamma = 0.9$, if $V^*(s_0) = 50$ and we follow a suboptimal policy $\\pi$ from $s_0$ with $V^\\pi(s_0) = 45$, then the policy improvement theorem guarantees that the greedy policy $\\pi'$ w.r.t. $V^\\pi$ satisfies $V^{\\pi'}(s_0) \\geq 45$.",
       correctAnswer: "True",
       explanation:
-        "The Policy Improvement Theorem (Sutton & Barto §4.2) states that if π' is greedy with respect to V^π (i.e., π'(s) = argmax_a Q^π(s,a)), then V^{π'}(s) ≥ V^π(s) for all s. So the greedy policy can only be at least as good — possibly better — than the policy it was derived from.",
+        "The Policy Improvement Theorem (Sutton & Barto Section 4.2) states that if $\\pi'$ is greedy with respect to $V^\\pi$ (i.e., $\\pi'(s) = \\arg\\max_a Q^\\pi(s,a)$), then $V^{\\pi'}(s) \\geq V^\\pi(s)$ for all $s$. So the greedy policy can only be at least as good -- possibly better -- than the policy it was derived from.",
       hints: [
-        'S&B §4.2: "The policy improvement theorem tells us that [the greedy policy] is at least as good as, possibly better than, the original policy."',
-        "If π' = π (no change after greedification), then both are already optimal (V^π = V*).",
+        'S&B Section 4.2: "The policy improvement theorem tells us that [the greedy policy] is at least as good as, possibly better than, the original policy."',
+        "If $\\pi' = \\pi$ (no change after greedification), then both are already optimal ($V^\\pi = V^*$).",
       ],
     },
     {

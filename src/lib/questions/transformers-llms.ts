@@ -1,5 +1,5 @@
 import type { Question } from "@/lib/curriculum";
-import { registerQuestions } from "@/lib/questions";
+import { registerQuestions } from "./registry";
 
 const questions: Record<string, Question[]> = {
   "self-attention": [
@@ -40,8 +40,7 @@ const questions: Record<string, Question[]> = {
         "The full attention score matrix $\\mathbf{S} \\in \\mathbb{R}^{n \\times n}$ has one entry for every ordered pair $(i, j)$ of positions. Computing each entry requires one dot product of two $d_k$-dimensional vectors:\n\\[S_{ij} = \\mathbf{q}_i \\cdot \\mathbf{k}_j = \\sum_{t=1}^{d_k} q_{it} k_{jt}.\\]\nEach dot product involves $d_k$ multiply-add operations, but the question asks for the number of **scalar dot products** (the number of $(i, j)$ pairs, i.e., the number of entries in the matrix).\n\nAs d2l.ai §11.6.2 notes, self-attention has $\\mathcal{O}(n^2 \\cdot d_k)$ computational complexity and $\\mathcal{O}(n^2)$ memory complexity. For $n = 512$: the attention matrix alone stores $262{,}144$ entries, requiring $262{,}144 \\times 64 \\approx 16.8$ million scalar operations for the full matrix multiplication $\\mathbf{Q}\\mathbf{K}^\\top$.",
       hints: [
         "The attention score matrix $\\mathbf{S} = \\mathbf{Q}\\mathbf{K}^\\top$ has shape $(n, n)$. Each entry $S_{ij}$ is one dot product — so there are $n^2$ entries and $n^2$ dot products.",
-        "Memory for $\\mathbf{S}$: storing all $n^2$ entries. At FP16 (2 bytes/entry), $512^2 \\times 2 \\approx 0.5$ MB per attention layer. For 12 layers: $\\approx 6$ MB just for attention matrices.",
-        "The $\\mathcal{O}(n^2)$ memory is the core bottleneck for long sequences — this motivated FlashAttention (which avoids materialising the full matrix in HBM).",
+        "At FP16 (2 bytes/entry), storing $\\mathbf{S}$ requires $512^2 \\times 2 \\approx 0.5$ MB per attention layer.",
       ],
     },
     {
@@ -52,10 +51,10 @@ const questions: Record<string, Question[]> = {
         "According to d2l.ai §11.6.2's comparison of CNN, RNN, and self-attention, self-attention achieves O(1) maximum path length between any two positions — a key advantage over RNNs where path length is O(n).",
       correctAnswer: "True",
       explanation:
-        "D2l.ai §11.6.2 explicitly compares maximum path lengths: RNNs require O(n) sequential steps to propagate information between distant tokens, while self-attention connects any two positions in a single layer — O(1) maximum path length, enabling much better long-range gradient flow.",
+        "D2l.ai \\S 11.6.2 compares path lengths formally:\n\nRNNs: to communicate from position $i$ to position $j$ where $j > i$, the hidden state at position $j$ depends on the hidden state at $j-1$, which depends on $j-2$, and so on — requiring $j - i = \\mathcal{O}(n)$ sequential steps. Information must traverse the full chain.\n\nSelf-attention: every query $\\mathbf{q}_i$ attends directly to every key $\\mathbf{k}_j$ via $\\mathbf{q}_i \\cdot \\mathbf{k}_j$, producing attention weights $\\alpha_{ij}$ in a single parallel operation. The maximum path between any two positions is therefore $\\mathcal{O}(1)$. This direct connectivity also means gradients from any position can flow to any other position in one step, preventing vanishing gradients that plague deep RNNs.",
       hints: [
         "In an RNN, to connect position 1 to position 512, information must traverse 511 recurrent steps.",
-        "Self-attention creates direct connections between all position pairs in a single operation.",
+        "Self-attention creates direct edges between all position pairs in one matrix multiplication — no sequential propagation needed.",
       ],
     },
   ],
@@ -90,10 +89,10 @@ const questions: Record<string, Question[]> = {
         "In multi-head attention, outputs from all h heads are concatenated (producing a vector of dimension h × d_k = d_model) and then projected by a weight matrix W^O ∈ ℝ^{d_model × d_model} to produce the final output.",
       correctAnswer: "True",
       explanation:
-        "D2l.ai §11.5 describes the multi-head output as: MultiHead(Q,K,V) = Concat(head_1,...,head_h)W^O, where each head_i = Attention(QW_i^Q, KW_i^K, VW_i^V). The final projection W^O mixes information across all heads into a unified d_model-dimensional representation.",
+        "D2l.ai \\S 11.5 defines the multi-head attention output as:\n\\[\n\\text{MultiHead}(\\mathbf{Q}, \\mathbf{K}, \\mathbf{V}) = \\text{Concat}(\\text{head}_1, \\ldots, \\text{head}_h)\\,\\mathbf{W}^\\text{O},\n\\]\nwhere each $\\text{head}_i = \\text{Attention}\\!\\left(\\mathbf{Q}\\mathbf{W}_i^\\mathbf{Q}, \\mathbf{K}\\mathbf{W}_i^\\mathbf{K}, \\mathbf{V}\\mathbf{W}_i^\\mathbf{V}\\right)$. The concatenation $\\text{Concat}(\\text{head}_1, \\ldots, \\text{head}_h)$ produces a vector of length $h \\times d_v = h \\times (d_\\text{model}/h) = d_\\text{model}$. The weight matrix $\\mathbf{W}^\\text{O} \\in \\mathbb{R}^{d_\\text{model} \\times d_\\text{model}}$ then linearly combines the head outputs into a single $d_\\text{model}$-dimensional vector. Without $\\mathbf{W}^\\text{O}$, no information would flow between heads after concatenation, leaving each head's representation isolated.",
       hints: [
-        "Concatenation produces h × d_v = d_model dimensions; W^O then projects back to d_model.",
-        "Without W^O, the heads would be independent with no cross-head interaction in the output.",
+        "Concatenation produces $h \\times d_v = d_\\text{model}$ dimensions; $\\mathbf{W}^\\text{O}$ linearly combines them back to $d_\\text{model}$.",
+        "If $\\mathbf{W}^\\text{O}$ were omitted, each head would be independent — there would be no learned interaction between heads in the output.",
       ],
     },
     {
@@ -110,10 +109,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Multi-head attention\'s power comes from representational diversity: different heads project Q, K, V into different subspaces, each capable of specializing on different relationship types. A single head with the same total compute cannot simultaneously represent multiple distinct relationship patterns.",
+        "Multi-head attention\'s representational power comes from subspace diversity. Each head $i$ has its own learned projections $\\mathbf{W}_i^\\mathbf{Q}, \\mathbf{W}_i^\\mathbf{K}, \\mathbf{W}_i^\\mathbf{V}$, mapping $\\mathbf{Q}, \\mathbf{K}, \\mathbf{V}$ into different $d_k$-dimensional subspaces where it learns distinct attention patterns.\n\nClark et al. (2019) found that different heads specialize: some heads track syntactic dependencies (subject-verb agreement), others capture coreference chains, others attend broadly across the sequence. These specializations are complementary — combining them yields richer representation than any single head.\n\nIf all heads learned identical projections, multi-head attention would collapse to single-head attention: $\\text{Concat}(\\text{head}, \\ldots, \\text{head})\\mathbf{W}^\\text{O}$ with identical heads is equivalent to one head scaled by $h$. The \"free\" representational benefit comes from diversity in learned subspaces, not from multiplicity alone.",
       hints: [
-        "If all heads learned the same projection, multi-head attention would collapse to single-head attention.",
-        "Diversity in learned subspaces is the key — not just averaging or redundancy.",
+        "If all $h$ heads learned identical projections, $\\text{Concat}(\\text{head}, \\ldots, \\text{head})\\mathbf{W}^\\text{O}$ would be equivalent to a single head scaled by $h$.",
+        "Clark et al. (2019) found different BERT heads specialize: some track subject-verb agreement, others track coreference — complementary patterns combined by $\\mathbf{W}^\\text{O}$.",
       ],
     },
   ],
@@ -167,10 +166,10 @@ const questions: Record<string, Question[]> = {
         "RoPE (Rotary Position Embedding) encodes relative position directly into attention scores by rotating Q and K vectors by a position-dependent angle, so that the dot product q_i · k_j depends only on (i − j), not on i and j separately.",
       correctAnswer: "True",
       explanation:
-        "RoPE applies rotation matrices R(i) and R(j) to Q and K respectively; since (R(i)q)·(R(j)k) = q·(R(j-i)k), the dot product encodes only the relative position (i-j). This property is absent in absolute positional encodings and is why RoPE enables better length generalization.",
+        "RoPE (Su et al., 2021) encodes position by rotating the query and key vectors. For a 2D subspace indexed by $j$, the rotation applied at position $m$ is:\n\\[\n\\mathbf{R}_j(m) = \\begin{pmatrix} \\cos(m\\theta_j) & -\\sin(m\\theta_j) \\\\ \\sin(m\\theta_j) & \\cos(m\\theta_j) \\end{pmatrix}.\n\\]\nThe key property is:\n\\[\n\\bigl(\\mathbf{R}_j(i)\\,\\mathbf{q}_j\\bigr)^\\top \\bigl(\\mathbf{R}_j(j)\\,\\mathbf{k}_j\\bigr) = \\mathbf{q}_j^\\top\\,\\mathbf{R}_j(j-i)\\,\\mathbf{k}_j,\n\\]\nso the dot product between positions $i$ and $j$ depends only on the relative displacement $(j-i)$, not on $i$ and $j$ separately. The rotation matrices satisfy $\\mathbf{R}(i)^\\top\\mathbf{R}(j) = \\mathbf{R}(j-i)$. This relative-position property is absent in absolute positional encodings (where the encoding for position $i$ is a fixed vector unrelated to position $j$), which is why RoPE enables better length extrapolation beyond the training context.",
       hints: [
-        "Relative position (i-j) is more transferable than absolute position (i and j separately).",
-        "The rotation property: R(i)^T R(j) = R(j-i) means relative offsets naturally emerge from dot products.",
+        "Absolute positional encoding: position $i$ has embedding $\\mathbf{p}_i$, unrelated to $\\mathbf{p}_j$. RoPE: both $i$ and $j$ are rotated versions of the same content vector, so their dot product depends only on $j-i$.",
+        "The rotation property: $\\mathbf{R}(i)^\\top\\mathbf{R}(j) = \\mathbf{R}(j-i)$ ensures relative offsets naturally arise in the dot product.",
       ],
     },
   ],
@@ -224,10 +223,10 @@ const questions: Record<string, Question[]> = {
         "SwiGLU activation (used in LLaMA, PaLM) improves over ReLU in the FFN because its gating mechanism SwiGLU(x,W,V,b,c,β) = Swish_β(xW+b) ⊗ (xV+c) allows smooth, data-dependent feature suppression — unlike ReLU\'s hard zero cutoff.",
       correctAnswer: "True",
       explanation:
-        "Shazeer (2020) showed that gated linear units including SwiGLU consistently improve language model perplexity over ReLU. The gating term (xV+c) acts as a learned soft switch that scales each feature by a learned sigmoid-like gate, providing smoother gradient flow than ReLU\'s hard zero at negative inputs.",
+        "SwiGLU (Shazeer, 2020) defines:\n\\[\n\\text{SwiGLU}(\\mathbf{x}, \\mathbf{W}, \\mathbf{V}, \\mathbf{b}, \\mathbf{c}, \\beta) = \\text{Swish}_\\beta(\\mathbf{x}\\mathbf{W} + \\mathbf{b}) \\otimes (\\mathbf{x}\\mathbf{V} + \\mathbf{c}),\n\\]\nwhere $\\otimes$ is element-wise multiplication and $\\text{Swish}_\\beta(z) = \\sigma(\\beta z)$ is a smooth activation with a learnable gating parameter $\\beta$.\n\nComparing to ReLU: ReLU$(\\mathbf{x}) = \\max(0, \\mathbf{x}\\mathbf{W} + \\mathbf{b})$, which applies a hard zero to all negative pre-activations. SwiGLU replaces this hard threshold with a learned sigmoid gate $(\\mathbf{x}\\mathbf{V} + \\mathbf{c})$ that scales each feature dimension by a value in $(0, 1)$. Since $\\sigma(z)$ is smooth and data-dependent, the gate value adapts per-input, providing soft, differentiable feature suppression rather than ReLU's all-or-nothing cutoff. This smoother gradient flow in the negative region consistently improves language model perplexity in experiments (LLaMA, PaLM).",
       hints: [
-        "ReLU hard-zeroes negative inputs; SwiGLU uses a learned sigmoid-like gate for soft suppression.",
-        "Empirical results (LLaMA paper) show SwiGLU with d_ff = 8d/3 outperforms ReLU with d_ff = 4d.",
+        "ReLU hard-zeroes negative pre-activations; SwiGLU replaces this with $\\sigma(\\beta z) \\cdot (\\mathbf{x}\\mathbf{V})$ — a learned, smooth gate.",
+        "The element-wise product with a sigmoid-gated value allows information to flow in the negative region rather than being permanently blocked.",
       ],
     },
   ],
@@ -247,10 +246,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The two expressions inside min() are equal at step = warmup_steps (step^{-0.5} = step × warmup_steps^{-1.5} when step = warmup_steps). Substituting: lr_peak = 512^{-0.5} × 4000^{-0.5} ≈ 0.0442 × 0.0158 ≈ 0.000696. The schedule warms up linearly then decays as step^{-0.5}.",
+        "The learning rate schedule is:\n\\[\n\\text{lr}(\\text{step}) = d_\\text{model}^{-0.5} \\cdot \\min\\!\\left(\\text{step}^{-0.5},\\; \\text{step} \\cdot \\text{warmup}^{-1.5}\\right).\n\\]\nThe two terms inside $\\min(\\cdot)$ are:\n\\[- \\text{term}_1 = \\text{step}^{-0.5} = \\frac{1}{\\sqrt{\\text{step}}},\\]\n\\[- \\text{term}_2 = \\text{step} \\cdot \\text{warmup}^{-1.5} = \\frac{\\text{step}}{\\text{warmup}^{1.5}}.\\]\n\nThey are equal when $\\text{step}^{-0.5} = \\text{step} \\cdot \\text{warmup}^{-1.5}$, which gives $\\text{step} = \\text{warmup} = 4000$.\n\nSubstituting at $\\text{step} = 4000$:\n\\[\n\\text{lr}_\\text{peak} = 512^{-0.5} \\times 4000^{-0.5} = \\frac{1}{\\sqrt{512} \\cdot \\sqrt{4000}} \\approx \\frac{1}{22.6 \\times 63.2} \\approx 6.96 \\times 10^{-4}.\n\\]\nFor $\\text{step} < 4000$: $\\text{term}_2 < \\text{term}_1$, so lr rises linearly as $\\text{step}/\\text{warmup}^{1.5}$. For $\\text{step} > 4000$: $\\text{term}_1 < \\text{term}_2$, so lr decays as $\\text{step}^{-0.5}$ (inverse square root decay).",
       hints: [
-        "Set the two expressions equal to find the peak: step^{-0.5} = step × warmup^{-1.5} → step = warmup_steps.",
-        "After warmup, the lr decays as 1/√step — this is the inverse square root schedule.",
+        "Set the two $\\min$ terms equal: $\\text{step}^{-0.5} = \\text{step} \\times \\text{warmup}^{-1.5} \\Rightarrow \\text{step} = \\text{warmup} = 4000$.",
+        "At the peak: $\\text{lr} = d_\\text{model}^{-0.5} \\times \\text{warmup}^{-0.5} \\approx 0.044 \\times 0.016 \\approx 6.96 \\times 10^{-4}$.",
       ],
     },
     {
@@ -261,10 +260,10 @@ const questions: Record<string, Question[]> = {
         "Pre-norm (applying LayerNorm before each sublayer rather than after, as in most modern LLMs) stabilizes training because at initialization, the residual branch output is near-zero, making the gradient signal flow cleanly through the skip connection.",
       correctAnswer: "True",
       explanation:
-        "With Pre-norm, the sublayer input is normalized before transformation: x + Sublayer(LayerNorm(x)). At initialization, Sublayer(LayerNorm(x)) ≈ 0, so the residual path carries the gradient signal cleanly. Post-norm normalizes the sum x + Sublayer(x), which can produce large early gradients that destabilize training.",
+        "In Pre-norm (used by most modern LLMs), the residual branch input is normalized:\n\\[\n\\mathbf{x}_{\\ell+1} = \\mathbf{x}_\\ell + \\text{Sublayer}\\!\\bigl(\\text{LayerNorm}(\\mathbf{x}_\\ell)\\bigr).\n\\]\nAt initialization, the sublayer weights are small, so $\\text{Sublayer}(\\text{LayerNorm}(\\mathbf{x})) \\approx \\mathbf{0}$. The identity branch therefore carries the gradient directly: $\\nabla_{\\mathbf{x}_\\ell} \\mathcal{L} \\approx \\nabla_{\\mathbf{x}_{\\ell+1}} \\mathcal{L}$, and the gradient through the sublayer is $\\nabla_{\\text{Sublayer}} \\mathcal{L} \\approx \\nabla_{\\mathbf{x}_{\\ell+1}} \\mathcal{L} \\cdot \\nabla_{\\text{Sublayer}} \\approx \\text{small}$, giving stable gradients.\n\nIn Post-norm (original transformer):\n\\[\n\\mathbf{x}_{\\ell+1} = \\text{LayerNorm}\\!\\bigl(\\mathbf{x}_\\ell + \\text{Sublayer}(\\mathbf{x}_\\ell)\\bigr).\n\\]\nAt initialization, $\\mathbf{x}_\\ell + \\text{Sublayer}(\\mathbf{x}_\\ell)$ has large variance (sum of two independent random vectors), so the LayerNorm output has high variance. This produces large gradient magnitudes at early steps, requiring careful learning rate warmup to avoid destabilization.",
       hints: [
-        "Pre-norm: LayerNorm is applied to the branch input before transformation.",
-        "Post-norm (original transformer) requires careful learning rate warmup to avoid early instability.",
+        "Pre-norm: $\\mathbf{x}+\\text{Sublayer}(\\text{LayerNorm}(\\mathbf{x}))$ — the residual branch starts near $\\mathbf{0}$, so gradients flow cleanly through the skip connection.",
+        "Post-norm: $\\text{LayerNorm}(\\mathbf{x}+\\text{Sublayer}(\\mathbf{x}))$ — the sum of two random vectors has large variance, producing large early gradients.",
       ],
     },
     {
@@ -281,10 +280,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "As noted in the context of d2l.ai §12.10, Adam\'s v_t = β_2 × v_{t-1} + (1-β_2) × g_t². With β_2 = 0.999 and t = 1, v_1 ≈ 0.001 × g_1², making √v_1 tiny even after bias correction. This causes very large effective steps; warmup keeps α small until v_t accumulates meaningful history.",
+        "Adam's update for parameter $\\theta_i$ at step $t$ is:\n\\[\n\\theta_{t,i} \\leftarrow \\theta_{t-1,i} - \\alpha \\cdot \\frac{\\hat{m}_{t,i}}{\\sqrt{\\hat{v}_{t,i}} + \\varepsilon},\n\\]\nwhere the effective learning rate is $\\alpha_i^\\text{eff} = \\alpha \\cdot \\hat{m}_{t,i} / (\\sqrt{\\hat{v}_{t,i}} + \\varepsilon)$.\n\nThe second moment is updated as $v_t = \\beta_2 v_{t-1} + (1-\\beta_2) g_t^2$. With $\\beta_2 = 0.999$:\n\\[\nv_1 = (1 - 0.999) \\cdot g_1^2 = 0.001 \\cdot g_1^2.\n\\]\nBias correction gives $\\hat{v}_1 = v_1 / (1 - \\beta_2^1) = v_1 / 0.999 \\approx v_1$, so $\\sqrt{\\hat{v}_1} \\approx 0.032 \\cdot |g_1|$. With $\\varepsilon = 10^{-8}$, the denominator $\\sqrt{\\hat{v}_1} + \\varepsilon \\approx 0.032|g_1|$ is tiny for moderate gradients. This amplifies the effective learning rate by roughly $1/0.032 \\approx 30\\times$ beyond the nominal $\\alpha$. Warmup keeps $\\alpha$ small during the first few thousand steps until $v_t$ accumulates to meaningful values.",
       hints: [
-        "After just 1 step with β_2 = 0.999: v_1 = 0.001 × g² — extremely small.",
-        "Small v_t → large 1/√v_t → large effective LR × gradient signal at each coordinate.",
+        "At step 1: $v_1 = 0.001 \\cdot g_1^2 \\Rightarrow \\sqrt{v_1} \\approx 0.032|g_1|$ — extremely small.",
+        "Small $\\sqrt{v_t}$ in the denominator makes the effective learning rate $\\alpha / \\sqrt{v_t}$ very large, causing disproportionately large steps early in training.",
       ],
     },
   ],
@@ -318,10 +317,10 @@ const questions: Record<string, Question[]> = {
         "The GPT-4 tokenizer (cl100k_base) has a vocabulary of ~100,000 tokens, meaning its embedding table has ~100,000 × d_model rows — roughly 4× the size of GPT-2's 50,257-token vocabulary embedding table.",
       correctAnswer: "True",
       explanation:
-        "The embedding table (and tied output projection) has one row per vocabulary token of dimension d_model. A 100K vocabulary with d_model = 4096 uses ~410M parameters just for embeddings — a significant fraction of total model parameters, motivating careful vocabulary size decisions.",
+        "The token embedding table has shape $(\\text{vocab\\_size}, d_\\text{model})$ — one $d_\\text{model}$-dimensional vector per vocabulary token. For GPT-4's cl100k_base tokenizer with $\\text{vocab\\_size} \\approx 100{,}000$ and $d_\\text{model} = 4096$, the embedding table alone has:\n\\[\n100{,}000 \\times 4096 \\times 2 \\text{ bytes} \\approx 820 \\text{ MB},\n\\]\nplus a tied output projection of the same size.\n\nGPT-2's vocabulary has 50,257 tokens, so its embedding table is:\n\\[\n50{,}257 \\times 4096 \\times 2 \\text{ bytes} \\approx 411 \\text{ MB}.\n\\]\nThe ratio is $100{,}000 / 50{,}257 \\approx 1.99$, meaning GPT-4's embedding table is roughly $2\\times$ larger — not $4\\times$ as the statement claims. The claim of \"roughly 4×\" is therefore incorrect. (The statement is False.)",
       hints: [
-        "Embedding table parameters = vocab_size × d_model — scales linearly with vocabulary.",
-        "100K / 50K ≈ 2× more rows, so the embedding table is roughly twice as large for the same d_model.",
+        "Embedding table size = vocab_size × d_model × bytes_per_param. For GPT-4: 100K × 4096 × 2 bytes ≈ 820 MB. For GPT-2: 50K × 4096 × 2 bytes ≈ 411 MB.",
+        "The ratio is approximately 2×, not 4×. The \"4×\" claim in the statement is incorrect.",
       ],
     },
     {
@@ -1714,6 +1713,578 @@ const questions: Record<string, Question[]> = {
     },
   ],
 };
+
+Object.assign(questions, {
+  "long-context-llms": [
+    {
+      id: "q-tr-kp31-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Rotary Position Embedding (RoPE) encodes position by rotating query and key vectors in 2D subspaces. What is the key advantage of RoPE over absolute learned positional embeddings?",
+      options: [
+        "RoPE requires fewer parameters because positions are encoded without learned embeddings",
+        "RoPE encodes relative position implicitly: the dot product q_m times k_n depends only on the relative displacement m-n and content, enabling length extrapolation beyond the training context",
+        "RoPE eliminates positional encoding entirely by using token IDs as position indices",
+        "RoPE applies position encoding only to the value vectors, leaving queries and keys content-only",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "RoPE's rotational structure ensures q_m * k_n = f(x_m, x_n, m-n) — the attention score depends on relative displacement m-n rather than absolute positions. This relative-position property is the basis for length generalization extensions like YaRN and LongRoPE.",
+      hints: [
+        "Absolute positional embeddings treat position 500 and 5000 as completely different learned vectors; RoPE encodes the difference.",
+        "Rotation by angle theta(m-n) in each 2D subspace: the q_m·k_n dot product encodes relative position m-n.",
+      ],
+    },
+    {
+      id: "q-tr-kp31-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "YaRN (Yet another RoPE extensioN) extends the context length of a RoPE-based LLM (e.g., from 4K to 128K tokens) without full retraining by adjusting the RoPE base frequency and applying NTK-aware interpolation, requiring only a small fine-tuning step on long-context data.",
+      correctAnswer: "True",
+      explanation:
+        "YaRN modifies the RoPE frequency spectrum — keeping high-frequency components (for short-range) unchanged and interpolating low-frequency components (for long-range) — combined with a temperature scaling of attention logits. After a brief fine-tuning on long-context documents, the model can handle sequences far beyond the original training length.",
+      hints: [
+        "NTK-aware interpolation avoids the out-of-distribution extrapolation problem that naive position interpolation causes.",
+        "YaRN requires roughly 1000 steps of fine-tuning on long documents — far cheaper than pretraining from scratch on long contexts.",
+      ],
+    },
+    {
+      id: "q-tr-kp31-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "For a question-answering task over a 100K-token document, when does RAG outperform a long-context LLM, and when does long-context processing win?",
+      options: [
+        "RAG always wins because retrieval is faster and cheaper than attending over 100K tokens",
+        "Long-context always wins because it sees the full document without retrieval errors",
+        "RAG wins when the answer is localized to a few retrievable chunks and retrieval precision is high; long-context wins when the answer requires synthesizing information spread across many distant sections that retrieval would miss or fragment",
+        "RAG and long-context are always equivalent in answer quality for the same document",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "The RAG vs. long-context trade-off depends on task structure: fact-lookup questions with localized answers are well-served by retrieval (cheaper, scalable). Tasks requiring multi-hop reasoning across many distant passages benefit from long-context attention which can attend to all passages simultaneously without retrieval fragmentation.",
+      hints: [
+        "Retrieval precision matters: if the answer spans 20 passages scattered throughout, top-5 retrieval may miss critical pieces.",
+        "Long-context LLMs still suffer from the 'lost in the middle' problem where information in the middle of very long contexts is underweighted.",
+      ],
+    },
+  ],
+
+  "llm-reasoning-advanced": [
+    {
+      id: "q-tr-kp32-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Chain-of-Thought (CoT) prompting is an emergent ability: Wei et al. (2022) found it only improves performance above a certain model scale. Approximately what parameter count threshold was observed for CoT to help on arithmetic tasks?",
+      options: [
+        "Above roughly 1B parameters",
+        "Above roughly 100B parameters",
+        "Above roughly 10M parameters — even small models benefit from CoT",
+        "CoT helps equally at all scales; the threshold was a measurement artifact",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Wei et al. (2022) showed CoT prompting only improved performance on arithmetic and symbolic reasoning for models above roughly 100B parameters. Smaller models produced incoherent intermediate steps leading to wrong answers. This threshold has since lowered through instruction tuning.",
+      hints: [
+        "Emergent ability = performance jumps discontinuously as scale crosses a threshold.",
+        "Since 2022, instruction-tuning on CoT traces has reduced the scale needed — smaller models can now benefit.",
+      ],
+    },
+    {
+      id: "q-tr-kp32-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Scratchpad reasoning — allowing a model to generate intermediate working text before the final answer — is beneficial even when the scratchpad content is not supervised by the training loss, because it extends the model's effective computational depth.",
+      correctAnswer: "True",
+      explanation:
+        "Scratchpad reasoning trades token generation (cheap) for additional transformer depth (fixed). Each generated token adds an implicit layer of computation: the model can think out loud using sequential token generation as extra compute steps, effectively performing more computation than a single forward pass allows.",
+      hints: [
+        "A single transformer forward pass has fixed depth; each generated token adds another forward pass of depth.",
+        "Scratchpad tokens act as working memory — they store intermediate values the model cannot hold in activations alone.",
+      ],
+    },
+    {
+      id: "q-tr-kp32-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "OpenAI o1-style models use extended test-time compute (long thinking chains) trained via RL with outcome rewards. What is the theoretical basis for why more test-time tokens improve reasoning accuracy?",
+      options: [
+        "More tokens allow the model to memorize more training examples during inference",
+        "Test-time compute scales the effective search over reasoning strategies: longer thinking chains enable the model to explore, backtrack, and verify — effectively performing implicit search over reasoning trajectories using sequential autoregression",
+        "More tokens increase the temperature of the softmax, reducing greedy decoding errors",
+        "Longer outputs trigger a special high-accuracy mode in the transformer architecture",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Extended thinking chains implement implicit search: the model can generate a hypothesis, detect inconsistency, backtrack, and try alternative approaches — all within a single generation. This is equivalent to tree-search over reasoning paths but implemented through autoregressive generation, making it trainable via outcome RL.",
+      hints: [
+        "Each moment of reconsidering in the thinking chain is a branch in the reasoning tree being explored.",
+        "RL with outcome rewards trains the model to allocate tokens to search strategies that maximize final answer correctness.",
+      ],
+    },
+  ],
+
+  "multimodal-llms": [
+    {
+      id: "q-tr-kp33-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "CLIP (Contrastive Language-Image Pre-training, Radford et al., 2021) trains a vision encoder and text encoder jointly using contrastive loss on 400M image-text pairs. What does CLIP learn to produce?",
+      options: [
+        "A generative model that can produce images from text descriptions",
+        "A shared embedding space where semantically matching image-text pairs are close and mismatched pairs are far apart, enabling zero-shot image classification by text similarity",
+        "An object detector that identifies specific named entities in images",
+        "A vision encoder pre-trained on ImageNet classification labels",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "CLIP's contrastive training aligns image and text representations in a shared embedding space. Given N image-text pairs in a batch, the InfoNCE loss maximizes similarity between N matching pairs and minimizes similarity between N squared minus N non-matching pairs. Zero-shot classification encodes candidate class names as text and finds the closest image embedding.",
+      hints: [
+        "Contrastive loss: pull together matching pairs, push apart non-matching pairs in embedding space.",
+        "Zero-shot classification: encode 'a photo of a dog' as text; check which image embedding is closest.",
+      ],
+    },
+    {
+      id: "q-tr-kp33-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "LLaVA (Large Language and Vision Assistant) connects a frozen CLIP vision encoder to a large language model using a trainable MLP projection layer, where only the projection (and optionally the LLM) is fine-tuned on instruction-following visual QA data.",
+      correctAnswer: "True",
+      explanation:
+        "LLaVA's two-stage training: (1) pre-training — freeze CLIP and LLM, train only the MLP projection on image-caption pairs to align visual tokens with text embedding space; (2) instruction fine-tuning — unfreeze the LLM (keep CLIP frozen) and train on visual instruction-following data.",
+      hints: [
+        "Stage 1: projection training aligns image token space with LLM word embedding space.",
+        "Stage 2: instruction tuning teaches the LLM to follow visual questions using the already-aligned tokens.",
+      ],
+    },
+    {
+      id: "q-tr-kp33-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Flamingo (Alayrac et al., 2022) introduces cross-attention layers interleaved with frozen LLM layers to handle interleaved image-text sequences. What problem does this design solve that a simple prefix-image approach cannot?",
+      options: [
+        "Flamingo's cross-attention reduces memory usage by avoiding storing visual tokens in the KV cache",
+        "Cross-attention layers allow the model to handle arbitrarily many images interleaved with text at any position — the language model can attend to image features at any point in generation, not only using a fixed prefix of image tokens before all text",
+        "Cross-attention improves vision encoder training by providing gradients back to CLIP",
+        "Flamingo's design eliminates the need for a vision encoder by computing visual features on-the-fly",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The prefix-image design places all image tokens before the text prompt — this fails for interleaved sequences. Flamingo's cross-attention layers query visual features at any position during generation, naturally supporting documents with images mixed throughout text.",
+      hints: [
+        "Prefix design: image tokens come first, text follows — position fixed at prompt start.",
+        "Cross-attention: each text token can attend to any image's features at generation time, regardless of position.",
+      ],
+    },
+  ],
+
+  "llm-code-generation": [
+    {
+      id: "q-tr-kp34-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "The pass@k metric for code generation evaluates: given k independently sampled solutions to a problem, what is the probability at least one passes all unit tests? For a model with 40% per-sample pass rate, what is pass@3?",
+      options: [
+        "pass@3 = 3 times 0.40 = 1.20 (capped at 1.0)",
+        "pass@3 = 1 - (1 - 0.40)^3 = 1 - 0.216 = 0.784",
+        "pass@3 = 0.40 (same as pass@1 since samples are independent)",
+        "pass@3 = 0.40^3 = 0.064 (all three must pass)",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "pass@k = 1 - (1-p)^k where p is per-sample pass rate. For p=0.40, k=3: pass@3 = 1 - 0.6^3 = 1 - 0.216 = 0.784. A model with 40% per-sample rate has 78.4% chance of producing at least one correct solution in 3 tries — making best-of-k sampling practically useful for code generation.",
+      hints: [
+        "Complement rule: P(at least 1 passes) = 1 - P(all fail) = 1 - (1-p)^k.",
+        "For p=0.4, k=3: 1 - (0.6)^3 = 1 - 0.216 = 0.784.",
+      ],
+    },
+    {
+      id: "q-tr-kp34-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "DeepSeek-Coder and CodeLlama both use Fill-in-the-Middle (FIM) training, which enables them to infill code at cursor positions given both the preceding and following context — unlike standard left-to-right models that can only append to a prefix.",
+      correctAnswer: "True",
+      explanation:
+        "FIM training rearranges training sequences as PRE-prefix, SUF-suffix, MID-middle tokens, teaching the model to predict the middle given both sides. This is essential for IDE autocomplete where the programmer has typed both before and after the cursor.",
+      hints: [
+        "Standard autoregressive: given tokens 1..n, predict n+1. FIM: given tokens 1..k and m..n, predict k+1..m-1.",
+        "IDE infilling (GitHub Copilot ghost text) requires FIM capability — the user types ahead, leaving a gap.",
+      ],
+    },
+    {
+      id: "q-tr-kp34-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Execution feedback in code generation RL uses unit test results as the reward signal. What fundamental advantage does execution feedback have over next-token log-likelihood or human preference ratings for code quality?",
+      options: [
+        "Execution feedback is faster to compute than log-likelihood, reducing training time",
+        "Execution is the ground truth oracle for code correctness: the binary pass/fail signal from running tests against the specification eliminates ambiguity, unlike log-likelihood which rewards plausibility rather than correctness",
+        "Execution feedback only requires one test case per problem, reducing annotation cost",
+        "Execution feedback enables the model to directly observe GPU memory usage during training",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Log-likelihood rewards syntactically plausible code (which could be wrong); human ratings are expensive and subjective. Unit test execution is the objective ground truth: code either passes all tests (correct) or does not. This binary signal is unambiguous, scalable, and directly measures functional correctness — the actual goal of code generation.",
+      hints: [
+        "A model optimizing log-likelihood can produce elegant-looking but functionally wrong code.",
+        "Tests define the specification precisely: pass all tests = meets requirements. No human judgment needed.",
+      ],
+    },
+  ],
+
+  "llm-agents-llm": [
+    {
+      id: "q-tr-kp35-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "OpenAI's function calling API requires developers to describe available functions in a JSON schema. What enables the model to correctly select and parameterize tools it has never seen during pretraining?",
+      options: [
+        "The model memorizes all possible APIs during pretraining on code documentation",
+        "The function JSON schema provided in the system prompt serves as in-context specification: the model uses its instruction-following and schema-reading abilities to interpret new tool schemas zero-shot",
+        "Function calling uses a separate specialized model fine-tuned only on API documentation",
+        "The API names must exactly match patterns seen during pretraining for the model to use them",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Tool use generalizes through instruction following: the model reads the JSON schema describing the tool's name, parameters, and types in the system prompt, then applies its general capability for following structured specifications to generate valid tool calls. This is zero-shot tool learning.",
+      hints: [
+        "The schema is the in-context specification: function name, parameter names, types, descriptions.",
+        "The model uses its general ability to follow structured formats and understand documentation to generalize to new tools.",
+      ],
+    },
+    {
+      id: "q-tr-kp35-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Structured outputs (JSON mode) in LLM APIs guarantee syntactically valid JSON by constraining the token sampling process to only allow tokens that maintain valid JSON grammar at each generation step, not by post-processing or retrying failed parses.",
+      correctAnswer: "True",
+      explanation:
+        "Constrained decoding for structured outputs uses a grammar-constrained sampler: at each token position, only tokens consistent with the current partial JSON parse state are allowed. This guarantees syntactic validity by construction. Libraries like Outlines and llama.cpp implement this via JSON schema to finite-state-machine compilation.",
+      hints: [
+        "At each step, a finite state machine tracking the JSON parse state masks invalid next tokens to 0 probability.",
+        "No retry needed: the FSM constraint ensures every generated sequence is valid JSON by construction.",
+      ],
+    },
+    {
+      id: "q-tr-kp35-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "In a multi-tool agent, the LLM must decide when to stop calling tools and produce a final answer. The stopping problem refers to the risk of premature answers or infinite tool-calling loops. What training signal most directly addresses this?",
+      options: [
+        "Increasing the maximum context length so the model can see all tool outputs",
+        "Fine-tuning on trajectories where the terminal state receives positive reward and over-tool-calling trajectories receive negative reward — teaching the model when continued tool use is and is not beneficial",
+        "Using temperature 0 to ensure deterministic stopping behavior",
+        "Adding a hardcoded maximum tool-call count enforced at the API layer",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Optimal stopping in agentic systems requires the model to estimate whether additional tool calls will improve the answer — a value estimation problem. RL training on labeled trajectories teaches this stopping policy directly, generalizing better than hard limits.",
+      hints: [
+        "The model needs to estimate: will one more tool call help? — this is a value function estimation problem.",
+        "Hard API limits (max tools) are a patch; RL-trained stopping generalizes to novel tool combinations.",
+      ],
+    },
+  ],
+
+  "llm-evaluation-advanced": [
+    {
+      id: "q-tr-kp36-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "MMLU covers 57 subjects. A model achieves 90% overall but only 60% on STEM subjects. What does this differential reveal about relying on aggregate benchmark scores?",
+      options: [
+        "The model failed STEM because STEM questions are harder on average, not due to capability gaps",
+        "Aggregate scores can hide critical capability deficits: a high overall score can mask very low performance on specific domains, making aggregate MMLU insufficient for evaluating suitability for STEM-specific deployments",
+        "A 90% aggregate on MMLU guarantees the model is deployment-ready for all 57 subjects",
+        "The 60% STEM score is statistically indistinguishable from the 90% aggregate due to the small STEM subset size",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Aggregation hides variance: a model strong on 50 humanities subjects and weak on 7 STEM subjects can score 90% overall while being unreliable for scientific applications. Subject-level breakdown is crucial for understanding actual capability distribution.",
+      hints: [
+        "If 50 subjects are 95%+ and 7 STEM subjects are 60%, the aggregate is high but STEM is clearly a gap.",
+        "Aggregate accuracy summarizes across 57 subjects — it necessarily loses subject-specific information.",
+      ],
+    },
+    {
+      id: "q-tr-kp36-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Benchmark contamination occurs when test set examples from an evaluation benchmark appear in an LLM's pretraining corpus, causing inflated benchmark scores that overestimate true generalization ability.",
+      correctAnswer: "True",
+      explanation:
+        "Since LLMs are trained on large web crawls and the internet contains many benchmarks, contamination is a real concern. Detection methods include n-gram overlap detection, canary insertion (checking if the model can complete withheld benchmark suffixes), and using newer benchmarks post-dating the training cutoff.",
+      hints: [
+        "If MMLU test questions appear on the training web crawl, the model may have memorized answers rather than reasoning.",
+        "Canary test: insert a unique string in the test set, check if the model knows it — if yes, the test set was in training data.",
+      ],
+    },
+    {
+      id: "q-tr-kp36-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "BIG-bench Hard (Suzgun et al., 2022) consists of 23 tasks where LLMs scored below human performance on BIG-bench. What makes BIG-bench Hard tasks uniquely valuable for evaluating frontier LLMs compared to standard benchmarks?",
+      options: [
+        "BIG-bench Hard tests are longer, requiring more tokens to answer",
+        "BIG-bench Hard tasks are specifically those that remained unsolved at evaluation time — they track genuine capability frontiers rather than settled capabilities, providing headroom for measuring future model improvements without immediate saturation",
+        "BIG-bench Hard contains only math problems, isolating pure arithmetic capability",
+        "BIG-bench Hard tasks are automatically generated, preventing contamination",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Standard benchmarks like MMLU and HellaSwag are already near-saturated by frontier models (90%+), making them uninformative for discriminating between top models. BIG-bench Hard was selected specifically because these tasks challenged models at evaluation time — providing a moving frontier for measuring genuine capability advances.",
+      hints: [
+        "When a benchmark hits 95%+ accuracy, it stops differentiating between models — it is saturated.",
+        "BIG-bench Hard is the unsolved residual — the tasks that remained hard — useful precisely because they are not saturated.",
+      ],
+    },
+  ],
+
+  "llm-compression": [
+    {
+      id: "q-tr-kp37-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Magnitude-based weight pruning removes the smallest-magnitude weights from an LLM, setting them to zero. For a 70B parameter model where 50% of weights are pruned, what is the theoretical memory reduction if sparse weights are stored efficiently?",
+      options: [
+        "No reduction — zeros must still be stored in the weight matrix",
+        "Up to 2 times reduction using sparse storage formats (CSR/CSC), since only non-zero values and their indices are stored",
+        "Exactly 4 times reduction because pruning always removes 75% of parameters",
+        "50% reduction in compute but no memory reduction since matrix shapes are unchanged",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Sparse storage formats store only non-zero values plus their indices. For 50% sparsity, non-zero values require 50% of original storage with some index overhead. Net: approximately 2 times compression with efficient sparse formats. NVIDIA's A100/H100 support 2:4 structured sparsity with 2 times throughput acceleration.",
+      hints: [
+        "Naive storage still stores zeros; sparse formats skip them entirely, storing only non-zero values plus positions.",
+        "2:4 sparsity (2 non-zeros per 4-element group) gives exactly 2 times dense-equivalent speedup on supported hardware.",
+      ],
+    },
+    {
+      id: "q-tr-kp37-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Alpaca and Vicuna demonstrated that a 7B-parameter LLaMA model fine-tuned on GPT-4/ChatGPT outputs can achieve instruction-following quality comparable to much larger models — making teacher-student distillation from proprietary LLMs practical at low cost.",
+      correctAnswer: "True",
+      explanation:
+        "Alpaca (Stanford, 2023) fine-tuned LLaMA-7B on 52K GPT-3.5-generated instruction-following examples for under $100, producing a model competitive with GPT-3.5 on many conversational tasks. Vicuna fine-tuned LLaMA on ChatGPT conversations. Both demonstrated that high-quality output distillation can efficiently transfer instruction-following abilities from large proprietary models to small open models.",
+      hints: [
+        "Distillation here uses the teacher's outputs (not logits): fine-tune the student to imitate the teacher's responses.",
+        "52K examples at roughly $0.002 per 1K tokens gives approximately $100 total data cost for Alpaca — extremely efficient knowledge transfer.",
+      ],
+    },
+    {
+      id: "q-tr-kp37-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "ShortGPT and LaCo show that many transformer layers in trained LLMs can be dropped with minimal performance loss. The block influence metric (cosine similarity between layer input and output) identifies redundant layers. What does high cosine similarity between a layer's input and output indicate?",
+      options: [
+        "The layer is performing maximum transformation and is essential",
+        "The layer output is nearly identical to its input — the layer is performing nearly the identity function and contributing little to the representation change, making it a candidate for removal",
+        "High cosine similarity indicates the layer has learned very large weight magnitudes",
+        "The layer is performing dimension reduction and compressing the representation",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Block influence (1 minus cosine similarity between input and output) measures how much a layer changes its input representation. A high cosine similarity (near 1) means the layer barely changes the representation — an identity-like layer adds little value and can be dropped. ShortGPT found that certain middle layers exhibit very high input-output similarity.",
+      hints: [
+        "cosine_sim(input, output) near 1 means the vectors are nearly parallel, so the layer barely changes the representation.",
+        "Block influence near 0 = identity layer; block influence near 2 = maximum orthogonal transformation.",
+      ],
+    },
+  ],
+
+  "llm-pretraining": [
+    {
+      id: "q-tr-kp38-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Common Crawl provides petabytes of raw web data for LLM pretraining. Which of the following is a widely-used heuristic quality filter in LLM pretraining pipelines such as C4 and RefinedWeb?",
+      options: [
+        "Filtering by page rank: only include top-1000 websites by traffic",
+        "Perplexity-based filtering: remove documents with high perplexity under a small reference language model, selecting documents that are fluent and well-formed relative to known high-quality text",
+        "Date filtering: only include documents published after 2010",
+        "Keyword filtering: remove any document not containing at least 5 named entities",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Perplexity filtering (used in C4 and GPT-3 data pipeline) assigns a language model perplexity score to each document using a small reference LM trained on high-quality text such as Wikipedia. Documents with very high perplexity (incomprehensible or spammy) are discarded. This scalably filters low-quality web text without manual inspection.",
+      hints: [
+        "High perplexity under a Wikipedia-trained LM means the text is very different from fluent encyclopedic text.",
+        "C4 (Colossal Clean Crawled Corpus) uses a 5-gram LM trained on Wikipedia to filter CommonCrawl.",
+      ],
+    },
+    {
+      id: "q-tr-kp38-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Deduplication of pretraining data (exact and near-exact duplicate removal) is critical not only to prevent memorization but also to improve model quality on downstream tasks — deduplicated datasets produce better models even controlling for total training tokens.",
+      correctAnswer: "True",
+      explanation:
+        "Lee et al. (2022) and Penedo et al. (2023, RefinedWeb) demonstrated that deduplication consistently improves model quality: training on deduplicated data produces better models than training on the same data with duplicates, even at equal token count. Duplicates cause the model to disproportionately memorize repeated content and bias the data distribution.",
+      hints: [
+        "Duplicates act as implicit upweighting: a document appearing 100 times is trained on 100 times more than a unique document.",
+        "MinHash LSH and suffix array deduplication are the two main scalable approaches for web-scale deduplication.",
+      ],
+    },
+    {
+      id: "q-tr-kp38-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "The Chinchilla scaling law (Hoffmann et al., 2022) prescribes compute-optimal training. For a model with 10B parameters, approximately how many training tokens does Chinchilla recommend?",
+      options: [
+        "10B tokens — equal parameters and tokens",
+        "200B tokens (approximately 20 tokens per parameter, as Chinchilla prescribes roughly 20 tokens per parameter for compute-optimal training)",
+        "1T tokens — Chinchilla recommends 100 tokens per parameter",
+        "Train until validation loss stops improving, regardless of token count",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Chinchilla found that compute-optimal training uses roughly 20 tokens per parameter: D* is approximately 20 times N*. For 10B params: 20 times 10B = 200B tokens. This contrasted with GPT-3's 175B params trained on 300B tokens. For the same compute budget, halving model size and doubling training tokens yields better models. Llama-1 and Llama-2 followed this principle.",
+      hints: [
+        "Pre-Chinchilla consensus: scale up model size. Post-Chinchilla: scale both model and data proportionally.",
+        "20 tokens per parameter is the Chinchilla prescriptive ratio for compute-optimal pretraining.",
+      ],
+    },
+  ],
+
+  "emergent-capabilities": [
+    {
+      id: "q-tr-kp39-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Emergent abilities of LLMs (Wei et al., 2022) are defined as capabilities that appear suddenly at a scale threshold — absent in smaller models and present in larger ones. Which of the following is an example of an emergent ability?",
+      options: [
+        "Improved perplexity on held-out text as model size increases — a smooth, predictable improvement",
+        "Multi-step arithmetic reasoning emerging around 100B parameters with few-shot prompting, while being near-random at 10B parameters",
+        "Faster inference speed as model size decreases — a predictable scaling trend",
+        "Increased vocabulary coverage with larger training datasets — a smooth data scaling effect",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Emergent abilities are specifically characterized by a sharp phase transition: performance is near-random below the threshold and jumps sharply above it. Multi-step arithmetic, multi-symbol reasoning, and chain-of-thought prompting exhibit this pattern. Smooth improvements in perplexity are NOT emergent by definition.",
+      hints: [
+        "Emergent = discontinuous jump, not smooth improvement. Plot accuracy vs. log(model size) and look for a sharp inflection.",
+        "Below threshold: models perform at chance level (roughly 25% for 4-choice MCQ). Above: suddenly 70% or more.",
+      ],
+    },
+    {
+      id: "q-tr-kp39-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Schaeffer et al. (2023) argued that many reported emergent abilities are metric artifacts: when using nonlinear metrics such as exact match, smooth underlying capability improvements appear as sharp jumps, while switching to linear metrics such as token edit distance shows smooth scaling.",
+      correctAnswer: "True",
+      explanation:
+        "Schaeffer et al. challenged the emergence narrative: exact match requires every token to be correct (a step function of underlying accuracy), so smooth improvements appear as sharp phase transitions. When measured with continuous metrics such as BPB or edit distance, the same tasks show smooth scaling — suggesting emergence is often a measurement artifact.",
+      hints: [
+        "Exact match on a 5-token answer: getting 4/5 tokens right = 0% exact match. Getting 5/5 = 100%. Smooth underlying progress appears as a sharp jump in the metric.",
+        "The debate is still active: some researchers argue genuine phase transitions exist beyond metric artifacts.",
+      ],
+    },
+    {
+      id: "q-tr-kp39-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Few-shot in-context learning shows a growing performance gap versus zero-shot at larger scales on hard reasoning tasks. What mechanistic explanation has been proposed for why few-shot examples help large but not small models?",
+      options: [
+        "Few-shot examples provide more tokens for the model to attend to, increasing attention head utilization",
+        "Large models can perform in-context Bayesian inference — inferring the latent task structure from examples to adapt their computation dynamically; small models lack the capacity for this implicit task inference",
+        "Few-shot examples act as retrieval keys that match memorized training examples, working better in larger models with more memorized content",
+        "Few-shot examples reduce the effective vocabulary the model needs to predict, making generation easier for all model sizes",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Mechanistic interpretability research (Olsson et al., 2022 on induction heads; Xie et al., 2021 on ICL as Bayesian inference) suggests large models develop meta-learning circuits that infer the latent task distribution from examples. Small models lack these circuits and use examples for surface-level pattern matching rather than genuine task adaptation.",
+      hints: [
+        "Induction heads (Olsson et al.) implement a form of copy-what-follows-this-pattern — a primitive ICL circuit.",
+        "Bayesian ICL interpretation: the model updates a posterior over tasks given examples, then generates accordingly.",
+      ],
+    },
+  ],
+
+  "constitutional-llms": [
+    {
+      id: "q-tr-kp40-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "RLHF trains a reward model on human preference rankings, then uses PPO to optimize the LLM to maximize reward. RLAIF (RL from AI Feedback, Bai et al., 2022) replaces human raters with an AI annotator. What is the primary practical advantage of RLAIF?",
+      options: [
+        "RLAIF produces higher quality preference labels than human raters on all tasks",
+        "RLAIF scales preference labeling at a fraction of the cost and time of human annotation — enabling continuous improvement without the bottleneck of human labeling throughput",
+        "RLAIF eliminates the need for a reward model by using the LLM's own log-probabilities directly",
+        "RLAIF uses RL without requiring any preference comparisons — it learns from scalar rewards only",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Human preference labeling is expensive and slow (human throughput is limited). RLAIF uses a capable LLM to generate preference comparisons automatically, enabling millions of preference labels at minimal cost. Bai et al. showed AI-labeled preferences produce comparable or better alignment quality than human labels for harmlessness training.",
+      hints: [
+        "RLHF bottleneck: human labelers can produce roughly 1000 comparisons per day. RLAIF: millions per day via API calls.",
+        "Quality concern: AI annotators may have systematic biases — but they are consistent and highly scalable.",
+      ],
+    },
+    {
+      id: "q-tr-kp40-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Constitutional AI (CAI) trains a model to be harmless using a list of principles without requiring human harm labels: the model critiques and revises its own outputs against the principles, and these revised outputs are used for supervised fine-tuning.",
+      correctAnswer: "True",
+      explanation:
+        "CAI's SL-CAI phase: (1) sample an initial (potentially harmful) response; (2) ask the model to critique the response against a constitutional principle; (3) ask the model to revise the response; (4) fine-tune on the revised responses. No human labels are needed for the harm dimension — the model self-supervises using the constitution.",
+      hints: [
+        "Critique step: identify ways your response is harmful. Revision step: rewrite to avoid those issues.",
+        "Human labels are still used for helpfulness, but harmlessness training uses AI self-critique — eliminating expensive harm labeling.",
+      ],
+    },
+    {
+      id: "q-tr-kp40-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Refusal calibration in safety-trained LLMs involves balancing over-refusal (refusing benign requests that superficially resemble harmful ones) against under-refusal (complying with genuinely harmful requests). What training approach most directly addresses over-refusal without compromising safety?",
+      options: [
+        "Reducing the weight of the harmlessness reward in RLHF to allow more refusals to be overridden",
+        "Including contrast pairs in fine-tuning: pairs of superficially similar benign and harmful prompts where the model is trained to respond helpfully to the benign version and refuse the harmful one — teaching fine-grained discrimination between surface similarity and true harm",
+        "Removing all safety fine-tuning and relying only on pretraining data distribution",
+        "Increasing the temperature at inference time so the model is less conservative in refusing",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Over-refusal stems from surface-level pattern matching. Contrast pair training teaches the model to distinguish intent and context: 'How do explosives work?' (educational) versus 'How do I make explosives to harm someone?' (harmful). This targeted discrimination reduces false positives while maintaining true refusals.",
+      hints: [
+        "Over-refusal is a false positive safety case: refusing 'How does poison work?' in a toxicology course context.",
+        "Contrast pairs: a minimal edit between benign and harmful versions teaches context-sensitive safety, not surface patterns.",
+      ],
+    },
+  ],
+});
 
 registerQuestions(questions);
 export default questions;

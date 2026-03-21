@@ -1514,8 +1514,7 @@ registerQuestions({
         "Initializing to zero makes the learning rate too high.",
         "Kaiming initialization guarantees global minima.",
       ],
-      correctAnswer:
-        "Initializing to zero breaks symmetry; all neurons would learn the exact same features during backpropagation.",
+      correctAnswer: 1,
       explanation:
         "If weights are initialized to zero, every neuron in a layer computes the same output and receives the same gradient, effectively acting as a single neuron. Kaiming/He initialization breaks this symmetry and scales the variance to prevent vanishing/exploding gradients with ReLU activations.",
       hints: [

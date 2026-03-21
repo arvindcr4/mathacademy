@@ -1,5 +1,5 @@
 import type { Question } from "@/lib/curriculum";
-import { registerQuestions } from "@/lib/questions";
+import { registerQuestions } from "./registry";
 
 const questions: Record<string, Question[]> = {
   "reward-modeling": [
@@ -228,7 +228,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "The KL-regularized RL objective:\n\\[ \\max_{\\pi} \\; \\mathbb{E}_{x}\\big[r(x,y)\\big] - \\beta \\cdot D_\\text{KL}\\big(\\pi\\|\\pi_\\text{ref}\\big) \\]\nhas a closed-form optimal solution given by the Gibbs (Boltzmann) distribution:\n\\[ \\pi^*(y|x) \\propto \\pi_\\text{ref}(y|x) \\cdot \\exp\\!\\bigg(\\frac{r(x,y)}{\\beta}\\bigg) \\]\nThis is derived by maximizing $\\sum_y \\pi(y|x)r(x,y) - \\beta\\sum_y\\pi(y|x)\\log(\\pi(y|x)/\\pi_\\text{ref}(y|x))$ with a Lagrange multiplier for $\\sum_y\\pi(y|x)=1$. DPO exploits this by using implicit rewards $r_\\text{impl}(x,y) = \\beta\\log(\\pi_\\theta(y|x)/\\pi_\\text{ref}(y|x))$, eliminating the need for a separate reward model.",
+        "The KL-regularized RL objective is:\n\\[ \\max_{\\pi} \\; \\mathbb{E}_{x}\\big[r(x,y)\\big] - \\beta \\cdot D_{\\mathrm{KL}}\\big(\\pi\\|\\pi_{\\mathrm{ref}}\\big) \\]\nwhere the KL term expands to:\n\\[ D_{\\mathrm{KL}}\\big(\\pi\\|\\pi_{\\mathrm{ref}}\\big) = \\sum_{y} \\pi(y|x) \\log\\frac{\\pi(y|x)}{\\pi_{\\mathrm{ref}}(y|x)} \\]\nMaximizing the Lagrangian with constraint $\\sum_y \\pi(y|x) = 1$:\n\\[ \\mathcal{L} = \\sum_{y} \\pi(y|x)\\,r(x,y) - \\beta\\sum_{y}\\pi(y|x)\\log\\frac{\\pi(y|x)}{\\pi_{\\mathrm{ref}}(y|x)} + \\lambda\\Bigl(1 - \\sum_{y}\\pi(y|x)\\Bigr) \\]\nSetting $\\partial\\mathcal{L}/\\partial\\pi(y|x) = 0$ gives:\n\\[ r(x,y) - \\beta\\Bigl(\\log\\frac{\\pi(y|x)}{\\pi_{\\mathrm{ref}}(y|x)} + 1\\Bigr) - \\lambda = 0 \\]\n\\[ \\log\\pi(y|x) = \\log\\pi_{\\mathrm{ref}}(y|x) + \\frac{r(x,y)}{\\beta} - \\frac{\\lambda+1}{\\beta} \\]\nExponentiating and normalizing yields the Gibbs (Boltzmann) distribution:\n\\[ \\pi^*(y|x) = \\frac{\\pi_{\\mathrm{ref}}(y|x)\\,\\exp\\!\\bigl(r(x,y)/\\beta\\bigr)}{\\sum_{y'}\\pi_{\\mathrm{ref}}(y'|x)\\,\\exp\\!\\bigl(r(x,y')/\\beta\\bigr)} \\propto \\pi_{\\mathrm{ref}}(y|x)\\,\\exp\\!\\biggl(\\frac{r(x,y)}{\\beta}\\biggr) \\]\n\n**Connection to DPO.** Since the partition function $Z(x) = \\sum_{y'}\\pi_{\\mathrm{ref}}(y'|x)\\,\\exp(r(x,y')/\\beta)$ does not depend on $y$, we can write the implicit reward as:\n\\[ r_{\\mathrm{impl}}(x,y) = \\beta\\log\\frac{\\pi_\\theta(y|x)}{\\pi_{\\mathrm{ref}}(y|x)} + \\beta\\log Z(x) \\]\nRearranging the optimality condition gives $r_{\\mathrm{impl}}(x,y) = \\beta\\log(\\pi_\\theta(y|x)/\\pi_{\\mathrm{ref}}(y|x))$, which DPO uses directly — eliminating the need for a separate reward model or RL loop.",
       hints: [
         "The temperature $\\beta$ controls entropy: $\\beta \\to \\infty$ gives $\\pi^* \\to \\pi_\\text{ref}$ (maximum entropy); $\\beta \\to 0$ concentrates on argmax outputs.",
         "DPO rearranges $\\pi^*(y|x) \\propto \\pi_\\text{ref}(x,y)\\exp(r/\\beta)$ to solve for implicit rewards in terms of log-probability ratios.",
@@ -670,6 +670,7 @@ const questions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'An LLM that scores perfectly on all NLP benchmarks (MMLU, HumanEval, GSM8K) is guaranteed to be well-aligned with human values.',
+      options: ['True', 'False'],
       correctAnswer: 'False',
       explanation: 'Benchmark performance measures capability (what the model can do), not alignment (whether it does what humans actually want). A model could score 100% on MMLU while producing harmful outputs, being deceptive, or failing to follow instructions — benchmarks measure narrow task performance, not the full scope of alignment.',
       hints: [
