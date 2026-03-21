@@ -740,7 +740,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Under the SaMD framework and FDA\'s risk classification, AI that drives critical treatment decisions for serious/life-threatening conditions (Class III SaMD in IMDRF terms) maps to FDA Class III, requiring Premarket Approval (PMA). The IDx-DR retinal AI was a notable exception cleared via De Novo pathway because it met certain criteria; novel high-stakes diagnostic AIs without predicate devices typically require PMA.",
+        "First, let's recall that the FDA classifies medical devices into three risk-based classes, with Class III being the highest risk category. " +
+        "Software as a Medical Device (SaMD) that makes autonomous diagnostic decisions for serious or life-threatening conditions falls into the highest risk class. " +
+        "When an AI algorithm directly drives treatment decisions (not just provides decision support), it is considered higher risk because there is no human clinician intermediate to catch errors. " +
+        "**Step 1:** Understand that AI that definitively diagnoses a condition and directly drives treatment decisions is considered high-risk under FDA's SaMD framework. " +
+        "**Step 2:** Recognize that such autonomous diagnostic AI typically maps to FDA Class III, requiring Premarket Approval (PMA). " +
+        "**Step 3:** Note that the 510(k) pathway (Class II) requires showing substantial equivalence to a previously cleared device, but novel autonomous AI often lacks a predicate device for equivalence. " +
+        "Therefore, the answer is Class III - Most stringent; Premarket Approval (PMA) required for novel high-risk devices.",
       hints: [
         "FDA Class III is for devices that support or sustain human life, prevent impairment of health, or present unreasonable risk - autonomous AI diagnostics driving treatment fall here.",
         "The 510(k) pathway (Class II) requires showing substantial equivalence to a legally marketed predicate device; a novel AI diagnostic algorithm often lacks a predicate.",
@@ -754,7 +760,13 @@ const questions: Record<string, Question[]> = {
         'Under the FDA\'s proposed framework for AI/ML-based SaMD, a "locked" algorithm that does not change after deployment can be updated post-market without notifying the FDA, as long as the changes are minor.',
       correctAnswer: "False",
       explanation:
-        'The FDA distinguishes "locked" (static, fixed after validation) from "adaptive" (continuously learning) AI/ML SaMD. Even for locked algorithms, significant changes to the AI function, intended use, or performance characteristics require a new 510(k) or PMA supplement. The FDA\'s Predetermined Change Control Plan (PCCP) framework is being developed to pre-specify and pre-approve acceptable post-market modifications.',
+        "First, let's recall that the FDA distinguishes between \"locked\" algorithms (static, fixed after validation) and \"adaptive\" algorithms (continuously learning from new data). " +
+        "Locked algorithms do not change after deployment, but they can still be updated through traditional software development processes. " +
+        "Any significant changes to a medical device require regulatory review to ensure safety and effectiveness are maintained. " +
+        "**Step 1:** Understand that even for locked algorithms, significant changes to the AI function, intended use, or performance characteristics require a new 510(k) or PMA supplement. " +
+        "**Step 2:** Recognize that the FDA distinguishes between minor changes (which may not require submission) and significant changes (which require regulatory review). " +
+        "**Step 3:** Note that the FDA's Predetermined Change Control Plan (PCCP) framework allows manufacturers to pre-specify acceptable post-market modifications and get them reviewed upfront. " +
+        "Therefore, the answer is False.",
       hints: [
         "Any change to an FDA-cleared device that significantly affects safety or effectiveness requires regulatory notification or submission.",
         "The PCCP concept allows manufacturers to pre-specify planned modifications and get them reviewed upfront - reducing the burden of post-market resubmission for anticipated changes.",
@@ -774,7 +786,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The 510(k) pathway grants clearance when a new device is substantially equivalent to a predicate (a previously cleared or pre-1976 device) in intended use and technological characteristics. If the technological characteristics differ, the manufacturer must show they do not raise new safety/efficacy questions. For AI/ML SaMD, finding an appropriate predicate and demonstrating equivalence of the algorithm\'s performance characteristics is the core regulatory challenge.",
+        "First, let's recall that the 510(k) pathway is one of the main FDA regulatory pathways for medical devices, including AI-based Software as a Medical Device (SaMD). " +
+        "It requires demonstrating that a new device is substantially equivalent to a legally marketed predicate device that was cleared before 1976 or has been determined to be substantially equivalent. " +
+        "The key is showing equivalence in both intended use and technological characteristics, not proving superior effectiveness. " +
+        "**Step 1:** Understand that 510(k) does NOT require clinical trials proving superiority - only substantial equivalence to an existing cleared device. " +
+        "**Step 2:** Recognize that if technological characteristics differ from the predicate, the manufacturer must show they do not raise new safety or efficacy questions. " +
+        "**Step 3:** Note that for AI/ML SaMD, finding an appropriate predicate device and demonstrating equivalence of algorithmic performance is the core regulatory challenge. " +
+        "Therefore, the answer is substantial equivalence to a legally marketed predicate device in terms of intended use and technological characteristics.",
       hints: [
         "510(k) does NOT require clinical trials proving superiority - only substantial equivalence to an existing cleared device.",
         "The predicate device anchors the regulatory pathway; if no predicate exists, the De Novo pathway or PMA is required.",
@@ -797,7 +815,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In federated learning, each hospital trains on its local data and sends only gradient updates or model weights to an aggregator - raw patient records are never transmitted, preserving data sovereignty and privacy.",
+        "First, let's recall that federated learning is a machine learning approach designed to address privacy concerns in distributed data settings like healthcare. " +
+        "In healthcare, patient data is distributed across hospitals and institutions, and regulations like HIPAA restrict how this data can be shared. " +
+        "Federated learning allows models to be trained on this distributed data without requiring the raw data to leave its source institution. " +
+        "**Step 1:** Understand that in federated learning, each hospital trains a model on its local patient data. " +
+        "**Step 2:** Recognize that only model updates (gradients or weights) are shared with a central aggregator - raw patient records are never transmitted. " +
+        "**Step 3:** Note that this preserves data sovereignty and privacy while enabling collaborative model development across institutions. " +
+        "Therefore, the answer is Patient data never leaves the local institution - only model updates (gradients) are shared.",
       hints: [
         "The key idea is that the data stays local while knowledge (from model parameters) is shared.",
         "Think about what is sent to the central server - it is not the training data itself.",
@@ -811,7 +835,13 @@ const questions: Record<string, Question[]> = {
         "Federated learning completely eliminates privacy risk because gradients carry no information about the underlying training data.",
       correctAnswer: "False",
       explanation:
-        "Gradient inversion attacks can reconstruct training data from shared gradients, making raw federated learning insufficient for strong privacy guarantees. Techniques like differential privacy or secure aggregation are needed.",
+        "First, let's recall that federated learning shares model updates (gradients or weights) with a central server rather than raw data. " +
+        "A common misconception is that since no raw data is transmitted, federated learning provides complete privacy protection. " +
+        "However, research has shown that gradient information can be exploited to reconstruct the original training data. " +
+        "**Step 1:** Understand that gradient inversion attacks can reconstruct training data from shared gradients by analyzing the model updates. " +
+        "**Step 2:** Recognize that this makes raw federated learning insufficient for strong privacy guarantees in sensitive applications like healthcare. " +
+        "**Step 3:** Note that additional privacy techniques like differential privacy (adding calibrated noise) or secure aggregation (cryptographic protocols) are needed to provide formal privacy guarantees. " +
+        "Therefore, the answer is False.",
       hints: [
         "Research has shown that gradients can leak information about the data used to compute them.",
         "Differential privacy adds calibrated noise to gradients to provide formal privacy guarantees.",
@@ -831,9 +861,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "FedAvg aggregates by computing:\n\n" +
-        "\\[\\sum_{k} \\frac{n_k}{n} \\cdot w_k\\]" +
-        "\n\nThis is a weighted average of local model weights, proportional to each client's dataset size, which converges to the same solution as centralized training under IID data conditions.",
+        "First, let's recall that FedAvg (Federated Averaging) is the most widely used aggregation algorithm in federated learning. " +
+        "It combines model updates from multiple participating clients (like hospitals) into a single global model. " +
+        "The key insight is that institutions with more data should have proportionally more influence on the final model. " +
+        "**Step 1:** Understand that FedAvg computes a weighted average of local model weights from each participating client. " +
+        "**Step 2:** Recognize that the weight assigned to each client's model is proportional to that client's dataset size. " +
+        "**Step 3:** Note that under the assumption of independent and identically distributed (IID) data, this weighted average converges to the same solution as centralized training. " +
+        "Therefore, the answer is computing a weighted average of local model weights, weighted by each client's dataset size.",
       hints: [
         "FedAvg is the most basic aggregation rule; it weights each institution\'s contribution by its data volume.",
         "A hospital with 10,000 patients contributes more to the aggregated model than one with 500.",
@@ -856,7 +890,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "1D CNNs and 1D ResNets naturally process temporal ECG waveforms as 1D sequences, learning local morphological features (P-wave, QRS complex, T-wave) hierarchically - Rajpurkar\'s Stanford model used this for cardiologist-level arrhythmia detection.",
+        "First, let's recall that ECG (electrocardiogram) data is a time-series waveform that captures the electrical activity of the heart over time. " +
+        "The waveform contains characteristic patterns like the P-wave, QRS complex, and T-wave that correspond to different phases of the cardiac cycle. " +
+        "Deep learning models need to learn these local morphological features hierarchically to classify different arrhythmia types. " +
+        "**Step 1:** Understand that ECG data is inherently a 1D temporal signal, not a 2D image, so architectures designed for sequences work best. " +
+        "**Step 2:** Recognize that 1D convolutional neural networks (CNNs) and 1D ResNets can process these waveforms directly, learning hierarchical features. " +
+        "**Step 3:** Note that Rajpurkar's Stanford model demonstrated cardiologist-level arrhythmia detection using this approach. " +
+        "Therefore, the answer is 1D Convolutional Neural Network or ResNet applied to the time-series waveform.",
       hints: [
         "ECG data is a time-series waveform, not a 2D image - consider which convolution dimension fits.",
         "The same ResNet architecture used for images can be adapted to 1D temporal signals.",
@@ -870,7 +910,13 @@ const questions: Record<string, Question[]> = {
         "EEG signals recorded from scalp electrodes have higher spatial resolution than fMRI for mapping brain function.",
       correctAnswer: "False",
       explanation:
-        "EEG has excellent temporal resolution (milliseconds) but poor spatial resolution due to volume conduction through the skull. fMRI has high spatial resolution (~1 mm) but poor temporal resolution (~2 seconds).",
+        "First, let's recall that EEG (electroencephalography) and fMRI (functional magnetic resonance imaging) are two different brain imaging modalities with complementary strengths and weaknesses. " +
+        "EEG measures electrical activity directly from scalp electrodes with millisecond temporal resolution, but the signal is blurred as it passes through the skull and scalp (volume conduction). " +
+        "fMRI measures blood oxygen level changes (BOLD signal) with high spatial resolution (~1 mm) but very poor temporal resolution (~2 seconds per volume). " +
+        "**Step 1:** Understand that EEG has excellent temporal resolution (milliseconds) but poor spatial resolution due to volume conduction through the skull. " +
+        "**Step 2:** Recognize that fMRI has high spatial resolution (~1 mm) for mapping brain activity but poor temporal resolution (~2 seconds). " +
+        "**Step 3:** Note that these represent a fundamental trade-off in brain imaging: you can measure brain activity quickly (EEG) or precisely in space (fMRI), but not both simultaneously with the same modality. " +
+        "Therefore, the answer is False.",
       hints: [
         "EEG electrodes sit on the scalp and measure electrical activity through bone and tissue - this blurs spatial information.",
         "Consider the trade-off: what EEG gains in time precision, it loses in spatial precision.",
@@ -890,7 +936,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "PPG measures light absorption changes caused by blood volume pulsing through tissue; by using red and infrared wavelengths, devices can compute SpO$_2$ via Beer-Lambert law, and heart rate from pulse timing - both now standard in consumer smartwatches.",
+        "First, let's recall that PPG (Photoplethysmography) is an optical technique that measures light absorption changes in tissue caused by blood volume pulsing through blood vessels with each heartbeat. " +
+        "The technology uses a light source (typically red or infrared LED) and a photodetector to measure these absorption changes. " +
+        "By analyzing the PPG signal at different wavelengths, devices can extract clinically relevant measurements. " +
+        "**Step 1:** Understand that PPG measures light absorption changes caused by blood volume pulsing through tissue with each heartbeat. " +
+        "**Step 2:** Recognize that by using red and infrared wavelengths, devices can compute blood oxygen saturation (SpO2) using the Beer-Lambert law. " +
+        "**Step 3:** Note that heart rate can be extracted from the timing of pulses in the PPG waveform. " +
+        "Therefore, the answer is blood oxygen saturation (SpO2) and heart rate.",
       hints: [
         "PPG uses light - think about what physical property of blood changes with each heartbeat.",
         "Pulse oximeters in hospitals use the same physical principle as wearable PPG sensors.",
@@ -912,7 +964,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Da Vinci is a surgeon-controlled teleoperation system - the surgeon sits at a console and controls robotic arms with tremor filtration and motion scaling; it is not autonomous. AI assistance layers are being added on top.",
+        "First, let's recall that the da Vinci Surgical System is a widely used robotic surgical platform that enables minimally invasive surgery. " +
+        "Despite its advanced capabilities, it is not an autonomous system - a human surgeon always maintains control. " +
+        "The surgeon operates from a console that provides a high-definition 3D view of the surgical site and controls robotic arms with precision-enhancing features. " +
+        "**Step 1:** Understand that da Vinci is a teleoperated system where a surgeon controls robotic arms in real time from a console. " +
+        "**Step 2:** Recognize that the system provides benefits like tremor filtration and motion scaling to enhance surgical precision. " +
+        "**Step 3:** Note that AI assistance layers are being developed to augment the system, but the surgeon remains always in control. " +
+        "Therefore, the answer is A teleoperated robotic system where a surgeon controls robotic arms in real time.",
       hints: [
         "The surgeon is always in the loop - the robot does not act independently.",
         "Teleoperation means controlling a remote device in real time from a distance.",
@@ -926,7 +984,13 @@ const questions: Record<string, Question[]> = {
         "Surgical phase recognition models that segment a surgical video into workflow phases (e.g., cholecystectomy phases) primarily use temporal models such as TCN or LSTM applied to per-frame feature embeddings.",
       correctAnswer: "True",
       explanation:
-        "Surgical phase recognition pipelines typically extract per-frame features with a CNN, then apply a temporal model (TCN, LSTM, or Transformer) to capture phase transitions across the video - combining spatial and temporal reasoning.",
+        "First, let's recall that surgical phase recognition involves segmenting a surgical video into different workflow phases, such as preparation, dissection, and closure. " +
+        "This requires understanding both what is happening in individual frames (spatial features) and how actions unfold over time (temporal patterns). " +
+        "The standard approach uses a two-stage pipeline: CNN for spatial feature extraction followed by a temporal model. " +
+        "**Step 1:** Understand that per-frame features are extracted using a CNN, which captures the spatial content of each video frame. " +
+        "**Step 2:** Recognize that temporal models like TCN, LSTM, or Transformer are then applied to the sequence of frame features to capture phase transitions. " +
+        "**Step 3:** Note that this combination of spatial and temporal reasoning enables accurate segmentation of surgical workflow phases. " +
+        "Therefore, the answer is True.",
       hints: [
         'Recognizing a "phase" requires understanding not just a single frame but the sequence of actions over time.',
         "The pipeline has two stages: spatial feature extraction per frame, then temporal modeling over the sequence.",
@@ -946,7 +1010,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Surgical skill assessment models analyze instrument kinematics or video to score economy of motion, instrument handling, and procedural efficiency - providing objective, automated feedback for surgical training.",
+        "First, let's recall that surgical training traditionally relies on expert observation and subjective feedback to evaluate trainee proficiency. " +
+        "This approach is time-consuming and may lack consistency across different trainers. " +
+        "Skill assessment models use computational methods to objectively evaluate surgical performance from tool motion data or video. " +
+        "**Step 1:** Understand that skill assessment models analyze instrument kinematics or video to score various aspects of surgical technique. " +
+        "**Step 2:** Recognize that they evaluate metrics like economy of motion (minimizing unnecessary movements), instrument handling, and procedural efficiency. " +
+        "**Step 3:** Note that these models provide objective, automated feedback for surgical training, enabling trainees to receive consistent and scalable assessment. " +
+        "Therefore, the answer is to automatically evaluate surgeon technical proficiency from tool motion or video data for training feedback.",
       hints: [
         "Think about how a surgical trainer evaluates a resident - they watch the movements and technique.",
         "Automated assessment provides scalable, objective feedback without requiring an expert to watch every recording.",
@@ -968,7 +1038,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Stratification finds patient subgroups (by genomics, proteomics, imaging, or clinical features) that respond differently to a treatment, enabling targeted therapies that benefit responders and avoid toxicity in non-responders.",
+        "First, let's recall that precision medicine aims to deliver targeted therapies to patients based on their individual characteristics. " +
+        "A key insight is that different patients with the same disease may respond differently to the same treatment due to biological differences. " +
+        "Patient stratification identifies subgroups of patients who share biological characteristics that predict differential treatment response. " +
+        "**Step 1:** Understand that patient stratification identifies subgroups of patients based on genomics, proteomics, imaging, or clinical features. " +
+        "**Step 2:** Recognize that these subgroups respond differently to treatments - some benefit while others may experience toxicity or lack efficacy. " +
+        "**Step 3:** Note that this enables targeted therapies that benefit responders and avoid harming non-responders. " +
+        "Therefore, the answer is identify subgroups of patients who share biological characteristics that predict differential treatment response.",
       hints: [
         'Precision medicine is sometimes called "the right treatment for the right patient at the right time."',
         "If all patients respond identically, stratification is unnecessary - the challenge is heterogeneous responses.",
@@ -982,7 +1058,13 @@ const questions: Record<string, Question[]> = {
         "Polygenic Risk Scores (PRS) aggregate the effects of many common genetic variants to estimate an individual\'s genetic predisposition to a disease.",
       correctAnswer: "True",
       explanation:
-        "PRS sum the weighted contributions of thousands of SNPs (weights from GWAS effect sizes) to produce a score predicting genetic liability for conditions like coronary artery disease, breast cancer, or type 2 diabetes.",
+        "First, let's recall that Polygenic Risk Scores (PRS) are a tool in precision medicine for estimating genetic predisposition to diseases. " +
+        "Most common diseases are influenced by many genetic variants, each with a small effect size, rather than a single causative mutation. " +
+        "PRS aggregate these small effects across thousands of genetic variants to produce an overall risk score. " +
+        "**Step 1:** Understand that PRS sums the weighted contributions of thousands of SNPs (single nucleotide polymorphisms), where weights come from GWAS effect sizes. " +
+        "**Step 2:** Recognize that the resulting score predicts genetic liability for conditions like coronary artery disease, breast cancer, or type 2 diabetes. " +
+        "**Step 3:** Note that PRS can identify individuals at higher genetic risk who might benefit from preventive interventions. " +
+        "Therefore, the answer is True.",
       hints: [
         'The word "polygenic" means "many genes" - not a single causal mutation but thousands of small effects.',
         "PRS is like a weighted sum where each SNP contributes a small amount based on its GWAS association strength.",
