@@ -491,3 +491,134 @@ describe('Bank Statistics', () => {
     expect(totalQuestions, 'Should have at least 100 total questions').toBeGreaterThan(100)
   })
 })
+
+describe('Question ID Format', () => {
+  it('should have consistent ID format', () => {
+    const allQuestions = getAllQuestions()
+    const idPattern = /^[a-z0-9-]+$/
+
+    for (const [bankName, questions] of Object.entries(allQuestions)) {
+      for (const q of questions) {
+        expect(
+          idPattern.test(q.id),
+          `${bankName}: ${q.id} ID should be kebab-case (lowercase, numbers, hyphens)`
+        ).toBe(true)
+      }
+    }
+  })
+
+  it('should have IDs with reasonable length', () => {
+    const allQuestions = getAllQuestions()
+
+    for (const [bankName, questions] of Object.entries(allQuestions)) {
+      for (const q of questions) {
+        expect(
+          q.id.length,
+          `${bankName}: ${q.id} ID should have at least 3 chars`
+        ).toBeGreaterThanOrEqual(3)
+        expect(
+          q.id.length,
+          `${bankName}: ${q.id} ID should have at most 50 chars`
+        ).toBeLessThanOrEqual(50)
+      }
+    }
+  })
+})
+
+describe('Question Bank Names', () => {
+  it('should have kebab-case bank names', () => {
+    const allQuestions = getAllQuestions()
+    const kebabPattern = /^[a-z0-9-]+$/
+
+    for (const bankName of Object.keys(allQuestions)) {
+      expect(
+        kebabPattern.test(bankName),
+        `Bank name "${bankName}" should be kebab-case`
+      ).toBe(true)
+    }
+  })
+
+  it('should have unique bank names', () => {
+    const allQuestions = getAllQuestions()
+    const names = Object.keys(allQuestions)
+    const uniqueNames = new Set(names)
+
+    expect(uniqueNames.size, 'Bank names should be unique').toBe(names.length)
+  })
+})
+
+describe('Question Explanation Quality', () => {
+  it('should have explanations with reasonable length', () => {
+    const allQuestions = getAllQuestions()
+
+    for (const [bankName, questions] of Object.entries(allQuestions)) {
+      for (const q of questions) {
+        expect(
+          q.explanation.length,
+          `${bankName}: ${q.id} explanation should be at least 10 chars`
+        ).toBeGreaterThanOrEqual(10)
+        expect(
+          q.explanation.length,
+          `${bankName}: ${q.id} explanation should be under 10000 chars`
+        ).toBeLessThanOrEqual(10000)
+      }
+    }
+  })
+
+  it('should have explanations ending with punctuation', () => {
+    const allQuestions = getAllQuestions()
+
+    for (const [bankName, questions] of Object.entries(allQuestions)) {
+      for (const q of questions) {
+        const lastChar = q.explanation.trim().slice(-1)
+        const validEnding = ['.', '!', '?', ')', ']', '`'].includes(lastChar)
+        expect(
+          validEnding,
+          `${bankName}: ${q.id} explanation should end with punctuation`
+        ).toBe(true)
+      }
+    }
+  })
+})
+
+describe('Multiple Choice Options', () => {
+  it('should have 2-6 options for MC questions', () => {
+    const allQuestions = getAllQuestions()
+
+    for (const [bankName, questions] of Object.entries(allQuestions)) {
+      for (const q of questions) {
+        if (q.type === 'multiple-choice' && q.options) {
+          expect(
+            q.options.length,
+            `${bankName}: ${q.id} should have at least 2 options`
+          ).toBeGreaterThanOrEqual(2)
+          expect(
+            q.options.length,
+            `${bankName}: ${q.id} should have at most 6 options`
+          ).toBeLessThanOrEqual(6)
+        }
+      }
+    }
+  })
+
+  it('should have reasonable option lengths', () => {
+    const allQuestions = getAllQuestions()
+
+    for (const [bankName, questions] of Object.entries(allQuestions)) {
+      for (const q of questions) {
+        if (q.type === 'multiple-choice' && q.options) {
+          for (const opt of q.options) {
+            expect(
+              opt.length,
+              `${bankName}: ${q.id} option should be at least 1 char`
+            ).toBeGreaterThanOrEqual(1)
+            expect(
+              opt.length,
+              `${bankName}: ${q.id} option should be under 1000 chars`
+            ).toBeLessThanOrEqual(1000)
+          }
+        }
+      }
+    }
+  })
+})
