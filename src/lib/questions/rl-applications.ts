@@ -17,7 +17,12 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Standard Q-learning uses a table to store $Q(s,a)$ for every state-action pair. This works for small problems, but fails when the state space is enormous (e.g., Atari frames with $210 \\times 160$ pixels giving ~10^50 states).\n\n**Step 1.** DQN replaces the Q-table with a deep neural network $Q(s,a;\\theta)$ parameterized by weights $\\theta$. The network takes a raw state $s$ (or stack of frames) as input and outputs a Q-value $Q(s,a;\\theta)$ for each action $a$.\n\n**Step 2.** This function approximation enables generalization: instead of learning $Q(s,a)$ for each $s$ individually, the network learns a shared representation that applies to all states, so experiencing one state improves Q-value estimates for similar states.\n\nTherefore, DQN extends Q-learning to large state spaces by approximating the Q-function with a deep neural network parameterized by $\\theta$.",
+        "First, let's recall why standard Q-learning fails in large state spaces: it uses a table to store $Q(s,a)$ for every state-action pair, which works for small problems but fails when the state space is enormous (e.g., Atari frames with $210 \\times 160$ pixels giving ~10^50 states).\n\n**Step 1.** DQN replaces the Q-table with a deep neural network $Q(s,a;\\theta)$ parameterized by weights $\\theta$. The network takes a raw state $s$ (or stack of frames) as input and outputs a Q-value $Q(s,a;\\theta)$ for each action $a$.\n\n**Step 2.** This function approximation enables generalization: instead of learning $Q(s,a)$ for each $s$ individually, the network learns a shared representation that applies to all states, so experiencing one state improves Q-value estimates for similar states.\n\nTherefore, DQN extends Q-learning to large state spaces by approximating the Q-function with a deep neural network parameterized by $\\theta$.",
+      stepByStep: {
+        step1: "DQN replaces the Q-table with a deep neural network $Q(s,a;\\theta)$ that takes a raw state $s$ as input and outputs Q-values for each action.",
+        step2: "The shared representation enables generalization across states, so experiencing one state improves Q-value estimates for similar states.",
+        step3: "This allows DQN to handle enormous state spaces like Atari frames where a lookup table would be infeasible.",
+      },
       hints: [
         "Tabular Q-learning cannot scale to Atari games with 210\\times160 pixel states.",
         'What does "deep" in DQN refer to?',
@@ -31,7 +36,12 @@ const questions: Record<string, Question[]> = {
         "DQN can be applied directly to environments with continuous action spaces.",
       correctAnswer: "false",
       explanation:
-        "Standard DQN requires computing max_a Q(s,a) over all actions, which is only tractable for discrete action spaces. Algorithms like DDPG or SAC extend deep Q-learning ideas to continuous actions.",
+        "First, let's recall that DQN selects actions by computing max_a Q(s,a), which is straightforward in discrete spaces with a small number of actions.\n\n**Step 1.** In continuous action spaces, actions are real-valued vectors (e.g., joint torques in robotics). Computing max_a Q(s,a) requires solving an optimization problem over an infinite set of possible actions at every training step.\n\n**Step 2.** DQN's neural network outputs Q-values for each action, but there is no efficient way to find the action that maximizes Q when the action space is continuous - unlike discrete spaces where you can simply enumerate all Q-values.\n\nTherefore, the answer is false: Standard DQN cannot be applied directly to environments with continuous action spaces.",
+      stepByStep: {
+        step1: "DQN selects actions by computing max_a Q(s,a), which is trivial in discrete action spaces with a small number of actions.",
+        step2: "In continuous action spaces, actions are real-valued vectors, making max_a Q(s,a) an intractable optimization problem at every training step.",
+        step3: "Unlike discrete spaces where Q-values can be enumerated, there is no efficient way to find the maximizing action in a continuous space.",
+      },
       hints: [
         "The DQN update requires finding the action that maximizes Q - how do you do this with infinitely many actions?",
         "Think about the computational challenge of maximizing over a continuous set.",
@@ -51,7 +61,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DQN with a neural network faces two key instability problems:\n\n**Step 1. Correlated data.** Sequential transitions $(s_t, a_t, r_t, s_{t+1})$ are highly correlated in time. If the network trains on these sequentially, the data distribution shifts during training, causing gradient descent to oscillate or diverge.\n\n**Step 2. Moving target.** The DQN update uses $y = R + \\gamma \\max_{a'} Q(s',a';\\theta)$ as the target. Since $\\theta$ changes with every update, the target keeps moving - a moving target for a supervised learning problem.\n\nExperience replay and the target network address these respectively:\n\n**Step 3.** Experience replay stores transitions in a replay buffer and samples uniformly at random for each gradient update. This decorrelates the training data, making it closer to i.i.d., and allows each transition to be reused many times for data efficiency.\n\n**Step 4.** The target network $Q(s',a';\\theta^-)$ is a separate, periodically-copied network kept fixed for many steps, providing stable targets $y = R + \\gamma \\max_{a'} Q(s',a';\\theta^-)$ while the online network $\\theta$ is updated. This prevents the moving-target problem.\n\nTogether, these two innovations made DQN stable enough to learn Atari games.",
+        "First, let's recall the two key instability problems that DQN faces when training a neural network:\n\n**Step 1. Correlated data.** Sequential transitions $(s_t, a_t, r_t, s_{t+1})$ are highly correlated in time. If the network trains on these sequentially, the data distribution shifts during training, causing gradient descent to oscillate or diverge.\n\n**Step 2. Moving target.** The DQN update uses $y = R + \\gamma \\max_{a'} Q(s',a';\\theta)$ as the target. Since $\\theta$ changes with every update, the target keeps moving - a moving target for a supervised learning problem.\n\nExperience replay and the target network address these respectively:\n\n**Step 3.** Experience replay stores transitions in a replay buffer and samples uniformly at random for each gradient update. This decorrelates the training data, making it closer to i.i.d., and allows each transition to be reused many times for data efficiency.\n\n**Step 4.** The target network $Q(s',a';\\theta^-)$ is a separate, periodically-copied network kept fixed for many steps, providing stable targets $y = R + \\gamma \\max_{a'} Q(s',a';\\theta^-)$ while the online network $\\theta$ is updated. This prevents the moving-target problem.\n\nTherefore, the answer is Experience replay and a separate target network.",
+      stepByStep: {
+        step1: "Sequential transitions are highly correlated in time, causing the data distribution to shift during training and leading to gradient oscillation or divergence.",
+        step2: "Since the DQN update target $y = R + \\gamma \\max_{a'} Q(s',a';\\theta)$ uses the same network parameters $\\theta$ that are being updated, the target keeps changing at every step.",
+        step3: "Experience replay decorrelates training data by sampling uniformly from a replay buffer, making data i.i.d. and enabling reuse of each transition.",
+        step4: "The target network provides stable TD targets by being frozen for many steps before being updated, preventing the moving-target problem.",
+      },
       hints: [
         "Training on correlated sequential data causes instability in gradient descent.",
         "Chasing a moving target (the Q-network you\'re updating) also causes instability.",
