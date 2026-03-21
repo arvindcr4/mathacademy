@@ -1546,6 +1546,88 @@ export const courses: Course[] = [
       },
     ]
   },
+  // META-LEARNING & FEW-SHOT LEARNING
+  {
+    id: 'meta-learning',
+    slug: 'meta-learning',
+    name: 'Meta-Learning & Few-Shot Learning',
+    description: 'Learning to learn: MAML, prototypical networks, and rapid adaptation from few examples.',
+    topics: [
+      {
+        id: 'few-shot-foundations',
+        name: 'Few-Shot Learning Foundations',
+        description: 'N-way K-shot setup, episodic training, and benchmark tasks.',
+        knowledgePoints: [
+          { id: 'ml3-kp-1', slug: 'nway-kshot', name: 'N-Way K-Shot Setup & Episodic Training' },
+          { id: 'ml3-kp-2', slug: 'miniImageNet', name: 'miniImageNet, tieredImageNet & FS Benchmarks' },
+          { id: 'ml3-kp-3', slug: 'prototypical-networks', name: 'Prototypical Networks & Class Prototypes' },
+          { id: 'ml3-kp-4', slug: 'matching-networks', name: 'Matching Networks & Attention-Based Retrieval' },
+          { id: 'ml3-kp-5', slug: 'relation-networks-fs', name: 'Relation Networks & Learned Similarity' },
+        ]
+      },
+      {
+        id: 'gradient-based-meta',
+        name: 'Gradient-Based Meta-Learning',
+        description: 'MAML, Reptile, and optimization-based fast adaptation.',
+        knowledgePoints: [
+          { id: 'ml3-kp-6', slug: 'maml', name: 'MAML & Model-Agnostic Meta-Learning' },
+          { id: 'ml3-kp-7', slug: 'fomaml', name: 'First-Order MAML (FOMAML) & Reptile' },
+          { id: 'ml3-kp-8', slug: 'meta-sgd', name: 'Meta-SGD & Learning the Learning Rate' },
+          { id: 'ml3-kp-9', slug: 'anil', name: 'ANIL & Almost-No-Inner-Loop Meta-Learning' },
+          { id: 'ml3-kp-10', slug: 'implicit-maml', name: 'iMAML & Implicit Gradient Meta-Learning' },
+        ]
+      },
+      {
+        id: 'memory-augmented',
+        name: 'Memory-Augmented Meta-Learning',
+        description: 'External memory, Neural Turing Machines, and memory-based meta-learners.',
+        knowledgePoints: [
+          { id: 'ml3-kp-11', slug: 'ntm', name: 'Neural Turing Machines (NTM)' },
+          { id: 'ml3-kp-12', slug: 'snail', name: 'SNAIL & Temporal Convolution + Attention' },
+          { id: 'ml3-kp-13', slug: 'mann', name: 'MANN & Memory-Augmented Neural Networks' },
+          { id: 'ml3-kp-14', slug: 'meta-dataset', name: 'Meta-Dataset & Diverse Multi-Domain FS' },
+          { id: 'ml3-kp-15', slug: 'hypernetworks', name: 'Hypernetworks for Fast Weight Generation' },
+        ]
+      },
+      {
+        id: 'in-context-learning',
+        name: 'In-Context & Prompt-Based Meta-Learning',
+        description: 'GPT-style in-context learning, ICL theory, and prompt-tuning.',
+        knowledgePoints: [
+          { id: 'ml3-kp-16', slug: 'in-context-learning', name: 'In-Context Learning (ICL) in LLMs' },
+          { id: 'ml3-kp-17', slug: 'icl-theory', name: 'ICL Theory: Gradient Descent as Bayesian Inference' },
+          { id: 'ml3-kp-18', slug: 'prefix-tuning', name: 'Prefix Tuning & Prompt Tuning' },
+          { id: 'ml3-kp-19', slug: 'p-tuning', name: 'P-Tuning & Continuous Prompt Optimization' },
+          { id: 'ml3-kp-20', slug: 'demonstration-selection', name: 'Demonstration Selection for ICL' },
+        ]
+      },
+      {
+        id: 'zero-shot-meta',
+        name: 'Zero-Shot & Cross-Domain Transfer',
+        description: 'Attribute-based methods, semantic embeddings, and generalized zero-shot learning.',
+        knowledgePoints: [
+          { id: 'ml3-kp-21', slug: 'attribute-zsl', name: 'Attribute-Based Zero-Shot Learning' },
+          { id: 'ml3-kp-22', slug: 'generalized-zsl', name: 'Generalized Zero-Shot Learning' },
+          { id: 'ml3-kp-23', slug: 'semantic-embedding-zsl', name: 'Semantic Embedding & Word2Vec Transfer' },
+          { id: 'ml3-kp-24', slug: 'cross-domain-fs', name: 'Cross-Domain Few-Shot Learning' },
+          { id: 'ml3-kp-25', slug: 'zsl-llm', name: 'Zero-Shot with LLMs & GPT-4' },
+        ]
+      },
+      {
+        id: 'meta-learning-applications',
+        name: 'Meta-Learning Applications',
+        description: 'Drug discovery, robotics, NLP, and continual learning with meta-learning.',
+        knowledgePoints: [
+          { id: 'ml3-kp-26', slug: 'drug-meta', name: 'Meta-Learning for Drug Discovery' },
+          { id: 'ml3-kp-27', slug: 'robotics-meta', name: 'Meta-Learning for Robotic Control (PEARL)' },
+          { id: 'ml3-kp-28', slug: 'nlp-meta', name: 'Meta-Learning for NLP & Low-Resource Languages' },
+          { id: 'ml3-kp-29', slug: 'continual-meta', name: 'Meta-Learning for Continual Learning' },
+          { id: 'ml3-kp-30', slug: 'meta-rl', name: 'Meta-Reinforcement Learning (RL2, PEARL)' },
+        ]
+      },
+    ]
+  },
+
   // SELF-SUPERVISED & CONTRASTIVE LEARNING
   {
     id: 'self-supervised-learning',
