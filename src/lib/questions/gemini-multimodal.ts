@@ -301,8 +301,7 @@ registerQuestions({
         "Safety settings only apply to image generation, not text.",
         "Safety settings are determined solely by the system prompt.",
       ],
-      correctAnswer:
-        "Developers can configure thresholds (e.g., BLOCK_ONLY_HIGH) for various categories like Harassment, Hate Speech, and Dangerous Content.",
+      correctAnswer: 1,
       explanation:
         "The Gemini API provides granular safety settings, allowing developers to adjust blocking thresholds across different harm categories depending on their application’s use case.",
       hints: [

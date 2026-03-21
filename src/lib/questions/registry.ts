@@ -2000,6 +2000,93 @@ const questionOverrides: Record<string, QuestionOverride> = {
     options: ["True", "False"],
     correctAnswer: "true",
   },
+  "q-msd-kp1-6": {
+    question: "Which option correctly interprets 99.9% availability for an ML system?",
+    options: [
+      "~44 minutes/month; only infrastructure failures count toward downtime.",
+      "~44 minutes/month; model degradation events (silent accuracy drops, data pipeline failures producing wrong features) must also be counted as availability failures if they cause incorrect outputs.",
+      "~8.7 hours/month; 99.9% availability only applies to web servers, not ML models.",
+      "~4.4 minutes/month; 99.9% is the strictest SLA and applies to all systems equally.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-msd-kp5-6": {
+    question:
+      "In NAS with accuracy and mobile latency as joint objectives, which option explicitly searches the Pareto frontier before selecting a model?",
+    options: [
+      "Optimize accuracy first, then apply post-training quantization to meet latency.",
+      "Use a Pareto-optimal search: identify the set of architectures where no architecture dominates another in both accuracy and latency, then select the Pareto-optimal architecture matching your latency budget.",
+      "Use a weighted sum: loss = accuracy + lambda x latency. Tune lambda on the validation set.",
+      "Maximize accuracy subject to a hard latency constraint using constrained optimization.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-msd-kp10-3": {
+    question:
+      "At a 0.5% fraud rate, which option best explains how 99.5% accuracy can coexist with poor fraud recall?",
+    options: [
+      "False positive rate is ~0%; the model is highly accurate and the recall failure is due to class imbalance.",
+      "At 0.5% fraud rate, predicting \"not fraud\" 100% of the time achieves 99.5% accuracy; the model has collapsed to the majority class, catching 0% of fraud - \"40% recall\" implies some minimal fraud detection with very high false negative rate.",
+      "The model is overfitting to training data; accuracy does not generalize to test data.",
+      "False positive rate is 60%, equal to the false negative rate.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-msd-kp14-6": {
+    question:
+      "After blocking still leaves 50B candidate pairs at 0.1 ms/pair, which option adds an appropriate fast pre-filter before the expensive classifier?",
+    options: [
+      "Run the classifier on all 50B pairs using a distributed cluster of 500 machines.",
+      "Apply two-stage scoring: a fast vectorized similarity pre-filter (TF-IDF cosine < 0.3 -> discard) to reduce candidate pairs by 90%, followed by the 0.1 ms classifier on the remaining 5B pairs. Add transitivity closure (union-find) to propagate matches.",
+      "Reduce blocking to 100M candidate pairs by using stricter blocking keys, accepting recall loss.",
+      "Use approximate nearest neighbor search (LSH) to replace blocking entirely, generating 1M candidate pairs.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-opt-kp2-2": {
+    type: "multiple-choice",
+    question: "What is the key change in AdamW?",
+    options: [
+      "Apply weight decay directly to the weights instead of mixing it into the adaptive gradient update",
+      "Add the weight-decay term to the gradient before Adam normalizes it",
+      "Drop the second-moment estimate and keep only momentum",
+      "Replace bias correction with Nesterov lookahead",
+    ],
+    correctAnswer: 0,
+  },
+  "q-opt-kp7-2": {
+    type: "multiple-choice",
+    question: "ZeRO Stage 3 shards which state across data-parallel ranks?",
+    options: [
+      "optimizer states, gradients, and parameters",
+      "optimizer states only",
+      "optimizer states and gradients only",
+      "activations, gradients, and parameters",
+    ],
+    correctAnswer: 0,
+  },
+  "q-opt-kp8-2": {
+    type: "multiple-choice",
+    question: "When does gradient accumulation match a single large-batch update?",
+    options: [
+      "When the model has no batch norm layers",
+      "Only when momentum and weight decay are both zero",
+      "Only when each micro-batch runs on a different GPU",
+      "Only when gradients are synchronized after every micro-batch",
+    ],
+    correctAnswer: 0,
+  },
+  "q-opt-kp40-2": {
+    type: "multiple-choice",
+    question: "If ||g||_2 exceeds c, what does global-norm clipping do?",
+    options: [
+      "Multiply all gradients by c / ||g||_2",
+      "Clip each gradient coordinate independently into [-c, c]",
+      "Zero the largest gradient coordinates until the norm is c",
+      "Rescale each layer separately to norm c",
+    ],
+    correctAnswer: 0,
+  },
 };
 
 // ── Hint generation helpers ─────────────────────────────────────────────────
