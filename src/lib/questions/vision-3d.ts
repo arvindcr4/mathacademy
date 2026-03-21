@@ -28,7 +28,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Scale ambiguity is an inherent limitation of monocular depth estimation because a scene at double the distance with double the size produces identical images under a pinhole camera model.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Under the pinhole camera model, scaling all 3D points by factor k and the camera translation by k produces identical image projections: p = K[R|t]·P. This means monocular methods can only recover depth up to an unknown scale factor s — all predicted depths D are valid up to D→s·D. Absolute metric scale requires additional constraints such as known object sizes, camera height, or IMU integration.",
       hints: [
@@ -85,7 +85,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "After stereo rectification, corresponding points in a stereo pair are guaranteed to lie on the same horizontal scanline, reducing the 2D matching problem to a 1D disparity search.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Stereo rectification applies homographic warps H_L and H_R to both images so that epipolar lines become horizontal rows. For any point pₗ = (x, y) in the left image, its correspondence in the right image must lie at (x − d, y) for some disparity d ≥ 0. This reduces stereo matching from searching a 2D neighbourhood to a 1D search along the same row, enabling efficient dynamic programming or cost-volume methods.",
       hints: [
@@ -141,7 +141,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Guide networks in depth completion use the RGB image to compute spatially varying convolution kernels that adapt to image edges, preventing blurring across depth discontinuities.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Methods like NLSPN and GuideNet predict spatially varying (non-local or guided) convolution kernels from the RGB image; these kernels are sharpened at edges, preventing depth values from blurring across object boundaries — a common failure of naive interpolation approaches.",
       hints: [
@@ -197,8 +197,8 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "ZoeDepth achieves metric monocular depth estimation by attaching a metric binning head (predicting N adaptive bin centres and per-pixel bin probabilities) on top of a relative depth foundation model (DPT/MiDaS backbone), enabling it to convert relative depth features into absolute metric predictions.",
-      correctAnswer: "true",
+        "ZoeDepth achieves metric monocular depth estimation by attaching a metric binning head (predictinging N adaptive bin centres and per-pixel bin probabilities) on top of a relative depth foundation model (DPT/MiDaS backbone), enabling it to convert relative depth features into absolute metric predictions.",
+      correctAnswer: "True",
       explanation:
         "ZoeDepth freezes the DPT encoder (trained on diverse relative depth data) and fine-tunes a metric head that predicts N=64 adaptive depth bin centres for the scene using an MLP on global features, then assigns each pixel a depth via a soft probability distribution over bins. This two-stage design leverages the generalised relative depth representations of DPT while adding metric scale via the fine-tuned head trained on LiDAR-supervised datasets.",
       hints: [
@@ -255,7 +255,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Depth Anything V2 improves over V1 primarily by using synthetic data with perfect metric depth labels for initial pre-training, followed by real-world data fine-tuning to improve robustness.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Depth Anything V2 leverages high-quality synthetic depth data (from rendering engines) as an initial training stage to learn accurate depth boundaries and fine details, then fine-tunes on real-world data; this synthetic-to-real curriculum produces sharper and more accurate depth maps than V1.",
       hints: [
@@ -375,7 +375,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The multi-resolution hash encoding in Instant-NGP stores feature vectors at L levels with geometrically increasing spatial resolution from N_min to N_max, so that coarser levels capture low-frequency structure and finer levels capture high-frequency detail.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Instant-NGP uses L resolution levels with resolution Nₗ = ⌊N_min × b^l⌋ where growth factor b = (N_max/N_min)^(1/(L−1)). Typical values: N_min=16, N_max=512, L=16, giving b≈1.45. Features from all L levels are concatenated and fed to a small MLP (2 hidden layers of 64 units), enabling the model to represent both global structure (coarse grid) and fine details (fine grid).",
       hints: [
@@ -432,7 +432,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "3D Gaussian Splatting renders pixel colour C by front-to-back alpha compositing: C = Σᵢ cᵢ αᵢ Πⱼ<ᵢ (1 − αⱼ), where αᵢ = oᵢ · exp(−½(x−μ₂ᴅ)^T Σ₂ᴅ⁻¹ (x−μ₂ᴅ)) evaluates the projected 2D Gaussian at pixel position x.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "After projecting each 3D Gaussian to a 2D Gaussian (via the Jacobian of the projective transform), 3DGS composes pixel colour front-to-back: C = Σᵢ cᵢαᵢΠⱼ<ᵢ(1−αⱼ). Here αᵢ = oᵢ·G₂ᴅ(x) is the product of learned opacity oᵢ and the 2D Gaussian value at pixel x. This is exactly the same alpha-compositing formula as NeRF\'s volume rendering but evaluated in 2D after splatting — enabling the fast tile-based GPU rasterizer.",
       hints: [
@@ -489,7 +489,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "D-NeRF models dynamic scenes by learning a deformation field Δx = MLP_deform(γ(x), γ(t)) that maps query points from world space at time t back to a canonical space, then evaluating a canonical NeRF at x + Δx.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "D-NeRF uses two MLPs: (1) deformation MLP: (γ(x), γ(t)) → Δx, predicting the displacement to map position x at time t to canonical space; (2) canonical NeRF: γ(x + Δx) → (c, σ). Volume rendering composites colours and densities from the canonical field. This canonical-space approach is compact but requires the topology to remain fixed across time (no appearance/disappearance of scene parts).",
       hints: [
@@ -546,7 +546,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "EG3D uses a tri-plane representation (three orthogonal feature planes) as an efficient 3D-aware generator backbone, trading full 3D volume resolution for much lower memory and computation cost.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "EG3D represents 3D features using three axis-aligned 2D feature planes (XY, XZ, YZ); for any 3D query point, features are sampled from all three planes by projection and aggregation, providing approximate 3D spatial structure at the cost of ambiguities that full voxel grids avoid but at a fraction of the memory.",
       hints: [
@@ -591,7 +591,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "SfM simultaneously recovers: (1) the 3D positions of feature-matched scene points (sparse point cloud, typically from SIFT/SuperPoint matches across image pairs); (2) the 6-DoF camera poses [R|t] and optionally intrinsics K for each image. This is solved via incremental registration + bundle adjustment. COLMAP is the standard SfM pipeline, outputting poses.bin/txt (poses + intrinsics) and points3D.bin/txt (sparse point cloud).",
+        "SfM simultaneously recovers: (1) the 3D positions of feature-matched scene points (sparse point cloud, typically from SIFT/SuperPoint matches across image pairs); (2) the 6-DoF camera poses [R|t] and optionally intrinsics K for each image. This is solved via incremental registration + bundle adjustment. COLMAP is the standard SfM pipeline, outputting cameras.bin/txt (poses + intrinsics) and points3D.bin/txt (sparse point cloud).",
       hints: [
         '"Structure" = 3D point positions. "Motion" = camera poses. SfM recovers both.',
         "COLMAP outputs cameras.bin/txt (poses + intrinsics) and points3D.bin/txt (sparse point cloud).",
@@ -603,7 +603,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "COLMAP uses incremental SfM: it starts with an initial pair of images, registers new images one at a time using PnP+RANSAC, and runs bundle adjustment periodically to refine all camera poses and 3D points jointly.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "COLMAP\'s incremental pipeline: (1) select initial pair maximising homography inlier ratio (ensures good baseline); (2) two-view reconstruction with 5-point essential matrix estimation; (3) iteratively select next image with most 2D-3D correspondences to registered points; (4) register via PnP (given 3D points and 2D observations) with RANSAC; (5) triangulate new points; (6) local bundle adjustment (BA) over recent images; (7) global BA periodically. This prevents drift accumulation.",
       hints: [
@@ -660,7 +660,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Learning-based MVS methods like MVSNet build a cost volume by warping source image features onto a set of depth hypothesis planes in reference camera space and aggregating them to estimate per-pixel depth.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "MVSNet warps source view feature maps onto depth hypothesis planes in the reference frame using differentiable homography warping, builds a 3D cost volume by averaging warped features from all source views, and applies 3D convolutions to regularize and regress depth — enabling end-to-end learning of MVS.",
       hints: [
@@ -716,7 +716,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "PVNet (Pixel-wise Voting Network) estimates 6-DoF pose by predicting the 2D image locations of predefined 3D keypoints on the object surface and then solving for pose using PnP (Perspective-n-Point).",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "PVNet trains a CNN to predict per-pixel unit vectors pointing toward each object keypoint; votes from all pixels are aggregated (RANSAC voting) to estimate 2D keypoint locations, and PnP with known 3D keypoint positions solves for the 6-DoF camera-to-object transformation.",
       hints: [
@@ -773,7 +773,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "SMPL-X (Expressive Body Model) is a parametric model that jointly represents body pose, hand pose, and facial expressions as a low-dimensional parameter vector, enabling full human body reconstruction from images.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "SMPL-X extends SMPL to include hands (using MANO model articulation) and face (FLAME model expressions), representing the entire human body — including finger joints and facial action units — with a compact parameter vector that can be regressed from images for full expressive body reconstruction.",
       hints: [
@@ -829,7 +829,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "FlowNet3D estimates scene flow directly from point clouds by using PointNet++-style set abstraction layers and a flow embedding layer that aggregates spatial proximity and feature similarity between two point clouds.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "FlowNet3D processes two point clouds jointly using PointNet++ set abstraction for feature extraction and a flow embedding module that mixes features from nearby points in both clouds based on spatial distance and feature affinity — directly regressing 3D flow vectors without optical flow or stereo matching.",
       hints: [
@@ -886,7 +886,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "PointNet++ improves over PointNet by hierarchically grouping local neighborhoods of points and applying a mini-PointNet within each group — analogous to how a CNN applies local filters at each spatial location before pooling.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "PointNet++ Set Abstraction (SA) layers: (1) farthest point sampling selects M centroids from N points; (2) ball query groups K points within radius r around each centroid; (3) a mini-PointNet (shared MLP + max pool) encodes each local group into a C-dim feature. Stacking SA layers produces hierarchical feature abstraction: local geometry first, then progressively larger structures — just like CNN conv→pool stacks.",
       hints: [
@@ -943,7 +943,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "VoxelNet first applies a Voxel Feature Encoding (VFE) layer that processes the variable number of points within each voxel using a shared MLP and element-wise max pooling, producing a fixed-length feature vector per voxel that is then processed by 3D convolutions.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "VoxelNet VFE: (1) for each non-empty voxel, compute point-level features: for each point in the voxel, concatenate [x, y, z, r, Δx, Δy, Δz] where Δ are offsets from the voxel centroid; (2) shared MLP transforms each point to a 128-dim feature; (3) element-wise max pooling over all points in the voxel → 128-dim voxel feature. These fixed-size voxel features are scattered into a sparse 3D tensor for subsequent 3D CNN processing and final BEV detection.",
       hints: [
@@ -1000,7 +1000,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Point Transformer (Zhao et al., 2021) uses a subtracted position encoding in its attention mechanism, computing attention weights based on the relative positions between points rather than absolute global positions.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Point Transformer computes attention weights using subtracted (relative) positional encodings γ(pᵢ - pⱼ), ensuring that attention is invariant to global translation of the point cloud — a desirable inductive bias for 3D shape understanding where relative geometry matters more than absolute position.",
       hints: [
@@ -1057,7 +1057,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "CenterPoint detects 3D objects by predicting Gaussian-rendered heatmaps of object centre locations in BEV space and then regressing object size, orientation, and velocity at each detected peak — making it naturally rotation-invariant without needing rotated anchors.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "CenterPoint renders each GT object\'s BEV centre as a Gaussian splat on a heatmap (σ proportional to object size), then trains a centre heatmap head with focal loss. At inference, local peaks above a confidence threshold are extracted; separate regression heads at those peaks predict log(width), log(length), height, sin(yaw), cos(yaw) and (dx, dy) velocity. No rotation-aligned anchors needed — arbitrary yaw is handled by the sin/cos regression.",
       hints: [
@@ -1114,7 +1114,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "RandLA-Net addresses the scalability challenge of point cloud segmentation by using random point sampling combined with a local feature aggregation module, achieving high efficiency on large-scale outdoor point clouds.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "RandLA-Net uses random sampling (replacing expensive FPS) for efficiency on point clouds with millions of points, and compensates for random sampling\'s quality loss with an attentive feature aggregation module that captures rich local geometry — achieving state-of-the-art accuracy on large-scale datasets like Semantic3D and SemanticKITTI.",
       hints: [
@@ -1152,7 +1152,7 @@ const questions: Record<string, Question[]> = {
       question:
         "What does a scene graph represent in the context of image understanding?",
       options: [
-        'A structured graph where nodes represent detected objects (with category and attributes) and directed edges represent semantic relationships between objects (e.g., "dog → on → mat")',
+        'A structured graph where nodes represent detected objects (with category and attributes) and directed edges represent semantic relationships between objects (e.g., "the cup is to the left of the keyboard", "the book is on the table")',
         "A hierarchical clustering of image regions based on color similarity",
         "A temporal sequence of scene states from a video, linked by action edges",
         "A bipartite graph between image pixels and semantic class labels",
@@ -1161,7 +1161,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "A scene graph provides a structured semantic representation: object nodes with class labels and attributes, connected by predicate edges that describe spatial, possessive, or semantic relationships; this representation supports visual reasoning, image retrieval, and question answering.",
       hints: [
-        "Think of a scene graph as a knowledge graph extracted from an image.",
+        'Think about what a scene graph is — a knowledge graph extracted from an image.',
         "Nodes are objects (what), edges are relationships (how they relate).",
       ],
     },
@@ -1170,13 +1170,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Scene graph generation from images is typically decomposed into object detection followed by pairwise relationship classification between detected object pairs.",
-      correctAnswer: "true",
+        "ScanRefer is a benchmark for 3D visual grounding that requires localizing an object in a 3D point cloud scene given a free-form natural language description that often references spatial relations to other objects.",
+      correctAnswer: "True",
       explanation:
-        "Most scene graph generation methods first detect objects with a detector (Faster R-CNN), extract pairwise (subject, object) feature pairs, and classify the relationship predicate for each pair — treating it as a two-stage detection + relationship classification problem.",
+        'ScanRefer contains 51,583 descriptions of 11,046 objects in 800 ScanNet scenes; many descriptions are disambiguating ("the white table with a chair in front of it"), requiring models to understand both object appearance and 3D spatial relations to correctly localize the referred object.',
       hints: [
+        "Disambiguating descriptions are what make 3D visual grounding hard — spatial relations are often the key differentiator.",
         "Think about how you would describe a specific object among many similar objects in a room.",
-        "Pairwise relationship classification grows quadratically with the number of detected objects.",
       ],
     },
     {
@@ -1184,19 +1184,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "What is the primary challenge of maintaining instance consistency in 3D panoptic segmentation across a sequence of LiDAR scans (video panoptic segmentation)?",
+        "EmbodiedScan and LEO (Embodied 3D Language Understanding) extend static 3D grounding to embodied agents. What key capability do they add?",
       options: [
-        "Instance IDs must be kept consistent over time as objects move, appear, and disappear; this requires data association (tracking) between instances across frames, which is complicated by occlusion, appearance changes, and sensor viewpoint variation",
-        "The number of object instances changes continuously, making fixed-size output representations infeasible",
-        "Semantic labels are inconsistent across LiDAR scan lines due to varying point density with distance",
-        "Hand pose estimation is limited to front-facing views and fails for side or back-of-hand views",
+        "They enable agents to ground language to 3D scenes from an egocentric viewpoint acquired through active exploration, rather than requiring a pre-built complete 3D scan as input — the agent must navigate to perceive and ground the referred object",
+        "They extend grounding to handle multiple simultaneous referring expressions and resolve conflicts between them",
+        "They replace 3D point cloud input with pure RGB video, eliminating the need for depth sensors",
+        "They allow grounding in outdoor scenes (street-level) rather than only indoor room-scale scenes",
       ],
       correctAnswer: 0,
       explanation:
-        "Monocular hand pose estimation is ambiguous because many 3D configurations project to the same 2D image; self-occlusion (fingers hiding each other) worsens this. Methods like Pose2Mesh, HandOccNet, and METRO use parametric hand models (MANO) whose anatomical constraints reduce the solution space and resolve ambiguities from single-view RGB.",
+        "Embodied 3D grounding places the agent in an environment where the full 3D scan is not pre-given; the agent must actively navigate and perceive the scene from egocentric views, incrementally building a scene representation and grounding language to what has been observed — a fundamentally harder and more realistic setting than offline 3D grounding.",
       hints: [
-        "Think about how many different 3D hand poses could produce the same 2D image — depth ambiguity is severe.",
-        "A parametric model provides prior knowledge about valid hand shapes and joint limits.",
+        "Think about how a robot in an unexplored room must first look around before it can find the referred object.",
+        "Offline 3D grounding assumes you already have the complete 3D scan — embodied grounding does not.",
       ],
     },
   ],
@@ -1226,8 +1226,8 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        'Referring expression comprehension requires a model to localize a specific object in an image given a free-form natural language description that includes spatial relations to other objects (e.g., "the white table with a chair in front of it").',
-      correctAnswer: "true",
+        "Referring expression comprehension requires a model to localize a specific object in an image given a free-form natural language description that often references spatial relations to other objects (e.g., 'the white table with a chair in front of it').",
+      correctAnswer: "True",
       explanation:
         'Referring expression comprehension grounds a referring expression (e.g., "the chair between the two tables") to a specific 3D bounding box; spatial relation understanding is critical because the description often references the target object\'s position relative to context objects.',
       hints: [
@@ -1257,63 +1257,56 @@ const questions: Record<string, Question[]> = {
     },
   ],
 
-  "grounded-3d": [
+  'neural-rendering-avatars': [
     {
-      id: "q-cv3d-kp25-1",
-      type: "multiple-choice",
-      difficulty: "easy",
-      question:
-        "Language-grounded 3D scene understanding refers to which capability?",
+      id: 'q-cv3d-kp25-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Neural Radiance Fields for human avatars (e.g., NeRF-based body models) must handle articulated motion. How do they address this compared to static scene NeRFs?',
       options: [
-        'Localizing and understanding 3D scene elements (objects, regions, relationships) in response to free-form natural language queries — for example, grounding "the chair next to the window" to a specific 3D bounding box',
-        "Translating 3D point cloud features into natural language descriptions for image captioning",
-        "Using language models to generate 3D object meshes from text descriptions",
-        "Training 3D detectors using only language supervision without any 3D bounding box annotations",
+        'They train a separate NeRF for each body pose, requiring one NeRF per training frame',
+        'They use a canonical body NeRF combined with a learnable deformation field that maps any posed body configuration back to the canonical space, where the NeRF is evaluated — enabling generalisation to novel poses not seen during training',
+        'They replace the neural radiance field with a mesh-based renderer that deforms with body pose',
+        'They concatenate the body pose as an additional input to the MLP alongside (x,y,z) coordinates',
       ],
-      correctAnswer: 0,
-      explanation:
-        "Language-grounded 3D understanding enables natural interaction with 3D environments: given a natural language expression, the system must find the referred object or region in 3D space — combining language comprehension with 3D spatial reasoning.",
+      correctAnswer: 1,
+      explanation: 'Neural avatar NeRFs (NeuralBody, ARAH, HumanNeRF): define a canonical NeRF in rest pose; a deformation field D(x, θ) maps query point x under pose θ back to canonical coordinates where the NeRF is queried. The deformation is typically LBS (linear blend skinning) from SMPL or a learned SE(3) flow. This allows the canonical NeRF to learn appearance and the deformation field to learn pose-dependent geometry, generalising to novel poses.',
       hints: [
-        'Think about how a robot assistant should respond when told "bring me the object on the left side of the table".',
-        "Grounding connects language to physical 3D locations in the environment.",
+        'Canonical NeRF: learned in rest/T-pose. Deformation: warp current-pose query points to canonical space before querying.',
+        'SMPL provides a kinematic skeleton and LBS weights — plugging SMPL pose parameters into LBS gives the deformation field.',
       ],
     },
     {
-      id: "q-cv3d-kp25-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "ScanRefer is a benchmark for 3D visual grounding that requires localizing an object in a 3D point cloud scene given a free-form natural language description that often references spatial relations to other objects.",
-      correctAnswer: "true",
-      explanation:
-        'ScanRefer contains 51,583 descriptions of 11,046 objects in 800 ScanNet scenes; many descriptions are disambiguating ("the white table with a chair in front of it"), requiring models to understand both object appearance and 3D spatial relations to correctly localize the referred object.',
+      id: 'q-cv3d-kp25-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Gaussian Avatar methods (GaussianAvatar, SplattingAvatar) represent human bodies as sets of 3D Gaussians attached to the SMPL mesh surface, enabling real-time neural avatar rendering by inheriting the speed advantage of 3D Gaussian Splatting.',
+      correctAnswer: 'True',
+      explanation: 'Gaussian avatars: initialise 3D Gaussians on the SMPL mesh surface; each Gaussian inherits the local pose transformation from its attached mesh triangle (LBS + rotation). As the body moves, Gaussians move with the mesh. A small MLP predicts pose-dependent Gaussian attribute updates (appearance changes from shadowing, cloth deformation). Rendering: standard 3DGS rasterisation at >100 FPS — 1000x faster than NeRF-based avatars.',
       hints: [
-        "Disambiguating descriptions are what make 3D visual grounding hard — spatial relations are often the key differentiator.",
-        "Think about how you would describe a specific object among many similar objects in a room.",
+        'Gaussians attached to mesh triangles: each Gaussian has local (u,v,w) barycentric coordinates on a triangle — it moves with the triangle under LBS.',
+        '3DGS rendering speed: tile rasterisation at 100+ FPS vs. NeRF ray-marching at <1 FPS for comparable quality.',
       ],
     },
     {
-      id: "q-cv3d-kp25-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "EmbodiedScan and LEO (Embodied 3D Language Understanding) extend static 3D grounding to embodied agents. What key capability do they add?",
+      id: 'q-cv3d-kp25-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'A key challenge for monocular neural avatar reconstruction (training from a single video) is separating lighting from surface reflectance. Why is this difficult and how do relightable avatar methods address it?',
       options: [
-        "They enable agents to ground language to 3D scenes from an egocentric viewpoint acquired through active exploration, rather than requiring a pre-built complete 3D scan as input — the agent must navigate to perceive and ground the referred object",
-        "They extend grounding to handle multiple simultaneous referring expressions and resolve conflicts between them",
-        "They replace 3D point cloud input with pure RGB video, eliminating the need for depth sensors",
-        "They allow grounding in outdoor scenes (street-level) rather than only indoor room-scale scenes",
+        'Lighting and reflectance are always entangled because cameras record RGB, not HDR light measurements',
+        'Under natural illumination, the observed colour = albedo × shading (lighting × surface normal). These are ambiguous from colour alone (infinite (albedo, lighting) pairs produce the same observed colour); relightable methods impose priors (smooth albedo, BRDF physics) and use shadow-free illumination changes across video frames to separate intrinsic components',
+        'Relightable avatars require a light stage with controlled illumination during capture, making monocular methods impossible',
+        'The difficulty is purely computational: the NeRF must evaluate the rendering equation at each sample point, which is too slow for real-time training',
       ],
-      correctAnswer: 0,
-      explanation:
-        "Embodied 3D grounding places the agent in an environment where the full 3D scan is not pre-given; the agent must actively navigate and perceive the scene from egocentric views, incrementally building a scene representation and grounding language to what has been observed — a fundamentally harder and more realistic setting than offline 3D grounding.",
+      correctAnswer: 1,
+      explanation: 'Intrinsic decomposition (albedo/shading) from monocular video: two different (albedo, shading) pairs can produce identical observed RGB — inherently under-determined. Relightable NeRF methods (NeRFactor, NeuSG-relightable): impose smoothness regularisation on albedo (spatially smooth), use physically-based BRDF models, and exploit natural illumination variation across video frames (outdoor: sunlight angle changes; indoor: moving person causes shading changes). Result: disentangled albedo + BRDF + normal that can be relit under novel illumination.',
       hints: [
-        "Think about how a robot in an unexplored room must first look around before it can find the referred object.",
-        "Offline 3D grounding assumes you already have the complete 3D scan — embodied grounding does not.",
+        'Colour = albedo × lighting × geometry: three unknowns from one equation. Priors and multi-frame observations resolve the ambiguity.',
+        'Albedo smoothness: real surfaces are piecewise smooth. Large spatial variation in albedo → likely an artifact, not real reflectance.',
       ],
     },
   ],
-
   "bev-perception": [
     {
       id: "q-cv3d-kp26-1",
@@ -1341,7 +1334,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "BEVFusion achieves camera-LiDAR fusion in BEV space by lifting camera features to BEV using LSS (with predicted depth distributions) and projecting LiDAR features to BEV via voxelisation, then concatenating both modality features before shared detection heads.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "BEVFusion (Liu et al. 2022): (1) camera features lifted to BEV via LSS depth prediction → camera BEV features; (2) LiDAR points voxelised and processed by sparse 3D CNN → LiDAR BEV features; (3) both BEV feature maps are spatially aligned and concatenated channel-wise; (4) shared 2D CNN backbone + detection heads (CenterPoint-style). This achieves tight geometric alignment because both modalities are in the same metric BEV coordinate frame.",
       hints: [
@@ -1398,7 +1391,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "MonoScene and TPVFormer demonstrate that semantic 3D occupancy can be predicted from camera images alone (without LiDAR), by lifting 2D image features to 3D using cross-attention or geometric projection.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "MonoScene uses 2D U-Net features projected to 3D via frustum pooling, while TPVFormer uses a tri-perspective view (TPV) representation and cross-attention to aggregate image features into a 3D occupancy grid — showing that camera-only systems can achieve reasonable 3D scene completion without LiDAR depth.",
       hints: [
@@ -1455,7 +1448,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Before aggregating LiDAR scans from multiple timesteps, ego-motion compensation must be applied to transform all past point clouds into the current frame\'s coordinate system using odometry or SLAM pose estimates.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "As the vehicle moves between scans, each historical point cloud is in a different coordinate frame; ego-motion compensation applies the inverse relative transformation (from pose estimates) to bring all past scans into the current reference frame before aggregation — otherwise static objects would appear smeared or duplicated.",
       hints: [
@@ -1512,7 +1505,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "GAIA-1 (from Wayve) is a generative world model trained on large-scale real driving data that can generate realistic future video conditioned on text descriptions, action tokens, and ego-vehicle state.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "GAIA-1 is a multi-modal autoregressive world model that combines video tokens, text tokens, and action tokens in a unified sequence model; it can generate temporally consistent, photorealistic driving video conditioned on natural language descriptions of weather, scenarios, and ego-vehicle actions.",
       hints: [
@@ -1569,7 +1562,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Waypoint-based end-to-end driving models (e.g., NEAT, Transfuser) predict a sequence of future waypoints as intermediate output and then use a simple PID controller to follow them, rather than directly outputting low-level steering and throttle commands.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Waypoint prediction provides a structured intermediate representation that is easier to learn and interpret than raw control commands; a PID controller then converts the waypoint sequence to low-level steering and throttle, combining the generalization of learned representations with the reliability of classical control.",
       hints: [
@@ -1599,5 +1592,610 @@ const questions: Record<string, Question[]> = {
     },
   ],
 };
+
+const additionalVision3dQuestions: Record<string, Question[]> = {
+  'instant-ngp': [
+    {
+      id: 'q-cv3d-kp31-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Instant Neural Graphics Primitives (Instant-NGP) achieves orders-of-magnitude speedup over vanilla NeRF by replacing MLP-based coordinate encoding with ___.',
+      options: [
+        'A precomputed voxel grid that stores RGB values at fixed resolution',
+        'A multiresolution hash table encoding: spatial coordinates are hashed at L resolution levels to look up trainable feature vectors, enabling fast gradient-based learning without large MLP depth',
+        'A convolutional encoder that processes depth maps from RGB-D sensors',
+        'A transformer that attends over a set of reference images to predict density and color',
+      ],
+      correctAnswer: 1,
+      explanation: 'Instant-NGP (Müller et al., 2022): coordinates x are hashed at L ∈ {16..512K} resolution levels; each level maps x to a small feature vector via a hash function with collision resolution via gradient averaging. The resulting multi-resolution feature is fed to a tiny 2-layer MLP. Hash lookups are O(L) vs. MLP forward pass O(D·W²), enabling training convergence in seconds rather than hours.',
+      hints: [
+        'Hash encoding: map (x,y,z) → integer → lookup trainable 2D feature vector. Collisions are handled implicitly by gradient averaging.',
+        'Multiresolution: coarse level captures large-scale structure; fine level captures details — same principle as image pyramids.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp31-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Instant-NGP\'s multiresolution hash encoding can represent scenes with hash collisions without explicit conflict resolution because gradient learning implicitly averages colliding features to represent the most frequently queried content.',
+      correctAnswer: 'True',
+      explanation: 'When two spatial locations hash to the same table entry, their gradients are summed. Frequently queried positions (e.g., object surfaces visible from many training views) dominate the gradient signal, so the feature adapts to represent them well. Rarely queried positions (background, occluded regions) contribute fewer gradients and their collisions matter less. This implicit averaging makes collision-based hash encoding robust in practice.',
+      hints: [
+        'High-frequency query positions get more gradient updates → their features win over rarely-queried collision partners.',
+        'Collision is a form of parameter sharing — acceptable when the sharing is between positions with similar appearance.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp31-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Compared to dense voxel grids, the multiresolution hash encoding in Instant-NGP achieves better memory efficiency because ___.',
+      options: [
+        'It uses 8-bit quantisation rather than 32-bit floats for all stored features',
+        'It covers a large spatial extent with small hash tables by accepting hash collisions — the total parameter count is T·F per resolution level (T = table size, F = feature dim) rather than N³·F for a voxel grid of side N',
+        'It stores only the surface voxels rather than the full 3D volume',
+        'It uses a separate network per resolution level, which can be pruned independently',
+      ],
+      correctAnswer: 1,
+      explanation: 'Dense voxel grid: N³ entries for a grid of side N (N=512 → 134M entries). Hash table: T entries per level (T typically 2^14 to 2^24), shared across all space — T << N³. Total params: L·T·F (e.g., 16 levels × 2^19 entries × 2 features = 16M params). This covers the same volume with 8-100x fewer parameters, enabling fine-grained representations that would be prohibitively large as explicit grids.',
+      hints: [
+        'Voxel grid: O(N³) memory. Hash table: O(T) memory. The hash collapses 3D space into 1D, accepting collisions.',
+        'At resolution N=512: 512³ = 134M entries. Hash table: 2^19 = 524K entries per level.',
+      ],
+    },
+  ],
+  'pointnet-deep-learning': [
+    {
+      id: 'q-cv3d-kp32-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'PointNet++ extends PointNet to capture local geometric structure. How does it do this?',
+      options: [
+        'It processes the entire point cloud as a single global feature with no local grouping',
+        'It uses a hierarchical set abstraction: iterative farthest point sampling selects centroids, ball-query groups neighbouring points, and a PointNet mini-network extracts local features at each centroid — creating a multi-scale local representation',
+        'It converts the point cloud to a voxel grid and applies 3D convolutions at multiple scales',
+        'It uses graph neural networks where each point attends to all other points via full self-attention',
+      ],
+      correctAnswer: 1,
+      explanation: 'PointNet++: (1) Farthest Point Sampling (FPS): greedily select S points maximally spread across the cloud; (2) Ball query: for each centroid, collect all points within radius r; (3) Mini-PointNet: extract a feature for each local group. This hierarchical abstraction is repeated at multiple scales (multi-scale grouping, MSG) to capture both fine local features and global context.',
+      hints: [
+        'PointNet (v1): global max-pool over all points — no local geometry. PointNet++: local grouping + hierarchy.',
+        'FPS: ensures centroids are well-spread, not clustered — better coverage than random sampling for non-uniform point clouds.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp32-2',
+      type: 'true-false',
+      difficulty: 'easy',
+      question: 'PointNet achieves permutation invariance by using a symmetric function (global max-pooling) over point features, so the output is identical regardless of the order in which points are processed.',
+      correctAnswer: 'True',
+      explanation: 'PointNet (Qi et al., 2017): each point p_i is independently mapped to a feature h_i = f(p_i) (shared MLP). Global feature g = max(h_1,...,h_N) (element-wise maximum). Since max-pool is symmetric (commutative), g is invariant to the permutation of points. A critical point function: {p_i | h_i = g} — the subset of points whose features are the global max — determines the global feature.',
+      hints: [
+        'Symmetric function: f(a,b,c) = f(c,a,b) = f(b,c,a). Max-pool satisfies this for any number of inputs.',
+        'Order-invariance is essential because point clouds have no canonical ordering — they are sets, not sequences.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp32-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'The T-Net (Transformer Network) in PointNet predicts an input alignment matrix. What problem does this solve?',
+      options: [
+        'It enables PointNet to process point clouds of variable size by dynamically resizing the network',
+        'It predicts a 3×3 (or 64×64) transformation matrix applied to input points (or intermediate features) to make the network invariant to rigid 3D transformations — regularised to be close to a rotation matrix via an L2 penalty on (I − TT^T)',
+        'It is a self-attention mechanism that attends to the most informative points before max-pooling',
+        'It transforms the point cloud from world coordinates to camera coordinates using a predicted extrinsic matrix',
+      ],
+      correctAnswer: 1,
+      explanation: 'T-Net: a mini-PointNet that predicts a 3×3 matrix applied to input xyz (for rotation/reflection invariance) or a 64×64 matrix applied to intermediate features (for feature-space alignment). Regularisation: L_reg = ||I − TT^T||_F² encourages T to be orthogonal. This makes PointNet approximately invariant to rigid transformations of the input point cloud, improving generalisation.',
+      hints: [
+        'Without T-Net: a rotated point cloud produces different features. With T-Net: T "un-rotates" the cloud before processing.',
+        'Feature-space T-Net (64×64): regularisation is crucial because unconstrained 64×64 matrices can destroy information.',
+      ],
+    },
+  ],
+  'lidar-3d-detection': [
+    {
+      id: 'q-cv3d-kp33-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'VoxelNet was one of the first end-to-end 3D object detectors for LiDAR point clouds. Its key innovation was ___.',
+      options: [
+        'Using a 2D bird\'s-eye-view projection of the LiDAR scan as input to a standard 2D detector',
+        'Voxelising the point cloud and processing each non-empty voxel with a VFE (Voxel Feature Encoding) network that learns per-voxel features from variable-size point sets, then applying a 3D convolutional RPN for detection',
+        'Projecting LiDAR points onto the camera image plane and using image features for detection',
+        'Applying PointNet directly to the entire point cloud without any spatial partitioning',
+      ],
+      correctAnswer: 1,
+      explanation: 'VoxelNet (Zhou & Tuia, 2018): (1) divide 3D space into voxels; (2) for each non-empty voxel, randomly sample ≤T points and encode with VFE layers (element-wise operations + max-pool); (3) stack voxel features into a sparse 3D tensor; (4) apply a 3D sparse convolutional backbone; (5) BEV projection → 2D RPN for 3D bounding box regression. VFE enables variable-size point sets within each voxel.',
+      hints: [
+        'VFE layer: pointwise MLP → element-wise max-pool → concatenate individual and pooled features. Same principle as PointNet.',
+        'Sparse convolution: only compute on non-empty voxels — critical efficiency gain since LiDAR point clouds are sparse.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp33-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'CenterPoint detects 3D objects by predicting a heatmap of object centres in BEV space rather than predicting bounding boxes directly, which simplifies the detection head and improves performance on rotated objects.',
+      correctAnswer: 'True',
+      explanation: 'CenterPoint (Yin et al., 2021): a centre-based detection head predicts a BEV heatmap where peaks correspond to object centres (inspired by CenterNet for 2D). From each peak, separate regression heads predict height, size, rotation angle (yaw), and velocity. Centre-based detection avoids the anchor-design problem and naturally handles objects at any orientation without anchor alignment issues.',
+      hints: [
+        'Anchor-based: need anchors at every location × every orientation × every size. Centre-based: just find the peak, then regress attributes.',
+        'Gaussian heatmap: the centre point is rendered as a 2D Gaussian in BEV — easy to detect via peak finding.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp33-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'BEVFusion (Liu et al., MIT) fuses LiDAR and camera features in a unified BEV space. What is the key challenge in aligning LiDAR BEV features with camera image features?',
+      options: [
+        'LiDAR and camera use different timestamp frequencies that must be interpolated',
+        'Camera images are perspective-projected (view-dependent) while LiDAR is range-based; transforming camera image features to BEV requires solving the "depth ambiguity" — a 2D image pixel corresponds to a ray in 3D, not a specific depth — typically resolved using predicted depth distributions or transformer-based cross-modal attention',
+        'LiDAR features are always higher resolution than camera features, requiring upsampling',
+        'Camera images cannot represent the z-axis (height) information that LiDAR captures, making fusion impossible',
+      ],
+      correctAnswer: 1,
+      explanation: 'Camera-to-BEV transformation requires lifting 2D image features to 3D. LSS (Lift-Splat-Shoot) predicts a depth distribution per pixel and splats features along the ray. BEVFusion uses a unified BEV encoder that fuses lifted camera features and voxelised LiDAR features with spatial alignment. The depth uncertainty from cameras is the fundamental misalignment — LiDAR provides sparse but accurate depth; cameras provide dense but depth-ambiguous features.',
+      hints: [
+        'Image pixel (u,v) + focal length → ray direction. But where along the ray is the object? Needs predicted depth.',
+        'LSS: predict depth probability d(z) for each pixel; splat feature f × d(z) into BEV at corresponding (x,y,z).',
+      ],
+    },
+  ],
+  'human-pose-estimation': [
+    {
+      id: 'q-cv3d-kp34-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'HRNet (High-Resolution Network) for human pose estimation maintains high-resolution representations throughout the network. Why does this matter for keypoint localisation?',
+      options: [
+        'High-resolution features enable the network to process higher-resolution input images without resizing',
+        'Keypoint locations require precise spatial localisation (sub-pixel accuracy); networks that downsample to low resolution (e.g., standard ResNet) and upsample back lose spatial precision due to the encoder-decoder bottleneck — HRNet maintains parallel high-to-low resolution streams with repeated fusion',
+        'High-resolution representations contain more semantic information than low-resolution ones',
+        'HRNet uses high resolution to avoid any form of data augmentation during training',
+      ],
+      correctAnswer: 1,
+      explanation: 'Standard pose estimators: image → downsample (high semantics, low spatial) → upsample → heatmap. Each downsample loses spatial precision. HRNet: start at full resolution, gradually add lower-resolution parallel streams, perform repeated multi-scale fusion — the high-resolution stream is never downsampled, preserving spatial accuracy. This is especially important for small joints (fingers, toes) where ±1 pixel matters.',
+      hints: [
+        'Encoder-decoder (HourGlass, SimpleBaseline): spatial information lost at the bottleneck must be recovered via skip connections or upsampling — imperfect.',
+        'HRNet parallel streams: 1/4, 1/8, 1/16 resolution run simultaneously and exchange information via multi-scale fusion.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp34-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: '3D human pose estimation from a single RGB camera is inherently ambiguous because multiple 3D joint configurations can project to the same 2D skeleton, making it an ill-posed problem that requires learned priors to resolve.',
+      correctAnswer: 'True',
+      explanation: 'Monocular 3D pose ambiguity: a 2D skeleton (projected joints) is consistent with infinitely many 3D skeletons (different depths). Humans use contextual cues (typical pose statistics, body proportions, contact with environment) to resolve this. 3D pose estimators learn statistical priors over human joint configurations (e.g., SMPL body model) to disambiguate. Multi-view cameras or depth sensors remove this ambiguity but require additional hardware.',
+      hints: [
+        'Rotation ambiguity: a limb can be at multiple depths while projecting to the same 2D point.',
+        'Body model prior: SMPL constrains joint angles to physically valid poses, reducing the ambiguity significantly.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp34-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'The SMPL body model represents human bodies as a parametric function of pose θ (joint angles) and shape β (PCA body shape coefficients). What enables SMPL to generalise to arbitrary body shapes and poses?',
+      options: [
+        'SMPL uses a lookup table mapping each (θ, β) to a stored mesh — enabling exact representation but limited to trained configurations',
+        'SMPL uses linear blend skinning (LBS) with learned pose-dependent corrective blend shapes: the template mesh is deformed by bone rotations (LBS), and pose-dependent blend shapes correct the LBS artifacts (candy wrapper effect) using learned linear functions of joint rotations',
+        'SMPL uses a neural network to directly regress vertex positions from (θ, β) without any mesh template',
+        'SMPL encodes body shape as a 3D voxel grid and pose as a sequence of transformations applied to the voxels',
+      ],
+      correctAnswer: 1,
+      explanation: 'SMPL (Loper et al., 2015): template mesh → shape blend shapes (B_S(β) = Σ_n β_n S_n) → pose blend shapes (B_P(θ) = Σ_k (R_k − R*_k) P_k) → LBS (rotate each vertex by its bone\'s weighted transformation). The pose blend shapes B_P correct LBS artifacts (e.g., collapsing at bent elbows). Result: a differentiable function mapping 72+10 parameters to a 6890-vertex mesh, enabling gradient-based fitting and neural network integration.',
+      hints: [
+        'LBS artifact: linear blending of rotations produces the "candy wrapper" effect (collapsing at large joint angles). Pose blend shapes fix this.',
+        'SMPL is differentiable: gradients flow from vertex positions back through LBS and blend shapes to θ and β.',
+      ],
+    },
+  ],
+  '3d-scene-flow': [
+    {
+      id: 'q-cv3d-kp35-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: '3D scene flow estimation predicts the per-point 3D motion vector between two consecutive LiDAR frames. FlowNet3D uses ___.',
+      options: [
+        'A voxelised BEV representation with 2D optical flow estimation applied at each height slice',
+        'Point mixture layers that associate points across frames via learned spatial correlation, followed by flow embedding propagation — producing per-point 3D flow vectors without voxelisation',
+        'Template matching: each point in frame 1 is matched to the nearest point in frame 2 using L2 distance',
+        'A GAN that generates the next-frame point cloud from the current frame, extracting flow from the generator\'s intermediate layers',
+      ],
+      correctAnswer: 1,
+      explanation: 'FlowNet3D (Liu et al., 2019): (1) PointNet++ encodes features for both frames independently; (2) Flow embedding layers: for each point in frame 1, aggregate weighted features from nearby frame-2 points (correlation in feature space); (3) Set upconv layers propagate flow estimates from sampled points to all input points. Result: per-point flow vectors without the memory cost of voxelisation.',
+      hints: [
+        'Analogy: FlowNet3D is to 3D point clouds what PWCNet is to 2D optical flow — correlation at multiple scales.',
+        'Flow embedding: the correlation between frame-1 features and nearby frame-2 features encodes "how should this point move?"',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp35-2',
+      type: 'true-false',
+      difficulty: 'easy',
+      question: '3D scene flow is a generalisation of 2D optical flow to 3D space, where each point in a point cloud receives a 3D motion vector (dx, dy, dz) rather than a 2D pixel displacement (du, dv).',
+      correctAnswer: 'True',
+      explanation: '2D optical flow: for each pixel (u,v) in image I_t, predict displacement (Δu, Δv) to its location in I_{t+1}. 3D scene flow: for each 3D point p_i in frame t, predict 3D motion vector (Δx, Δy, Δz) to its location in frame t+1. 3D scene flow enables understanding of 3D motion in world coordinates, not just projected motion — critical for autonomous driving (understanding which 3D points are moving and where).',
+      hints: [
+        '2D optical flow: ambiguous for depth (a point moving in depth produces no image motion if it stays on the same ray).',
+        '3D scene flow: explicit 3D displacement — no depth ambiguity since both frames are in 3D.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp35-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Self-supervised 3D scene flow estimation trains without ground-truth flow labels. Which self-supervised objective is most commonly used?',
+      options: [
+        'Reconstruction loss: predict frame t+1 point cloud from frame t using estimated flow, penalise Chamfer distance between predicted and observed frame t+1',
+        'Cycle consistency: estimate flow from t→t+1 and t+1→t; enforce that composing them returns to the original point cloud',
+        'Both Chamfer reconstruction and cycle consistency are commonly used together as complementary self-supervised objectives',
+        'Contrastive learning: push flow features of matching points together and non-matching points apart',
+      ],
+      correctAnswer: 2,
+      explanation: 'Self-supervised scene flow: (1) Chamfer loss: p_i + f_i should be close to its nearest neighbour in frame t+1 (forward reconstruction); (2) Cycle loss: f_forward(p) + f_backward(p + f_forward(p)) ≈ 0 — the round-trip should return to the original. Both objectives are complementary: Chamfer ensures the warped cloud matches observations; cycle ensures forward and backward flows are consistent. Methods like Self-Point-Flow combine these.',
+      hints: [
+        'Chamfer: warp frame t by flow → should overlap with frame t+1. Penalises poor flow that doesn\'t match observations.',
+        'Cycle: if you move forward then backward by the corresponding flow, you should return home. Enforces flow consistency.',
+      ],
+    },
+  ],
+  'stereo-depth-estimation': [
+    {
+      id: 'q-cv3d-kp36-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'RAFT-Stereo adapts the RAFT optical flow framework for stereo depth estimation. Its core operation is ___.',
+      options: [
+        'A single forward pass CNN that directly regresses a depth map from a stereo image pair',
+        'An iterative update operator that refines a disparity estimate over multiple steps using correlation volumes between left and right image features, converging to accurate sub-pixel disparity estimates',
+        'A GAN discriminator that distinguishes between estimated and ground-truth disparity maps',
+        'A transformer with cross-attention between left and right image patches at each pixel',
+      ],
+      correctAnswer: 1,
+      explanation: 'RAFT-Stereo (Lipson et al., 2021): build a 1D correlation volume between left features and all right features at each row (epipolar constraint means right features are searched along a horizontal line). The GRU-based update operator iteratively refines the disparity map d using a look-up in the correlation volume at the current d estimate. After K iterations (K=32 typical), the disparity map converges to sub-pixel accuracy.',
+      hints: [
+        'Stereo constraint: corresponding points in left/right images lie on the same horizontal epipolar line — search is 1D, not 2D.',
+        'Disparity d: left pixel (u,v) corresponds to right pixel (u−d, v). Depth Z = f·B/d where f=focal length, B=baseline.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp36-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Monocular depth estimation is an ill-posed problem (scale ambiguous), while stereo depth estimation provides metric (absolute) depth because the known stereo baseline converts disparity to physical distance.',
+      correctAnswer: 'True',
+      explanation: 'Stereo: depth Z = f·B/d where B (baseline = distance between cameras) and f (focal length) are known from calibration. Disparity d is measured in pixels. Result: metric depth in metres. Monocular: a scene scaled by λ produces the same image for any λ — depth is only recoverable up to scale. Monocular models learn a scale-ambiguous depth prior; post-hoc scale alignment with a GPS or LiDAR point is needed for metric estimates.',
+      hints: [
+        'Stereo baseline B: cameras are 6cm apart → B = 0.06m. This physical constant converts relative disparity to absolute depth.',
+        'Monocular scale ambiguity: a small close object and a large far object can look identical in a single image.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp36-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Generalising stereo depth estimation to unseen domains (different camera baselines, focal lengths, or environments) is challenging because ___.',
+      options: [
+        'Stereo matching requires the cameras to have identical focal lengths, which rarely holds across different camera rigs',
+        'Models trained on a specific camera rig (fixed B and f) learn disparity-to-depth mappings tied to that geometry; at test time with different B or f, the disparity-to-depth scale changes and the model fails unless it explicitly conditions on camera intrinsics/extrinsics or is trained with varying rigs',
+        'Domain shifts in stereo are larger than in monocular because stereo uses twice as many images',
+        'Stereo models require ground-truth depth for training and cannot be adapted without retraining from scratch',
+      ],
+      correctAnswer: 1,
+      explanation: 'Stereo domain generalisation: Z = f·B/d means the disparity value for a 10m object changes if f or B changes. A model trained on KITTI (B=0.54m) applied to a short-baseline phone stereo (B=6mm) sees 90x smaller disparities for the same scene — completely out of distribution. Solutions: normalise disparity by (f·B) during training/inference; train with diverse synthetic datasets varying B and f; meta-learning across camera configurations.',
+      hints: [
+        'KITTI baseline 54cm, phone stereo baseline 6mm = 90x difference. Same real-world depth → very different disparity values.',
+        'Normalised disparity: d_norm = d / (f·B) is scale-invariant. Training on d_norm generalises across camera rigs.',
+      ],
+    },
+  ],
+  '3d-generation-diffusion': [
+    {
+      id: 'q-cv3d-kp37-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'DreamFusion generates 3D scenes from text prompts without 3D training data by using ___.',
+      options: [
+        'A 3D diffusion model trained on a large dataset of (text, 3D mesh) pairs',
+        'Score Distillation Sampling (SDS): a NeRF is optimised so that rendered views from random camera angles look like samples from a 2D text-conditioned diffusion model, without requiring any 3D ground truth',
+        'A GAN where the generator creates 3D scenes and the discriminator is a pretrained image classifier',
+        'A retrieval system that finds the nearest text-aligned 3D model in a database and deforms it to match the text',
+      ],
+      correctAnswer: 1,
+      explanation: 'DreamFusion (Poole et al., 2022): initialise a NeRF randomly; at each step, render from a random camera pose; add noise at a random diffusion timestep; compute the 2D diffusion model\'s predicted noise; the SDS gradient updates the NeRF to make rendered views more likely under the text-conditioned diffusion model. No 3D dataset needed — the 2D diffusion model provides all the supervisory signal.',
+      hints: [
+        'SDS: "if this rendered view doesn\'t look like a sample from the diffusion model for this text prompt, update the 3D scene to make it more likely."',
+        'No 3D GT: the 2D diffusion model trained on billions of images is a rich 3D-consistent image prior—SDS exploits this.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp37-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'One3D and Zero123 demonstrate zero-shot novel view synthesis: given a single image, they generate the object from arbitrary viewpoints by fine-tuning a diffusion model to be conditioned on camera pose.',
+      correctAnswer: 'True',
+      explanation: 'Zero123 (Liu et al., 2023): fine-tune Stable Diffusion on (image, relative camera pose) → target view pairs. At inference: given a single input image and a target (Δazimuth, Δelevation, Δdistance), generate the novel view. The model learns the mapping from image appearance + camera geometry to novel view appearance — enabling arbitrary view synthesis from a single image without 3D reconstruction.',
+      hints: [
+        'Training data: synthetic 3D objects rendered from multiple poses → (source view, relative pose) → target view pairs.',
+        'At test time: feed a real-world photo + desired camera pose → the model imagines the novel view.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp37-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Point-E (OpenAI) generates 3D point clouds from text using a two-stage approach. What are the two stages and why is this decomposition useful?',
+      options: [
+        'Stage 1: generate a point cloud from text with a 3D diffusion model; Stage 2: texture the point cloud with a 2D GAN',
+        'Stage 1: generate a coarse 3D coloured point cloud from text using a small 3D diffusion model; Stage 2: upsample to a dense fine-resolution point cloud using a point cloud upsampling diffusion model — this decomposition is efficient because the coarse stage captures 3D structure while the fine stage adds detail',
+        'Stage 1: retrieve the nearest text-aligned 3D model from a database; Stage 2: deform it using a neural network to match the text exactly',
+        'Stage 1: generate a depth map from text using a 2D diffusion model; Stage 2: lift the depth map to a 3D point cloud using back-projection',
+      ],
+      correctAnswer: 1,
+      explanation: 'Point-E: Stage 1 generates a 1024-point coloured point cloud from a text-conditioned image synthesised from the text (using a text-to-image model). Stage 2: given the coarse 4096-point cloud, a separate diffusion model generates a 16384-point fine-resolution cloud. The decomposition: coarse stage handles 3D semantics at low resolution (faster, more tractable); fine stage adds surface detail using the coarse cloud as conditioning. This is more tractable than direct high-resolution 3D diffusion.',
+      hints: [
+        'Direct 16K-point 3D diffusion: very high-dimensional, slow to train. Coarse-to-fine: 1K → 16K is much more tractable.',
+        'The coarse stage provides the 3D structure (shape, overall geometry); the fine stage adds surface texture and detail.',
+      ],
+    },
+  ],
+  'indoor-3d-reconstruction': [
+    {
+      id: 'q-cv3d-kp38-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'BundleFusion reconstructs dense 3D models from RGB-D sequences in real-time. Its key innovation for handling drift in camera tracking is ___.',
+      options: [
+        'Loop closure detection using a bag-of-words vocabulary tree, followed by pose graph optimisation',
+        'A hierarchical global-to-local alignment that continuously re-integrates all frames into a global TSDF volume while simultaneously optimising all camera poses in a bundle adjustment framework — achieving both local and global consistency without explicit loop closure triggers',
+        'Using depth-only data without RGB, which avoids drift from colour-based tracking errors',
+        'A neural network that predicts camera pose from each depth frame independently without any temporal accumulation',
+      ],
+      correctAnswer: 1,
+      explanation: 'BundleFusion (Dai et al., 2017): maintains a global TSDF volume and continuously optimises all camera poses jointly (bundle adjustment) using sparse point-to-point correspondences established via feature matching (SIFT + BRIEF). Unlike frame-to-model tracking that accumulates drift, BundleFusion continuously corrects all past poses — any drift detected via misalignment triggers a global re-optimisation, preventing accumulation.',
+      hints: [
+        'TSDF: Truncated Signed Distance Function — voxel-based surface representation. Fusion = weighted average of depth measurements.',
+        'Bundle adjustment: optimise all camera poses and 3D points simultaneously to minimise reprojection error — the gold standard for SLAM accuracy.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp38-2',
+      type: 'true-false',
+      difficulty: 'easy',
+      question: 'TSDF (Truncated Signed Distance Function) fusion represents a 3D surface by storing, at each voxel, the signed distance to the nearest surface — positive outside, negative inside — and the surface is extracted at the zero-crossing using Marching Cubes.',
+      correctAnswer: 'True',
+      explanation: 'TSDF (Curless & Levoy, 1996; KinectFusion, 2011): each voxel stores (TSDF value, weight). For each depth frame, update TSDF: if the voxel is in front of the measured surface, TSDF > 0; behind, TSDF < 0; truncate at ±t. The surface is at TSDF = 0. Marching Cubes extracts the isosurface as a triangle mesh. Multiple depth frames are fused by weighted averaging, improving robustness to noise.',
+      hints: [
+        'SDF zero-crossing: voxels where TSDF changes sign mark the surface — Marching Cubes finds this boundary.',
+        'Truncation: TSDF values beyond ±t (e.g., ±5cm) are set to ±1 — prevents distant empty space from influencing the surface.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp38-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'ScanNet is a benchmark dataset for indoor 3D scene understanding. What makes it particularly useful for training and evaluating 3D reconstruction and semantic segmentation methods?',
+      options: [
+        'It provides only LiDAR scans without any RGB images, forcing purely geometric algorithms',
+        'It provides RGB-D sequences with ground-truth camera poses (from BundleFusion), 3D mesh reconstructions, and per-vertex/per-voxel semantic labels from 20 NYU label classes — enabling joint evaluation of 3D reconstruction, semantic segmentation, and instance segmentation',
+        'It was collected in outdoor environments and provides GPS ground truth for all camera trajectories',
+        'ScanNet only contains empty rooms without objects, enabling evaluation of wall/floor reconstruction accuracy',
+      ],
+      correctAnswer: 1,
+      explanation: 'ScanNet (Dai et al., 2017): 1513 RGB-D scans of indoor scenes, annotated with: (1) 3D ground-truth meshes from BundleFusion; (2) per-vertex semantic labels (20 classes: chair, table, sofa, etc.) from crowdsourced annotation; (3) per-instance labels. This enables evaluation of 3D semantic segmentation (PointNet++, PointTransformer), instance segmentation (3D-BoNet), and reconstruction (occupancy networks). The standard benchmark for indoor 3D scene understanding.',
+      hints: [
+        'RGB-D: RGB camera + depth camera (Kinect or similar) captures both colour and geometry simultaneously.',
+        '1513 scans × diverse room types (bedroom, living room, kitchen) = comprehensive indoor scene diversity.',
+      ],
+    },
+  ],
+  'multi-camera-3d-perception': [
+    {
+      id: 'q-cv3d-kp39-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'BEVFormer learns a unified BEV representation from surround-view cameras using ___.',
+      options: [
+        'Projecting all camera images to BEV using known camera extrinsics without any learned lifting',
+        'Deformable attention from BEV queries to multi-scale, multi-camera image features: each BEV grid point queries relevant image regions across cameras and timesteps, implicitly learning depth-free BEV feature lifting',
+        'A separate depth estimation network that converts each camera image to a depth map before BEV projection',
+        'A polar-to-Cartesian transformation of the concatenated surround-view image panorama',
+      ],
+      correctAnswer: 1,
+      explanation: 'BEVFormer (Li et al., 2022): initialise BEV queries on a grid; for each query at (x,y), project to each camera via camera geometry → get candidate 2D locations; use deformable DETR attention to sample and aggregate features from those image regions across multiple cameras and temporal frames. The transformer implicitly learns the depth and occlusion relationships without explicit depth estimation.',
+      hints: [
+        'BEV query (x,y): "what is at this ground location?" — projected to multiple cameras, features are aggregated via attention.',
+        'Deformable attention: instead of attending to all image tokens (quadratic), attend to a small set of learned offsets around the projected location.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp39-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Tesla\'s Autopilot vision-only perception system demonstrates that camera-only 3D perception can approach LiDAR-level accuracy for autonomous driving by using surround-view cameras with implicit 3D reasoning.',
+      correctAnswer: 'True',
+      explanation: 'Tesla Autopilot uses 8 surround-view cameras (no LiDAR) and predicts a BEV occupancy map from multi-camera image features. By training on fleet data with pseudo-labels from a teacher LiDAR-based model, the vision system learns implicit 3D reasoning. While not strictly equivalent to LiDAR on all metrics (especially in poor lighting), Tesla\'s deployment at scale demonstrates that vision-only perception can reach production-grade performance for many driving scenarios.',
+      hints: [
+        'Vision-only advantage: cameras are cheaper, smaller, and don\'t fail in rain unlike some LiDAR systems.',
+        'Fleet learning: millions of miles of driving data with diverse scenarios compensate for the difficulty of learning 3D geometry from 2D images.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp39-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Occupancy networks for autonomous driving (OccNet, SurroundOcc) predict 3D occupancy and semantic labels for each voxel in the driving scene. How do they handle temporal fusion across multiple frames?',
+      options: [
+        'They process each frame independently and average predictions across the time window',
+        'They use recurrent BEV feature propagation: BEV features from the current frame are aligned with past frames via ego-motion compensation (known ego-pose from IMU/GPS), then fused via spatial attention or ConvGRU — enabling temporal context without explicit tracking',
+        'They extract optical flow between frames and warp past predictions to the current frame',
+        'Temporal fusion is not used because occupancy changes too rapidly between frames to be beneficial',
+      ],
+      correctAnswer: 1,
+      explanation: 'OccNet/BEVFormer temporal: at timestep t, the ego vehicle has moved from t-1. The BEV feature map from t-1 is spatially warped using the known ego-motion (rotation + translation from odometry) to align it with the current frame\'s coordinate system. Then deformable temporal attention fuses current and past BEV features — allowing the model to see occluded areas that were visible in past frames and reduce per-frame noise.',
+      hints: [
+        'Ego-motion compensation: if you moved 1m forward, the past BEV feature is shifted by -1m to align with the current reference frame.',
+        'Temporal context: an occluded pedestrian behind a truck was visible 3 frames ago — the past feature preserves this knowledge.',
+      ],
+    },
+  ],
+  'nerf-editing-composition': [
+    {
+      id: 'q-cv3d-kp40-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Instruct-NeRF2NeRF edits a NeRF scene using natural language instructions. It uses ___.',
+      options: [
+        'Direct text-to-mesh editing by modifying the NeRF\'s weight tensors based on text embeddings',
+        'An iterative dataset update approach: render training images from the NeRF, edit each image with InstructPix2Pix (image diffusion model conditioned on instruction), update the NeRF training set with edited images, retrain NeRF — iterating until the NeRF represents the desired edit',
+        'A differentiable renderer that computes gradients from CLIP loss between rendered views and text description',
+        'A GAN discriminator conditioned on text that guides NeRF optimisation toward the specified edit',
+      ],
+      correctAnswer: 1,
+      explanation: 'Instruct-NeRF2NeRF (Haque et al., 2023): (1) render training views from original NeRF; (2) edit each view with InstructPix2Pix ("make the person wear a hat"); (3) replace training images with edited versions; (4) finetune NeRF on edited images. Repeat until convergence. This propagates 2D edits to 3D consistently — the NeRF integrates edits across all views, ensuring 3D-consistent appearance without explicit 3D editing.',
+      hints: [
+        'InstructPix2Pix: "given this image and instruction, generate an edited image that follows the instruction."',
+        'Iterative update: one round of editing may be inconsistent across views — multiple rounds converge to a consistent 3D edit.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp40-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'NeRF composition methods allow combining multiple independently trained NeRFs into a single scene by treating each NeRF as an object and compositing their radiance fields using spatial bounding regions or opacity-based blending.',
+      correctAnswer: 'True',
+      explanation: 'Object-compositional NeRF (uORF, ObjectNeRF): each object has its own NeRF. During rendering, a ray samples densities from all object NeRFs; compositing uses the alpha-compositing formula over objects along the ray. Spatial bounding boxes restrict each object NeRF to its region. This enables scene editing: move an object by translating its bounding box, swap objects by replacing one NeRF with another — without retraining the full scene.',
+      hints: [
+        'Object NeRF: trained on crops/masks of each object. Scene rendering: composite all objects via alpha-compositing.',
+        'Compositing formula: T_final = Π_i (1 − σ_i·Δ_i) — transmittance through all objects ordered front-to-back.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp40-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'A fundamental limitation of volume rendering in NeRF for real-time applications is that it requires many samples per ray (typically 128-256). NeRF acceleration methods like Plenoxels and TensorRF address this by ___.',
+      options: [
+        'Reducing the number of training views required so the scene is simpler to represent',
+        'Using explicit spatial data structures (voxel grids, tensor decompositions) that allow faster per-sample density lookups than MLP forward passes, and exploiting early ray termination (stop sampling once accumulated opacity > threshold) to reduce the effective samples per ray',
+        'Replacing volume rendering with surface rendering, which requires only 1 sample per ray',
+        'Using GPU-optimised matrix multiplication to make MLP forward passes 10x faster',
+      ],
+      correctAnswer: 1,
+      explanation: 'Plenoxels: stores density and spherical harmonic colour coefficients at each voxel; lookup = trilinear interpolation (fast). TensoRF: decomposes the radiance field as a sum of low-rank vector-matrix outer products, enabling fast vectorised lookups. Both avoid costly MLP evaluations (which require many multiply-accumulate ops per sample). Early ray termination: once T(t) < ε (ray is almost fully opaque), stop sampling — saves 50-90% of samples on typical scenes.',
+      hints: [
+        'MLP eval: input (x,y,z) → 8 layers of 256-dim activations → one density + colour. Voxel lookup: input (x,y,z) → trilinear interpolation → one scalar. The latter is 100x faster.',
+        'Early termination: a point behind an opaque object contributes near-zero to the final pixel — stop sampling there.',
+      ],
+    },
+  ],
+  'gaussian-splatting-variants': [
+    {
+      id: 'q-cv3d-kp41-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: '3D Gaussian Splatting (3DGS) represents scenes as a collection of 3D Gaussians. Each Gaussian\'s 3D covariance Σ is parameterised as Σ = RSS^T R^T. Why is this decomposition used instead of directly optimising Σ?',
+      options: [
+        'Because Σ = RSS^T R^T (R = rotation matrix from quaternion q, S = diagonal scaling matrix) ensures Σ stays symmetric and positive semi-definite throughout optimisation — direct gradient updates on Σ entries can produce invalid non-PSD matrices',
+        'Because this decomposition reduces the number of parameters from 9 to 6 by eliminating redundant off-diagonal entries',
+        'Because R and S can be optimised with different learning rates, making training more stable',
+        'Because storing R and S separately enables faster GPU matrix multiplication during rendering',
+      ],
+      correctAnswer: 0,
+      explanation: 'A valid 3D covariance matrix must be symmetric positive semi-definite (PSD). Direct gradient updates on Σ\'s 9 entries can violate PSD during training. Decomposing Σ = R·S·S^T·R^T where R is a rotation (stored as quaternion q, 4 params) and S is a diagonal scale matrix (3 params) guarantees PSD by construction: any matrix of the form RSS^T R^T is PSD.',
+      hints: [
+        'A covariance matrix Σ = A^T A is always PSD. What structure guarantees this while remaining differentiable?',
+        'Quaternion → rotation matrix keeps R orthogonal; scaling S along axes keeps ellipsoid axes aligned.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp41-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: '3D Gaussian Splatting renders pixel colour C by front-to-back alpha compositing: C = Σᵢ cᵢ αᵢ Πⱼ<ᵢ (1 − αⱼ), where αᵢ = oᵢ · exp(−½(x−μ₂ᴅ)^T Σ₂ᴅ⁻¹ (x−μ₂ᴅ)) evaluates the projected 2D Gaussian at pixel position x.',
+      correctAnswer: 'True',
+      explanation: 'After projecting each 3D Gaussian to a 2D Gaussian (via the Jacobian of the projective transform), 3DGS composes pixel colour front-to-back: C = Σᵢ cᵢαᵢΠⱼ<ᵢ(1−αⱼ). Here αᵢ = oᵢ·G₂ᴅ(x) is the product of learned opacity oᵢ and the 2D Gaussian value at pixel x. This is exactly the same alpha-compositing formula as NeRF\'s volume rendering but evaluated in 2D after splatting — enabling the fast tile-based GPU rasterizer.',
+      hints: [
+        'Compare to NeRF\'s C(r) = Σᵢ Tᵢαᵢcᵢ: 3DGS uses the same compositing formula but Gaussians are already projected to 2D.',
+        'Front-to-back ordering is achieved by sorting Gaussians by depth before rasterisation.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp41-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'What is the adaptive density control strategy in 3D Gaussian Splatting, and why is it necessary?',
+      options: [
+        'Gaussians are periodically split (when too large — positional gradient magnitude exceeds threshold τ_pos) or cloned (when too small — in under-reconstructed regions), and those with opacity αᵢ below threshold ε_α are pruned — adapting the number and placement of Gaussians to scene complexity',
+        'The number of Gaussians is fixed at initialisation and only their parameters (position, covariance, opacity, colour) are optimised throughout training',
+        'Gaussians are densified by adding new ones at positions with high photometric loss, and merged when two Gaussians overlap (IoU > 0.9) to prevent redundancy',
+        'A fixed densification schedule adds Gaussians every N iterations at random scene positions regardless of reconstruction quality',
+      ],
+      correctAnswer: 0,
+      explanation: 'Adaptive density control monitors the L1 norm of positional gradients ∇μ accumulated over training. When ||∇μ|| > τ_pos: if the Gaussian is large (large scale S), split it into two smaller ones; if small, clone it to cover under-reconstructed regions. Periodically, Gaussians with opacity αᵢ < ε_α are pruned. Gaussians that grow too large (exceeding world-space or screen-space size thresholds) are also split. This adapts the Gaussian count from typically ~100K (SfM initialisation) to millions.',
+      hints: [
+        'High positional gradient magnitude signals that the Gaussian is being pulled in conflicting directions — it needs to split to resolve ambiguity.',
+        'Under-reconstruction (high loss region with small Gaussians) → clone; over-reconstruction (one Gaussian covers too much) → split.',
+      ],
+    },
+  ],
+  'occupancy-and-semantic-3d': [
+    {
+      id: 'q-cv3d-kp42-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Occupancy networks (Mescheder et al., 2019) represent 3D shapes as ___.',
+      options: [
+        'A set of oriented surface points (normal + position) generated by a conditional GAN',
+        'A continuous function f_θ(p, z) → [0,1] that predicts the probability of any 3D point p being inside the shape given latent code z, enabling mesh extraction at arbitrary resolution via Marching Cubes on the decision boundary f = 0.5',
+        'A signed distance function stored in a fixed-resolution voxel grid',
+        'A triangle mesh with a fixed number of vertices generated autoregressively',
+      ],
+      correctAnswer: 1,
+      explanation: 'Occupancy networks: encode the input (e.g., image, point cloud) into latent z via an encoder; for any query point p in 3D, predict f_θ(p, z) = P(p is occupied). The surface is at f = 0.5. Marching Cubes extracts the mesh from this implicit function at any query resolution. This is resolution-free (unlike voxels) and differentiable (unlike explicit meshes with fixed topology).',
+      hints: [
+        'Implicit representation: the surface is defined implicitly as the decision boundary of a classifier, not as an explicit set of points.',
+        'Resolution-free: you can query the occupancy function at 16³ voxels for speed or 512³ for high-quality mesh extraction.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp42-2',
+      type: 'true-false',
+      difficulty: 'easy',
+      question: 'Semantic 3D scene graphs represent indoor scenes as graphs where nodes are objects/rooms and edges encode spatial relationships (on, in, next-to), enabling reasoning about functional relationships beyond geometric proximity.',
+      correctAnswer: 'True',
+      explanation: '3D scene graphs (Armeni et al., 2019; SceneGraphNet): nodes = rooms, objects, cameras; edges = spatial/functional relationships (chair is at table, table is in kitchen). This representation supports spatial queries ("find all chairs next to a table"), navigation planning, and language grounding ("pick up the cup on the counter"). Scene graphs bridge raw geometry and semantic understanding.',
+      hints: [
+        'Pure geometry: "these points form a cluster." Scene graph: "this cluster is a chair (node), next to a table (edge)."',
+        'Applications: embodied AI agents use scene graphs to answer "where is the nearest chair?" without explicit search.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp42-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Panoptic 3D scene understanding combines semantic segmentation and instance segmentation in 3D. Which model unifies these tasks end-to-end for point clouds?',
+      options: [
+        'PointNet++ with two separate heads: one for semantic labels, one for binary instance masks',
+        'Mask3D: a Transformer-based architecture that produces a variable number of instance masks each with a semantic class label, trained with a bipartite Hungarian matching loss between predicted and ground-truth instances — enabling panoptic 3D segmentation in a single end-to-end framework',
+        'VoxelNet with instance labels stored per voxel alongside semantic labels',
+        'A two-stage pipeline where semantic segmentation is run first and instance boundaries are detected in the semantic map',
+      ],
+      correctAnswer: 1,
+      explanation: 'Mask3D (Schult et al., 2023): a sparse 3D U-Net backbone extracts point features; N learnable instance queries cross-attend to point features via Transformer decoder layers to produce N (mask, class) pairs. Hungarian matching during training assigns each predicted instance to a ground-truth instance. This unifies semantic and instance segmentation — no separate pipelines, no post-processing heuristics (no clustering, no NMS). State-of-the-art on ScanNet panoptic 3D.',
+      hints: [
+        'Instance segmentation: each object gets a unique label (chair_1, chair_2). Semantic: each point gets a class (chair, table).',
+        'Panoptic = semantic + instance. Hungarian matching: assign predictions to GTs by minimising total assignment cost.',
+      ],
+    },
+  ],
+}
+
+Object.assign(questions, additionalVision3dQuestions)
 
 export default questions;
