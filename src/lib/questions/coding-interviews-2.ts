@@ -1,8 +1,8 @@
 import type { Question } from "@/lib/curriculum";
-import { registerQuestions } from "@/lib/questions";
+import { registerQuestions } from "./registry";
 
 const questions: Record<string, Question[]> = {
-  // ── TREES ─────────────────────────────────────────────────────────────
+  //
   "binary-tree-inorder": [
     {
       id: "q-bti-1",
@@ -438,19 +438,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "BST validation must handle equal values. Typically, BST requires:",
+        "BST duplicate handling varies across implementations. In the standard LeetCode convention (LeetCode 98), the rule is:",
       options: [
-        "Duplicates placed in the right subtree (left < node <= right)",
-        "No duplicates allowed (strictly less on left, strictly greater on right)",
-        "Duplicates can go either left or right",
-        "It depends on the problem statement",
+        "Duplicates in the right subtree only (left < node <= right)",
+        "Strict inequality on both sides (left < node < right, no duplicates)",
+        "Duplicates allowed on either side",
+        "No duplicates are allowed, but equal values may be placed in either subtree",
       ],
-      correctAnswer: 3,
+      correctAnswer: 1,
       explanation:
-        "Standard definitions vary:\n\n\\[\n\\text{LeetCode 98: } left < node < right \\quad \\text{(strict — no duplicates)}\n\\]\n\n\\[\n\\text{Option A definition: } left \\leq node \\leq right\n\\]\n\nAlways read the problem constraints. LeetCode 98 uses strict inequalities, which is the most common convention in coding interviews.",
+        "LeetCode 98 (the canonical BST validation problem) uses strict inequalities:\n\n\\[\n\\text{valid BST: } \\forall x \\in \\text{left subtree}: x < node.\\text{val} \\quad \\text{and} \\quad \\forall y \\in \\text{right subtree}: y > node.\\text{val}\n\\]\n\nSome textbook BST definitions allow duplicates in the right subtree with left <= node <= right, but the coding interview standard is strict. Always check the problem constraints — when not specified, default to strict inequalities.",
       hints: [
-        "LeetCode 98 uses strict inequalities. Real-world BST implementations vary.",
-        "When in doubt, assume strict unless stated otherwise.",
+        "LeetCode 98 is the canonical BST problem. It enforces strict left < root < right with no duplicates allowed.",
+        "When problem statements don't specify, assume strict inequality unless the problem context implies otherwise.",
       ],
     },
     {
@@ -661,17 +661,20 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "When inserting a value into a BST, if the value is less than the current node, you go:",
+        "When inserting a value into a BST, if the value is less than the current node's value, you descend to the:",
       options: [
         "Right subtree",
         "Left subtree",
-        "Replace current node",
-        "Insert at root",
+        "Parent node",
+        "Root node",
       ],
       correctAnswer: 1,
       explanation:
-        "BST property: smaller values go left. Recurse left until finding a null position to insert.",
-      hints: ["BST invariant: left < node < right."],
+        "The BST invariant requires all values in the left subtree to be strictly less than the parent node's value. Starting from the root, we compare the target value with each node and descend left or right accordingly:\n\n\\[\n\\text{if } val < node.val: node = node.\\text{left} \\\\\n\\text{else: } node = node.\\text{right}\n\\]\n\nWe continue until reaching a null child, which becomes the insertion point — always as a leaf node.",
+      hints: [
+        "BST invariant: all values in the left subtree must be strictly less than the parent node.",
+        "Insertion always happens at a leaf position: traverse until reaching a null child.",
+      ],
     },
     {
       id: "q-ibst-2",
@@ -686,9 +689,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Standard BST insertion traverses down until a null pointer — that null position becomes the new leaf.",
+        "Standard BST insertion follows the BST invariant (left < node < right) from the root downward until reaching a null child:\n\n\\[\n\\text{while }(current \\neq null):\\quad \\{\\;parent = current;\\; current = (val < current.val) ? current.\\text{left} : current.\\text{right} \\}\n\\]\n\nThe null position where traversal stops becomes the new leaf. No existing nodes are displaced or converted to internal nodes.",
       hints: [
-        "You traverse until you hit null. That null becomes the new leaf.",
+        "Standard BST insertion never reorganizes existing nodes — it only adds a new leaf.",
+        "Traverse from root, following the BST invariant left/right decision at each step, until hitting a null child.",
       ],
     },
     {
@@ -700,9 +704,10 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "False",
       explanation:
-        "Sorted insertion produces a skewed chain (degenerates to a linked list). Balanced BSTs require explicit rebalancing (AVL, Red-Black).",
+        "Sorted insertion into a standard BST produces a completely skewed (degenerate) chain:\n\n\\[\n\\text{Insert } 1 \\to \\text{tree}=1\\quad\n\\text{Insert } 2 \\to \\text{tree}=1 \\rightarrow 2\\quad\n\\text{Insert } 3 \\to \\text{tree}=1 \\rightarrow 2 \\rightarrow 3\\quad\n\\dots\n\\]\n\nEach new element becomes the right child of the previous leaf. Height = n − 1 = O(n). A balanced BST requires explicit rebalancing mechanisms such as AVL rotations or Red-Black tree rules.",
       hints: [
-        "What happens inserting 1, 2, 3, 4, 5 in order? Each becomes a right child.",
+        "Trace it out: inserting 1, then 2 (both go right since 2 > 1), then 3, etc. The tree becomes a right-skewed chain.",
+        "Standard BSTs do not self-balance. Balanced variants (AVL, Red-Black) are needed to maintain O(log n) height.",
       ],
     },
     {
@@ -735,9 +740,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "When we reach null, create a new TreeNode and return it. The caller links it as left or right child.",
+        "The recursive function either continues descending or creates a new node:\n\n\\[\n\\text{insert}(node, val) = \\begin{cases}\n\\text{new } TreeNode(val) & \\text{if } node = null \\\\\nnode.\\text{left} = \\text{insert}(node.\\text{left}, val) & \\text{if } val < node.val \\\\\nnode.\\text{right} = \\text{insert}(node.\\text{right}, val) & \\text{if } val > node.val\n\\end{cases}\n\\]\n\nThe base case (root == null) creates and returns the new TreeNode. The caller assigns it as either the left or right child of the previous node.",
       hints: [
-        "Recursive pattern: root.left = insert(root.left, val) or root.right = insert(root.right, val).",
+        "The base case creates a new TreeNode and returns it upward to be linked as a child.",
+        "After the recursive call returns, assign the result to root.left or root.right.",
       ],
     },
     {
@@ -753,9 +759,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Track current node and parent. Go left/right per BST rules. When current is null, set parent.left or parent.right to the new node.",
+        "Iterative insertion uses two pointers: current and parent. Descend the tree following the BST invariant:\n\n\\[\n\\begin{aligned}\n&parent = null;\\; current = root\\\\\n&\\text{while }(current \\neq null):\\\\\n&\\quad parent = current\\\\\n&\\quad current = (val < current.val) ? current.\\text{left} : current.\\text{right}\\\\[5pt]\n&\\text{// current is now null}\\\\\n&\\text{if }(val < parent.val):\\; parent.\\text{left} = \\text{new } TreeNode(val)\\\\\n&\\text{else: } parent.\\text{right} = \\text{new } TreeNode(val)\n\\end{aligned}\n\\]\n\nThis is O(h) time and O(1) extra space (no recursion stack).",
       hints: [
-        "Track both current and parent. When current becomes null, link to parent.",
+        "Use two pointers: one to track the current node and one to remember the parent.",
+        "When current becomes null, the parent is where we attach the new node as a left or right child.",
       ],
     },
     {
@@ -796,18 +803,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Which insertion sequence creates the most balanced BST from values {1,2,3,4,5,6,7}?",
+        "Which insertion sequence, applied to a standard BST, creates the most balanced tree from the sorted set {1, 2, 3, 4, 5, 6, 7}?",
       options: [
-        "Sorted: 1,2,3,4,5,6,7",
-        "Reverse sorted: 7,6,5,4,3,2,1",
-        "Middle-out: 4,2,6,1,3,5,7",
-        "Random order (expected balanced)",
+        "Sorted ascending order: 1, 2, 3, 4, 5, 6, 7",
+        "Reverse sorted order: 7, 6, 5, 4, 3, 2, 1",
+        "Middle-first order: 4, 2, 6, 1, 3, 5, 7",
+        "Random order (expected to be balanced)",
       ],
       correctAnswer: 2,
       explanation:
-        "Inserting the median (4) first, then medians of each half recursively, creates a perfectly balanced BST of height 3. This is the pre-order of a balanced tree.",
+        "The middle-first sequence (4, 2, 6, 1, 3, 5, 7) is the preorder traversal of a perfectly balanced BST:\n\n\\[\n\\text{Step 1: Insert 4} \\to 4\\quad \\text{root}\n\\]\n\\[\n\\text{Step 2: Insert 2} \\to \\text{goes left of 4}\\quad \\text{Step 3: Insert 6} \\to \\text{goes right of 4}\n\\]\n\\[\n\\text{Step 4: Insert 1} \\to \\text{left of 2}\\quad \\text{Step 5: Insert 3} \\to \\text{right of 2}\n\\]\n\\[\n\\text{Step 6: Insert 5} \\to \\text{left of 6}\\quad \\text{Step 7: Insert 7} \\to \\text{right of 6}\n\\]\n\nEach insertion places the median of the remaining elements at the root of the current subtree — giving height = floor(log2 n) = 3. Sorted order creates a chain (height = 7); random order has expected O(log n) height but is not guaranteed.",
       hints: [
-        "What value should be root of a balanced BST containing 1-7? The median: 4.",
+        "The median element of a sorted array should be the root of a balanced BST built from that array.",
+        "Middle-first insertion mimics the recursive 'build from sorted array' strategy: median = root, recurse on halves.",
       ],
     },
   ],
@@ -1117,7 +1125,7 @@ const questions: Record<string, Question[]> = {
     },
   ],
 
-  // ── SERIALIZE / DESERIALIZE TREE ──────────────────────────────────────────
+  //
   "serialize-deserialize-tree": [
     {
       id: "q-sdt-1",
@@ -1181,7 +1189,7 @@ const questions: Record<string, Question[]> = {
     },
   ],
 
-  // ── BINARY TREE MAX PATH SUM ───────────────────────────────────────────────
+  //
   "binary-tree-max-path": [
     {
       id: "q-btmp-1",
@@ -1240,7 +1248,7 @@ const questions: Record<string, Question[]> = {
     },
   ],
 
-  // ── CONSTRUCT TREE FROM TRAVERSALS ────────────────────────────────────────
+  //
   "construct-from-traversals": [
     {
       id: "q-cft-1",
@@ -1299,7 +1307,7 @@ const questions: Record<string, Question[]> = {
     },
   ],
 
-  // ── BINARY SEARCH TREE ITERATOR ───────────────────────────────────────────
+  //
   "binary-search-tree-iterator": [
     {
       id: "q-bsti-1",
@@ -1363,7 +1371,7 @@ const questions: Record<string, Question[]> = {
     },
   ],
 
-  // ── COUNT COMPLETE TREE NODES ──────────────────────────────────────────────
+  //
   "count-complete-tree-nodes": [
     {
       id: "q-cctn-1",
@@ -1422,7 +1430,7 @@ const questions: Record<string, Question[]> = {
     },
   ],
 
-  // ── FLATTEN BINARY TREE TO LINKED LIST ────────────────────────────────────
+  //
   "flatten-binary-tree": [
     {
       id: "q-fbt-1",
@@ -1481,7 +1489,7 @@ const questions: Record<string, Question[]> = {
     },
   ],
 
-  // ── PATH SUM VARIANTS ─────────────────────────────────────────────────────
+  //
   "path-sum-variants": [
     {
       id: "q-psv-1",
@@ -1540,7 +1548,7 @@ const questions: Record<string, Question[]> = {
     },
   ],
 
-  // ── DIAMETER OF BINARY TREE ────────────────────────────────────────────────
+  //
   "diameter-binary-tree": [
     {
       id: "q-dbt-1",
@@ -1599,7 +1607,7 @@ const questions: Record<string, Question[]> = {
     },
   ],
 
-  // ── RECOVER BST ────────────────────────────────────────────────────────────
+  //
   "recover-bst": [
     {
       id: "q-rbst-1",
