@@ -549,7 +549,12 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "REINFORCE assigns the full episode return G\_t to every action in the trajectory, but individual actions may have contributed very differently to the outcome - making it hard to identify which actions were truly responsible for the reward.",
+        "First, let's recall that in REINFORCE, the parameter update is $\\theta \\leftarrow \\theta + \\alpha \\cdot \\nabla_\\theta \\log \\pi_\\theta(a_t|s_t) \\cdot G_t$. The full return $G_t$ is assigned to every action in the trajectory.\n\n**Step 1.** In a trajectory of 100 steps, every action $a_1, a_2, ..., a_{100}$ receives the same credit: the final return $G_t$. But actions taken early in the episode might have been crucial for reaching the rewarding state, while later actions might have been irrelevant.\n\n**Step 2.** REINFORCE cannot distinguish which specific action in the trajectory actually caused the high return. An action that was neutral or even harmful might still receive credit simply because the episode ended well.\n\nTherefore, the answer is The algorithm cannot distinguish which specific actions in a trajectory actually caused the high return.",
+      stepByStep: {
+        step1: "REINFORCE assigns the full episode return $G_t$ to every action in the trajectory, treating all actions equally regardless of when they occurred.",
+        step2: "Actions taken early might be crucial for reaching the rewarding state, while later actions might be irrelevant - but all receive the same credit.",
+        step3: "REINFORCE cannot distinguish which specific action actually caused the high return, making it hard to assign proper credit.",
+      },
       hints: [
         "If an episode has 100 steps and ends with a reward, which of the 100 actions deserves credit?",
         "This is the temporal credit assignment problem - a fundamental challenge in RL.",
