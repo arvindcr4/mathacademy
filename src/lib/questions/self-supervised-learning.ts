@@ -251,8 +251,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "MoCo uses a FIFO queue of 65,536 encoded keys as negatives. The key encoder \\theta_k is updated by EMA: \\theta_k \\leftarrow 0.999\\cdot\\theta_k + 0.001\\cdot\\theta_q. High momentum (0.999) ensures keys from different mini-batches are encoded by nearly the same network, maintaining representation consistency across the queue. This decouples negative count (65k) from batch size.",
-      hints: [
+        "**Step 1:** The queue-based memory bank.\\n\\nMoCo uses a FIFO queue of 65,536 encoded keys as negatives. This decouples the number of negatives from the batch size - you can have 65k negatives even with a small batch of 256.\\n\\n**Step 2:** Momentum encoder update.\\n\\nThe key encoder $\theta_k$ is updated by EMA: $\theta_k \leftarrow 0.999 \cdot \theta_k + 0.001 \cdot \theta_q$. High momentum (0.999) means the key encoder changes very slowly.\\n\\n**Step 3:** Why high momentum matters.\\n\\nHigh momentum ensures that keys from different mini-batches are encoded by nearly the same network, maintaining representation consistency across the queue. If the key encoder changed rapidly, older keys in the queue would be inconsistent with newer ones, degrading the contrastive learning signal.",hints: [
         "The queue stores 65,536 negatives - far more than any feasible batch size.",
         "Momentum 0.999 means the momentum encoder slowly tracks the query encoder without gradients.",
       ],
@@ -265,8 +264,7 @@ const questions: Record<string, Question[]> = {
         "In MoCo, the momentum encoder\'s parameters are updated by backpropagating gradients through the key encoding path.",
       correctAnswer: "False",
       explanation:
-        "The momentum encoder\'s parameters are NOT updated by gradient backpropagation - the queue is not differentiable. They are updated by EMA: \\theta_k \\leftarrow m\\cdot\\theta_k + (1−m)\\cdot\\theta_q (m=0.999). Backpropagating through the queue would require storing gradients for all 65k encoded keys, which is infeasible.",
-      hints: [
+        "**Step 1:** Why gradients cannot flow through the queue.\\n\\nThe momentum encoder\'s parameters are NOT updated by gradient backpropagation - the queue is not differentiable. Backpropagating through the queue would require storing gradients for all 65k encoded keys, which is infeasible (each key has thousands of dimensions).\\n\\n**Step 2:** The EMA solution.\\n\\nInstead, parameters are updated by EMA: $\theta_k \leftarrow m \cdot \theta_k + (1-m) \cdot \theta_q$ with $m=0.999$. This is a simple weighted average that does not require storing any gradient history.\\n\\n**Step 3:** Why EMA maintains consistency.\\n\\nHigh momentum (0.999) ensures that the key encoder changes slowly, so older keys in the queue remain consistent with the current encoder state. This is crucial because negatives from many batches ago are still used in the contrastive loss.",hints: [
         "Gradient-updating the momentum encoder would make it inconsistent with the older keys in the queue.",
         "EMA update: the momentum encoder slowly tracks the query encoder without gradients.",
       ],
@@ -285,8 +283,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "ViT-based contrastive training is prone to training instability (loss spikes, collapse). MoCo-v3 specifically identified that patching the ViT\'s patch projection layer to a frozen random projection prevents instability, alongside learning rate warm-up. Loss spikes occur when ViT\'s large attention span causes sudden representation shifts.",
-      hints: [
+        "**Step 1:** Why ViTs are unstable in SSL.\\n\\nViT-based contrastive training is prone to training instability (loss spikes, complete collapse). Loss spikes occur when ViT\'s large attention span causes sudden representation shifts - the global attention mechanism can create runaway feedback during training.\\n\\n**Step 2:** The MoCo v3 solution.\\n\\nMoCo-v3 specifically identified that patching the ViT\'s patch projection layer (the linear projection that maps image patches to tokens) to a frozen random projection prevents instability. This removes the patch projection from gradient-based updates, stabilizing training.\\n\\n**Step 3:** Learning rate warm-up.\\n\\nAlongside frozen patch projections, careful learning rate warm-up is essential for ViT SSL training. Starting with a small learning rate and gradually increasing it allows the attention mechanisms to stabilize before taking large gradient steps.",hints: [
         "ViTs are more sensitive to learning rate and batch size than CNNs in SSL settings.",
         "Training instability in SSL manifests as sudden loss spikes or complete representation collapse.",
       ],
@@ -399,8 +396,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "SimSiam's loss for a pair of views is $\\mathcal{L} = \\frac{1}{2}\\sum_{z_A, z_B} D(p_A, \\text{stopgrad}(z_B)) + D(p_B, \\text{stopgrad}(z_A))$, where $D(p, z) = -\\frac{p \\cdot z}{\\|p\\|\\|z\\|}$ is negative cosine similarity. The stopgradient operator splits the update into two alternating phases: (1) E-step: fix $z$ (no gradient flows into the encoder from this term) and minimize $\\mathcal{L}$ with respect to the predictor $p$ - this is equivalent to finding the best predictor given fixed targets; (2) M-step: gradients now flow through $z = g_\\theta(x)$ to update $\\theta$, improving the encoder for the next iteration. Without stopgrad, both $p$ and $z$ are optimized simultaneously, which can trivially collapse by making both constant. The alternating scheme provably avoids this degenerate fixed point.",
-      hints: [
+        "**Step 1:** SimSiam\'s loss function.\\n\\nSimSiam\'s loss for a pair of views is $\mathcal{L} = \frac{1}{2}\sum_{z_A, z_B} D\left(p_A, \text{stopgrad}\left(z_B\right)\right) + D\left(p_B, \text{stopgrad}\left(z_A\right)\right)$, where $D(p, z) = -\frac{p \cdot z}{\|p\|\|z\|}$ is negative cosine similarity. The stopgradient operator splits the update into two alternating phases.\\n\\n**Step 2:** E-step (Expectation).\\n\\nFix $z$ (no gradient flows into the encoder from this term) and minimize $\mathcal{L}$ with respect to the predictor $p$. This is equivalent to finding the best predictor given fixed targets - analogous to the E-step in EM clustering.\\n\\n**Step 3:** M-step (Maximization).\\n\\nGradients now flow through $z = g_\theta(x)$ to update $\theta$, improving the encoder for the next iteration.\\n\\n**Step 4:** Why stopgrad prevents collapse.\\n\\nWithout stopgrad, both $p$ and $z$ are optimized simultaneously, which can trivially collapse by making both constant. The alternating E/M scheme provably avoids this degenerate fixed point by separating target estimation from encoder update.",hints: [
         "In classical EM for clustering: E-step assigns points to clusters (fix cluster centers), M-step updates cluster centers. SimSiam's E-step fixes $z$ (targets) and updates $p$ (predictor); M-step uses the improved $p$ to compute gradients for $\\theta$.",
         "The stopgradient is not just a numerical trick - it implements the E-step/M-step separation that prevents the trivial constant solution.",
       ],
@@ -422,8 +418,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The cross-correlation matrix $C_{ij}$ measures how similarly dimension $i$ of the two augmented embeddings responds across the batch. The diagonal term $(1 - C_{ii})^2$ drives $C_{ii} \to 1$, enforcing that each dimension captures view-invariant information. The off-diagonal term $C_{ij}^2$ for $i \neq j$ penalizes correlation between dimensions, decorrelating them - following Horace Barlow's redundancy reduction hypothesis (1961): each neuron should convey independent information. An optimal $C$ is the identity matrix $I$, meaning $C_{ii} = 1$ and $C_{ij}=0$ for $i \neq j$. The hyperparameter $\lambda$ balances the two objectives.",
-      hints: [
+        "**Step 1:** The cross-correlation matrix $C_{ij}$.\\n\\nThe cross-correlation matrix $C_{ij}$ measures how similarly dimension $i$ of the two augmented embeddings responds across the batch. It is computed as $C_{ij} = \frac{\sum_b z^A_{b,i} \, z^B_{b,j}}{\|z^A_{\cdot,i}\| \; \|z^B_{\cdot,j}\|}$.\\n\\n**Step 2:** Diagonal term (invariance).\\n\\nThe diagonal term $(1 - C_{ii})^2$ drives $C_{ii} \to 1$, enforcing that each dimension captures view-invariant information. If $C_{ii} = 1$, the embedding dimension is perfectly consistent across augmented views of the same image.\\n\\n**Step 3:** Off-diagonal term (redundancy reduction).\\n\\nThe off-diagonal term $C_{ij}^2$ for $i \neq j$ penalizes correlation between dimensions, decorrelating them - following Horace Barlow\'s redundancy reduction hypothesis (1961): each neuron should convey independent information. If two neurons are correlated, one is redundant.\\n\\n**Step 4:** Optimal solution and the role of $\lambda$.\\n\\nAn optimal $C$ is the identity matrix $I$, meaning $C_{ii} = 1$ and $C_{ij}=0$ for $i \neq j$. The hyperparameter $\lambda$ balances the two objectives: a larger $\lambda$ places more weight on redundancy reduction at the cost of invariance.",hints: [
         "If $C = I$, then $(1-C_{ii})^2 = 0$ and $C_{ij}^2 = 0$ for $i \neq j$ - the loss is minimized. This is what the optimization drives toward.",
         "Barlow's insight: if two neurons are correlated, one is redundant. Penalizing off-diagonal $C_{ij}$ removes that redundancy.",
       ],
@@ -456,8 +451,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In NT-Xent, each sample uses exactly 2(N−1) negatives - the loss directly collapses if N is too small. In Barlow Twins, the cross-correlation matrix always has d\\timesd entries; N only affects the statistical quality of the correlation estimate. Empirically, Barlow Twins works with batch sizes as small as 256, while SimCLR needs 4096+.",
-      hints: [
+        "**Step 1:** NT-Xent\'s batch-size dependence.\\n\\nIn NT-Xent (SimCLR), each sample uses exactly $2(N-1)$ negatives - the loss directly depends on batch size $N$. If $N$ is too small, there are not enough negatives to learn good representations, and the loss can collapse.\\n\\n**Step 2:** Barlow Twins\' batch-size independence.\\n\\nIn Barlow Twins, the cross-correlation matrix always has $d \times d$ entries where $d$ is the embedding dimension, regardless of batch size $N$. The batch size $N$ only affects the statistical quality of the correlation estimates (through the batch average), not the loss landscape itself.\\n\\n**Step 3:** Practical implications.\\n\\nEmpirically, Barlow Twins works with batch sizes as small as 256, while SimCLR needs 4096+ for optimal performance. This makes Barlow Twins more accessible for researchers with limited GPU memory.",hints: [
         "SimCLR\'s NT-Xent explicitly uses all other batch items as negatives - the loss changes dramatically with N.",
         "Barlow Twins' cross-correlation matrix size is determined by embedding dimension d, not batch size N.",
       ],
@@ -479,8 +473,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "VICReg's loss is $\\mathcal{L} = \\frac{1}{d}\\sum_i \\max(0, \\gamma - \\text{std}(z_i))$ (variance) $+\\frac{1}{d}\\sum_i \\|z^A_i - z^B_i\\|^2$ (invariance) $-\\frac{1}{d}\\sum_{i \\neq j} C_{ij}$ (covariance). The variance term prevents collapse by keeping embedding standard deviation above a threshold $\\gamma$; the invariance term attracts embeddings of positive pairs (minimizing pairwise distance); the covariance term decorrelates embedding dimensions to prevent redundancy - similar in spirit to Barlow Twins but applied to each branch independently.",
-      hints: [
+        "**Step 1:** Decomposing the three loss terms.\\n\\nVICReg\'s loss is $\mathcal{L} = \frac{1}{d}\sum_i \max\left(0, \gamma - \text{std}\left(z_i\right)\right)$ (variance) $+\frac{1}{d}\sum_i \|z^A_i - z^B_i\|^2$ (invariance) $-\frac{1}{d}\sum_{i \neq j} C_{ij}$ (covariance). Each term has a distinct role.\\n\\n**Step 2:** Variance term (collapse prevention).\\n\\nThe variance term prevents collapse by keeping embedding standard deviation above a threshold $\gamma$. If all embeddings collapse to a constant $c$, then $\text{std}\left(z_i\right) = 0$ and the term $\max\left(0, \gamma - \text{std}\left(z_i\right)\right)$ is maximally violated - penalizing collapse explicitly.\\n\\n**Step 3:** Invariance term (positive pair attraction).\\n\\nThe invariance term attracts embeddings of positive pairs by minimizing pairwise distance: $\|z^A_i - z^B_i\|^2$. This is analogous to the contrastive term in SimCLR/MoCo.\\n\\n**Step 4:** Covariance term (redundancy reduction).\\n\\nThe covariance term decorrelates embedding dimensions to prevent redundancy - similar in spirit to Barlow Twins but applied to each branch independently. If dimensions $i$ and $j$ are correlated, one is redundant and the covariance penalty reduces this.",hints: [
         "Write out what collapse would look like: if all embeddings collapse to a constant $c$, then $\\text{std}(z_i) = 0$ and the variance term is maximally violated - penalizing collapse explicitly.",
         "The covariance term $C_{ij} = \\text{Cov}(z_i, z_j)$ penalizes correlated dimensions: if two dimensions always co-vary, one is redundant. Maximizing independence is the goal.",
       ],
@@ -2314,8 +2307,8 @@ const extraSsl: Record<string, Question[]> = {
         "High alignment implies high uniformity because pulling positives together automatically pushes negatives apart",
       ],
       correctAnswer: 1,
-      explanation: "Wang and Isola (2020) show that a good contrastive loss balances: (1) alignment - loss = E[||f(x) - f(x')||^2] over positive pairs (x, x'), encouraging augmentation-invariant embeddings; (2) uniformity - loss = log E[exp(-2||f(x) - f(y)||^2)] over random pairs, encouraging a uniform distribution of embeddings on the unit hypersphere (maximizing entropy). A perfectly aligned model puts all positive pairs at the same point (zero diversity), violating uniformity. A perfectly uniform model distributes points maximally but ignores augmentation invariance. The contrastive objective naturally balances both.",
-      hints: [
+      explanation:
+        "**Step 1:** The two components of contrastive loss.\\n\\nWang and Isola (2020) show that a good contrastive loss balances two distinct objectives: (1) alignment - $\mathcal{L}_{\text{align}} = \mathbb{E}\|f(x) - f(x'\|)^2$ over positive pairs $(x, x')$, encouraging augmentation-invariant embeddings; (2) uniformity - $\mathcal{L}_{\text{uniform}} = \log \mathbb{E}\left[\exp\left(-2\|f(x) - f(y)\|^2\right)\right]$ over random pairs, encouraging a uniform distribution of embeddings on the unit hypersphere (maximizing entropy).\\n\\n**Step 2:** The alignment-uniformity trade-off.\\n\\nA perfectly aligned model puts all positive pairs at the same point (zero diversity), which violates uniformity. A perfectly uniform model distributes points maximally but ignores augmentation invariance. Neither objective alone produces useful representations.\\n\\n**Step 3:** Why contrastive learning balances both.\\n\\nThe contrastive objective naturally balances both: pulling positives together (alignment) while spreading negatives apart (uniformity). Collapse (all embeddings at one point) has perfect alignment but zero uniformity - the worst case. Good SSL finds a sweet spot where both are maximized jointly.",hints: [
         "Think of alignment as 'pull same-class embeddings together' and uniformity as 'spread all embeddings evenly'.",
         "Collapse (all embeddings at one point) has perfect alignment but zero uniformity - the worst case.",
       ],
