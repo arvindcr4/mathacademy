@@ -1,17 +1,10 @@
-import { describe, it, expect, beforeEach } from 'vitest'
-import { registerQuestions, getQuestions, getAllQuestions, type QuestionsMap } from './registry'
-import type { Question } from '@/lib/curriculum'
+import { describe, it, expect } from 'vitest'
+import { getQuestions, getAllQuestions } from './registry'
 
 // Import all question files to trigger registration
 import './index'
 
 describe('Question Registry', () => {
-  let originalRegistry: QuestionsMap
-
-  beforeEach(() => {
-    // Save original registry state
-    originalRegistry = { ...getAllQuestions() }
-  })
 
   describe('getQuestions', () => {
     it('should return questions for a valid slug', () => {

@@ -128,7 +128,7 @@ const questions: Record<string, Question[]> = {
 
   "maximum-subarray": [
     {
-      id: "q-ms-1",
+      id: "q-msa-1",
       type: "multiple-choice",
       difficulty: "medium",
       question: "Kadane's algorithm runs in what time complexity?",
@@ -593,13 +593,15 @@ const questions: Record<string, Question[]> = {
         '"flow" and "flight" match on "fl" but diverge at position 2: "o" vs "i".'
       ],
       explanation:
-        'Scanning character by character:\n\n' +
-        '\\begin{align*}\n' +
-        '\\text{Position 0:} &\\quad f, f, f \\; \\checkmark \\\\\n' +
-        '\\text{Position 1:} &\\quad l, l, l \\; \\checkmark \\\\\n' +
-        '\\text{Position 2:} &\\quad o, o, i \\; \\text{(mismatch: } o \\neq i \\text{)}\n' +
-        '\\end{align*}\n\n' +
-        'The common prefix stops at position 2. The LCP is "fl".'
+        "**Step 1:** Scan character by character:\n\n" +
+        "\\[\n" +
+        "\\begin{aligned}\n" +
+        "\\text{Position 0:} &\\quad f, f, f \\; \\checkmark, \\\\\n" +
+        "\\text{Position 1:} &\\quad l, l, l \\; \\checkmark, \\\\\n" +
+        "\\text{Position 2:} &\\quad o, o, i \\; \\text{(mismatch: } o \\neq i \\text{)}.\n" +
+        "\\end{aligned}\n" +
+        "\\]\n\n" +
+        "**Step 2:** The common prefix stops at position 2. The LCP is \"fl\"."
     },
     {
       id: "q-lcp-2",
@@ -2236,9 +2238,9 @@ const questions: Record<string, Question[]> = {
     },
   ],
 
-  "matrix-search": [
+  "matrix-search-2": [
     {
-      id: "q-ms-1",
+      id: "q-ms-1b",
       type: "multiple-choice",
       difficulty: "medium",
       question: "Search a 2D Matrix where rows and columns are independently sorted (LeetCode 240) - best approach?",
