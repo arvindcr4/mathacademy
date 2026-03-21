@@ -876,6 +876,99 @@ export const courses: Course[] = [
     ]
   },
 
+  // COMPUTER VISION
+  {
+    id: 'computer-vision',
+    slug: 'computer-vision',
+    name: 'Computer Vision',
+    description: 'From classical image processing to diffusion models: master the full computer vision stack.',
+    category: 'fine-tuning',
+    icon: '👁️',
+    color: '#0EA5E9',
+    topicCount: 6,
+    estimatedHours: 32,
+    topics: [
+      {
+        id: 'image-fundamentals',
+        slug: 'image-fundamentals',
+        name: 'Image Fundamentals',
+        description: 'Pixels, color spaces, and classical image processing operations.',
+        knowledgePoints: [
+          { id: 'cv-kp-1', slug: 'pixel-representation', name: 'Pixel Representation & Color Spaces' },
+          { id: 'cv-kp-2', slug: 'image-filtering', name: 'Image Filtering & Convolution' },
+          { id: 'cv-kp-3', slug: 'edge-detection', name: 'Edge Detection (Sobel, Canny)' },
+          { id: 'cv-kp-4', slug: 'image-transforms', name: 'Fourier Transform for Images' },
+          { id: 'cv-kp-5', slug: 'morphological-ops', name: 'Morphological Operations' },
+        ]
+      },
+      {
+        id: 'feature-extraction',
+        slug: 'feature-extraction',
+        name: 'Feature Extraction',
+        description: 'Classical and learned feature extraction for visual recognition.',
+        knowledgePoints: [
+          { id: 'cv-kp-6', slug: 'sift-orb', name: 'SIFT & ORB Feature Descriptors' },
+          { id: 'cv-kp-7', slug: 'hog-features', name: 'HOG Features' },
+          { id: 'cv-kp-8', slug: 'feature-matching', name: 'Feature Matching & Homography' },
+          { id: 'cv-kp-9', slug: 'bag-of-words-vision', name: 'Bag of Visual Words' },
+          { id: 'cv-kp-10', slug: 'deep-features', name: 'Deep Feature Extraction from CNNs' },
+        ]
+      },
+      {
+        id: 'image-classification',
+        slug: 'image-classification',
+        name: 'Image Classification',
+        description: 'Train and evaluate models for single and multi-label image classification.',
+        knowledgePoints: [
+          { id: 'cv-kp-11', slug: 'resnet', name: 'ResNet & Skip Connections' },
+          { id: 'cv-kp-12', slug: 'efficientnet', name: 'EfficientNet & Neural Architecture Search' },
+          { id: 'cv-kp-13', slug: 'vit', name: 'Vision Transformer (ViT)' },
+          { id: 'cv-kp-14', slug: 'fine-tuning-vision', name: 'Fine-Tuning Vision Models' },
+          { id: 'cv-kp-15', slug: 'class-activation-maps', name: 'Class Activation Maps (CAM, Grad-CAM)' },
+        ]
+      },
+      {
+        id: 'object-detection-seg',
+        slug: 'object-detection-seg',
+        name: 'Detection & Segmentation',
+        description: 'Locate and segment objects within images at scale.',
+        knowledgePoints: [
+          { id: 'cv-kp-16', slug: 'yolo', name: 'YOLO Architecture Family' },
+          { id: 'cv-kp-17', slug: 'anchor-free', name: 'Anchor-Free Detection (FCOS, CenterNet)' },
+          { id: 'cv-kp-18', slug: 'instance-segmentation', name: 'Instance Segmentation (Mask R-CNN, SAM)' },
+          { id: 'cv-kp-19', slug: 'semantic-segmentation', name: 'Semantic Segmentation (DeepLab, SegFormer)' },
+          { id: 'cv-kp-20', slug: 'panoptic-segmentation', name: 'Panoptic Segmentation' },
+        ]
+      },
+      {
+        id: 'generative-vision',
+        slug: 'generative-vision',
+        name: 'Generative Vision Models',
+        description: 'GANs, VAEs, and diffusion models for image generation.',
+        knowledgePoints: [
+          { id: 'cv-kp-21', slug: 'gan-basics', name: 'GAN Architecture & Training' },
+          { id: 'cv-kp-22', slug: 'vae', name: 'Variational Autoencoders (VAE)' },
+          { id: 'cv-kp-23', slug: 'diffusion-models', name: 'Diffusion Models (DDPM, DDIM)' },
+          { id: 'cv-kp-24', slug: 'stable-diffusion', name: 'Stable Diffusion & Latent Diffusion' },
+          { id: 'cv-kp-25', slug: 'controlnet', name: 'ControlNet & Guided Generation' },
+        ]
+      },
+      {
+        id: 'multimodal-vision',
+        slug: 'multimodal-vision',
+        name: 'Multimodal & Vision-Language',
+        description: 'Connect vision and language for captioning, VQA, and grounding.',
+        knowledgePoints: [
+          { id: 'cv-kp-26', slug: 'clip', name: 'CLIP: Contrastive Language-Image Pre-Training' },
+          { id: 'cv-kp-27', slug: 'vqa', name: 'Visual Question Answering (VQA)' },
+          { id: 'cv-kp-28', slug: 'llava', name: 'LLaVA & Vision-Language Models' },
+          { id: 'cv-kp-29', slug: 'image-captioning', name: 'Image Captioning (BLIP, Flamingo)' },
+          { id: 'cv-kp-30', slug: 'visual-grounding', name: 'Visual Grounding & Referring Expression' },
+        ]
+      },
+    ]
+  },
+
   // AGENTIC AI & MULTI-AGENT SYSTEMS
   {
     id: 'agentic-ai',
