@@ -1838,6 +1838,196 @@ const questionOverrides: Record<string, QuestionOverride> = {
     ],
     correctAnswer: 2,
   },
+  "q-rlhf-kp7-1": {
+    question:
+      "What shape best describes gold-standard reward versus KL from the reference policy during RLHF?",
+  },
+  "q-rlhf-kp8-1": {
+    question:
+      "If pretraining is about 98% of InstructGPT compute, what does that mainly suggest about SFT and RLHF?",
+    options: [
+      "They are too small to matter for model quality",
+      "They are high-leverage post-training steps that unlock capabilities already learned in pretraining",
+      "They make pretraining unnecessary",
+      "They matter only for style, not alignment",
+    ],
+    correctAnswer: 1,
+  },
+  "q-rlhf-kp14-1": {
+    question: "Which expression is the DPO loss for a chosen/rejected pair?",
+  },
+  "q-rlhf-kp14-2": {
+    question:
+      "DPO trains on a fixed preference dataset instead of collecting new preferences from the current policy.",
+  },
+  "q-rlhf-kp32-3": {
+    question:
+      "How does IPO keep DPO's implicit reward from growing without bound?",
+    options: [
+      "By adding L2 regularization directly on model weights",
+      "By regressing the log-probability ratio difference toward a fixed target instead of pushing it upward without bound",
+      "By clipping rewards to a maximum value",
+      "By training a separate bounded critic network",
+    ],
+    correctAnswer: 1,
+  },
+  "q-fin-kp2-1": {
+    question:
+      "Portfolio A has excess return 12% and volatility 20%. Portfolio B has excess return 6% and volatility 8%. Which has the higher Sharpe ratio?",
+    options: [
+      "Portfolio A",
+      "Portfolio B",
+      "They are equal",
+      "Cannot tell without the risk-free rate",
+    ],
+    correctAnswer: 1,
+  },
+  "q-fin-kp3-2": {
+    question:
+      "If you test many trading signals, a high in-sample Sharpe ratio is likely to hold out of sample.",
+  },
+  "q-fin-kp11-2": {
+    question:
+      "CVaR at level alpha is the average loss conditional on exceeding VaR(alpha).",
+  },
+  "q-qml-kp2-1": {
+    question:
+      "Start from |00>. Apply H to qubit 1, then CNOT with qubit 1 as control. What state do you get?",
+    options: ["|00>", "(|00> + |11>) / sqrt(2)", "(|01> + |10>) / sqrt(2)", "|11>"],
+    correctAnswer: 1,
+  },
+  "q-qml-kp9-3": {
+    question:
+      "For a standard Pauli rotation, what parameter-shift value s is used?",
+  },
+  "q-qml-kp29-1": {
+    question:
+      "What principle makes quantum annealing work when the Hamiltonian changes slowly?",
+  },
+  "q-aud-kp3-2": {
+    question:
+      "CTC uses a blank token so multiple frames can emit the same label before collapsing.",
+  },
+  "q-aud-kp5-2": {
+    question:
+      "Shallow fusion adds language-model scores during decoding, while deep fusion integrates the language model during training.",
+  },
+  "q-aud-kp24-2": {
+    question:
+      "In Mean Teacher training for semi-supervised sound event detection, the student matches an EMA teacher on unlabeled audio.",
+    correctAnswer: "True",
+  },
+  "q-clim-kp34-3": {
+    question:
+      "Why does treating droughts and heatwaves as independent hazards underestimate compound-event risk?",
+    options: [
+      "Independent models are too accurate to capture compound events",
+      "Positively correlated hazards occur together more often than the product of their marginal probabilities",
+      "Compound events happen only in mountainous regions",
+      "Assuming independence usually overestimates joint risk",
+    ],
+    correctAnswer: 1,
+  },
+  "q-clim-kp35-1": {
+    question:
+      "How do ML systems estimate 3D ocean heat content from sparse Argo profiles?",
+  },
+  "q-clim-kp39-1": {
+    question:
+      "What is the main advantage of ML-based infrastructure climate risk assessment over deterministic engineering assessments?",
+  },
+  "q-rob-kp1-2": {
+    question:
+      "Factor-graph SLAM gains efficiency over EKF-SLAM because its information matrix is sparse.",
+  },
+  "q-rob-kp1-3": {
+    question:
+      "After adding a loop-closure constraint, which back-end optimizer updates the whole pose graph?",
+  },
+  "q-rob-kp26-4": {
+    question:
+      "RT-1 discretizes robot actions into bins so a transformer can predict them like tokens.",
+  },
+  "q-rob-kp12-4": {
+    question:
+      "In inverse reinforcement learning, the recovered reward is usually more useful than the recovered policy because it can transfer to new environments and changed dynamics.",
+    correctAnswer: "True",
+  },
+  "q-cv3d-kp6-3": {
+    question: "After the coarse NeRF pass, how are the fine samples chosen?",
+  },
+  "q-cv3d-kp34-2": {
+    question:
+      "Monocular 3D human pose estimation is ambiguous because multiple 3D poses can project to the same 2D skeleton.",
+    correctAnswer: "true",
+  },
+  "q-cv3d-kp38-2": {
+    question:
+      "TSDF fusion extracts the surface at the zero-crossing, typically with Marching Cubes.",
+  },
+  "q-gan-kp2-3": {
+    question:
+      "If p_r and p_g lie on disjoint manifolds, JS divergence stays at log 2 and the generator gets no gradient.",
+  },
+  "q-gan-kp13-1": {
+    question:
+      "Why is the non-saturating GAN generator loss -log D(G(z)) preferred early in training?",
+    options: [
+      "It has lower computational cost",
+      "It gives larger gradients when the discriminator easily rejects fake samples",
+      "It guarantees convergence to the global optimum",
+      "It removes the need for a discriminator",
+    ],
+    correctAnswer: 1,
+  },
+  "q-gan-kp27-3": {
+    question: "In DDIM, what happens when eta = 0?",
+  },
+  "q-k-kp-4-f": {
+    question:
+      "Why is `(e2x - 1) / (e2x + 1)` less numerically stable than `math.tanh(x)` for large x?",
+    options: [
+      "It gives the wrong mathematical value for all inputs",
+      "It can overflow when e2x becomes huge, while `math.tanh` handles large inputs safely",
+      "It is not differentiable",
+      "It works only for positive inputs",
+    ],
+    correctAnswer: 1,
+  },
+  "q-k-kp-9-b": {
+    question:
+      "If you increase the add-k smoothing constant in makemore from 1 to a very large value, what happens to the next-character distribution?",
+    options: [
+      "It becomes sharper around common bigrams",
+      "It becomes more uniform",
+      "It stays the same after normalization",
+      "Its NLL goes to infinity",
+    ],
+    correctAnswer: 1,
+  },
+  "q-agent-kp1-3": {
+    question:
+      "As an agent run grows, how should it compress old reasoning to stay within the context window?",
+  },
+  "q-agent-kp2-3": {
+    question:
+      "ChemCrow beat vanilla GPT-4 under human chemistry evaluation but looked similar under LLM self-evaluation. What does that show?",
+    options: [
+      "LLMs are reliable judges of expert chemistry tasks",
+      "LLM self-evaluation is unreliable on tasks that need domain expertise the evaluator lacks",
+      "ChemCrow's tool use does not really help",
+      "Human experts are biased toward tool-using systems",
+    ],
+    correctAnswer: 1,
+  },
+  "q-gem-kp-12": {
+    question:
+      "In the Gemini SDKs, which method usually sends a prompt and returns a full response?",
+  },
+  "q-gem-kp-27": {
+    question:
+      "With Gemini's long context window, how can a RAG system handle very large document sets?",
+  },
 };
 
 function normalizeText(text: string): string {

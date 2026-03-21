@@ -1724,5 +1724,481 @@ const questions: Record<string, Question[]> = {
   ],
 };
 
+  "ml-interpretability-systems": [
+    {
+      id: "q-mls-kp31-1",
+      type: "multiple-choice",
+      difficulty: "intermediate",
+      question:
+        "What is the primary purpose of SHAP (SHapley Additive exPlanations) values in ML systems?",
+      options: [
+        "To speed up model training by pruning unimportant features.",
+        "To assign each feature a contribution value for a specific prediction, based on game-theoretic Shapley values that fairly distribute the prediction among features.",
+        "To automatically select the best hyperparameters for a model.",
+        "To visualize the decision boundary of a classifier.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "SHAP values provide consistent, locally accurate feature attributions by computing each feature's average marginal contribution across all possible feature subsets. Unlike simpler attribution methods, SHAP satisfies desirable properties: local accuracy, missingness, and consistency, making it the gold standard for model explanation.",
+      hints: [
+        "Shapley values come from cooperative game theory — imagine features as players splitting a payout (prediction).",
+        "SHAP is model-agnostic but also has fast, model-specific implementations for tree ensembles.",
+      ],
+    },
+    {
+      id: "q-mls-kp31-2",
+      type: "multiple-choice",
+      difficulty: "advanced",
+      question:
+        "A loan approval model uses 50 features. SHAP analysis reveals that a protected attribute (ethnicity) has high importance. What is the correct engineering response?",
+      options: [
+        "Increase the weight of ethnicity since it improves model accuracy.",
+        "Remove ethnicity from the feature set, retrain, check if ethnicity-correlated features act as proxies, measure fairness metrics (demographic parity, equalized odds) across groups, and document findings for regulatory compliance.",
+        "Use SHAP to reduce ethnicity's contribution to exactly zero without changing the model.",
+        "Accept the result since SHAP values are just statistics without legal implications.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Protected attributes in high-stakes models create legal and ethical risk (disparate impact under ECOA). The remediation process: remove the direct feature, check for correlated proxies, apply fairness constraints if needed, measure fairness metrics on hold-out data, and document the investigation. Simply ignoring high SHAP importance for a protected attribute creates regulatory liability.",
+    },
+    {
+      id: "q-mls-kp31-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "An interpretable model (e.g., linear regression, decision tree) is always preferable to a black-box model in production ML systems.",
+      correctAnswer: "False",
+      explanation:
+        "Interpretability is context-dependent. In high-stakes domains (credit, medicine, criminal justice) where explanations are legally required or essential for trust, interpretable models are preferred despite accuracy trade-offs. In other domains (image recognition, speech processing), black-box models are standard and post-hoc explanation methods provide sufficient insight. The choice depends on requirements, not a universal rule.",
+    },
+  ],
+
+  "ml-governance-systems": [
+    {
+      id: "q-mls-kp32-1",
+      type: "multiple-choice",
+      difficulty: "intermediate",
+      question:
+        "What is the purpose of a model card in ML governance?",
+      options: [
+        "A business card format for ML engineers.",
+        "A standardized document accompanying a model that describes its intended uses, performance across subgroups, limitations, training data, and ethical considerations — enabling informed decisions about deployment.",
+        "A credit card used to pay for GPU compute.",
+        "A configuration file specifying model hyperparameters.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Model cards (Mitchell et al., 2019) are model documentation artifacts: they specify intended use cases, out-of-scope uses, performance metrics across demographic groups, ethical considerations, and training data information. They enable stakeholders to assess whether a model is appropriate for a given deployment context and make ML systems more transparent and accountable.",
+      hints: [
+        "Google, Hugging Face, and many organizations publish model cards for their public models.",
+        "Think of a model card as a nutrition label for ML models.",
+      ],
+    },
+    {
+      id: "q-mls-kp32-2",
+      type: "multiple-choice",
+      difficulty: "advanced",
+      question:
+        "An ML governance framework for a financial institution must ensure models are compliant with SR 11-7 (Fed model risk management guidance). What technical controls are required?",
+      options: [
+        "Only audit model accuracy annually.",
+        "Model inventory with risk ratings, independent validation (challenger models, back-testing), documentation of assumptions and limitations, ongoing monitoring with performance thresholds, change management process for model updates, and audit trails for all model decisions.",
+        "Use open-source models only to ensure transparency.",
+        "Have the model development team self-validate their own models.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "SR 11-7 requires a three-line-of-defense model risk framework: (1) model development with full documentation; (2) independent model validation (separate team tests the model, builds challengers, performs conceptual soundness review); (3) audit. Technical controls include: model inventory tracking versions and risk tiers, automated back-testing pipelines, performance monitoring dashboards, and immutable audit logs of predictions.",
+    },
+    {
+      id: "q-mls-kp32-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Data lineage tracking in ML systems records the origin, transformations, and usage of data throughout its lifecycle, enabling debugging, compliance audits, and impact analysis.",
+      correctAnswer: "True",
+      explanation:
+        "Data lineage answers where did this data come from and what happened to it. This is essential for: debugging model degradation (which data transform introduced the bug?), GDPR right-to-erasure compliance (finding and deleting an individual's data from all derived datasets), and impact analysis (if upstream data changes, what models are affected?).",
+    },
+  ],
+
+  "ml-testing-systems": [
+    {
+      id: "q-mls-kp33-1",
+      type: "multiple-choice",
+      difficulty: "intermediate",
+      question:
+        "What is behavioral testing for NLP models, as proposed by Ribeiro et al.?",
+      options: [
+        "Testing how quickly the model responds to requests.",
+        "A systematic evaluation methodology that tests specific linguistic capabilities (negation, vocabulary, robustness to typos) using templated test cases, going beyond aggregate accuracy to reveal specific failure modes.",
+        "A user study measuring model behavior in production.",
+        "Testing model behavior under adversarial attacks.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Behavioral testing (CheckList) creates test suites targeting specific model capabilities: minimum functionality tests (basic sanity checks), invariance tests (adding typos or changing names should not change sentiment), and directional tests (adding not should flip sentiment). This reveals failures that aggregate metrics miss — a model with 95% accuracy may still completely fail at understanding negation.",
+      hints: [
+        "Inspired by software testing checklists — check specific behaviors, not just aggregate performance.",
+        "Different from adversarial testing: behavioral tests check expected model properties.",
+      ],
+    },
+    {
+      id: "q-mls-kp33-2",
+      type: "multiple-choice",
+      difficulty: "advanced",
+      question:
+        "How should regression testing for ML models be designed to detect silent model degradation across releases?",
+      options: [
+        "Manually compare model outputs on random samples before each release.",
+        "Maintain a frozen evaluation suite (held-out benchmark with known correct answers and performance baselines per metric per slice), run it automatically on every model candidate in CI, and block promotion if any metric regresses below a configurable threshold from the current production model.",
+        "Use the training loss as the primary regression metric.",
+        "Regression testing is unnecessary if CI/CD pipelines are in place.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "ML regression testing requires: (1) a frozen, representative benchmark never modified after establishment; (2) per-slice metrics to catch targeted regressions on subpopulations; (3) automated CI integration so every candidate is evaluated; (4) configurable non-regression thresholds. This prevents subtle quality degradations from accumulating undetected.",
+    },
+    {
+      id: "q-mls-kp33-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Unit testing ML code should cover data preprocessing functions, feature engineering pipelines, and custom loss functions — not just model architecture code.",
+      correctAnswer: "True",
+      explanation:
+        "ML bugs most commonly occur in data transformations and feature engineering, not model architectures. Unit tests should verify: preprocessing functions handle edge cases (nulls, outliers, type mismatches); feature engineering produces expected outputs on known inputs; custom loss functions return finite values and correct gradients; data loaders produce correct shapes and types.",
+    },
+  ],
+
+  "ml-cost-engineering": [
+    {
+      id: "q-mls-kp34-1",
+      type: "multiple-choice",
+      difficulty: "intermediate",
+      question:
+        "What is the primary driver of inference cost in transformer-based language models, and what is the most effective technique to reduce it?",
+      options: [
+        "Model accuracy; reducing accuracy by using a smaller vocabulary.",
+        "The KV cache memory and attention computation scale quadratically with sequence length; KV cache quantization, FlashAttention, and speculative decoding are the most effective techniques to reduce inference cost.",
+        "Network bandwidth; using faster network cards.",
+        "CPU memory; upgrading to larger RAM.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Transformer inference cost drivers: (1) attention computation is O(n^2) in sequence length — FlashAttention reduces memory I/O by fusing operations; (2) KV cache grows linearly with context length, becoming the memory bottleneck for long contexts; (3) speculative decoding (small draft model proposes tokens, large model verifies in parallel) can achieve 2-4x speedup for repetitive outputs.",
+      hints: [
+        "Autoregressive decoding generates tokens sequentially — each token requires a full forward pass.",
+        "Speculative decoding exploits that verification is cheaper than sequential generation.",
+      ],
+    },
+    {
+      id: "q-mls-kp34-2",
+      type: "multiple-choice",
+      difficulty: "advanced",
+      question:
+        "Your ML training job costs $50,000 per run and takes 3 days on 256 A100 GPUs. GPU utilization monitoring shows 45% average utilization. What is the most impactful optimization?",
+      options: [
+        "Upgrade to H100 GPUs immediately.",
+        "Profile the data loading and preprocessing pipeline — at 45% GPU utilization, the bottleneck is likely the CPU-side data pipeline. Fix with multi-process data loading, prefetching, pre-tokenization, and faster storage (NVMe). This can double effective throughput without adding hardware.",
+        "Increase the learning rate to converge faster.",
+        "Reduce the model size by 50% to fit on fewer GPUs.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "45% GPU utilization in training almost always indicates a data pipeline bottleneck: GPUs are sitting idle waiting for batches. The fix: (1) increase DataLoader workers; (2) pin memory for faster CPU to GPU transfer; (3) pre-process and cache tokenized data; (4) use high-speed NVMe or memory-mapped datasets; (5) implement prefetching. Fixing this can raise utilization to 85-90%, halving effective cost without any model or hardware changes.",
+    },
+    {
+      id: "q-mls-kp34-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Mixed-precision training (using FP16 or BF16 for forward/backward passes while keeping FP32 master weights) reduces memory usage and increases training throughput without significant accuracy loss.",
+      correctAnswer: "True",
+      explanation:
+        "Mixed-precision training: (1) FP16/BF16 activations and gradients halve memory, enabling 2x larger batch sizes; (2) Tensor Cores on modern GPUs execute FP16 matrix multiplications 4-8x faster than FP32; (3) FP32 master weights and loss scaling prevent gradient underflow. BF16 is preferred over FP16 because it has the same exponent range as FP32, avoiding gradient overflow issues.",
+    },
+  ],
+
+  "ml-scalability-patterns": [
+    {
+      id: "q-mls-kp35-1",
+      type: "multiple-choice",
+      difficulty: "intermediate",
+      question:
+        "What is the key challenge when scaling an ML system from 1 million to 1 billion users?",
+      options: [
+        "The model architecture must be completely redesigned.",
+        "The system must handle not just increased request volume but also increased data heterogeneity, longer tail distributions in user behavior, stricter latency SLAs at scale, and the compounding effects of model feedback loops on user behavior.",
+        "More users always improve model quality due to more training data.",
+        "Scaling from 1M to 1B users only requires adding more servers.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Scaling ML systems introduces non-linear challenges: (1) tail distributions — rare behaviors that matter at 1B users do not appear in 1M user training data; (2) feedback loops — at scale, model recommendations significantly shape the data distribution the model is trained on next; (3) infrastructure complexity — sharding, consistency, and latency SLAs become harder; (4) societal impact — mistakes at scale affect millions.",
+    },
+    {
+      id: "q-mls-kp35-2",
+      type: "multiple-choice",
+      difficulty: "advanced",
+      question:
+        "What is the purpose of the two-phase commit pattern in distributed ML feature stores, and when is it necessary?",
+      options: [
+        "To commit model weights to disk in two separate write operations.",
+        "To ensure atomicity when writing features to both an online store (Redis) and offline store (S3) simultaneously — either both writes succeed or neither does, preventing training-serving skew from partial updates.",
+        "A training technique that commits gradients twice per step for stability.",
+        "Two-phase commit is only relevant for transactional databases, not ML systems.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "When a feature computation updates both online (serving) and offline (training) stores, a partial failure creates training-serving skew. Two-phase commit ensures atomicity. In practice, saga patterns or eventual consistency with version tracking are more common due to availability trade-offs.",
+    },
+    {
+      id: "q-mls-kp35-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Horizontal scaling (adding more machines) is always sufficient to handle increased ML inference load without architectural changes.",
+      correctAnswer: "False",
+      explanation:
+        "Horizontal scaling works well for stateless inference but has limits: (1) shared state (feature caches, model state) creates coordination overhead; (2) model size may require all replicas to load large weights, causing memory waste; (3) heterogeneous request types require different resource profiles; (4) at very high QPS, upstream bottlenecks (feature store, database) become the constraint. Architectural changes are often also needed.",
+    },
+  ],
+
+  "ml-workflow-orchestration": [
+    {
+      id: "q-mls-kp36-1",
+      type: "multiple-choice",
+      difficulty: "intermediate",
+      question:
+        "What is the primary advantage of using a workflow orchestration system (e.g., Apache Airflow, Prefect, Kubeflow Pipelines) for ML pipelines over cron jobs?",
+      options: [
+        "Workflow orchestrators run jobs faster than cron.",
+        "Workflow orchestrators provide dependency management (execute step B only after step A succeeds), retry logic, monitoring, lineage tracking, parameterization, and reproducibility — things cron cannot provide.",
+        "Workflow orchestrators eliminate the need for containerization.",
+        "Cron jobs cannot run ML code.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Cron jobs are primitive: they run at a schedule but have no dependency management, no retry logic, no monitoring, and no parameterization. ML pipelines have complex dependencies and failure modes requiring retries. Orchestrators provide DAG-based dependency resolution, step-level monitoring, parameter sweeps, artifact tracking, and integration with compute backends.",
+      hints: [
+        "A cron job that fails silently is a common source of ML production incidents.",
+        "Orchestrators provide the glue between pipeline steps that cron lacks.",
+      ],
+    },
+    {
+      id: "q-mls-kp36-2",
+      type: "multiple-choice",
+      difficulty: "advanced",
+      question:
+        "An ML pipeline DAG has a step that takes 6 hours to compute a feature matrix used by 5 downstream training jobs. How should this be optimized?",
+      options: [
+        "Run the feature computation step 5 separate times, once before each training job.",
+        "Cache the computed feature matrix as a versioned artifact (content-addressed by input hash) in a shared store; downstream training jobs check the cache first and skip recomputation if the input hash matches.",
+        "Parallelize all 6 steps together using stream processing.",
+        "Replace the feature computation with a simpler method that takes 1 hour.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Artifact caching is fundamental to efficient ML pipeline orchestration: compute the artifact hash from all inputs, check if the cache contains an artifact with this hash, load from cache if yes or compute and store if no. This enables incremental computation — only recompute what has changed.",
+    },
+    {
+      id: "q-mls-kp36-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "In ML pipeline orchestration, a DAG (Directed Acyclic Graph) structure ensures that pipeline steps can be executed in a valid order without circular dependencies.",
+      correctAnswer: "True",
+      explanation:
+        "DAGs model dependencies between pipeline steps: an edge A to B means B depends on A. Acyclicity guarantees there is always a topological ordering (a valid execution sequence). Circular dependencies would create deadlocks. Orchestrators like Airflow enforce DAG structure at definition time, catching circular dependencies before execution.",
+    },
+  ],
+
+  "model-deployment-patterns": [
+    {
+      id: "q-mls-kp37-1",
+      type: "multiple-choice",
+      difficulty: "intermediate",
+      question:
+        "What is the difference between blue-green deployment and canary deployment for ML models?",
+      options: [
+        "Blue-green uses GPU; canary uses CPU.",
+        "Blue-green maintains two identical production environments and switches all traffic instantly; canary gradually routes a small percentage of traffic to the new model, monitoring for issues before full rollout.",
+        "Blue-green is for batch models; canary is for online models.",
+        "Blue-green requires more hardware than canary deployment.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Blue-green: instant switchover with easy rollback; risk is that all users see the new model simultaneously. Canary: gradual rollout (1% to 5% to 20% to 100%) with continuous monitoring; risk exposure is limited to a small user percentage, enabling early issue detection. For ML models with hard-to-predict behavioral changes, canary is preferred.",
+    },
+    {
+      id: "q-mls-kp37-2",
+      type: "multiple-choice",
+      difficulty: "advanced",
+      question:
+        "A canary deployment of a new recommendation model shows 0.3% better CTR but 0.5% higher p99 latency. How should you evaluate whether to proceed with full rollout?",
+      options: [
+        "Always prioritize the metric (CTR) over infrastructure metrics (latency).",
+        "Evaluate whether p99 latency remains within the SLA threshold; check if the latency increase affects user experience; model the business impact of +0.3% CTR vs. potential churn from +0.5% latency; investigate the root cause of the latency increase before committing to full rollout.",
+        "Roll back immediately since any latency regression is unacceptable.",
+        "Proceed with rollout since CTR improvement outweighs latency concerns.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Deployment decisions require multi-dimensional evaluation: (1) Is the SLA breached? (2) Business impact model: CTR gain vs. latency-induced conversion loss. (3) Root cause analysis prevents a latency regression from masking a deeper issue. (4) User experience research on latency thresholds. This holistic evaluation is necessary before irreversible full rollout.",
+    },
+    {
+      id: "q-mls-kp37-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "In ML deployment, a rollback plan should be prepared before every model deployment to ensure rapid recovery if the new model causes production issues.",
+      correctAnswer: "True",
+      explanation:
+        "Rollback readiness is a fundamental deployment best practice: the previous model version should remain available and deployable in minutes. This requires: keeping the previous model artifact in the registry, pre-testing the rollback procedure, having runbooks that specify rollback triggers, and ensuring the serving infrastructure can route traffic to the old version without downtime.",
+    },
+  ],
+
+  "experiment-design-systems": [
+    {
+      id: "q-mls-kp38-1",
+      type: "multiple-choice",
+      difficulty: "intermediate",
+      question:
+        "What is the multiple comparisons problem in ML experimentation and why does it matter?",
+      options: [
+        "Running multiple models simultaneously causes GPU memory conflicts.",
+        "When testing many metrics or variants simultaneously, the probability of finding at least one statistically significant result by chance increases — requiring corrections like Bonferroni or FDR control to maintain valid statistical inference.",
+        "Multiple comparisons slow down the experiment analysis process.",
+        "Only one metric should ever be evaluated per ML experiment.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The multiple comparisons problem: with alpha=0.05 and 20 independent tests, the expected number of false positives is 1. Teams testing 10 metrics across 5 variants face 50 comparisons — inflating the false positive rate dramatically. Corrections: Bonferroni (divide alpha by number of tests, conservative), Benjamini-Hochberg (FDR control, less conservative), or pre-specifying a primary metric before seeing data.",
+    },
+    {
+      id: "q-mls-kp38-2",
+      type: "multiple-choice",
+      difficulty: "advanced",
+      question:
+        "You want to run 20 A/B tests simultaneously on a platform with 10M users to accelerate iteration velocity. What experimental design challenge must you address?",
+      options: [
+        "You cannot run more than 3 tests simultaneously.",
+        "Interaction effects: if multiple experiments affect the same user experience, treatment effects may not be additive, violating SUTVA. Mitigate with orthogonal design (independent randomization layers), interaction detection, and holdout groups excluded from all experiments.",
+        "Running 20 tests requires 20 separate traffic splits of equal size.",
+        "Simultaneous tests must all have the same treatment duration.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Experiment interaction is the key challenge at scale. SUTVA assumes each unit's outcome depends only on its own treatment — violated if experiments interact. Solutions: (1) orthogonal randomization layers reduce but do not eliminate interactions; (2) interaction detection checks if experiments perform differently when co-assigned; (3) holdout groups measure cumulative effect of all live experiments.",
+    },
+    {
+      id: "q-mls-kp38-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Peeking at A/B test results before the pre-determined end date and stopping early when significance is reached inflates the false positive rate above the nominal alpha level.",
+      correctAnswer: "True",
+      explanation:
+        "The peeking problem (optional stopping): running a significance test multiple times during an experiment inflates Type I error rate. At 5 looks at alpha=0.05, the actual false positive rate is approximately 14%. Solutions: pre-determine sample size before starting, use sequential testing methods that are valid at any stopping time, or apply alpha spending functions for planned interim analyses.",
+    },
+  ],
+
+  "ml-data-engineering": [
+    {
+      id: "q-mls-kp39-1",
+      type: "multiple-choice",
+      difficulty: "intermediate",
+      question:
+        "What is the purpose of data versioning in ML pipelines, and what does it enable?",
+      options: [
+        "Data versioning prevents data from being modified by multiple users simultaneously.",
+        "Data versioning assigns unique identifiers to datasets at specific points in time, enabling experiment reproducibility (same data plus same code equals same model), debugging by comparing dataset versions when model performance changes, and rollback to known-good datasets.",
+        "Data versioning compresses data to reduce storage costs.",
+        "Data versioning automatically cleans and validates incoming data.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Data versioning (DVC, Delta Lake, LakeFS) is analogous to code version control for datasets. Without it, which data was used to train the model that was in production on March 15 is unanswerable. With versioning: full reproducibility by tagging training dataset versions, bisect data quality issues by comparing versions when metrics degraded, and rollback to last-known-good dataset.",
+      hints: [
+        "DVC (Data Version Control) integrates with git to version datasets stored in S3, GCS, etc.",
+        "Content-addressed storage (sha256 hash of content) naturally versions data without metadata management.",
+      ],
+    },
+    {
+      id: "q-mls-kp39-2",
+      type: "multiple-choice",
+      difficulty: "advanced",
+      question:
+        "A Spark job processing 10TB of daily log data for ML feature computation takes 4 hours. Profiling shows 70% of time is in a groupBy + count on a high-cardinality key with skewed distribution (10% of keys have 80% of records). What optimization addresses this?",
+      options: [
+        "Increase the number of Spark executors proportionally.",
+        "Apply salting: append a random suffix (0 to N) to the skewed keys before aggregation to distribute records across N partitions, perform the groupBy + count on salted keys, then sum the partial counts per original key in a second aggregation pass.",
+        "Switch from Spark to a single-machine pandas job for accuracy.",
+        "Filter out the high-frequency keys before aggregation.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Data skew in Spark causes stragglers: the few partitions handling high-frequency keys take 10-100x longer than others. Salting artificially distributes the skewed key, spreading records across N partitions. After the first aggregation, a second groupBy on the original key sums partial counts, transforming an O(skew_factor) straggler into a balanced O(N) parallel computation.",
+    },
+    {
+      id: "q-mls-kp39-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Schema evolution in ML data pipelines refers to handling changes in the structure of data over time (e.g., new fields added, fields renamed) without breaking downstream feature computations.",
+      correctAnswer: "True",
+      explanation:
+        "Schema evolution is a practical ML data engineering challenge: as products evolve, event schemas change. Without schema evolution handling, adding a new field breaks all pipelines that do not expect it. Solutions: backwards-compatible schema changes, schema registries enforcing compatibility, and defensive code that handles missing fields gracefully.",
+    },
+  ],
+
+  "ml-production-incidents": [
+    {
+      id: "q-mls-kp40-1",
+      type: "multiple-choice",
+      difficulty: "intermediate",
+      question:
+        "What is a silent ML failure and why is it more dangerous than a system crash?",
+      options: [
+        "A model that generates predictions with no sound output.",
+        "A model that continues to serve predictions and appears healthy by system metrics (uptime, latency, error rate) but is actually producing subtly wrong predictions due to data drift, feature bugs, or model degradation — undetected until business impact materializes.",
+        "A failure that occurs only during low-traffic periods.",
+        "A model crash that is not logged to the monitoring system.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Silent failures are the most dangerous ML production issues: infrastructure is healthy (no errors, normal latency) but predictions are quietly wrong. Examples: feature pipeline bug causing all users to get the same features, data drift making the model output nonsense that passes schema validation. Detection requires business metric monitoring (revenue, engagement) and prediction distribution monitoring — not just system health checks.",
+      hints: [
+        "System monitoring catches crashes; business metric monitoring catches silent failures.",
+        "No news is good news is a dangerous assumption for ML systems.",
+      ],
+    },
+    {
+      id: "q-mls-kp40-2",
+      type: "multiple-choice",
+      difficulty: "advanced",
+      question:
+        "During a production incident, a recommendation model begins returning the same 10 items for all users. What is the most likely root cause and debugging approach?",
+      options: [
+        "The model weights were corrupted; restore from backup immediately.",
+        "Investigate in order of likelihood: (1) feature pipeline bug returning constant or null features causing identical model inputs; (2) model serving bug such as cached response returned for all users; (3) diversity filter bug excluding all candidates except top-10; (4) upstream data outage returning empty user history. Compare features at serving time to training-time distribution, check feature freshness timestamps, and review recent deployments in all pipeline components.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Homogeneous recommendation output is almost always a feature or serving bug, not a model bug. Debugging sequence: (1) is the model receiving identical inputs? Log feature vectors for different users; (2) is the serving layer caching? Check response headers; (3) is candidate generation filtering too aggressively? Log candidate counts at each pipeline stage; (4) recent deployment? Roll back the last change. Feature bugs (null/constant features) are the most common cause.",
+    },
+    {
+      id: "q-mls-kp40-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Post-incident reviews (PIRs) for ML systems should include analysis of detection time (how long until the issue was detected) and recovery time (how long to restore normal service) to improve future incident response.",
+      correctAnswer: "True",
+      explanation:
+        "ML incident PIRs should track: (1) detection time — was the issue caught by monitoring alerts or by user complaints? Alerts indicate mature monitoring; user complaints indicate monitoring gaps; (2) time to diagnose root cause; (3) recovery time; (4) impact (users affected, business cost). These metrics drive targeted investments: long detection time means improve monitoring; long diagnosis time means improve observability tooling; long recovery time means improve rollback automation.",
+    },
+  ],
+
 registerQuestions(questions);
 export default questions;

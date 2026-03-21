@@ -1616,6 +1616,68 @@ const questions: Record<string, Question[]> = {
     },
   ],
 
+  "modern-activation-functions": [
+    {
+      id: "q-dl-kp30-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "SiLU (Sigmoid Linear Unit / Swish) is defined as SiLU(x) = x · σ(x). Compared to ReLU, which property does SiLU possess that makes it beneficial for deep networks?",
+      options: [
+        "SiLU is computationally cheaper than ReLU because it avoids the max operation",
+        "SiLU is smooth and non-monotonic — it has a small negative region near x ≈ −1.28, allowing the network to learn to suppress near-zero activations rather than hard-zeroing them, improving gradient flow and empirical performance in deep architectures",
+        "SiLU eliminates the vanishing gradient problem entirely because its derivative is always ≥ 1",
+        "SiLU is equivalent to ReLU for positive inputs and LeakyReLU for negative inputs",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "SiLU(x) = x·σ(x) is smooth (infinitely differentiable), self-gated, and non-monotonic with a global minimum near x ≈ −1.28. Unlike ReLU's hard zero for x < 0, SiLU allows small negative values to pass, providing a richer gradient signal. Empirically, SiLU outperforms ReLU in EfficientNet, MobileNetV3, and large language model FFN layers. Its derivative SiLU'(x) = σ(x) + x·σ(x)·(1−σ(x)) is nonzero for all x.",
+      hints: [
+        "Self-gating: the activation gates itself (x · σ(x)) rather than using a separate learned gate.",
+        "SiLU is the activation function used in EfficientNet and many modern vision transformers.",
+      ],
+    },
+    {
+      id: "q-dl-kp30-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "GELU (Gaussian Error Linear Unit) is defined as GELU(x) = x · Φ(x), where Φ is the standard normal CDF. What is the intuition behind this formulation, and why is it preferred in transformer architectures like BERT and GPT?",
+      options: [
+        "GELU approximates ReLU but is computationally faster due to lookup table approximation of Φ(x)",
+        "GELU stochastically gates inputs: each input x is multiplied by the probability that x is greater than a standard normal random draw — smoothly blending identity (x passes through) and zero-gating based on the input's magnitude, which regularizes and improves calibration in attention-based models",
+        "GELU is preferred because it is the only activation function with a closed-form derivative",
+        "GELU eliminates the need for layer normalization in transformer blocks",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "GELU(x) = x·Φ(x) can be interpreted as: scale x by the probability that a standard normal random variable Z is less than x. For large positive x, Φ(x) ≈ 1 (full pass-through); for large negative x, Φ(x) ≈ 0 (suppressed). This smooth stochastic gating outperforms ReLU in BERT, GPT-2/3, ViT, and most modern transformers. Approximation: GELU(x) ≈ 0.5x·(1 + tanh(√(2/π)·(x + 0.044715·x³))) is commonly used in practice.",
+      hints: [
+        "GELU is the default activation in BERT, GPT-2, GPT-3, and ViT — it has essentially replaced ReLU in transformer architectures.",
+        "The approximation using tanh avoids computing the true Gaussian CDF and is accurate to within 0.001% on the typical input range.",
+      ],
+    },
+    {
+      id: "q-dl-kp30-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "SwiGLU (Swish-Gated Linear Unit) is used in LLaMA, PaLM, and Mistral FFN layers. It replaces the standard FFN (Linear → activation → Linear) with which formulation?",
+      options: [
+        "FFN(x) = SiLU(W₁x + b₁) + W₂x + b₂ — adding a residual path inside the FFN block",
+        "FFN(x) = (SiLU(W₁x) ⊙ W₃x) · W₂ — a gated linear unit where one branch applies SiLU and the other is a learned linear gate, combined via elementwise multiplication before the output projection",
+        "FFN(x) = SiLU(W₁x) · SiLU(W₂x) — applying SiLU to both linear projections and multiplying the results",
+        "FFN(x) = LayerNorm(SiLU(W₁x + b₁)) · W₂ — inserting layer normalization between the two linear layers",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "SwiGLU(x, W, V, W₂) = (SiLU(xW) ⊙ xV) W₂. Two linear projections (W and V) split the input: one branch applies SiLU as the activation, the other is a linear gate. Their elementwise product selects which features pass. This gated architecture requires a third weight matrix but delivers better perplexity per parameter. LLaMA models use SwiGLU with a hidden dimension scaled to 8/3 of d_model to maintain parameter count parity with the standard 4×d_model FFN.",
+      hints: [
+        "GLU family: Gated Linear Units use elementwise multiplication of two linear branches — the gate controls information flow.",
+        "LLaMA/Mistral FFN: three weight matrices (W_gate, W_up, W_down) rather than the standard two (W_1, W_2) in vanilla transformers.",
+      ],
+    },
+  ],
   "dl-frameworks": [
     {
       id: "q-dl-kp29-1",
