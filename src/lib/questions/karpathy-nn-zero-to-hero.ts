@@ -35,7 +35,7 @@ registerQuestions({
         "df/dx = dg/dh / dh/dx",
         "df/dx = dg/dx * dh/dx",
       ],
-      correctAnswer: "\\(\\frac{dg}{dh} \\cdot \\frac{dh}{dx}\\)",
+      correctAnswer: 1,
       explanation:
         "The chain rule states that for a composed function \\(f(x) = g(h(x))\\), the derivative with respect to \\(x\\) is:\n" +
         "\\[\\frac{df}{dx} = \\frac{dg}{dh} \\cdot \\frac{dh}{dx}\\]" +
@@ -52,7 +52,7 @@ registerQuestions({
       question:
         "In Karpathy's Micrograd, when computing backprop for an addition node z = x + y, what is dz/dx?",
       options: ["0", "y", "1", "x"],
-      correctAnswer: "1",
+      correctAnswer: 2,
       explanation:
         "The derivative of a sum z = x + y with respect to x is 1, meaning the gradient from the output is passed through unchanged to x (and also to y). This is why addition fans out gradients equally.",
       hints: [

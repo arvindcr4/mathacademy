@@ -619,8 +619,7 @@ registerQuestions({
         "Vertex AI is completely free, while AI Studio is paid.",
         "There is no difference; they are the exact same platform.",
       ],
-      correctAnswer:
-        "AI Studio is for prototyping and fast developer access, while Vertex AI provides enterprise-grade security, data governance, and MLOps pipelines.",
+      correctAnswer: 1,
       explanation:
         "Google AI Studio is built for rapid developer prototyping with easy API keys, whereas Vertex AI (on Google Cloud) offers enterprise SLAs, advanced MLOps, private endpoints, and strict data governance.",
       hints: [

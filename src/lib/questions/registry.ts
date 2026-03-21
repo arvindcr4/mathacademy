@@ -2305,6 +2305,70 @@ const questionOverrides: Record<string, QuestionOverride> = {
     ],
     correctAnswer: 2,
   },
+  "q-tab-kp24-1": {
+    question: "Why put scaling and imputation inside a Pipeline during cross-validation?",
+    options: [
+      "To reuse fitted transformers across folds and speed up training",
+      "To fit each transformer on the training fold only, so validation rows do not leak into preprocessing",
+      "To let the estimator tune preprocessing hyperparameters automatically",
+      "To make the feature matrix dense before model fitting",
+    ],
+    correctAnswer: 1,
+  },
+  "q-tab-kp25-2": {
+    question: "Platt scaling should be fit on which predictions?",
+    options: [
+      "Predictions on the same rows used to train the base model",
+      "Predictions on a held-out calibration set or out-of-fold predictions",
+      "Predictions on the final test set",
+      "Averaged predictions from train and test rows",
+    ],
+    correctAnswer: 1,
+  },
+  "q-tab-kp32-2": {
+    question:
+      "A model predicts February churn using data available on January 31. Which feature is leaky?",
+    options: [
+      "Tickets opened in the 90 days before January 31",
+      "Average spend through January 31",
+      "Support tickets opened in February",
+      "Days since last login measured on January 31",
+    ],
+    correctAnswer: 2,
+  },
+  "q-tab-kp34-2": {
+    question:
+      "In CatBoost ordered target statistics, which rows may contribute to row i's encoding?",
+    options: [
+      "All training rows with the same category, including row i",
+      "Only rows that appear earlier than row i in a random permutation",
+      "Only rows in the same cross-validation fold as row i",
+      "Only rows with a different target value than row i",
+    ],
+    correctAnswer: 1,
+  },
+  "q-mfml-kp12-1": {
+    question: "If u = 2x and f(u) = u^3, what is df/dx at x = 2?",
+    options: ["12", "24", "48", "96"],
+    correctAnswer: 3,
+  },
+  "q-mfml-kp25-1": {
+    question:
+      "For IEEE 754 float64, what is the smallest epsilon such that 1 + epsilon != 1?",
+    options: ["2^-23 ~= 1.19e-7", "2^-52 ~= 2.22e-16", "2^-53 ~= 1.11e-16", "10^-52"],
+    correctAnswer: 1,
+  },
+  "q-mfml-kp25-3": {
+    question:
+      "If kappa(A) = 10^6 and b has relative error 10^-12, what upper bound do you get for the relative error in x?",
+    options: ["10^-18", "10^-12", "10^-6", "10^6"],
+    correctAnswer: 2,
+  },
+  "q-mfml-kp41-2": {
+    question: "If P(A) = 1/2, P(B) = 1/4, and P(C) = P(D) = 1/8, what is H(X) in bits?",
+    options: ["1.5", "1.75", "1.875", "2.0"],
+    correctAnswer: 1,
+  },
 };
 
 // ── Hint generation helpers ─────────────────────────────────────────────────

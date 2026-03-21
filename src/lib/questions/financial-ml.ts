@@ -96,7 +96,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Fama and French augmented CAPM with SMB (Small Minus Big, the size premium — long small-caps, short large-caps) and HML (High Minus Low book-to-market, the value premium — long high B/M stocks, short low B/M growth stocks) to capture empirical return patterns unexplained by the market factor alone. The model is: E[R\\_i] − Rƒ = \\alpha\\_i + \\betaMKT\\cdot(Rm−Rƒ) + \\betaSMB\\cdotSMB + \\betaHML\\cdotHML.",
+        "Fama and French augmented CAPM with SMB (Small Minus Big — the size premium: long small-cap stocks, short large-cap stocks) and HML (High Minus Low — the value premium: long high book-to-market stocks, short low B/M growth stocks) to capture empirical return patterns unexplained by the market factor alone.\n\nThe model takes the form:\n\n\\[\nE[R_i] - R_f = \\alpha_i + \\beta_{\\text{MKT}} \\cdot (E[R_m] - R_f) + \\beta_{\\text{SMB}} \\cdot \\text{SMB} + \\beta_{\\text{HML}} \\cdot \\text{HML}.\n\\]\n\nHere \\( \\alpha_i \\) is the asset's abnormal return unexplained by the three factors. The model dramatically improved explanatory power over CAPM alone.",
       hints: [
         "One factor captures a systematic return difference between small and large companies by market cap.",
         "The other factor relates to how cheaply a company\'s assets are priced relative to their book value (book-to-market ratio).",
