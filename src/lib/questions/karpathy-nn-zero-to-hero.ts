@@ -1835,8 +1835,7 @@ registerQuestions({
         "By accumulating gradients over multiple smaller micro-steps (forward/backward) before performing a single optimizer weight update.",
         "By storing gradients on the CPU instead of the GPU.",
       ],
-      correctAnswer:
-        "By accumulating gradients over multiple smaller micro-steps (forward/backward) before performing a single optimizer weight update.",
+      correctAnswer: 2,
       explanation:
         "If a GPU can only hold a batch of 4, you can run 8 forward/backward passes, summing the gradients each time, and then step the optimizer. Mathematically, this simulates a batch size of 32 (8 * 4).",
       hints: [

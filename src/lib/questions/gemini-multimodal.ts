@@ -1,4 +1,4 @@
-import { registerQuestions } from "./index";
+import { registerQuestions } from "./registry";
 
 registerQuestions({
   "gemini-nano": [
@@ -14,12 +14,11 @@ registerQuestions({
         "High-throughput video generation and editing.",
         "Training massive multimodal foundation models from scratch.",
       ],
-      correctAnswer:
-        "On-device execution for mobile and edge applications with memory and power constraints.",
+      correctAnswer: 1,
       explanation:
         "Gemini Nano is highly optimized for edge devices (like smartphones), allowing on-device AI capabilities that ensure privacy, work offline, and have low latency.",
       hints: [
-        "\'Nano\' implies small size — think mobile or edge hardware.",
+        "'Nano' implies small size - think mobile or edge hardware.",
         "Consider privacy and offline use as key constraints for on-device AI.",
       ],
     },

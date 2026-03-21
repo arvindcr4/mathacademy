@@ -182,15 +182,15 @@ const questions: Record<string, Question[]> = {
         "An agent follows policy π in an MDP with γ = 0.9. Starting from state s, it receives rewards 10, 0, 5 over the next three steps then reaches a terminal state. What is V^π(s) (the exact discounted return for this trajectory)?",
       options: [
         "15",
-        "10 + 0.9·(0) + 0.81·(5) = 14.05",
+        "10 + 0.9*(0) + 0.81*(5) = 14.05",
         "10 + 0 + 5 = 15",
         "(10 + 0 + 5)/3 = 5",
       ],
       correctAnswer: 1,
       explanation:
-        "V^π(s) = E_π[G_t | S_t = s] where G_t = Σ_{k=0}^∞ γ^k R_{t+k+1}. For this trajectory: G = 10 + 0.9·0 + 0.9²·5 = 10 + 0 + 0.81·5 = 10 + 4.05 = 14.05. S&B (§3.3) define V^π(s) as the expected return of G_t when starting in s and following π.",
+        "V^π(s) = E_π[G_t | S_t = s] where G_t = $\\sum_{k=0}^{\\infty} \\gamma^k R_{t+k+1}$. For this trajectory: G = 10 + 0.9*0 + $0.9^2$*5 = 10 + 0 + 0.81*5 = 10 + 4.05 = 14.05. S&B (3.3) define V^π(s) as the expected return of G_t when starting in s and following π.",
       hints: [
-        "G_t = R_{t+1} + γR_{t+2} + γ²R_{t+3} + … Apply γ = 0.9 to each reward, weighted by time step.",
+        "G_t = R_{t+1} + γR_{t+2} + $γ^2$R_{t+3} + ... Apply γ = 0.9 to each reward, weighted by time step.",
         'S&B §3.3: "The value of a state s under a policy π, denoted V^π(s), is the expected return when starting in s and following π thereafter."',
       ],
     },

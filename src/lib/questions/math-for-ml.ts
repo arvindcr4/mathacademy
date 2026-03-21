@@ -2176,5 +2176,469 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
 
 Object.assign(questions, extra);
 
+const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
+  "information-theory-advanced": [
+    {
+      id: "q-mfml-kp41-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "The entropy H(X) of a discrete random variable X with n equally likely outcomes is:",
+      options: [
+        "H(X) = 0 (certainty)",
+        "H(X) = log₂(n) bits",
+        "H(X) = 1/n bits",
+        "H(X) = n bits",
+      ],
+      correctAnswer: 1,
+      explanation: "For a uniform distribution over n outcomes: H(X) = −Σᵢ (1/n) log₂(1/n) = log₂(n). A fair coin (n=2) has H=1 bit; a fair die (n=6) has H=log₂6≈2.58 bits. Uniform is the maximum-entropy distribution for fixed n.",
+      hints: [
+        "Each outcome has probability 1/n. Plug into H = −Σ p log p.",
+        "Entropy is maximized by the uniform distribution — all outcomes equally surprising.",
+      ],
+    },
+    {
+      id: "q-mfml-kp41-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "A source emits symbols A (prob 0.5), B (prob 0.25), C (prob 0.125), D (prob 0.125). What is its entropy in bits?",
+      options: ["1.75", "1.875", "2.0", "2.25"],
+      correctAnswer: 1,
+      explanation: "H = −(0.5 log₂0.5 + 0.25 log₂0.25 + 0.125 log₂0.125 + 0.125 log₂0.125) = 0.5×1 + 0.25×2 + 0.125×3 + 0.125×3 = 0.5 + 0.5 + 0.375 + 0.375 = 1.75. Wait: the Huffman code assigns lengths 1, 2, 3, 3, so average length = 1.75 bits, which equals entropy H = 1.75 bits — achieving the theoretical optimum.",
+      hints: [
+        "H = −Σ pᵢ log₂pᵢ. For each symbol: −0.5×log₂0.5 = 0.5, −0.25×log₂0.25 = 0.5, each −0.125×log₂0.125 = 0.375.",
+        "Sum: 0.5 + 0.5 + 0.375 + 0.375 = 1.75 bits.",
+      ],
+    },
+    {
+      id: "q-mfml-kp41-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Shannon's channel capacity theorem (Shannon 1948) states that a noisy channel with bandwidth B Hz and SNR γ = S/N has maximum error-free throughput:",
+      options: [
+        "C = B log₂(1 + γ) bits/second",
+        "C = B · γ bits/second",
+        "C = B / γ bits/second",
+        "C = γ log₂(1 + B) bits/second",
+      ],
+      correctAnswer: 0,
+      explanation: "The Shannon-Hartley theorem: C = B log₂(1 + S/N). Example: B=1 MHz, SNR=63: C = 10⁶ × log₂(64) = 6 Mbps. Below capacity, there exist codes achieving arbitrarily low error rate (Shannon's noisy channel coding theorem). This sets the ultimate limit for wireless communications regardless of modulation scheme.",
+      hints: [
+        "Doubling bandwidth doubles capacity. Doubling SNR adds only log₂(2)=1 bit/Hz.",
+        "SNR must be on a linear scale (not dB). If SNR is given in dB: SNR_linear = 10^(SNR_dB/10).",
+      ],
+    },
+    {
+      id: "q-mfml-kp41-4",
+      type: "true-false",
+      difficulty: "medium",
+      question: "The conditional entropy H(Y|X) is always less than or equal to H(Y), with equality if and only if X and Y are independent.",
+      correctAnswer: "True",
+      explanation: "Conditioning reduces entropy (or leaves it unchanged): H(Y|X) ≤ H(Y). Proof: H(Y) − H(Y|X) = I(X;Y) ≥ 0. Equality H(Y|X) = H(Y) holds iff I(X;Y) = 0 iff X and Y are independent. This formalises the intuition that knowing X cannot increase uncertainty about Y.",
+      hints: [
+        "I(X;Y) = H(Y) − H(Y|X) ≥ 0. Mutual information is always non-negative.",
+        "If X is perfectly correlated with Y: H(Y|X) = 0. If independent: H(Y|X) = H(Y).",
+      ],
+    },
+    {
+      id: "q-mfml-kp41-5",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The data processing inequality states that for a Markov chain X → Y → Z:",
+      options: [
+        "I(X;Z) ≥ I(X;Y): processing can increase information",
+        "I(X;Z) ≤ I(X;Y): post-processing cannot increase mutual information",
+        "I(X;Z) = I(X;Y) always: information is preserved by processing",
+        "H(Z) ≥ H(Y): processing increases entropy",
+      ],
+      correctAnswer: 1,
+      explanation: "Data processing inequality: for Markov chain X→Y→Z, I(X;Z) ≤ I(X;Y). Any function of Y cannot extract more information about X than Y itself contains. Application: bottleneck features — a compressed representation Z of features Y can retain at most I(X;Y) bits about the label X. This motivates the Information Bottleneck (Tishby 2000).",
+      hints: [
+        "Markov chain: Z is determined by Y alone, not by X directly. So Z cannot 'see' X through anything other than Y.",
+        "Information Bottleneck: find Z that compresses Y while maximising I(Z;X) — subject to I(X;Z) ≤ I(X;Y).",
+      ],
+    },
+    {
+      id: "q-mfml-kp41-6",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Cross-entropy H(P, Q) = −Σ P(x) log Q(x) is always greater than or equal to the entropy H(P) = −Σ P(x) log P(x), with equality iff P = Q.",
+      correctAnswer: "True",
+      explanation: "H(P, Q) − H(P) = KL(P||Q) ≥ 0 (Gibbs' inequality). Equivalently: −Σ P log Q ≥ −Σ P log P. Cross-entropy is the expected code length when using Q to encode messages drawn from P. The inefficiency relative to the optimal H(P) is exactly the KL divergence KL(P||Q).",
+      hints: [
+        "H(P,Q) = H(P) + KL(P||Q). Since KL ≥ 0, cross-entropy ≥ entropy.",
+        "In ML training, minimising cross-entropy H(P_data, P_model) = H(P_data) + KL(P_data||P_model), so minimising cross-entropy = minimising KL.",
+      ],
+    },
+  ],
+
+  "numerical-methods-advanced": [
+    {
+      id: "q-mfml-kp42-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Gradient descent with constant learning rate η on a strongly convex function with Lipschitz gradient (L-smooth, μ-strongly convex) converges at rate:",
+      options: [
+        "O(1/t) — sublinear convergence",
+        "O((1 − μ/L)^t) — linear (geometric) convergence",
+        "O(1/t²) — accelerated sublinear convergence",
+        "O(exp(−t²)) — super-linear convergence",
+      ],
+      correctAnswer: 1,
+      explanation: "For L-smooth μ-strongly convex f, gradient descent with η=1/L achieves f(xₜ)−f* ≤ (1 − μ/L)^t (f(x₀)−f*). The condition number κ = L/μ ≥ 1 controls convergence: small κ → fast. Nesterov acceleration (momentum) improves this to O((1−√(μ/L))^t), the optimal first-order rate.",
+      hints: [
+        "The ratio μ/L ∈ (0,1] is the progress per step. Small κ=L/μ means function is well-conditioned.",
+        "Momentum (Nesterov): replaces factor (1−μ/L) with (1−√(μ/L)) — exploits the geometric mean structure.",
+      ],
+    },
+    {
+      id: "q-mfml-kp42-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "LU decomposition with partial pivoting decomposes a matrix A as PA = LU where P is a permutation matrix. The condition number κ(A) affects numerical stability because:",
+      options: [
+        "Partial pivoting directly reduces κ(A) to 1 for any matrix",
+        "The relative error in the solution x to Ax=b is bounded by ‖δx‖/‖x‖ ≤ κ(A)·‖δb‖/‖b‖, so large κ amplifies rounding errors from finite precision arithmetic",
+        "LU without pivoting always produces a smaller condition number than LU with pivoting",
+        "The condition number only affects the speed of convergence, not the accuracy of the solution",
+      ],
+      correctAnswer: 1,
+      explanation: "The fundamental condition number bound: ‖δx‖/‖x‖ ≤ κ(A)·(‖δA‖/‖A‖ + ‖δb‖/‖b‖). Partial pivoting (swapping rows to put the largest pivot on the diagonal) controls the growth factor of LU and improves numerical stability, but cannot change κ(A). An ill-conditioned matrix (κ >> 1) will give poor solutions regardless of the algorithm used.",
+      hints: [
+        "κ(A) = σ_max/σ_min. Large κ: tiny changes in b cause huge changes in x.",
+        "float64 precision ≈ 10⁻¹⁶. If κ(A) = 10¹², you lose 12 digits of accuracy → solution has only ~4 significant digits.",
+      ],
+    },
+    {
+      id: "q-mfml-kp42-3",
+      type: "true-false",
+      difficulty: "medium",
+      question: "The QR decomposition A = QR (Q orthogonal, R upper triangular) can be used to solve least-squares problems Ax ≈ b more numerically stably than forming the normal equations AᵀAx = Aᵀb.",
+      correctAnswer: "True",
+      explanation: "Normal equations AᵀAx = Aᵀb square the condition number: κ(AᵀA) = κ(A)². For κ(A) = 10⁸, κ(AᵀA) = 10¹⁶, exhausting float64 precision. QR solves min‖Ax−b‖ via Rx=Qᵀb without squaring the condition number, using orthogonal transformations (Householder, Givens) that are numerically stable. Standard numerical libraries (LAPACK's dgels) use QR for least-squares.",
+      hints: [
+        "Normal equations condition number = κ(A)²: for ill-conditioned A, this can catastrophically amplify errors.",
+        "QR preserves condition number: solving Rx=Qᵀb has the same conditioning as the original A.",
+      ],
+    },
+    {
+      id: "q-mfml-kp42-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The Singular Value Decomposition A = UΣVᵀ provides the best rank-k approximation Aₖ = UₖΣₖVₖᵀ in the sense that:",
+      options: [
+        "Aₖ has the smallest Frobenius norm among all rank-k matrices",
+        "‖A − Aₖ‖₂ = σₖ₊₁ is minimal — no other rank-k matrix approximates A better in spectral or Frobenius norm (Eckart-Young theorem)",
+        "Aₖ minimizes the number of non-zero entries (sparsity)",
+        "Aₖ is the rank-k matrix closest to A in the L∞ norm",
+      ],
+      correctAnswer: 1,
+      explanation: "Eckart-Young-Mirsky theorem: among all rank-k matrices B, the SVD truncation Aₖ = UₖΣₖVₖᵀ minimizes both ‖A−B‖₂ = σₖ₊₁ (spectral norm) and ‖A−B‖_F = √(σₖ₊₁² + ⋯ + σᵣ²) (Frobenius norm). This makes SVD the theoretically optimal dimensionality reduction for linear methods, underlying PCA, LSA, and collaborative filtering.",
+      hints: [
+        "Truncate after k singular values: the approximation error in spectral norm = σₖ₊₁, the (k+1)-th singular value.",
+        "PCA is SVD on the centered data matrix: the k principal components are the top-k right singular vectors Vₖ.",
+      ],
+    },
+    {
+      id: "q-mfml-kp42-5",
+      type: "true-false",
+      difficulty: "hard",
+      question: "Newton's method for finding the root of f(x)=0 has quadratic convergence near the root: the error at step t+1 satisfies |eₜ₊₁| ≈ C|eₜ|², meaning the number of correct decimal digits doubles each iteration.",
+      correctAnswer: "True",
+      explanation: "Newton's method: xₜ₊₁ = xₜ − f(xₜ)/f'(xₜ). Taylor expansion around root x*: eₜ₊₁ ≈ f''(x*)/(2f'(x*)) · eₜ². This quadratic convergence (once in the basin of attraction) gives extremely fast local convergence: 1 → 2 → 4 → 8 → 16 significant digits per iteration. Applied to f(θ) = ∇L(θ): Newton step = −H⁻¹∇L is the full Newton method for optimization.",
+      hints: [
+        "Quadratic convergence: error ~ C × (previous error)². Starting at 10⁻¹: next step 10⁻², then 10⁻⁴, then 10⁻⁸.",
+        "Newton requires computing and inverting the Hessian H: O(n²) storage, O(n³) per step — expensive in high dimensions.",
+      ],
+    },
+    {
+      id: "q-mfml-kp42-6",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "The conjugate gradient (CG) method solves Ax = b (A symmetric positive definite) in at most n iterations exactly, and in practice converges faster for well-conditioned matrices. Its key advantage over gradient descent for solving linear systems is:",
+      options: [
+        "CG requires computing A⁻¹ explicitly, making each step O(n³)",
+        "CG is guaranteed to converge in at most n iterations for an n×n SPD system, versus gradient descent which may require many more steps",
+        "CG uses randomized matrix-vector products for speed",
+        "CG is only applicable to diagonal matrices",
+      ],
+      correctAnswer: 1,
+      explanation: "CG generates mutually A-conjugate search directions (dᵢᵀAdⱼ = 0 for i≠j), ensuring each new step makes progress in a previously unexplored direction. For an n×n SPD system: CG terminates in ≤ n steps exactly. Convergence rate: ‖eₜ‖_A ≤ 2((√κ−1)/(√κ+1))^t ‖e₀‖_A — dependent on √κ rather than κ for gradient descent.",
+      hints: [
+        "CG termination in n steps: n search directions span ℝⁿ — x* is found exactly.",
+        "Condition number dependence: GD converges as (1−2/(κ+1))^t; CG as ((√κ−1)/(√κ+1))^t — CG is faster by factor √κ.",
+      ],
+    },
+  ],
+
+  "markov-chains-mcmc": [
+    {
+      id: "q-mfml-kp43-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "A Markov chain with transition matrix P is called ergodic if it is:",
+      options: [
+        "Reducible and periodic",
+        "Irreducible and aperiodic, guaranteeing convergence to a unique stationary distribution",
+        "Absorbing: some states cannot be left once entered",
+        "Reversible: detailed balance holds with any initial distribution",
+      ],
+      correctAnswer: 1,
+      explanation: "Ergodic Markov chain = irreducible (every state reachable from every other state) + aperiodic (no cyclic patterns). Ergodicity guarantees: (1) unique stationary distribution π exists, (2) Pᵗ → 1πᵀ (convergence from any initial state), (3) time averages equal ensemble averages (ergodic theorem). MCMC methods rely on ergodicity for valid sampling.",
+      hints: [
+        "Irreducible: can go from any state to any other. Aperiodic: not stuck in a cycle of fixed length.",
+        "Ergodicity = unique stationary distribution π such that πP = π, and Pᵗ converges to it.",
+      ],
+    },
+    {
+      id: "q-mfml-kp43-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "In Metropolis-Hastings MCMC, the acceptance probability for moving from state x to proposed state x' with proposal Q(x'|x) is α = min(1, π(x')Q(x|x')/π(x)Q(x'|x)). If Q is symmetric (Q(x'|x) = Q(x|x')), this simplifies to:",
+      options: [
+        "α = min(1, π(x)/π(x'))",
+        "α = min(1, π(x')/π(x))",
+        "α = π(x')/(π(x') + π(x))",
+        "α = 1 always (all proposals accepted)",
+      ],
+      correctAnswer: 1,
+      explanation: "For symmetric Q: α = min(1, π(x')Q(x|x')/(π(x)Q(x'|x))) = min(1, π(x')/π(x)). This is the original Metropolis algorithm (1953). If the proposed state has higher density (π(x') > π(x)): always accept. If lower: accept with probability π(x')/π(x). This implements detailed balance: π(x)T(x'|x) = π(x')T(x|x').",
+      hints: [
+        "Symmetric Q cancels: MH ratio reduces to just the target density ratio π(x')/π(x).",
+        "Always move uphill (higher π); sometimes move downhill — prevents getting trapped at local modes.",
+      ],
+    },
+    {
+      id: "q-mfml-kp43-3",
+      type: "true-false",
+      difficulty: "hard",
+      question: "Hamiltonian Monte Carlo (HMC) uses gradient information ∇log π(x) to propose distant moves that are accepted with high probability, making it more efficient than random-walk Metropolis for smooth high-dimensional targets.",
+      correctAnswer: "True",
+      explanation: "HMC augments the state with auxiliary momentum p ~ N(0, M), then simulates Hamiltonian dynamics (conservative motion on the energy surface H(x,p) = −log π(x) + ½pᵀM⁻¹p) using leapfrog integration. The dynamics propose distant moves in the right direction guided by the gradient. Acceptance rate is near 1 (energy is conserved exactly in continuous time; leapfrog has small discretization error). HMC reduces random-walk behaviour from O(n) to O(n^{1/4}) steps per effective sample in n dimensions.",
+      hints: [
+        "Random-walk MH explores by diffusion (O(n) steps to traverse the target). HMC uses gradient to slide along level sets — much more efficient.",
+        "The leapfrog integrator preserves volume in phase space (symplectic), enabling high acceptance rates without detailed computation of the Jacobian.",
+      ],
+    },
+    {
+      id: "q-mfml-kp43-4",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "The mixing time of a Markov chain measures how long it takes to approach the stationary distribution. For Metropolis-Hastings on a target with K well-separated modes, the mixing time tends to be:",
+      options: [
+        "Very short because HM always accepts inter-mode proposals",
+        "Exponentially long in the energy barrier between modes — the chain can get trapped in one mode",
+        "Exactly K steps, one per mode",
+        "Independent of K because MH has geometric convergence guarantees",
+      ],
+      correctAnswer: 1,
+      explanation: "Multimodal targets are the Achilles heel of local MCMC methods. If modes are separated by a low-density region, proposals that cross the barrier are rejected with probability 1 − π(x')/π(x) ≈ 1. The chain explores within one mode for an exponentially long time before crossing. Solutions: parallel tempering (run chains at multiple temperatures), transdimensional MCMC, or normalizing flows as proposals.",
+      hints: [
+        "Energy barrier = region where π(x) ≈ 0 between modes. Crossing it requires a proposal with very low acceptance.",
+        "Parallel tempering: high-temperature chains mix faster and occasionally swap states with the cold chain, enabling cross-mode jumps.",
+      ],
+    },
+    {
+      id: "q-mfml-kp43-5",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "A Markov chain has stationary distribution π. The detailed balance condition (reversibility) π(x)T(x'|x) = π(x')T(x|x') implies:",
+      options: [
+        "The chain visits states in order of decreasing probability",
+        "The chain is time-reversible: the forward and backward processes are statistically indistinguishable",
+        "The chain converges faster than non-reversible chains",
+        "All transition probabilities are equal",
+      ],
+      correctAnswer: 1,
+      explanation: "Detailed balance (also called reversibility or microreversibility) means the probability flux from x to x' equals that from x' to x: π(x)T(x'|x) = π(x')T(x|x'). Summing over x': Σ_x π(x)T(x'|x) = π(x')·Σ_x T(x|x') = π(x'). So detailed balance implies stationarity. Metropolis-Hastings is designed to satisfy detailed balance by construction.",
+      hints: [
+        "Detailed balance = equal flux in both directions. Sum over x to verify π satisfies πP = π.",
+        "Not all MCMC methods satisfy detailed balance. Non-reversible chains can mix faster but are harder to construct.",
+      ],
+    },
+    {
+      id: "q-mfml-kp43-6",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Gibbs sampling is a special case of Metropolis-Hastings where each coordinate is updated from its full conditional distribution P(xᵢ|x_{−i}), and all proposed updates are accepted with probability 1.",
+      correctAnswer: "True",
+      explanation: "In Gibbs sampling, the proposal for coordinate i is Q(xᵢ'|x) = P(xᵢ'|x_{−i}). The MH acceptance ratio: π(x')Q(x|x')/π(x)Q(x'|x) = P(x')/P(xᵢ|x_{−i}) × P(xᵢ'|x_{−i})/P(x) = 1. So Gibbs sampling always accepts. This requires that full conditionals are available in closed form (e.g., exponential family conjugate models) — otherwise MH with a different proposal is needed.",
+      hints: [
+        "Gibbs = MH with acceptance rate 1. The proposal already places probability according to the target's full conditional.",
+        "Gibbs works for models with conjugate priors where P(θᵢ|θ_{−i}, data) has a known form (Beta, Gaussian, etc.).",
+      ],
+    },
+  ],
+
+  "lagrangian-kkt-optimization": [
+    {
+      id: "q-mfml-kp44-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "For the constrained optimization problem min f(x) s.t. g(x) ≤ 0, h(x) = 0, the Lagrangian is L(x, λ, ν) = f(x) + λᵀg(x) + νᵀh(x). The KKT conditions for optimality include the complementary slackness condition:",
+      options: [
+        "λᵢ ≥ 0 for all inequality constraints",
+        "λᵢ · gᵢ(x*) = 0 for each i: either the multiplier is zero or the constraint is active",
+        "νᵢ = 0 for all equality constraints",
+        "∇f(x*) = 0 (unconstrained stationarity)",
+      ],
+      correctAnswer: 1,
+      explanation: "KKT conditions: (1) Stationarity: ∇f + Σλᵢ∇gᵢ + Σνⱼ∇hⱼ = 0. (2) Primal feasibility: gᵢ(x*)≤0, hⱼ(x*)=0. (3) Dual feasibility: λᵢ≥0. (4) Complementary slackness: λᵢ·gᵢ(x*)=0. The CS condition means: if constraint i is inactive (gᵢ<0), its multiplier λᵢ must be 0 (it doesn't constrain the optimum). If λᵢ>0, the constraint must be active (gᵢ=0).",
+      hints: [
+        "Complementary slackness: λᵢ=0 or gᵢ(x*)=0 — at least one of them must be zero.",
+        "Active constraints (gᵢ=0) can have λᵢ>0; inactive constraints (gᵢ<0) must have λᵢ=0.",
+      ],
+    },
+    {
+      id: "q-mfml-kp44-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Strong duality holds for convex optimization problems satisfying Slater's condition (existence of a strictly feasible point), meaning the primal and dual optimal values are equal: p* = d*.",
+      correctAnswer: "True",
+      explanation: "Slater's condition: ∃x with gᵢ(x)<0 for all i. For convex f, gᵢ: Slater's condition guarantees strong duality (p*=d*). The duality gap p*−d* measures the quality of the dual lower bound. For the SVM: strong duality gives the dual formulation max Σαᵢ − ½Σᵢⱼαᵢαⱼyᵢyⱼxᵢᵀxⱼ s.t. αᵢ≥0, Σαᵢyᵢ=0 — enabling the kernel trick.",
+      hints: [
+        "Slater's condition: there is a point that strictly satisfies all inequality constraints — not just on the boundary.",
+        "Without Slater's condition, the duality gap p*−d* ≥ 0 but may be positive even for convex problems.",
+      ],
+    },
+    {
+      id: "q-mfml-kp44-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The dual of the primal SVM (min ½‖w‖² s.t. yᵢ(wᵀxᵢ+b) ≥ 1) has the dual variables αᵢ ≥ 0 satisfying complementary slackness: αᵢ(yᵢ(wᵀxᵢ+b)−1) = 0. This means:",
+      options: [
+        "All αᵢ > 0 (all training points contribute to the decision boundary)",
+        "Only the support vectors (points with yᵢ(wᵀxᵢ+b) = 1) have αᵢ > 0; all other points have αᵢ = 0",
+        "αᵢ = yᵢ for all points by the dual constraint",
+        "αᵢ = 0 iff the point is correctly classified",
+      ],
+      correctAnswer: 1,
+      explanation: "By complementary slackness: either αᵢ=0 or yᵢ(wᵀxᵢ+b)=1. For points strictly inside the margin (yᵢ(wᵀxᵢ+b)>1): their constraint is inactive → αᵢ=0. They do not contribute to w = Σαᵢyᵢxᵢ. Only support vectors (on the margin boundary) have αᵢ>0. This is why SVM is memory-efficient: the solution depends only on the support vectors.",
+      hints: [
+        "αᵢ>0 requires the constraint to be active: yᵢ(wᵀxᵢ+b) = 1 exactly — on the margin boundary.",
+        "w = Σᵢ αᵢyᵢxᵢ: only support vectors (αᵢ>0) contribute. Far-from-margin points have αᵢ=0 and are irrelevant.",
+      ],
+    },
+    {
+      id: "q-mfml-kp44-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The proximal operator of a function g with step size η is defined as prox_{ηg}(v) = argmin_x (g(x) + ‖x−v‖²/(2η)). For g(x) = λ‖x‖₁ (LASSO), the proximal operator is:",
+      options: [
+        "prox(v) = v/(1 + 2ηλ) (ridge shrinkage)",
+        "prox(v) = sign(v)·max(|v| − ηλ, 0) (soft-thresholding)",
+        "prox(v) = v if |v| > ηλ, else 0 (hard-thresholding)",
+        "prox(v) = v − ηλ·sign(v) (gradient step of L1)",
+      ],
+      correctAnswer: 1,
+      explanation: "The proximal operator of ηλ‖·‖₁ is the soft-thresholding operator: S_{ηλ}(v) = sign(v)·max(|v|−ηλ, 0). It shrinks each coordinate toward zero by ηλ, setting small coordinates exactly to zero (sparsity). This arises in ISTA/FISTA for solving LASSO: xₜ₊₁ = prox_{ηλ‖·‖₁}(xₜ − η∇f(xₜ)).",
+      hints: [
+        "Soft-thresholding: values in [−ηλ, ηλ] map to 0; values outside shrink by ηλ toward 0.",
+        "ISTA (Iterative Shrinkage Thresholding Algorithm) = gradient step on smooth part f + proximal step on L1.",
+      ],
+    },
+    {
+      id: "q-mfml-kp44-5",
+      type: "true-false",
+      difficulty: "easy",
+      question: "A function f is convex if and only if its epigraph epi(f) = {(x,t): f(x) ≤ t} is a convex set.",
+      correctAnswer: "True",
+      explanation: "The epigraph definition is equivalent to the standard definition f(λx+(1−λ)y) ≤ λf(x)+(1−λ)f(y). The epigraph is the set of points on or above the graph of f. If epi(f) is convex, then for any two points (x₁,t₁) and (x₂,t₂) in epi(f): f(x₁)≤t₁, f(x₂)≤t₂, and by convexity of epi(f): f(λx₁+(1−λ)x₂) ≤ λt₁+(1−λ)t₂.",
+      hints: [
+        "epi(f) = region above the graph. Convex epigraph = the 'bowl' above a convex function.",
+        "This definition extends naturally to functions on infinite-dimensional spaces and allows f(x)=+∞ (convex indicator functions).",
+      ],
+    },
+    {
+      id: "q-mfml-kp44-6",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Mirror descent generalizes gradient descent by replacing the Euclidean proximity measure with a Bregman divergence D_φ(x, y) = φ(x) − φ(y) − ∇φ(y)ᵀ(x−y). For online learning with the simplex constraint and φ(x) = Σ xᵢ log xᵢ (negative entropy), mirror descent becomes:",
+      options: [
+        "Gradient descent with L1 projection onto the simplex",
+        "The multiplicative weights (Hedge) algorithm: xₜ₊₁ ∝ xₜ · exp(−η∇fₜ(xₜ))",
+        "Projected gradient descent with Euclidean projection onto the simplex",
+        "Stochastic gradient descent with batch normalization",
+      ],
+      correctAnswer: 1,
+      explanation: "With mirror map φ(x)=Σxᵢlogxᵢ (KL-divergence-based Bregman), the mirror descent update is: xₜ₊₁ ∝ xₜᵢ exp(−ηgₜᵢ) where gₜ=∇fₜ(xₜ). This is the multiplicative weights / Hedge algorithm, achieving regret O(√(T log K)) for K experts — optimal for the simplex. Compared to projected gradient descent, mirror descent adapts the geometry to the constraint set.",
+      hints: [
+        "Mirror map φ = negative entropy → Bregman divergence = KL(x||y). The update maintains the simplex constraint naturally.",
+        "Multiplicative weights: multiply each weight by exp(−η × gradient). Exponentials automatically keep weights non-negative.",
+      ],
+    },
+  ],
+
+  "conjugate-priors-moments": [
+    {
+      id: "q-mfml-kp45-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "The Beta distribution Beta(α,β) is a conjugate prior for the Bernoulli likelihood. After observing k successes in n trials, the posterior is:",
+      options: [
+        "Beta(α+n, β+k)",
+        "Beta(α+k, β+n−k)",
+        "Normal(α/(α+β), αβ/(α+β)²(α+β+1))",
+        "Dirichlet(α+k, β+n−k)",
+      ],
+      correctAnswer: 1,
+      explanation: "Likelihood: P(k|θ) ∝ θᵏ(1−θ)^{n−k}. Prior: Beta(α,β) ∝ θ^{α−1}(1−θ)^{β−1}. Posterior: θ^{α+k−1}(1−θ)^{β+n−k−1} = Beta(α+k, β+n−k). The counts simply add to the prior pseudocounts. Prior mean E[θ] = α/(α+β); posterior mean = (α+k)/(α+β+n). With large n, posterior approaches MLE k/n.",
+      hints: [
+        "Beta conjugate update: just add observed successes to α and failures to β.",
+        "Effective prior sample size = α+β. Large α+β → posterior less affected by data (strong prior).",
+      ],
+    },
+    {
+      id: "q-mfml-kp45-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "The moment generating function (MGF) M_X(t) = E[e^{tX}] of a random variable X uniquely determines its distribution (when it exists in a neighborhood of t=0), and the k-th moment E[Xᵏ] can be recovered as M_X^{(k)}(0) (the k-th derivative at t=0).",
+      correctAnswer: "True",
+      explanation: "MGF uniqueness theorem: if M_X(t) exists for |t|<δ, it uniquely determines the distribution of X. Derivatives: M_X'(0) = E[X], M_X''(0) = E[X²], M_X^{(k)}(0) = E[Xᵏ]. Example: X ~ N(μ,σ²): M_X(t) = exp(μt + σ²t²/2). MGFs are useful for proving CLT and computing moments without integration.",
+      hints: [
+        "Taylor expand M_X(t) = Σₖ (E[Xᵏ]/k!) tᵏ — coefficients are moments divided by k!.",
+        "MGF of sum of independents = product of MGFs: M_{X+Y}(t) = M_X(t)·M_Y(t).",
+      ],
+    },
+    {
+      id: "q-mfml-kp45-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The Dirichlet distribution Dir(α₁,...,αₖ) is a conjugate prior for the Categorical/Multinomial likelihood. Its mean and mode are:",
+      options: [
+        "Mean = αᵢ/Σαⱼ; Mode = (αᵢ−1)/(Σαⱼ−K) for αᵢ > 1",
+        "Mean = Σαⱼ/K; Mode = K/Σαⱼ",
+        "Mean = αᵢ; Mode = αᵢ/max(αⱼ)",
+        "Mean = 1/K (uniform regardless of α); Mode = argmax αᵢ",
+      ],
+      correctAnswer: 0,
+      explanation: "Dir(α): Mean_i = αᵢ/Σαⱼ (normalized counts). Mode_i = (αᵢ−1)/(Σαⱼ−K) for αᵢ>1 (valid when all αᵢ>1). With prior Dir(α₁,...,αK) and observed counts (n₁,...,nK): posterior is Dir(α₁+n₁,...,αK+nK). LDA uses Dir(α) prior on topic mixtures and Dir(β) prior on word distributions.",
+      hints: [
+        "Dirichlet mean: normalize the α parameters. Posterior: simply add observed counts to α.",
+        "αᵢ < 1: sparse mode (pushes probability mass to corners of simplex). αᵢ > 1: smooth distribution.",
+      ],
+    },
+    {
+      id: "q-mfml-kp45-4",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "The Normal-Inverse-Gamma distribution is a conjugate prior for Bayesian linear regression. Which of the following describes a key benefit of using conjugate priors in Bayesian inference?",
+      options: [
+        "Conjugate priors always assign equal probability to all parameter values, preventing overfitting",
+        "The posterior distribution has the same parametric form as the prior, enabling analytical (closed-form) updates without numerical integration",
+        "Conjugate priors guarantee that the MAP estimate equals the MLE estimate",
+        "Using conjugate priors removes the need for any prior specification",
+      ],
+      correctAnswer: 1,
+      explanation: "Conjugacy enables exact Bayesian inference without MCMC or variational approximations. After observing data, the posterior is computed by updating the prior parameters according to fixed formulas. This is computationally efficient and supports sequential (online) updating: each new observation updates the posterior which becomes the new prior. For large datasets or non-conjugate models, approximations (MCMC, VI) are needed.",
+      hints: [
+        "Conjugate posterior: same family as prior, updated parameters. No integration required.",
+        "Sequential updating: posterior after n samples = prior updated with all n observations simultaneously = prior updated one sample at a time.",
+      ],
+    },
+  ],
+};
+
+Object.assign(questions, extra2);
+
 registerQuestions(questions);
 export default questions;

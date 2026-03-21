@@ -360,10 +360,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Using the power law: L(10B)/L(1B) = (10B/1B)^{-0.076} = 10^{-0.076} ≈ 0.839. So L(10B) ≈ 3.0 × 0.839 ≈ 2.52. The small exponent (0.076) means loss decreases slowly with scale — a 10× parameter increase reduces loss by only ~16%.",
+        "Kaplan et al.'s power law states $L(N) = L_0 + a \\cdot N^{-\\alpha_N}$ with $\\alpha_N = 0.076$. For two model sizes $N_1$ and $N_2$:\n\\[\n\\frac{L(N_2)}{L(N_1)} = \\left(\\frac{N_2}{N_1}\\right)^{-\\alpha_N}.\n\\]\nWith $N_2 = 10N_1 = 10\\text{B}$ and $\\alpha_N = 0.076$:\n\\[\n\\frac{L(10\\text{B})}{L(1\\text{B})} = 10^{-0.076} \\approx 0.839.\n\\]\nTherefore $L(10\\text{B}) \\approx 3.0 \\times 0.839 \\approx 2.52$. The exponent $0.076$ is small: a 10× increase in parameters reduces loss by only about 16%. This is why scaling laws predict that enormous compute investments yield only incremental loss improvements — a fundamental inefficiency of the current scaling paradigm.",
       hints: [
-        "Power law: L(N) ∝ N^{-0.076}. Ratio: L(10N)/L(N) = 10^{-0.076} ≈ 0.84.",
-        "The small exponent explains why you need 10× more compute for modest improvements.",
+        "Power law: $L(N) \\propto N^{-0.076}$. Compute the ratio: $L(10\\text{B})/L(1\\text{B}) = 10^{-0.076} \\approx 0.84$.",
+        "Small exponent means slow loss reduction: 10× more parameters → only ~16% loss reduction.",
       ],
     },
     {
@@ -380,10 +380,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Chinchilla\'s equal-scaling rule: D_optimal ≈ 20N. For N = 70B: D = 20 × 70B = 1.4T tokens. Llama-2-70B was trained on 2T tokens, deliberately over-training the model beyond Chinchilla-optimal to improve inference efficiency (smaller model, better quality per parameter).",
+        "Chinchilla's finding: for a compute budget $C$, the optimal model size $N^*$ and training tokens $D^*$ satisfy:\n\\[\nN^* \\propto C^{0.5}, \\quad D^* \\propto C^{0.5}.\n\\]\nBoth $N$ and $D$ should scale equally with compute — hence the name \"equal scaling.\" The specific ratio found empirically was:\n\\[\nD_\\text{optimal} \\approx 20 \\times N.\n\\]\nFor $N = 70$B parameters, this prescribes:\n\\[\nD_\\text{optimal} = 20 \\times 70\\text{B} = 1.4\\text{ trillion tokens}.\n\\]\nLlama-2-70B was trained on 2T tokens — deliberate over-training. The rationale: if inference is performed at scale, a model trained on more tokens (per parameter) has better quality per parameter, reducing inference cost while improving quality. Over-training trades training compute for inference efficiency.",
       hints: [
-        "Chinchilla: optimal D/N ≈ 20. Multiply model size by 20 to get the token target.",
-        "Over-training (beyond 20N tokens) is now common because inference cost is amortized over many queries.",
+        "Chinchilla rule: $D_\\text{optimal} \\approx 20N$. For $N = 70$B, $D \\approx 1.4$T tokens.",
+        "Over-training (2T tokens vs. 1.4T optimal) is common when inference cost dominates — better quality per parameter reduces serving cost.",
       ],
     },
     {
@@ -679,10 +679,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Kwon et al. (2023) showed that naive contiguous KV cache allocation wastes 60–80% of GPU memory due to fragmentation and over-allocation. PagedAttention maps logical KV positions to physical pages via a block table (like OS virtual memory), allocating pages only when needed and reclaiming them immediately when a request completes.",
+        "With naive contiguous allocation, each request reserves $\\text{max\\_seq\\_len}$ slots in the KV cache upfront. For 4 concurrent requests each with $\\text{max\\_seq\\_len} = 512$, the allocation is $4 \\times 512 = 2048$ slots. If each request generates only 200 tokens, only 800 slots are used — wasting $2048 - 800 = 1248$ slots.\n\nThis wasted memory cannot be reallocated: the reserved slots for tokens 201–512 of request A are unavailable to request B, even after request A completes. Across a batch of many requests, this fragmentation can waste 60–80% of GPU memory.\n\nPagedAttention solves this by allocating KV cache in fixed-size pages (e.g., 16 tokens/page). A block table maps logical sequence positions to physical page addresses:\n\\[\n\\text{block\\_table}[\\text{logical\\_pos}] \\rightarrow \\text{physical\\_page\\_addr}.\n\\]\nPages are allocated on-demand as tokens are generated and immediately freed when a request completes. For 200 tokens: $\\lceil 200 / 16 \\rceil = 13$ pages are allocated (not 32), reclaiming the rest for other requests.",
       hints: [
-        "Pre-allocating max_seq_len slots per request wastes memory for short sequences.",
-        "Physical page addresses are non-contiguous; a block table translates logical sequence positions to physical pages.",
+        "Waste with naive allocation: $(2048 - 800) / 2048 \\approx 61\\%$ of reserved slots unused.",
+        "PagedAttention: allocate only $\\lceil 200/16 \\rceil = 13$ pages (16 tokens each), not 32 — the block table maps logical positions to physical pages.",
       ],
     },
   ],
@@ -773,10 +773,10 @@ const questions: Record<string, Question[]> = {
         "Speculative decoding (Leviathan et al., 2023) guarantees that the output token distribution is identical to the target model\'s distribution — not the draft model\'s — through an acceptance-rejection mechanism that corrects draft tokens whenever they deviate from the target.",
       correctAnswer: "True",
       explanation:
-        "For each draft token x, speculative decoding accepts it with probability min(1, p_target(x)/p_draft(x)). If rejected, a correction token is sampled from a modified distribution (p_target - p_draft normalized). This guarantees the output is exactly distributed as the target model, making speculative decoding lossless.",
+        "For each draft token $x$ with draft probability $q(x)$ and target probability $p(x)$:\n\n**Acceptance**: if $q(x) \\leq p(x)$ (draft is less confident than target), the token is always accepted — min$(1, p/q) = 1$. The target model is more confident, so accepting is safe.\n\n**Rejection**: if $q(x) > p(x)$ (draft is more confident than target), the token is accepted with probability $p(x)/q(x)$. The correction token is sampled from the adjusted distribution:\n\\[\np_\\text{adj}(x) \\propto \\max\\bigl(0,\\; p(x) - q(x)\\bigr).\n\\]\nThis correction ensures the marginal distribution over accepted/rejected tokens exactly matches $p(x)$. Intuitively: the correction \"takes back\" the excess probability mass that the draft assigned to rejected tokens.\n\nLeviathan et al. (2023) prove that the resulting sequence is distributed exactly as the target model — no approximation, no distribution mismatch. The draft accelerates throughput; the correction guarantees correctness.",
       hints: [
-        "Accept probability = min(1, p_target/p_draft): tokens more likely under target than draft are always accepted.",
-        "Rejection plus correction sampling ensures the resulting distribution is exactly p_target — provably.",
+        "Accept: if $q \\leq p$, min$(1, p/q) = 1$ — always accept tokens the target would produce more confidently.",
+        "Reject: if $q > p$, accept with probability $p/q$. Sample correction from $p - q$ (normalized) — this adds back the probability mass \"lost\" on rejected tokens.",
       ],
     },
     {
@@ -816,10 +816,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "INT4 uses 4 bits/weight: 7B × 0.5 bytes = 3.5 GB theoretical. GPTQ/AWQ use group quantization with one FP16 scale and zero-point per group of 128 weights — adding 7B/128 × 2 × 2 bytes ≈ 219 MB overhead (~6%), bringing practical size to ~3.7 GB.",
+        "With 4-bit precision, each weight occupies 4 bits = 0.5 bytes:\n\\[\n7\\text{B params} \\times 0.5 \\text{ bytes/param} = 3.5 \\text{ GB}.\n\\]\nGPTQ and AWQ use group quantization: weights are grouped in blocks of 128, and each block stores a scale factor $s$ and optional zero-point $z$ in FP16 (2 bytes each):\n\\[\n\\hat{w} = \\text{clamp}\\!\\left(\\left\\lfloor \\frac{w}{s}\\right\\rceil + z,\\; -8,\\; 7\\right) \\times s.\n\\]\nScale overhead: $\\frac{7\\text{B}}{128} \\times (2 \\text{ bytes}) \\times 2 \\text{ (scale + zero-point)} \\approx 219$ MB. Practical size:\n\\[\n3.5 \\text{ GB (weights)} + 0.22 \\text{ GB (scales)} \\approx 3.7 \\text{ GB},\n\\]\napproximately 6% overhead versus the theoretical 3.5 GB.",
       hints: [
-        "4 bits = 0.5 bytes per weight: 7B × 0.5 = 3.5 GB.",
-        "Group scaling: each 128-weight group needs its own scale factor stored in FP16 — small but real overhead.",
+        "4 bits = 0.5 bytes per weight: $7\\text{B} \\times 0.5 = 3.5$ GB.",
+        "Overhead: $\\frac{7\\text{B}}{128} \\times 2 \\times 2$ bytes $\\approx 219$ MB — one FP16 scale + one zero-point per 128-weight group.",
       ],
     },
     {
@@ -830,10 +830,10 @@ const questions: Record<string, Question[]> = {
         "GPTQ quantizes weights to INT4 by minimizing per-layer quantization error using the inverse Hessian of the layer\'s input activations, compensating remaining weights for the error introduced by already-quantized weights.",
       correctAnswer: "True",
       explanation:
-        "GPTQ (Frantar et al., 2022) applies Optimal Brain Quantization (OBQ) layer-by-layer: for each weight column being quantized, it computes the Hessian (second-order information about sensitivity) and adjusts remaining weights to compensate for the introduced error — achieving near-lossless INT4 quantization with perplexity degradation < 1 point on most models.",
+        "GPTQ (Frantar et al., 2022) applies the Optimal Brain Quantization framework layer-by-layer. For a weight row $\\mathbf{w} \\in \\mathbb{R}^{d_\\text{out}}$, the quantization error for quantizing weight $w_j$ to $\\hat{w}_j$ is:\n\\[\n\\text{error} = (\\mathbf{w} - \\hat{\\mathbf{w}})_i \\cdot x_j \\quad \\text{for output neuron } i.\n\\]\nThe Hessian of the layer loss w.r.t. $\\mathbf{w}$ is $\\mathbf{H} = 2\\mathbf{x}\\mathbf{x}^\\top$ (ignoring constants), where $\\mathbf{x}$ are the input activations. The OBQ update for remaining weights after quantizing $w_j$ is:\n\\[\nw_i \\leftarrow w_i - \\frac{H_{ij}}{H_{jj}} (\\hat{w}_j - w_j).\n\\]\nThis compensates for the quantization error of $w_j$ by adjusting all other weights in the row, using second-order sensitivity information ($H_{ij}/H_{jj}$). GPTQ applies this iteratively across all weights, achieving near-lossless INT4 quantization with < 1 perplexity point degradation on most models.",
       hints: [
-        "Hessian diagonal tells you which weights are most sensitive to perturbation — quantize less-sensitive weights more aggressively.",
-        "The compensation step: after quantizing weight w, update remaining weights to minimize the layer output change.",
+        "Hessian diagonal $H_{jj}$: sensitivity of the loss to weight $w_j$. Large $H_{jj}$ = this weight matters more; quantize it more carefully.",
+        "After quantizing $w_j$ to $\\hat{w}_j$, update remaining weights to approximately restore the original output — OBQ's core idea.",
       ],
     },
     {
@@ -850,10 +850,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "AWQ exploits the identity: (s × x_i) × (w_i/s) = x_i × w_i. By absorbing the scale s into the input (via preceding LayerNorm) and inverse-scaling the weights (w_i/s), salient weights become smaller in magnitude, reducing their quantization error while keeping the mathematical output unchanged.",
+        "AWQ's insight exploits a simple algebraic identity. For input channel $i$ with input $x_i$ and weight $w_i$:\n\\[\n(s \\cdot x_i) \\cdot \\frac{w_i}{s} = x_i \\cdot w_i.\n\\]\nThe output is mathematically unchanged, but the effective weight value changes from $w_i$ to $w_i/s$. For salient weights (those producing large activations), $w_i$ is large in magnitude. Scaling it down by $s > 1$ reduces its magnitude, which reduces the absolute quantization error when rounding to 4 bits.\n\nAWQ finds the optimal per-channel scale $s$ by measuring which weights produce large activations (using a calibration set) and applying $w_i \\leftarrow w_i / s$ before quantization. The scale $s$ is absorbed into the preceding LayerNorm's output, so the net effect on the model's computation is zero.",
       hints: [
-        "Key insight: scale × input AND divide weight by same scale — output is mathematically identical.",
-        "Smaller weight magnitude → smaller absolute quantization error for the same number of bits.",
+        "Identity: $(s x_i)(w_i/s) = x_i w_i$. Scale input UP by $s$ and weight DOWN by $s$ — output unchanged, but weight magnitude reduced.",
+        "Smaller $|w_i|$ → quantization to 4 bits introduces less absolute error → better preserved signal after dequantization.",
       ],
     },
   ],
@@ -907,10 +907,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Information-theoretically optimal quantization places levels at quantiles of the data distribution. Since weights ∼ N(0,σ²), most weight values cluster near zero — NF4 levels are denser near zero (matching the high-probability region) and sparser in the tails, minimizing expected quantization error versus uniform INT4 which places equal spacing across the full range.",
+        "For a quantization level set $\{q_1, \\ldots, q_{16}\}$ at 4-bit precision, the mean squared error is:\n\\[\n\\text{MSE} = \\int_{q_1}^{q_{16}} (x - \\hat{x})^2 \\cdot p(x)\\, dx,\n\\]\nwhere $\\hat{x}$ is the quantized value and $p(x)$ is the weight distribution. The optimal $q_k$ values are the quantiles of $p(x)$: each of the 16 levels captures $1/16$ of the probability mass.\n\nFor normally distributed weights $x \\sim \\mathcal{N}(0, \\sigma^2)$, most probability mass is concentrated near zero, with sparse tails. NF4 sets its 16 quantization levels at the 16 quantiles of $\\mathcal{N}(0, 1)$, so:\n\\[\n\\text{Levels}_{\\rm NF4}: \\{F^{-1}\\!\\left(\\tfrac{1}{16}\\right), F^{-1}\\!\\left(\\tfrac{2}{16}\\right), \\ldots, F^{-1}\\!\\left(\\tfrac{15}{16}\\right)\\}.\n\\]\nUniform INT4 places levels at equal intervals across the full range $[-3\\sigma, +3\\sigma]$, wasting precision on sparse tail regions. NF4 concentrates precision in the dense center where most weight values lie, minimizing MSE for the normal distribution.",
       hints: [
-        "Uniform INT4 wastes precision on the sparse tails; NF4 concentrates precision where weights are most likely.",
-        "Quantile-spaced levels minimize mean squared error for known distributions — basic optimal quantization theory.",
+        "Optimal quantization: place levels at equal-probability boundaries of the data distribution. For $x \\sim \\mathcal{N}(0,1)$, most mass is near 0 — NF4's center is denser than uniform INT4.",
+        "Uniform INT4: levels at $-3\\sigma, -2\\sigma, -\\sigma, 0, \\sigma, 2\\sigma, 3\\sigma$. NF4: levels at the actual quantiles, which are closer together near 0.",
       ],
     },
   ],
@@ -1272,10 +1272,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "ReAct\'s interleaved structure: Thought reasons about the current state and next step; Action executes a tool call; Observation records the tool result; this cycle repeats until a final answer can be produced. The explicit Thought steps make reasoning traceable and debuggable, unlike pure action-based or pure reasoning-based agents.",
+        "ReAct (Yao et al., 2022) interleaves three step types at each turn:\n\n1. **Thought** $\\tau$: the LLM reasons about the current state and decides what to do next. Example: \"The question asks for Paris's population, so I need to search for 'Paris population.'\"\n\n2. **Action** $a$: the LLM outputs a tool call. Example: `search(\"Paris population\")`.\n\n3. **Observation** $o$: the tool result is injected back into the context. Example: \"Paris population is 2.1 million.\"\n\nThe cycle $\\tau \\rightarrow a \\rightarrow o \\rightarrow \\tau \\rightarrow \\cdots$ repeats until the LLM produces a Final Answer. For \"Find the population of the capital of France\":\n\\[\n\\tau_1: & \\text{\"France's capital is Paris\"} \\rightarrow a_1: \\text{search}(\\text{Paris population}) \\\\\n\\tau_2: & o_1 = \\text{\"2.1M\"} \\rightarrow \\text{\"I have the answer\"} \\rightarrow \\text{Final Answer: 2.1M}\n\\]\nThe explicit Thought steps make the agent's reasoning traceable — unlike Action-only agents (which act without visible reasoning) or Thought-only agents (which cannot observe tool results).",
       hints: [
-        "The cycle is: Thought → Action → Observation → Thought → ... → Final Answer.",
-        "Explicit thoughts are the key innovation — they make the agent\'s internal reasoning observable.",
+        "The cycle is: Thought (reason) → Action (tool call) → Observation (result) → repeat → Final Answer.",
+        "Explicit thoughts make the agent debuggable — you can inspect the reasoning trace step by step.",
       ],
     },
     {
@@ -1420,10 +1420,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "When π_θ = π_ref: all log(π_θ/π_ref) = 0; DPO loss = -log σ(0) = -log(0.5) ≈ 0.693. The gradient at this point is non-zero — it pushes π_θ to increase log-probability of preferred responses relative to π_ref and decrease it for rejected ones. This confirms the starting point is not a minimum, and training will improve preferences.",
+        "When the fine-tuned policy equals the reference ($\\pi_\\theta = \\pi_\\text{ref}$):\n\\[\n\\log \\frac{\\pi_\\theta(y_w|x)}{\\pi_\\text{ref}(y_w|x)} = \\log 1 = 0,\n\\]\n\\[\n\\log \\frac{\\pi_\\theta(y_l|x)}{\\pi_\\text{ref}(y_l|x)} = \\log 1 = 0.\n\\]\nSubstituting into the DPO loss:\n\\[\n\\mathcal{L}_\\text{DPO} = -\\log \\sigma\\bigl(\\beta \\cdot 0 - \\beta \\cdot 0\\bigr) = -\\log \\sigma(0).\n\\]\nSince $\\sigma(z) = 1/(1 + e^{-z})$, we have $\\sigma(0) = 1/2$. Therefore:\n\\[\n\\mathcal{L}_\\text{DPO} = -\\log\\!\\left(\\tfrac{1}{2}\\right) = \\log 2 \\approx 0.693.\n\\]\nThis is a non-zero loss, confirming the model has not yet learned preferences. The gradient at this point is non-zero and pushes $\\pi_\\theta$ to increase the log-probability gap between preferred and rejected responses.",
       hints: [
-        "σ(0) = 1/(1+e^0) = 0.5; -log(0.5) = log(2) ≈ 0.693.",
-        'The gradient pushes toward increasing log π_θ(y_w|x) - log π_ref(y_w|x) — the "uplift" for preferred responses.',
+        "At $\\pi_\\theta = \\pi_\\text{ref}$: both log-ratios are 0, so $\\sigma(0) = 1/2$ and loss $= -\\log(1/2) = \\log 2 \\approx 0.693$.",
+        "The non-zero gradient means training will improve preference alignment from this starting point — $\\pi_\\theta = \\pi_\\text{ref}$ is not a fixed point.",
       ],
     },
   ],

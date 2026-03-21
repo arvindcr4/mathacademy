@@ -680,6 +680,190 @@ const questionOverrides: Record<string, QuestionOverride> = {
     ],
     correctAnswer: 0,
   },
+  "q-rl-kp10-3": {
+    question: "If Q^pi(s,a) = 8 and V^pi(s) = 5, find A^pi(s,a).",
+    options: ["3", "-3", "13", "8/5"],
+    correctAnswer: 0,
+  },
+  "q-rl-kp12-3": {
+    question:
+      "If V^pi(s1) = 1 + 0.5V^pi(s2) and V^pi(s2) = 0.5V^pi(s1), find V^pi(s1).",
+    options: ["4/3", "2/3", "1", "2"],
+    correctAnswer: 0,
+  },
+  "q-rl-kp23-3": {
+    question:
+      "If the per-step importance-sampling ratio is 1/0.925 for 20 steps, find rho.",
+    options: ["(1/0.925)^20 ~= 4.76", "0.925^20 ~= 0.21", "20/0.925 ~= 21.62", "1"],
+    correctAnswer: 0,
+  },
+  "q-rl-kp26-3": {
+    question:
+      "If each Q_hat(s,a) is an unbiased noisy estimate of 0, what is E[max_a Q_hat(s,a)]?",
+    options: ["> 0", "= 0", "< 0", "Cannot be determined"],
+    correctAnswer: 0,
+  },
+  "q-agent-kp1-5": {
+    type: "multiple-choice",
+    question:
+      "An agent adds 50 observations of about 200 tokens each to its running context. About how many tokens do those observations contribute?",
+    options: ["1,000", "10,000", "20,000", "100,000"],
+    correctAnswer: 1,
+  },
+  "q-agent-kp2-3": {
+    question:
+      "Human experts say a chemistry agent performs much better than vanilla GPT-4, but an LLM judge rates them nearly the same. What is the safest conclusion?",
+    options: [
+      "LLMs are reliable evaluators of expert-level chemistry tasks.",
+      "LLM self-evaluation is unreliable when the task requires expertise the model does not have.",
+      "Tool use did not materially improve the chemistry output.",
+      "Human experts are systematically biased toward tool-using systems.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-agent-kp3-9": {
+    question:
+      "ReAct tends to outperform chain-of-thought the most on which kind of task?",
+    options: [
+      "Code generation from a fixed prompt",
+      "Multi-hop question answering that can use external search",
+      "Arithmetic reasoning where all needed information is already in the prompt",
+      "Static multiple-choice knowledge questions with no retrieval",
+    ],
+    correctAnswer: 1,
+  },
+  "q-agent-kp9-3": {
+    question:
+      "On repository bug-fixing benchmarks such as SWE-Bench, which agent design tends to work best?",
+    options: [
+      "Single-pass code generation with no tool use",
+      "An iterative agent that edits files, runs tests or commands, and revises based on the results",
+      "Pure retrieval of similar past patches with no execution",
+      "An agent that only writes diffs and never runs code",
+    ],
+    correctAnswer: 1,
+  },
+  "q-rla-kp1-1": {
+    type: "multiple-choice",
+    question: "Which change allows DQN to handle large state spaces?",
+    options: [
+      "Using a lookup table with interpolation between states",
+      "Approximating the Q-function with a deep neural network parameterized by theta",
+      "Discretizing the state space into a finite grid",
+      "Running multiple Q-learning agents in parallel",
+    ],
+    correctAnswer: 1,
+  },
+  "q-rla-kp1-3": {
+    type: "multiple-choice",
+    question:
+      "Which two techniques made DQN stable enough to learn Atari games from raw pixels?",
+    options: [
+      "Policy gradients and entropy regularization",
+      "Experience replay and a separate target network",
+      "Batch normalization and residual connections",
+      "Prioritized sampling and double Q-learning",
+    ],
+    correctAnswer: 1,
+  },
+  "q-rla-kp2-1": {
+    type: "multiple-choice",
+    question: "What does DQN do with transitions stored in the replay buffer during training?",
+    options: [
+      "Replays the most recent transition for every gradient update",
+      "Samples mini-batches of past transitions uniformly at random for training",
+      "Only stores transitions from successful episodes",
+      "Replays entire episodes in reverse order",
+    ],
+    correctAnswer: 1,
+  },
+  "q-rla-kp3-1": {
+    type: "multiple-choice",
+    question: "What is the target network used for in DQN?",
+    options: [
+      "Select actions during environment interaction",
+      "Provide stable TD targets by being updated less frequently than the online network",
+      "Compute the policy gradient",
+      "Encode state observations into feature vectors",
+    ],
+    correctAnswer: 1,
+  },
+  "q-mfml-kp2-3": {
+    type: "multiple-choice",
+    question: "If A and B are both invertible n x n matrices, what is (AB)^-1?",
+    options: ["A^-1B^-1", "B^-1A^-1", "AB", "(A+B)^-1"],
+    correctAnswer: 1,
+  },
+  "q-mfml-kp8-3": {
+    type: "multiple-choice",
+    question: "Which statement about Bayes' theorem is correct?",
+    options: [
+      "It requires H and E to be independent",
+      "It follows from conditional probability and only requires P(E) > 0",
+      "It can be used only when H and E are mutually exclusive",
+      "It implies P(H|E) = P(E|H)",
+    ],
+    correctAnswer: 1,
+  },
+  "q-mfml-kp10-3": {
+    type: "multiple-choice",
+    question: "Which estimator is unbiased for the variance sigma^2 of a normal distribution?",
+    options: [
+      "sigma_hat^2_MLE = (1/n) sum_i (x_i-x_bar)^2",
+      "s^2 = (1/(n-1)) sum_i (x_i-x_bar)^2",
+      "(1/n) sum_i x_i^2",
+      "x_bar^2",
+    ],
+    correctAnswer: 1,
+  },
+  "q-mfml-kp11-1": {
+    question: "Compute grad f(1,2) for f(x,y) = 3x^2y + y^3 - 2x.",
+    options: ["[10, 15]", "[12, 15]", "[10, 12]", "[6, 15]"],
+    correctAnswer: 0,
+  },
+  "q-fin-kp26-3": {
+    question:
+      "A neural network trained to price options can encode the no-arbitrage constraint that call price is convex and non-increasing in strike by:",
+    options: [
+      "Adding L2 regularisation to penalise large weights",
+      "Constraining the network architecture so second derivatives with respect to strike are non-negative (e.g., using monotone networks or penalty terms in the loss)",
+      "Using dropout to prevent overfitting to training strike-price combinations",
+      "Normalising the training targets to unit variance before fitting",
+    ],
+    correctAnswer: 1,
+  },
+  "q-fin-kp31-1": {
+    question: "What is the primary limitation of historical-simulation VaR?",
+    options: [
+      "Historical simulation requires matrix inversion, which is numerically unstable",
+      "Historical simulation is anchored to the specific historical window and cannot capture loss scenarios worse than any day in that window, understating tail risk when the history lacks extreme events",
+      "Historical simulation overestimates VaR because it always uses the worst day as the estimate",
+      "Historical simulation requires normally distributed returns, which rarely holds in practice",
+    ],
+    correctAnswer: 1,
+  },
+  "q-fin-kp33-3": {
+    question:
+      "Generalized Linear Models (GLMs) with log link and Tweedie distributions are the actuarial standard for insurance loss modeling. What is the primary advantage over ordinary least squares regression?",
+    options: [
+      "GLMs are faster to train than OLS because they use gradient descent rather than matrix inversion",
+      "GLMs with log link enforce non-negative predictions and model multiplicative interactions between rating factors, matching the multiplicative structure of insurance tariffs and the right-skewed, zero-inflated nature of insurance losses",
+      "GLMs always achieve higher predictive accuracy than OLS because they use regularization by default",
+      "GLMs are preferred because they can handle more than 100 features without overfitting",
+    ],
+    correctAnswer: 1,
+  },
+  "q-fin-kp34-1": {
+    question:
+      "Why can an Information Coefficient (IC) of only 0.05 still be useful in quantitative equity investing?",
+    options: [
+      "IC is computed on monthly returns, which are inherently noisy compared to daily predictions",
+      "Financial markets are highly competitive: most alpha signals are arbitraged away, leaving IC near zero. The residual IC of 0.05, applied with high breadth via the Fundamental Law of Active Management, compounds into economically significant returns",
+      "IC of 0.05 means the model is wrong 95% of the time and should be discarded",
+      "Low IC is caused by transaction costs that reduce gross alpha to near zero",
+    ],
+    correctAnswer: 1,
+  },
 };
 
 // ── Hint generation helpers ─────────────────────────────────────────────────
