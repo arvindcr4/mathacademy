@@ -9,13 +9,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Which load balancing algorithm is best suited for ensuring a user's session always hits the same backend server?",
-      question_html:
-        "<p>Which load balancing algorithm is best suited for ensuring a user's session always hits the same backend server?</p>",
       options: [
-        { text: "Round-robin", html: "Round-robin" },
-        { text: "Least connections", html: "Least connections" },
-        { text: "IP hash", html: "IP hash" },
-        { text: "Weighted round-robin", html: "Weighted round-robin" },
+        "Round-robin",
+        "Least connections",
+        "IP hash",
+        "Weighted round-robin",
       ],
       correctAnswer: 2,
       explanation:
@@ -31,25 +29,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "What is the key difference between Layer 4 and Layer 7 load balancing?",
-      question_html:
-        "<p>What is the key difference between Layer 4 and Layer 7 load balancing?</p>",
       options: [
-        {
-          text: "L4 supports HTTP only; L7 supports TCP/UDP only",
-          html: "L4 supports HTTP only; L7 supports TCP/UDP only",
-        },
-        {
-          text: "L4 routes based on TCP/UDP headers without inspecting payload; L7 inspects HTTP content and can route by URL path or headers",
-          html: "L4 routes based on TCP/UDP headers without inspecting payload; L7 inspects HTTP content and can route by URL path or headers",
-        },
-        {
-          text: "L4 is slower because it requires full TLS termination",
-          html: "L4 is slower because it requires full TLS termination",
-        },
-        {
-          text: "L7 cannot perform health checks on backends",
-          html: "L7 cannot perform health checks on backends",
-        },
+        "L4 supports HTTP only; L7 supports TCP/UDP only",
+        "L4 routes based on TCP/UDP headers without inspecting payload; L7 inspects HTTP content and can route by URL path or headers",
+        "L4 is slower because it requires full TLS termination",
+        "L7 cannot perform health checks on backends",
       ],
       correctAnswer: 1,
       explanation:
@@ -65,8 +49,6 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Active health checks involve the load balancer proactively sending periodic pings or HTTP requests to backend servers to determine their health.",
-      question_html:
-        "<p>Active health checks involve the load balancer proactively sending periodic pings or HTTP requests to backend servers to determine their health.</p>",
       correctAnswer: "True",
       explanation:
         "Active health checks are initiated by the load balancer itself. It sends periodic requests (e.g., an HTTP $\\texttt{GET /health}$) to each backend on a configured interval and marks a server as unhealthy if it fails to respond or returns an error status code.\n\n**Step 1**\nDistinguish who initiates the health check.\n- Active: the load balancer initiates the check.\n- Passive: the load balancer monitors real production traffic.\n\n**Step 2**\nRecognize the trade-offs.\nActive checks detect failures quickly but add background traffic overhead to backends. Passive checks have zero overhead but may allow several failed real requests before detecting an unhealthy server.\n\n**Step 3**\nConfirm the statement.\nThe statement accurately describes active health checks: proactive, periodic probes from the load balancer. Therefore, it is true.",
@@ -81,13 +63,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Which global load balancing approach routes traffic by advertising the same IP address from multiple geographic locations using BGP, so routers automatically direct clients to the nearest PoP?",
-      question_html:
-        "<p>Which global load balancing approach routes traffic by advertising the same IP address from multiple geographic locations using BGP, so routers automatically direct clients to the nearest PoP?</p>",
       options: [
-        { text: "GeoDNS", html: "GeoDNS" },
-        { text: "Anycast", html: "Anycast" },
-        { text: "Weighted round-robin DNS", html: "Weighted round-robin DNS" },
-        { text: "Latency-based routing", html: "Latency-based routing" },
+        "GeoDNS",
+        "Anycast",
+        "Weighted round-robin DNS",
+        "Latency-based routing",
       ],
       correctAnswer: 1,
       explanation:
@@ -106,13 +86,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Which CDN caching strategy is most appropriate for a large collection of static assets whose full set is known before any user requests them?",
-      question_html:
-        "<p>Which CDN caching strategy is most appropriate for a large collection of static assets whose full set is known before any user requests them?</p>",
       options: [
-        { text: "Pull caching", html: "Pull caching" },
-        { text: "Push caching", html: "Push caching" },
-        { text: "Passive caching", html: "Passive caching" },
-        { text: "Stale-while-revalidate", html: "Stale-while-revalidate" },
+        "Pull caching",
+        "Push caching",
+        "Passive caching",
+        "Stale-while-revalidate",
       ],
       correctAnswer: 1,
       explanation:
@@ -128,13 +106,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Which Cache-Control directive specifically controls how long CDN/proxy caches may store a response, independently of the browser's max-age?",
-      question_html:
-        "<p>Which Cache-Control directive specifically controls how long CDN/proxy caches may store a response, independently of the browser's max-age?</p>",
       options: [
-        { text: "max-age", html: "max-age" },
-        { text: "s-maxage", html: "s-maxage" },
-        { text: "no-cache", html: "no-cache" },
-        { text: "immutable", html: "immutable" },
+        "max-age",
+        "s-maxage",
+        "no-cache",
+        "immutable",
       ],
       correctAnswer: 1,
       explanation:
@@ -150,25 +126,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Why is URL versioning (e.g., /static/app.v123.js) considered the most reliable CDN cache invalidation strategy?",
-      question_html:
-        "<p>Why is URL versioning (e.g., $\\texttt{/static/app.v123.js}$) considered the most reliable CDN cache invalidation strategy?</p>",
       options: [
-        {
-          text: "Because CDNs poll origin servers for version updates automatically",
-          html: "Because CDNs poll origin servers for version updates automatically",
-        },
-        {
-          text: "Because changing the URL creates a cache miss on all edges instantly—no purge API needed",
-          html: "Because changing the URL creates a cache miss on all edges instantly—no purge API needed",
-        },
-        {
-          text: "Because it relies on ETags to detect file changes",
-          html: "Because it relies on ETags to detect file changes",
-        },
-        {
-          text: "Because Cache-Control max-age is ignored for versioned URLs",
-          html: "Because Cache-Control max-age is ignored for versioned URLs",
-        },
+        "Because CDNs poll origin servers for version updates automatically",
+        "Because changing the URL creates a cache miss on all edges instantly—no purge API needed",
+        "Because it relies on ETags to detect file changes",
+        "Because Cache-Control max-age is ignored for versioned URLs",
       ],
       correctAnswer: 1,
       explanation:
@@ -184,8 +146,6 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "An origin shield is an intermediate CDN PoP placed between edge nodes and the origin server, designed to reduce the number of cache misses that reach the origin.",
-      question_html:
-        "<p>An origin shield is an intermediate CDN PoP placed between edge nodes and the origin server, designed to reduce the number of cache misses that reach the origin.</p>",
       correctAnswer: "True",
       explanation:
         "An origin shield (called a regional edge cache in CloudFront) is an additional caching layer sitting between the edge PoPs and the origin server. When multiple edge nodes around the world experience a cache miss for the same object, instead of all independently hitting the origin, they all request from the single origin shield PoP.\n\n**Step 1**\nVisualize the request flow without an origin shield.\n\\[\n\\text{Edge (us-east)} \\rightarrow \\text{Origin} \\quad\\text{and}\\quad \\text{Edge (eu-west)} \\rightarrow \\text{Origin} \\quad\\text{both independently hit origin.}\n\\]\n\n**Step 2**\nVisualize the request flow with an origin shield.\n\\[\n\\text{Edge (us-east)} \\rightarrow \\text{Shield} \\leftarrow \\text{Edge (eu-west)} \\quad\\text{only one origin request if shield misses.}\n\\]\n\n**Step 3**\nConfirm the statement.\nThis is precisely the definition and purpose of an origin shield: reducing origin traffic by consolidating cache warm-up through a single intermediate layer.",
@@ -203,13 +163,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Which API paradigm is most suitable for internal microservice communication where performance, strong typing, and code generation are priorities?",
-      question_html:
-        "<p>Which API paradigm is most suitable for internal microservice communication where performance, strong typing, and code generation are priorities?</p>",
       options: [
-        { text: "REST", html: "REST" },
-        { text: "GraphQL", html: "GraphQL" },
-        { text: "gRPC", html: "gRPC" },
-        { text: "SOAP", html: "SOAP" },
+        "REST",
+        "GraphQL",
+        "gRPC",
+        "SOAP",
       ],
       correctAnswer: 2,
       explanation:
@@ -225,25 +183,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Which API versioning strategy is generally considered the most visible to developers and most cache-friendly?",
-      question_html:
-        "<p>Which API versioning strategy is generally considered the most visible to developers and most cache-friendly?</p>",
       options: [
-        {
-          text: "Header versioning (Accept: application/vnd.api.v1+json)",
-          html: "Header versioning (Accept: application/vnd.api.v1+json)",
-        },
-        {
-          text: "Query parameter versioning (?version=1)",
-          html: "Query parameter versioning (?version=1)",
-        },
-        {
-          text: "URL path versioning (/v1/users)",
-          html: "URL path versioning (/v1/users)",
-        },
-        {
-          text: "Subdomain versioning (v1.api.example.com)",
-          html: "Subdomain versioning (v1.api.example.com)",
-        },
+        "Header versioning (Accept: application/vnd.api.v1+json)",
+        "Query parameter versioning (?version=1)",
+        "URL path versioning (/v1/users)",
+        "Subdomain versioning (v1.api.example.com)",
       ],
       correctAnswer: 2,
       explanation:
@@ -258,12 +202,11 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question: "Which of the following HTTP methods is NOT idempotent?",
-      question_html: "<p>Which of the following HTTP methods is NOT idempotent?</p>",
       options: [
-        { text: "GET", html: "GET" },
-        { text: "PUT", html: "PUT" },
-        { text: "DELETE", html: "DELETE" },
-        { text: "POST", html: "POST" },
+        "GET",
+        "PUT",
+        "DELETE",
+        "POST",
       ],
       correctAnswer: 3,
       explanation:
@@ -279,13 +222,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Which pagination strategy performs best at scale for large datasets and prevents page drift when new items are inserted?",
-      question_html:
-        "<p>Which pagination strategy performs best at scale for large datasets and prevents page drift when new items are inserted?</p>",
       options: [
-        { text: "Offset + limit pagination", html: "Offset + limit pagination" },
-        { text: "Cursor-based pagination", html: "Cursor-based pagination" },
-        { text: "Page number pagination", html: "Page number pagination" },
-        { text: "Seek method with random access", html: "Seek method with random access" },
+        "Offset + limit pagination",
+        "Cursor-based pagination",
+        "Page number pagination",
+        "Seek method with random access",
       ],
       correctAnswer: 1,
       explanation:
@@ -304,13 +245,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Which real-time communication technology supports true bidirectional communication over a single persistent TCP connection?",
-      question_html:
-        "<p>Which real-time communication technology supports true bidirectional communication over a single persistent TCP connection?</p>",
       options: [
-        { text: "Server-Sent Events (SSE)", html: "Server-Sent Events (SSE)" },
-        { text: "HTTP long polling", html: "HTTP long polling" },
-        { text: "WebSocket", html: "WebSocket" },
-        { text: "HTTP/2 push", html: "HTTP/2 push" },
+        "Server-Sent Events (SSE)",
+        "HTTP long polling",
+        "WebSocket",
+        "HTTP/2 push",
       ],
       correctAnswer: 2,
       explanation:
@@ -326,25 +265,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "In a horizontally scaled WebSocket system, a message sent by User A (connected to Server 1) needs to reach User B (connected to Server 2). What is the standard architecture to achieve this?",
-      question_html:
-        "<p>In a horizontally scaled WebSocket system, a message sent by User A (connected to Server 1) needs to reach User B (connected to Server 2). What is the standard architecture to achieve this?</p>",
       options: [
-        {
-          text: "Sticky sessions so both users always connect to the same server",
-          html: "Sticky sessions so both users always connect to the same server",
-        },
-        {
-          text: "A shared Redis Pub/Sub broker so Server 1 publishes the message and Server 2 forwards it to User B",
-          html: "A shared Redis Pub/Sub broker so Server 1 publishes the message and Server 2 forwards it to User B",
-        },
-        {
-          text: "A database polling loop where Server 2 polls for new messages every 100ms",
-          html: "A database polling loop where Server 2 polls for new messages every 100ms",
-        },
-        {
-          text: "HTTP/2 server push from Server 1 to Server 2",
-          html: "HTTP/2 server push from Server 1 to Server 2",
-        },
+        "Sticky sessions so both users always connect to the same server",
+        "A shared Redis Pub/Sub broker so Server 1 publishes the message and Server 2 forwards it to User B",
+        "A database polling loop where Server 2 polls for new messages every 100ms",
+        "HTTP/2 server push from Server 1 to Server 2",
       ],
       correctAnswer: 1,
       explanation:
@@ -360,8 +285,6 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "HTTP/2 multiplexing is functionally equivalent to WebSocket for building real-time bidirectional applications because both allow the server to push data to the client at any time.",
-      question_html:
-        "<p>HTTP/2 multiplexing is functionally equivalent to WebSocket for building real-time bidirectional applications because both allow the server to push data to the client at any time.</p>",
       correctAnswer: "False",
       explanation:
         "HTTP/2 multiplexes multiple request-response streams over one TCP connection, which dramatically reduces head-of-line blocking compared to HTTP/1.1. However, HTTP/2 is still fundamentally a request-response protocol—all communication is initiated by the client. Server push in HTTP/2 is limited to pushing resources proactively alongside a response (e.g., pushing CSS when the browser requests HTML), not for arbitrary server-to-client messaging.\n\n**Step 1**\nDistinguish the communication models.\n\\[\n\\begin{align}\n\\text{HTTP/2 multiplexing} &\\rightarrow \\text{client initiates all streams; server pushes resources as hints} \\\\\\[5pt]\n\\text{WebSocket} &\\rightarrow \\text{either side can send a frame independently at any time}\n\\end{align}\n\\]\n\n**Step 2**\nIdentify the key difference.\nHTTP/2 server push cannot be used for general-purpose bidirectional messaging (chat, gaming, live trading). It is a hint mechanism for associated resources only.\n\n**Step 3**\nConfirm the answer.\nThe statement is false. WebSocket is truly bidirectional; HTTP/2 multiplexing is not.",
@@ -376,13 +299,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Approximately how many concurrent WebSocket connections can a single well-tuned server handle with asynchronous I/O (e.g., Node.js or Go)?",
-      question_html:
-        "<p>Approximately how many concurrent WebSocket connections can a single well-tuned server handle with asynchronous I/O (e.g., Node.js or Go)?</p>",
       options: [
-        { text: "1,000 – 5,000", html: "1,000 – 5,000" },
-        { text: "10,000 – 20,000", html: "10,000 – 20,000" },
-        { text: "50,000 – 100,000", html: "50,000 – 100,000" },
-        { text: "500,000 – 1,000,000", html: "500,000 – 1,000,000" },
+        "1,000 – 5,000",
+        "10,000 – 20,000",
+        "50,000 – 100,000",
+        "500,000 – 1,000,000",
       ],
       correctAnswer: 2,
       explanation:
@@ -401,25 +322,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "What is the correct order of servers contacted during a full (uncached) DNS resolution for a domain like www.example.com?",
-      question_html:
-        "<p>What is the correct order of servers contacted during a full (uncached) DNS resolution for a domain like $\\texttt{www.example.com}$?</p>",
       options: [
-        {
-          text: "Client → Authoritative NS → TLD NS → Root NS → Recursive resolver",
-          html: "Client → Authoritative NS → TLD NS → Root NS → Recursive resolver",
-        },
-        {
-          text: "Client → Recursive resolver → Root NS → TLD NS → Authoritative NS",
-          html: "Client → Recursive resolver → Root NS → TLD NS → Authoritative NS",
-        },
-        {
-          text: "Client → Root NS → Recursive resolver → Authoritative NS → TLD NS",
-          html: "Client → Root NS → Recursive resolver → Authoritative NS → TLD NS",
-        },
-        {
-          text: "Client → TLD NS → Root NS → Authoritative NS → Recursive resolver",
-          html: "Client → TLD NS → Root NS → Authoritative NS → Recursive resolver",
-        },
+        "Client → Authoritative NS → TLD NS → Root NS → Recursive resolver",
+        "Client → Recursive resolver → Root NS → TLD NS → Authoritative NS",
+        "Client → Root NS → Recursive resolver → Authoritative NS → TLD NS",
+        "Client → TLD NS → Root NS → Authoritative NS → Recursive resolver",
       ],
       correctAnswer: 1,
       explanation:
@@ -435,13 +342,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "You are designing a DNS-based failover system for a critical service. What TTL should you set for production DNS records to balance failover speed against resolver load?",
-      question_html:
-        "<p>You are designing a DNS-based failover system for a critical service. What TTL should you set for production DNS records to balance failover speed against resolver load?</p>",
       options: [
-        { text: "5 seconds", html: "5 seconds" },
-        { text: "60–300 seconds", html: "60–300 seconds" },
-        { text: "1 hour (3600 seconds)", html: "1 hour (3600 seconds)" },
-        { text: "24 hours (86400 seconds)", html: "24 hours (86400 seconds)" },
+        "5 seconds",
+        "60–300 seconds",
+        "1 hour (3600 seconds)",
+        "24 hours (86400 seconds)",
       ],
       correctAnswer: 1,
       explanation:
@@ -457,8 +362,6 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "DNS round-robin with multiple A records reliably distributes traffic evenly across backends because clients always respect DNS TTLs and re-query after expiration.",
-      question_html:
-        "<p>DNS round-robin with multiple A records reliably distributes traffic evenly across backends because clients always respect DNS TTLs and re-query after expiration.</p>",
       correctAnswer: "False",
       explanation:
         "DNS round-robin is unreliable for even load distribution for two reasons. First, many clients (browsers, JVM-based applications, mobile apps) cache DNS responses much longer than the TTL—they ignore TTL expiration and keep using the same IP for minutes or hours. Second, even when TTLs are respected, the client's local DNS cache sticks to one IP for the duration of the TTL.\n\n**Step 1**\nIdentify the first failure mode: client-side DNS caching.\nThe JVM, for example, caches DNS results indefinitely by default unless explicitly configured. Browsers also hold DNS entries well past TTL expiration. This means a single IP address can serve the vast majority of requests regardless of the TTL set.\n\n**Step 2**\nIdentify the second failure mode: TTL-aligned client batches.\nIf many clients resolve at similar times (e.g., after a TTL expires at the top of the hour), they all get the same rotation slot. This creates a thundering herd effect.\n\n**Step 3**\nConfirm the answer.\nDNS-based load balancing cannot detect backend health without active integration with a health-aware DNS provider. Therefore, the statement is false.",
@@ -476,13 +379,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In MQTT, which QoS level guarantees that a message is delivered exactly once using a four-step handshake?",
-      question_html:
-        "<p>In MQTT, which QoS level guarantees that a message is delivered exactly once using a four-step handshake?</p>",
       options: [
-        { text: "QoS 0 (at-most-once)", html: "QoS 0 (at-most-once)" },
-        { text: "QoS 1 (at-least-once)", html: "QoS 1 (at-least-once)" },
-        { text: "QoS 2 (exactly-once)", html: "QoS 2 (exactly-once)" },
-        { text: "QoS 3 (persistent)", html: "QoS 3 (persistent)" },
+        "QoS 0 (at-most-once)",
+        "QoS 1 (at-least-once)",
+        "QoS 2 (exactly-once)",
+        "QoS 3 (persistent)",
       ],
       correctAnswer: 2,
       explanation:
@@ -498,13 +399,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "In AMQP (RabbitMQ), a message is published to an exchange with routing key 'order.created'. Which exchange type routes this message to ALL bound queues regardless of routing key?",
-      question_html:
-        "<p>In AMQP (RabbitMQ), a message is published to an exchange with routing key $\\texttt{order.created}$. Which exchange type routes this message to ALL bound queues regardless of routing key?</p>",
       options: [
-        { text: "Direct exchange", html: "Direct exchange" },
-        { text: "Topic exchange", html: "Topic exchange" },
-        { text: "Fanout exchange", html: "Fanout exchange" },
-        { text: "Headers exchange", html: "Headers exchange" },
+        "Direct exchange",
+        "Topic exchange",
+        "Fanout exchange",
+        "Headers exchange",
       ],
       correctAnswer: 2,
       explanation:
@@ -520,13 +419,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Which gRPC streaming mode allows the client to send a stream of messages and receive a single response when done (e.g., uploading a large file in chunks)?",
-      question_html:
-        "<p>Which gRPC streaming mode allows the client to send a stream of messages and receive a single response when done (e.g., uploading a large file in chunks)?</p>",
       options: [
-        { text: "Unary RPC", html: "Unary RPC" },
-        { text: "Server streaming RPC", html: "Server streaming RPC" },
-        { text: "Client streaming RPC", html: "Client streaming RPC" },
-        { text: "Bidirectional streaming RPC", html: "Bidirectional streaming RPC" },
+        "Unary RPC",
+        "Server streaming RPC",
+        "Client streaming RPC",
+        "Bidirectional streaming RPC",
       ],
       correctAnswer: 2,
       explanation:
@@ -542,25 +439,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "You need strict message ordering for all events related to a single user's account. Using Apache Kafka, how do you guarantee order for a given user's events?",
-      question_html:
-        "<p>You need strict message ordering for all events related to a single user's account. Using Apache Kafka, how do you guarantee order for a given user's events?</p>",
       options: [
-        {
-          text: "Use multiple partitions with a round-robin producer",
-          html: "Use multiple partitions with a round-robin producer",
-        },
-        {
-          text: "Use a single global Kafka topic with one partition",
-          html: "Use a single global Kafka topic with one partition",
-        },
-        {
-          text: "Partition by user ID so all events for the same user go to the same partition",
-          html: "Partition by user ID so all events for the same user go to the same partition",
-        },
-        {
-          text: "Use Kafka Streams with a global KTable",
-          html: "Use Kafka Streams with a global KTable",
-        },
+        "Use multiple partitions with a round-robin producer",
+        "Use a single global Kafka topic with one partition",
+        "Partition by user ID so all events for the same user go to the same partition",
+        "Use Kafka Streams with a global KTable",
       ],
       correctAnswer: 2,
       explanation:
@@ -578,25 +461,11 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question: "TLS 1.3 reduces the connection setup latency compared to TLS 1.2 primarily because it:",
-      question_html:
-        "<p>TLS 1.3 reduces the connection setup latency compared to TLS 1.2 primarily because it:</p>",
       options: [
-        {
-          text: "Eliminates the certificate exchange step entirely",
-          html: "Eliminates the certificate exchange step entirely",
-        },
-        {
-          text: "Reduces the handshake to 1 round trip (1-RTT) instead of 2",
-          html: "Reduces the handshake to 1 round trip (1-RTT) instead of 2",
-        },
-        {
-          text: "Uses symmetric encryption for the entire handshake",
-          html: "Uses symmetric encryption for the entire handshake",
-        },
-        {
-          text: "Allows the client to skip certificate verification",
-          html: "Allows the client to skip certificate verification",
-        },
+        "Eliminates the certificate exchange step entirely",
+        "Reduces the handshake to 1 round trip (1-RTT) instead of 2",
+        "Uses symmetric encryption for the entire handshake",
+        "Allows the client to skip certificate verification",
       ],
       correctAnswer: 1,
       explanation:
@@ -612,25 +481,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "A JWT access token is issued with a 15-minute expiry. The user logs out and the token should be immediately invalidated before the 15-minute window ends. What mechanism achieves this?",
-      question_html:
-        "<p>A JWT access token is issued with a 15-minute expiry. The user logs out and the token should be immediately invalidated before the 15-minute window ends. What mechanism achieves this?</p>",
       options: [
-        {
-          text: "Increase the token's expiry to 1 second",
-          html: "Increase the token's expiry to 1 second",
-        },
-        {
-          text: "Store the token in a server-side session database and delete it on logout",
-          html: "Store the token in a server-side session database and delete it on logout",
-        },
-        {
-          text: "Maintain a token blacklist (denylist) checked on every request",
-          html: "Maintain a token blacklist (denylist) checked on every request",
-        },
-        {
-          text: "Use RSA-signed tokens instead of HMAC",
-          html: "Use RSA-signed tokens instead of HMAC",
-        },
+        "Increase the token's expiry to 1 second",
+        "Store the token in a server-side session database and delete it on logout",
+        "Maintain a token blacklist (denylist) checked on every request",
+        "Use RSA-signed tokens instead of HMAC",
       ],
       correctAnswer: 2,
       explanation:
@@ -646,25 +501,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "In the OAuth 2.0 authorization code flow with PKCE, what is the purpose of the code_verifier and code_challenge?",
-      question_html:
-        "<p>In the OAuth 2.0 authorization code flow with PKCE, what is the purpose of the $\\texttt{code\\_verifier}$ and $\\texttt{code\\_challenge}$?</p>",
       options: [
-        {
-          text: "They replace the client secret for public clients and prevent authorization code interception attacks",
-          html: "They replace the client secret for public clients and prevent authorization code interception attacks",
-        },
-        {
-          text: "They encrypt the access token in transit",
-          html: "They encrypt the access token in transit",
-        },
-        {
-          text: "They bind the authorization code to the user's IP address",
-          html: "They bind the authorization code to the user's IP address",
-        },
-        {
-          text: "They generate the refresh token deterministically",
-          html: "They generate the refresh token deterministically",
-        },
+        "They replace the client secret for public clients and prevent authorization code interception attacks",
+        "They encrypt the access token in transit",
+        "They bind the authorization code to the user's IP address",
+        "They generate the refresh token deterministically",
       ],
       correctAnswer: 0,
       explanation:
@@ -680,25 +521,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Which CSRF prevention mechanism works by preventing the browser from including cookies in cross-origin requests at the browser level, without requiring server-side token generation?",
-      question_html:
-        "<p>Which CSRF prevention mechanism works by preventing the browser from including cookies in cross-origin requests at the browser level, without requiring server-side token generation?</p>",
       options: [
-        {
-          text: "CSRF token in hidden form field",
-          html: "CSRF token in hidden form field",
-        },
-        {
-          text: "Double-submit cookie pattern",
-          html: "Double-submit cookie pattern",
-        },
-        {
-          text: "SameSite=Strict cookie attribute",
-          html: "SameSite=Strict cookie attribute",
-        },
-        {
-          text: "Content-Security-Policy header",
-          html: "Content-Security-Policy header",
-        },
+        "CSRF token in hidden form field",
+        "Double-submit cookie pattern",
+        "SameSite=Strict cookie attribute",
+        "Content-Security-Policy header",
       ],
       correctAnswer: 2,
       explanation:
@@ -717,25 +544,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In client-side service discovery, who is responsible for querying the service registry and selecting an instance to call?",
-      question_html:
-        "<p>In client-side service discovery, who is responsible for querying the service registry and selecting an instance to call?</p>",
       options: [
-        {
-          text: "The load balancer, which queries the registry and forwards the request",
-          html: "The load balancer, which queries the registry and forwards the request",
-        },
-        {
-          text: "The calling service itself, which queries the registry and applies its own load balancing logic",
-          html: "The calling service itself, which queries the registry and applies its own load balancing logic",
-        },
-        {
-          text: "The target service, which registers its own IP and selects its own callers",
-          html: "The target service, which registers its own IP and selects its own callers",
-        },
-        {
-          text: "The API gateway, which always centralizes registry lookups",
-          html: "The API gateway, which always centralizes registry lookups",
-        },
+        "The load balancer, which queries the registry and forwards the request",
+        "The calling service itself, which queries the registry and applies its own load balancing logic",
+        "The target service, which registers its own IP and selects its own callers",
+        "The API gateway, which always centralizes registry lookups",
       ],
       correctAnswer: 1,
       explanation:
@@ -751,25 +564,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "A circuit breaker is in the 'Open' state. What behavior does the calling service exhibit, and when does the circuit breaker transition to 'Half-Open'?",
-      question_html:
-        "<p>A circuit breaker is in the $\\texttt.Open}$ state. What behavior does the calling service exhibit, and when does the circuit breaker transition to $\\texttt{Half-Open}$?</p>",
       options: [
-        {
-          text: "All requests pass through normally; the circuit moves to Half-Open after 50% of requests succeed",
-          html: "All requests pass through normally; the circuit moves to Half-Open after 50% of requests succeed",
-        },
-        {
-          text: "All requests fail fast immediately without calling the downstream service; after a configured timeout (e.g., 60s), one test request is allowed through",
-          html: "All requests fail fast immediately without calling the downstream service; after a configured timeout (e.g., 60s), one test request is allowed through",
-        },
-        {
-          text: "Requests queue up until the downstream service recovers; the circuit opens when the queue is drained",
-          html: "Requests queue up until the downstream service recovers; the circuit opens when the queue is drained",
-        },
-        {
-          text: "The circuit breaker retries failed requests indefinitely until the downstream service responds",
-          html: "The circuit breaker retries failed requests indefinitely until the downstream service responds",
-        },
+        "All requests pass through normally; the circuit moves to Half-Open after 50% of requests succeed",
+        "All requests fail fast immediately without calling the downstream service; after a configured timeout (e.g., 60s), one test request is allowed through",
+        "Requests queue up until the downstream service recovers; the circuit opens when the queue is drained",
+        "The circuit breaker retries failed requests indefinitely until the downstream service responds",
       ],
       correctAnswer: 1,
       explanation:
@@ -785,25 +584,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "The bulkhead pattern in microservices is named after ship compartmentalization. What problem does it solve?",
-      question_html:
-        "<p>The bulkhead pattern in microservices is named after ship compartmentalization. What problem does it solve?</p>",
       options: [
-        {
-          text: "It prevents unauthorized services from calling each other by enforcing mTLS",
-          html: "It prevents unauthorized services from calling each other by enforcing mTLS",
-        },
-        {
-          text: "It isolates thread pools or connection pools per downstream dependency so that exhausting one pool does not affect calls to other services",
-          html: "It isolates thread pools or connection pools per downstream dependency so that exhausting one pool does not affect calls to other services",
-        },
-        {
-          text: "It replicates service instances across availability zones to prevent single points of failure",
-          html: "It replicates service instances across availability zones to prevent single points of failure",
-        },
-        {
-          text: "It rate-limits inbound requests to a service to prevent overload",
-          html: "It rate-limits inbound requests to a service to prevent overload",
-        },
+        "It prevents unauthorized services from calling each other by enforcing mTLS",
+        "It isolates thread pools or connection pools per downstream dependency so that exhausting one pool does not affect calls to other services",
+        "It replicates service instances across availability zones to prevent single points of failure",
+        "It rate-limits inbound requests to a service to prevent overload",
       ],
       correctAnswer: 1,
       explanation:
