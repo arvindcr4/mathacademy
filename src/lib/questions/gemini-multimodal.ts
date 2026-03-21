@@ -1770,4 +1770,574 @@ registerQuestions({
       ],
     },
   ],
+  "gemini-grounding": [
+    {
+      id: "q-gem-kp-91",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "When Google Search grounding is enabled in the Gemini API, what additional information does the API response include alongside the model's answer?",
+      options: [
+        "Raw HTML of every page visited during the search.",
+        "Grounding metadata with source citations, URIs, and support scores for each claim.",
+        "A ranked list of the top 100 search results.",
+        "A confidence score between 0 and 1 for the entire response.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "With grounding enabled, the API returns `groundingMetadata` containing `groundingChunks` (source URIs and titles) and `groundingSupports` that map segments of the model\'s text to the specific source chunks that substantiate them.",
+      hints: [
+        "Look for a `groundingMetadata` field in the Gemini API response object.",
+        "Each claim in the response can be traced back to a specific web source URI.",
+      ],
+    },
+    {
+      id: "q-gem-kp-92",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Enabling Google Search grounding in the Gemini API guarantees that every factual statement in the model's response is verified against a real-time web source and is therefore always accurate.",
+      options: ["True", "False"],
+      correctAnswer: "False",
+      explanation:
+        "Grounding significantly reduces hallucinations by tethering answers to retrieved documents, but it does not guarantee perfect accuracy. The model can still misinterpret retrieved content, and the retrieved documents themselves may be wrong or outdated.",
+      hints: [
+        "Grounding retrieves real sources, but the model still interprets and summarizes them.",
+        "No AI system provides absolute accuracy guarantees.",
+      ],
+    },
+    {
+      id: "q-gem-kp-93",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "In the Gemini API, which configuration approach enables Google Search grounding?",
+      options: [
+        "`search_grounding=True` in the top-level request body.",
+        "Adding a `Tool` with a `google_search` entry to the `tools` list in `GenerateContentConfig`.",
+        "`grounding_source='google'` inside the `SafetySettings` block.",
+        "`enable_search=True` in the `SystemInstruction` object.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Google Search grounding is enabled by adding a `Tool` with a `google_search` entry to the `tools` list in `GenerateContentConfig` (or the equivalent SDK builder). This tells the model it may call the Google Search tool to retrieve current information before generating its answer.",
+      hints: [
+        "Grounding is implemented as a special built-in tool, not a top-level flag.",
+        "The SDK class is `GoogleSearch` inside a `Tool` wrapper.",
+      ],
+    },
+  ],
+  "gemini-long-context-applications": [
+    {
+      id: "q-gem-kp-94",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "A developer wants to answer questions about a 400-page PDF using Gemini 1.5 Pro without pre-chunking the document. Which approach is most appropriate?",
+      options: [
+        "Extract text, split into 512-token chunks, embed each chunk separately, and run vector similarity search.",
+        "Upload the entire PDF via the File API and include the file reference in the prompt alongside the question.",
+        "Summarize each chapter first with a smaller model, then feed the summaries to Gemini Pro.",
+        "This is not possible; Gemini models cannot process PDFs longer than 50 pages.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Gemini 1.5 Pro\'s 1-million-token context window can accommodate very large documents. Uploading the PDF via the File API and passing it inline with the question leverages this capability directly, avoiding the complexity and information loss of manual chunking or multi-step summarization pipelines.",
+      hints: [
+        "Gemini 1.5 Pro\'s long context window is its defining capability.",
+        "The File API allows passing large files directly as part of the prompt.",
+      ],
+    },
+    {
+      id: "q-gem-kp-95",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Gemini 1.5 Pro can ingest and reason across multiple separate documents within a single API request by including all document file references together in one prompt.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Because Gemini 1.5 Pro\'s context window is large enough to hold several full-length documents simultaneously, a single prompt can reference multiple uploaded files. The model can then perform cross-document reasoning — comparing, contrasting, or synthesizing information — in one pass.",
+      hints: [
+        "A 1M-token context can hold roughly 700,000 words, equivalent to several books.",
+        "Multiple file references can be included sequentially in the `contents` array.",
+      ],
+    },
+    {
+      id: "q-gem-kp-96",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "When asking Gemini to summarize a 2-hour video, what is the primary mechanism that allows the model to handle temporal reasoning across the full video?",
+      options: [
+        "The model transcribes the audio track and processes only the text transcript.",
+        "Keyframes are extracted at a fixed 1-fps rate and the rest of the video is discarded.",
+        "The video is sampled into frames and the full sequence of frames is placed in the context window, allowing temporal reasoning over the entire video.",
+        "The model splits the video into 5-minute segments, summarizes each independently, and then summarizes the summaries.",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "Gemini natively processes video by sampling it into frames (e.g., 1 fps) and placing the entire sequence into the context window. Because all frames are in context simultaneously, the model can reason about events that span the full video duration without losing inter-segment context.",
+      hints: [
+        "Frame sampling rate is configurable in the File API upload step.",
+        "Long-context video understanding is a key advantage over segment-based pipelines.",
+      ],
+    },
+  ],
+  "gemini-structured-output": [
+    {
+      id: "q-gem-kp-97",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "When using Gemini\'s JSON mode via the API, which configuration field is used to enforce a specific output schema?",
+      options: [
+        "`json_schema` inside `SafetySettings`.",
+        "`response_schema` inside `GenerationConfig` combined with `response_mime_type='application/json'`.",
+        "`output_format` inside the system instruction string.",
+        "`schema_validation=True` in the top-level request.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "To activate constrained JSON output, set `response_mime_type='application/json'` and provide a `response_schema` (as a Pydantic model or JSON Schema dict) in `GenerationConfig`. Gemini will then constrain its decoding to produce only tokens that satisfy the schema.",
+      hints: [
+        "Both `response_mime_type` and `response_schema` must be set together.",
+        "`GenerationConfig` is where output format constraints live.",
+      ],
+    },
+    {
+      id: "q-gem-kp-98",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "When Gemini's structured output (JSON mode) is enabled with a schema, the model's decoding process is constrained so it cannot produce output that violates the schema's field types and required fields.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Constrained decoding (grammar-guided generation) works at the token level: at each step only tokens that remain valid given the schema are considered. This makes schema violations structurally impossible, unlike prompting the model to 'output JSON' without enforcement.",
+      hints: [
+        "Constrained decoding filters the token vocabulary at each step.",
+        "This is enforced at the logits level, not just a soft instruction.",
+      ],
+    },
+    {
+      id: "q-gem-kp-99",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A developer defines a `response_schema` with a nested array of objects. Which statement best describes a known limitation of Gemini's constrained JSON mode?",
+      options: [
+        "Nested schemas are not supported; only flat key-value pairs are allowed.",
+        "Cardinality constraints like `minItems` may not be perfectly enforced during constrained decoding, so programmatic validation is still recommended.",
+        "Constrained decoding only works for schemas with fewer than 10 fields.",
+        "The JSON output cannot be parsed by standard `json.loads()` and requires a special library.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Nested schemas are supported, but cardinality constraints like `minItems`/`maxItems` can be tricky for constrained decoding. The token-level grammar enforces structural correctness (brackets, commas, types), but count enforcement may not be perfectly reliable. Developers should validate the output programmatically.",
+      hints: [
+        "Structural constraints (types, required fields) are easier to enforce than count constraints.",
+        "Always validate parsed JSON against the schema on the client side.",
+      ],
+    },
+  ],
+  "gemini-embeddings": [
+    {
+      id: "q-gem-kp-100",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "What is the default output dimension of the `text-embedding-004` model from Google, and what feature allows reducing it?",
+      options: [
+        "768 dimensions; no configurable parameters.",
+        "3072 dimensions; temperature controls quality.",
+        "768 dimensions by default; `output_dimensionality` can reduce it via Matryoshka representation learning.",
+        "1536 dimensions; truncation is not supported.",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "`text-embedding-004` produces 768-dimensional vectors by default. Using Matryoshka Representation Learning, you can specify a smaller `output_dimensionality` (e.g., 256) while retaining most of the semantic quality, which reduces storage and retrieval latency.",
+      hints: [
+        "Matryoshka embeddings allow truncating vectors without retraining.",
+        "768 is the default; smaller values trade some quality for efficiency.",
+      ],
+    },
+    {
+      id: "q-gem-kp-101",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Which `task_type` parameter values should be used when generating embeddings for documents versus queries in a semantic search system?",
+      options: [
+        "`RETRIEVAL_DOCUMENT` for documents; `RETRIEVAL_QUERY` for queries.",
+        "`DOCUMENT_EMBEDDING` for documents; `QUERY_EMBEDDING` for queries.",
+        "Both should use `SEMANTIC_SIMILARITY`.",
+        "Task types do not exist in the Gemini embeddings API.",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "The Gemini Embeddings API accepts a `task_type` to optimize the embedding for its intended use. `RETRIEVAL_DOCUMENT` is used when embedding corpus documents for indexing, and `RETRIEVAL_QUERY` is used for the search query at inference time. Using the correct task type improves retrieval relevance.",
+      hints: [
+        "Asymmetric retrieval: document-side and query-side embeddings are optimized differently.",
+        "Other task types include `SEMANTIC_SIMILARITY`, `CLASSIFICATION`, and `CLUSTERING`.",
+      ],
+    },
+    {
+      id: "q-gem-kp-102",
+      type: "true-false",
+      difficulty: "hard",
+      question:
+        "Gemini's multimodal embedding model can produce a shared embedding space where text and image representations are directly comparable by cosine similarity, enabling cross-modal retrieval such as finding images from a text query.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Google\'s multimodal embedding model (available via Vertex AI) projects text and images into a shared vector space. Because the embeddings are aligned, cosine similarity between a text embedding and an image embedding is meaningful, enabling text-to-image and image-to-text retrieval without a separate alignment step.",
+      hints: [
+        "Shared embedding space is the key property for cross-modal retrieval.",
+        "This is analogous to OpenAI\'s CLIP model.",
+      ],
+    },
+  ],
+  "gemini-system-instructions": [
+    {
+      id: "q-gem-kp-103",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "In the Gemini API, where does the system instruction appear relative to the conversation turns?",
+      options: [
+        "It appears after the last user turn; the user can override it by repeating the instruction.",
+        "It is injected before all conversation turns and is treated with higher authority than user messages.",
+        "It appears between the first and second user turns.",
+        "System instructions are merged with the first user message automatically.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "System instructions are placed at the start of the context, before any user or model turns. They carry higher architectural authority, meaning the model is fine-tuned to respect them. A normal user message cannot simply override a well-written system instruction.",
+      hints: [
+        "System instructions set the stage before the conversation begins.",
+        "They are designed to resist casual override by user messages.",
+      ],
+    },
+    {
+      id: "q-gem-kp-104",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Which of the following is a best practice when writing system instructions to set a persona for a customer service bot?",
+      options: [
+        "Make the system instruction as short as possible (one word) to reduce token cost.",
+        "Include a clear role definition, the scope of topics the bot should handle, the desired tone, and explicit instructions on what to do when out-of-scope questions arise.",
+        "Embed the product's entire knowledge base directly in the system instruction.",
+        "Use the system instruction only for authentication tokens, not behavioral guidance.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Effective system instructions define role, scope, tone, and fallback behavior. This gives the model a complete behavioral contract. Embedding entire knowledge bases in the system instruction is impractical (token limits) and is better handled via RAG or context caching.",
+      hints: [
+        "A persona needs: who the bot is, what it handles, how it speaks, and what to do when stuck.",
+        "Keep instructions focused; use RAG for large knowledge bases.",
+      ],
+    },
+    {
+      id: "q-gem-kp-105",
+      type: "true-false",
+      difficulty: "hard",
+      question:
+        "When using context caching in the Gemini API, a system instruction can be included in the cached prefix, so it does not need to be retransmitted on every API call and does not count against per-call token costs once cached.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Context caching allows developers to cache a prefix — which can include the system instruction, large documents, or few-shot examples — so that it is processed once and reused. Cached tokens are billed at a lower rate and the prefix is not retransmitted, reducing both latency and cost on repeated calls.",
+      hints: [
+        "Context caching is distinct from application-level caching.",
+        "Cached prefixes are stored server-side and referenced by a cache ID.",
+      ],
+    },
+  ],
+  "gemini-safety-advanced": [
+    {
+      id: "q-gem-kp-106",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "The Gemini API exposes configurable thresholds for built-in safety filters. Which of the following is a valid harm category that can be configured?",
+      options: [
+        "HARM_CATEGORY_FINANCIAL_FRAUD",
+        "HARM_CATEGORY_HATE_SPEECH",
+        "HARM_CATEGORY_POLITICAL_OPINION",
+        "HARM_CATEGORY_AMBIENT_NOISE",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The Gemini API defines harm categories including `HARM_CATEGORY_HATE_SPEECH`, `HARM_CATEGORY_HARASSMENT`, `HARM_CATEGORY_SEXUALLY_EXPLICIT`, and `HARM_CATEGORY_DANGEROUS_CONTENT`. Developers can set the blocking threshold for each category independently.",
+      hints: [
+        "The four main harm categories map to content safety domains.",
+        "Category names all follow the `HARM_CATEGORY_*` prefix pattern.",
+      ],
+    },
+    {
+      id: "q-gem-kp-107",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "In the Gemini API safety settings, what does setting a category's threshold to `BLOCK_ONLY_HIGH` mean?",
+      options: [
+        "Only content rated HIGH probability of harm in that category will be blocked; LOW and MEDIUM rated content will be allowed.",
+        "All content with any probability of harm will be blocked.",
+        "The category is disabled entirely.",
+        "Content will be blocked only if the user explicitly reports it.",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "`BLOCK_ONLY_HIGH` means the filter blocks responses only when the model assigns a HIGH probability score to that harm category. LOW and MEDIUM probability content passes through. This is the most permissive threshold, useful for research or adult-verified platforms where strictness would degrade utility.",
+      hints: [
+        "Thresholds range from BLOCK_NONE to BLOCK_LOW_AND_ABOVE.",
+        "`BLOCK_ONLY_HIGH` is the most permissive non-off threshold.",
+      ],
+    },
+    {
+      id: "q-gem-kp-108",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "When a Gemini API response is blocked by a safety filter, the `finish_reason` field in the response candidate is set to `SAFETY` rather than `STOP`.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "The Gemini API signals safety blocks via `finish_reason: SAFETY` in the candidate object. Developers should always check `finish_reason` before accessing the response text; attempting to read `text` from a SAFETY-blocked candidate raises an error in the official SDKs.",
+      hints: [
+        "Check `finish_reason` before reading `.text` on a candidate.",
+        "`STOP` means normal completion; `SAFETY` means filtered.",
+      ],
+    },
+  ],
+  "gemini-flash-vs-pro": [
+    {
+      id: "q-gem-kp-109",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Which Gemini model tier is recommended for high-volume, latency-sensitive applications such as real-time chat interfaces and document classification pipelines where cost per token is a primary concern?",
+      options: [
+        "Gemini Ultra",
+        "Gemini Pro",
+        "Gemini Flash",
+        "Gemini Nano",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "Gemini Flash is explicitly designed for high-frequency, cost-sensitive use cases. Its smaller architecture delivers significantly lower latency and cost per token compared to Pro, while still maintaining strong multimodal capabilities for most production tasks.",
+      hints: [
+        "'Flash' implies speed and economy over raw power.",
+        "For chatbots processing millions of messages, cost per token dominates.",
+      ],
+    },
+    {
+      id: "q-gem-kp-110",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "A company has a pipeline with two stages: (1) classify whether an incoming document is relevant, and (2) perform deep legal analysis on relevant documents. Which model routing strategy minimizes cost while preserving quality?",
+      options: [
+        "Use Gemini Ultra for both stages to ensure maximum accuracy.",
+        "Use Gemini Flash for stage 1 (classification) and Gemini Pro for stage 2 (deep analysis).",
+        "Use Gemini Nano for both stages to minimize cost.",
+        "Use a single Gemini Pro call that does both classification and analysis together.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Task routing — using a cheap fast model for triage and a more capable model only for tasks that need it — is a best practice for cost optimization. Classification is a simpler task well-suited to Flash; deep legal reasoning benefits from Pro\'s stronger capabilities.",
+      hints: [
+        "Not every task needs the most powerful model.",
+        "Task routing is a common production cost optimization pattern.",
+      ],
+    },
+    {
+      id: "q-gem-kp-111",
+      type: "true-false",
+      difficulty: "hard",
+      question:
+        "Gemini 1.5 Flash supports the same maximum context window length as Gemini 1.5 Pro (up to 1 million input tokens).",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Both Gemini 1.5 Flash and Gemini 1.5 Pro share the same 1-million-token context window. Flash achieves its speed and cost advantages through architectural efficiency (smaller model, optimized serving), not by reducing the context length. This allows Flash to be used for long-document tasks at lower cost.",
+      hints: [
+        "Context window size is a property of the model generation, not just the tier.",
+        "Flash\'s efficiency comes from model size and serving optimization, not shorter context.",
+      ],
+    },
+  ],
+  "gemini-tool-use": [
+    {
+      id: "q-gem-kp-112",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In Gemini's function calling flow, after the model returns a `FunctionCall` part in its response, what is the developer's responsibility before making the next API call?",
+      options: [
+        "The developer must update the model weights with the function result.",
+        "The developer must execute the function locally and return the result back to the model in a new `FunctionResponse` turn.",
+        "The developer must restart the conversation from the beginning.",
+        "The function is executed automatically by the API; no developer action is needed.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Gemini does not execute functions itself — it only proposes the call. The developer\'s code runs the actual function (e.g., calling an external API or database), then appends the result as a `FunctionResponse` in the conversation history and calls the API again so the model can incorporate the result into its final response.",
+      hints: [
+        "The model returns a structured call specification; your code does the actual work.",
+        "The result goes back to the model as a `FunctionResponse` content part.",
+      ],
+    },
+    {
+      id: "q-gem-kp-113",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "When Gemini returns multiple `FunctionCall` parts in a single response turn, what does this indicate and how should the developer handle it?",
+      options: [
+        "It is an error condition; the API should never return more than one function call per turn.",
+        "The model determined that multiple function calls can be made in parallel; the developer should execute all concurrently and return all results as separate `FunctionResponse` parts in one turn.",
+        "The model is unsure which function to call and the developer should pick one.",
+        "The developer should execute the calls sequentially, waiting for each result before starting the next.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Gemini supports parallel function calling, where it determines multiple independent tool calls can be made simultaneously. Developers should execute all proposed calls in parallel, then return all `FunctionResponse` parts in a single turn. This dramatically reduces latency in agentic workflows that need multiple data sources.",
+      hints: [
+        "Parallel function calls appear as multiple `FunctionCall` parts in one response.",
+        "Return all results together in one turn rather than sequentially.",
+      ],
+    },
+    {
+      id: "q-gem-kp-114",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "In Gemini's function calling API, the `parameters` field of a function declaration must be described using JSON Schema syntax to define the argument types and descriptions.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Gemini function declarations use JSON Schema to describe parameters. Each parameter has a `type` (string, number, boolean, array, object), a `description`, and optionally `enum` values or `required` lists. This schema is how the model learns to construct valid function call arguments.",
+      hints: [
+        "JSON Schema is the standard format; types include string, number, object, array.",
+        "The `description` of each parameter is critical for the model to understand when to use it.",
+      ],
+    },
+  ],
+  "gemini-fine-tuning": [
+    {
+      id: "q-gem-kp-115",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "What is the required data format for supervised fine-tuning a Gemini model via Vertex AI Generative AI Studio?",
+      options: [
+        "A CSV file with columns `input` and `output`.",
+        "A JSONL file where each line contains an `input_text` and `output_text` field, or a structured messages array.",
+        "A TFRecord binary dataset.",
+        "A plain text file with input/output pairs separated by `---`.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Vertex AI fine-tuning for Gemini uses JSONL (JSON Lines) format. For text completion tasks, each record has `input_text` and `output_text`; for chat fine-tuning, each record has a `messages` array. The dataset is uploaded to Google Cloud Storage before starting a tuning job.",
+      hints: [
+        "JSONL means one JSON object per line.",
+        "Data is uploaded to GCS first, then referenced by the tuning job.",
+      ],
+    },
+    {
+      id: "q-gem-kp-116",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "How does Gemini supervised fine-tuning (SFT) on Vertex AI differ from full parameter fine-tuning?",
+      options: [
+        "Vertex AI SFT updates all model parameters using standard gradient descent on the provided dataset.",
+        "Vertex AI SFT uses parameter-efficient fine-tuning (PEFT) techniques such as LoRA adapters, updating only a small fraction of parameters while keeping the base model frozen.",
+        "Vertex AI SFT only fine-tunes the tokenizer vocabulary, not the model weights.",
+        "Vertex AI SFT is identical to prompt engineering and does not update any weights.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Google\'s managed fine-tuning service uses parameter-efficient methods (including LoRA-style adapters) rather than full fine-tuning. This makes tuning faster and cheaper, and the resulting adapter is merged or served alongside the frozen base model. Full parameter fine-tuning of Gemini is not available to external customers.",
+      hints: [
+        "PEFT (Parameter-Efficient Fine-Tuning) only updates a small set of adapter parameters.",
+        "LoRA is a common PEFT technique that adds low-rank matrices to attention layers.",
+      ],
+    },
+    {
+      id: "q-gem-kp-117",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "After fine-tuning a Gemini model on Vertex AI, evaluation can be performed by comparing the tuned model's outputs on a held-out evaluation dataset against the base model.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Vertex AI provides an evaluation framework that computes metrics such as exact match, BLEU, or ROUGE on a held-out evaluation split. This allows developers to quantify whether fine-tuning improved task-specific performance before deploying the tuned model to production.",
+      hints: [
+        "Always evaluate on held-out data, not the training set.",
+        "Vertex AI supports both automatic metrics and human evaluation workflows.",
+      ],
+    },
+  ],
+  "gemini-vs-competitors": [
+    {
+      id: "q-gem-kp-118",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In published benchmark comparisons (as of the Gemini 1.5 and 2.0 era), which modality is widely considered a primary competitive differentiator of the Gemini family over GPT-4o?",
+      options: [
+        "Text-only reasoning benchmarks like GSM8K.",
+        "Long-context understanding, particularly the ability to process 1M+ token contexts natively.",
+        "Image generation quality.",
+        "Text-to-speech voice naturalness.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Gemini 1.5 Pro\'s 1-million-token (and later 2-million-token) native context window is a clear architectural differentiator. GPT-4o\'s context window was 128K tokens at launch. Gemini\'s long-context capability enables use cases like full-codebase analysis, multi-document legal review, and full-movie analysis that are impractical with shorter-context models.",
+      hints: [
+        "The 1M token context is Google\'s flagship benchmark differentiator.",
+        "Compare context window sizes: 128K vs 1M tokens.",
+      ],
+    },
+    {
+      id: "q-gem-kp-119",
+      type: "true-false",
+      difficulty: "hard",
+      question:
+        "On MMLU (Massive Multitask Language Understanding), Gemini Ultra was the first publicly reported model to surpass human expert-level performance (~89.8%) at the time of its announcement in December 2023.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Google reported that Gemini Ultra achieved 90.0% on MMLU using a 5-shot chain-of-thought prompting strategy, making it the first model to surpass the human expert threshold of ~89.8% on that benchmark at the time of the Gemini 1.0 announcement in December 2023.",
+      hints: [
+        "MMLU covers 57 academic subjects; human expert level is ~89.8%.",
+        "This claim was made in the original Gemini technical report.",
+      ],
+    },
+    {
+      id: "q-gem-kp-120",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "When comparing Gemini and Claude (Anthropic) models, which characteristic most clearly distinguishes the two families?",
+      options: [
+        "Only Gemini supports function calling; Claude does not.",
+        "Claude models do not support multimodal inputs.",
+        "Gemini is natively integrated with Google Search grounding and the broader Google ecosystem, while Claude\'s Constitutional AI training approach prioritizes a different safety and helpfulness methodology.",
+        "Claude models have a larger context window than any Gemini model.",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "Gemini\'s deep integration with Google Search (grounding), Google Workspace, and Vertex AI is a product-level differentiator. Claude uses Constitutional AI (CAI) for alignment — a distinct approach from Google\'s RLHF-based methods. Both support function calling and multimodal inputs.",
+      hints: [
+        "Think about ecosystem integration as a differentiator, not just model capabilities.",
+        "Constitutional AI is Anthropic\'s distinctive alignment methodology.",
+      ],
+    },
+  ],
 });
