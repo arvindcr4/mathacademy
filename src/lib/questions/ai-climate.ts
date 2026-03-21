@@ -1238,14 +1238,21 @@ const questions: Record<string, Question[]> = {
         "The altitude of the satellite",
         "Regions where land cover or land use has changed between the two acquisition dates",
         "The accuracy of the GPS coordinates of the images",
-        "Atmospheric water vapor content",
+        "Atmospheric water vapor content during acquisition",
       ],
       correctAnswer: 1,
       explanation:
-        "Change detection algorithms identify pixels or objects that have changed between two or more images taken at different times, enabling monitoring of urban growth, deforestation, disaster damage, and coastline change.",
+        "Change detection identifies spatial locations where the observed surface properties have changed between two or more dates:\n\n" +
+        "\\[\\Delta_{i,j} = \\|I^{(t_2)}_{i,j} - I^{(t_1)}_{i,j}\\| > \\tau \\Rightarrow \\text{change detected}\\]\n\n" +
+        "Applications include:\n" +
+        "\\[- \\text{Urban growth monitoring}\\]" +
+        "\\[- \\text{Deforestation tracking}\\]" +
+        "\\[- \\text{Disaster damage assessment}\\]" +
+        "\\[- \\text{Crop rotation detection}\\]\n\n" +
+        "The key assumption is that atmospheric and illumination differences between dates are corrected, so remaining differences reflect actual surface changes.",
       hints: [
-        "If the same location looks different in two images from different dates, something on the ground has changed.",
-        "Change detection is the foundation of many Earth observation monitoring applications.",
+        "If the same location looks different in two images from different dates, what can you conclude about what happened on the ground?",
+        "Change detection is the foundation of many Earth observation monitoring applications. What specific question does it answer?",
       ],
     },
     {
@@ -1256,10 +1263,13 @@ const questions: Record<string, Question[]> = {
         "Siamese neural networks are commonly used for change detection because they are designed to compare two inputs and produce a similarity or difference measure.",
       correctAnswer: "True",
       explanation:
-        "Siamese networks process two images (bi-temporal or multi-temporal) through shared-weight encoders to extract aligned feature representations, then compute a difference or attention map that highlights changed regions — a natural architecture for comparative analysis.",
+        "Siamese networks use twin encoders with shared weights to process bi-temporal images:\n\n" +
+        "\\[h^{(1)} = f_\\theta(I^{(t_1)}), \\quad h^{(2)} = f_\\theta(I^{(t_2)})\\]" +
+        "\\[\\hat{y} = g\\left(h^{(1)}, h^{(2)}\\right) = \\text{change map}\\]\n\n" +
+        "Shared weights ensure both images are projected into the same feature space, making comparison meaningful. The difference head produces an attention or distance map highlighting changed regions. This architecture was first used for face verification — change detection is directly analogous.",
       hints: [
-        "Siamese networks were originally designed for face verification (comparing two images) — change detection is analogous.",
-        "Shared weights ensure that both images are projected into the same feature space, making their comparison meaningful.",
+        "Siamese networks were originally designed for face verification (comparing two images to determine if they show the same person). How does this map to change detection?",
+        "Why is it important that both encoders in a Siamese network share weights? What does this ensure about the feature representations?",
       ],
     },
     {
@@ -1267,19 +1277,25 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Time-series change detection using CCDC (Continuous Change Detection and Classification) fits which model to each pixel\'s spectral time series?",
+        "Time-series change detection using CCDC (Continuous Change Detection and Classification) fits which model to each pixel's spectral time series?",
       options: [
         "A deep neural network with LSTM layers",
         "A harmonic regression model with seasonal components, detecting breaks in the model fit",
-        "A random forest classifier on monthly composites",
+        "A random forest classifier on monthly composite images",
         "A support vector machine on spectral difference images",
       ],
       correctAnswer: 1,
       explanation:
-        "CCDC fits harmonic (sinusoidal) regression models to capture seasonal vegetation cycles in each pixel\'s Landsat time series; abrupt changes (deforestation, floods, agriculture conversion) appear as statistical breaks in the model residuals.",
+        "CCDC models each pixel's temporal trajectory as a harmonic regression with seasonal components:\n\n" +
+        "\\[\\text{NDVI}(t) = \\sum_{k=0}^{K} \\left[ a_k \\cos\\left(\\frac{2\\pi k t}{T}\\right) + b_k \\sin\\left(\\frac{2\\pi k t}{T}\\right) \\right] + \\epsilon\\]\n\n" +
+        "where \\(T\\) is the annual cycle period. This captures:\n" +
+        "\\[- \\text{Seasonal vegetation phenology}\\]" +
+        "\\[- \\text{Baseline vegetation condition}\\]\n\n" +
+        "When a change occurs (deforestation, flooding), the observed trajectory deviates significantly from the fitted harmonic model. CCDC detects this as a 'break' in the model residuals:\n\n" +
+        "\\[|\\text{NDVI}_{\\text{observed}}(t) - \\text{NDVI}_{\\text{fitted}}(t)| > \\tau \\Rightarrow \\text{change detected}\\]",
       hints: [
-        "Vegetation has strong seasonal cycles — a model that captures these cycles can detect when they are disrupted.",
-        "Harmonic models fit sine/cosine curves to time series; a sharp deviation from the fitted curve signals a change.",
+        "Vegetation has strong seasonal cycles (green-up in spring, senescence in fall). What type of mathematical model captures these periodic cycles?",
+        "When deforestation occurs, the NDVI trajectory changes abruptly. How does CCDC detect this — is it the trajectory matching a pattern or failing to match one?",
       ],
     },
   ],
@@ -1299,10 +1315,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Satellites measure SST using thermal infrared sensors that detect the long-wave radiation emitted by the ocean surface; ML correction algorithms remove atmospheric interference and cloud contamination to produce high-quality SST products used for ocean heat monitoring.",
+        "Satellites measure SST using thermal infrared sensors. According to Planck's law, the radiation emitted by the ocean surface has a spectrum that depends on temperature:\n\n" +
+        "\\[B(\\lambda, T) = \\frac{2hc^2}{\\lambda^5} \\frac{1}{e^{hc/(\\lambda k_B T)} - 1}\\]\n\n" +
+        "At typical SST (~15°C), peak emission is at \\(\\lambda \\approx 11\\;\\mu\\text{m}\\) (thermal infrared). ML correction algorithms remove atmospheric interference and cloud contamination to produce high-quality SST products used for ocean heat monitoring:\n\n" +
+        "\\[\\text{SST}_{\\text{corrected}} = \\text{SST}_{\\text{brightness}} - \\Delta T_{\\text{atmospheric}}\\]",
       hints: [
-        "Temperature determines the wavelength of thermal emission (Planck\'s law) — which part of the spectrum detects heat?",
-        "Thermal infrared sensors measure emitted rather than reflected radiation, making them sensitive to surface temperature.",
+        "Temperature determines the wavelength of thermal emission (Planck's law). At typical ocean surface temperatures, what part of the electromagnetic spectrum does the peak emission fall in?",
+        "Thermal infrared sensors measure emitted rather than reflected radiation. What advantage does this provide for monitoring ocean surface temperature?",
       ],
     },
     {
@@ -1313,10 +1332,12 @@ const questions: Record<string, Question[]> = {
         "Sea ice extent in the Arctic has been monitored using passive microwave satellite data since the 1970s, providing a long-term record of ice loss.",
       correctAnswer: "True",
       explanation:
-        "Passive microwave sensors (SMMR, SSM/I, SSMIS) measure natural microwave emission from the sea ice surface and have provided continuous global sea ice extent and concentration data since 1979, revealing dramatic Arctic ice loss correlated with climate warming.",
+        "Passive microwave sensors (SMMR, SSM/I, SSMIS) measure natural microwave emission from the sea ice surface. The emissivity of ice differs from open ocean:\n\n" +
+        "\\[\\epsilon_{\\text{ice}} \\approx 0.85-0.95 \\quad \\text{vs.} \\quad \\epsilon_{\\text{ocean}} \\approx 0.5-0.7\\]\n\n" +
+        "This difference allows sea ice concentration to be retrieved globally. The 45+ year passive microwave record (1979-present) provides the definitive dataset for tracking Arctic and Antarctic sea ice trends, revealing approximately 13% decline per decade in Arctic summer sea ice extent.",
       hints: [
-        "Passive microwave sensors work day/night and through clouds — essential for monitoring the polar regions.",
-        "The 45+ year microwave record provides the definitive long-term dataset for Arctic and Antarctic sea ice change.",
+        "Passive microwave sensors work day/night and through clouds. Why is this essential for monitoring polar regions?",
+        "The passive microwave record spans over 45 years. What makes this record definitive for understanding sea ice change?",
       ],
     },
     {
@@ -1333,10 +1354,14 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Phytoplankton contain chlorophyll-a, which absorbs blue light and reflects green light; ocean color sensors measure the water-leaving reflectance spectrum, and ML algorithms (neural networks, mixture density networks) retrieve chlorophyll-a concentrations to map phytoplankton distribution.",
+        "Phytoplankton contain chlorophyll-a, which absorbs blue light and reflects green light. Ocean color sensors measure the water-leaving reflectance spectrum:\n\n" +
+        "\\[R_{\\text{rs}}(\\lambda) = \\frac{L_w(\\lambda)}{E_d(\\lambda)}\\]\n\n" +
+        "The ratio of blue to green reflectance encodes chlorophyll-a concentration. ML algorithms (neural networks, mixture density networks) retrieve chlorophyll-a concentrations:\n\n" +
+        "\\[\\hat{C}_{\\text{chla}} = f_\\theta(R_{\\text{rs}}(\\lambda_1), R_{\\text{rs}}(\\lambda_2), \\ldots)\\]\n\n" +
+        "Phytoplankton are the base of the marine food web and a major carbon sink — satellite chlorophyll maps provide global ocean productivity estimates.",
       hints: [
-        "Phytoplankton are the base of the marine food web and a major carbon sink — how can satellites detect microscopic organisms in the ocean?",
-        "Ocean color changes from blue (clear deep water) to green (chlorophyll-rich) as phytoplankton concentration increases.",
+        "Phytoplankton are microscopic organisms at the base of the marine food web. How can satellites detect them in the open ocean?",
+        "Ocean color changes from blue (clear deep water) to green as phytoplankton concentration increases. What specific pigment causes this color change?",
       ],
     },
   ],
