@@ -11,7 +11,7 @@ const questions: Record<string, Question[]> = {
       options: ["|1⟩", "(|0⟩ − |1⟩) / √2", "(|0⟩ + |1⟩) / √2", "|0⟩"],
       correctAnswer: 2,
       explanation:
-        "The Hadamard matrix is H = (1/√2)[[1,1],[1,−1]]. Acting on |0⟩ = [1,0]\\^T gives H|0⟩ = (1/√2)[1,1]\\^T = (|0⟩ + |1⟩)/√2, the |+⟩ state - an equal superposition with positive phase.",
+        "Let's recall the action of H on computational basis states:\n\\[\nH|0\\rangle = \\frac{|0\\rangle + |1\\rangle}{\\sqrt{2}} = |+\\rangle, \\qquad H|1\\rangle = \\frac{|0\\rangle - |1\\rangle}{\\sqrt{2}} = |-\\rangle.\n\\]\nWriting |0\\rangle as the column vector \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}, we compute:\n\\[\nH|0\\rangle = \\frac{1}{\\sqrt{2}}\\begin{pmatrix} 1 & 1 \\\\ 1 & -1 \\end{pmatrix}\\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix} = \\frac{1}{\\sqrt{2}}\\begin{pmatrix} 1 \\\\ 1 \\end{pmatrix} = \\frac{|0\\rangle + |1\\rangle}{\\sqrt{2}}.\n\\]\nThe result |+\\rangle = \\frac{|0\\rangle + |1\\rangle}{\\sqrt{2}} is an equal superposition with phase 0.",
       hints: [
         "Write out H as a 2\\times2 matrix and multiply by the column vector [1, 0]\\^T representing |0⟩.",
         "H maps |0⟩ \\to |+⟩ and |1⟩ \\to |−⟩ = (|0⟩ − |1⟩)/√2.",
@@ -26,7 +26,7 @@ const questions: Record<string, Question[]> = {
       options: ["\\beta|0⟩ + \\alpha|1⟩", "\\alpha|0⟩ − \\beta|1⟩", "−\\alpha|0⟩ + \\beta|1⟩", "\\alpha|0⟩ + \\beta|1⟩"],
       correctAnswer: 1,
       explanation:
-        "The Pauli-Z matrix is Z = [[1,0],[0,−1]]. Acting on \\alpha|0⟩ + \\beta|1⟩ = [\\alpha,\\beta]\\^T gives Z[\\alpha,\\beta]\\^T = [\\alpha,−\\beta]\\^T = \\alpha|0⟩ − \\beta|1⟩. Z is a \\pi rotation around the Z-axis, flipping the phase of the |1⟩ component.",
+        "The Pauli-Z matrix is Z = \\begin{pmatrix} 1 & 0 \\\\ 0 & -1 \\end{pmatrix}.  Applying it to a general qubit state \\alpha|0\\rangle + \\beta|1\\rangle = \\begin{pmatrix} \\alpha \\\\ \\beta \\end{pmatrix}:\n\\[\nZ\\begin{pmatrix} \\alpha \\\\ \\beta \\end{pmatrix} = \\begin{pmatrix} 1 & 0 \\\\ 0 & -1 \\end{pmatrix}\\begin{pmatrix} \\alpha \\\\ \\beta \\end{pmatrix} = \\begin{pmatrix} \\alpha \\\\ -\\beta \\end{pmatrix} = \\alpha|0\\rangle - \\beta|1\\rangle.\n\\]\nGeometrically, Z is a \\pi rotation around the Z-axis; it leaves |0\\rangle unchanged while flipping the phase of the |1\\rangle amplitude.",
       hints: [
         "The Z matrix leaves |0⟩ unchanged but multiplies |1⟩ by −1.",
         "Z = diag(1, −1), so it simply negates the amplitude of |1⟩.",
@@ -41,7 +41,7 @@ const questions: Record<string, Question[]> = {
       options: ["Identity I", "Pauli-X", "Pauli-Z", "Hadamard H"],
       correctAnswer: 2,
       explanation:
-        "S\\^2 = [[1,0],[0,i]]\\^2 = [[1,0],[0,i\\^2]] = [[1,0],[0,−1]] = Z. Applying the S gate twice is equivalent to a \\pi/2 phase shift applied twice, giving a \\pi phase shift - the Pauli-Z gate.",
+        "The S gate is diagonal: S = \\begin{pmatrix} 1 & 0 \\\\ 0 & i \\end{pmatrix} = \\operatorname{diag}(1, i).  Squaring a diagonal matrix squares each diagonal entry:\n\\[\nS^2 = \\operatorname{diag}(1^2, i^2) = \\operatorname{diag}(1, -1) = \\begin{pmatrix} 1 & 0 \\\\ 0 & -1 \\end{pmatrix} = Z.\n\\]\nApplying the phase gate twice gives a total phase shift of \\pi (since i \\times i = -1), which is exactly the Pauli-Z operation.",
       hints: [
         "S = diag(1, i). Squaring a diagonal matrix just squares the diagonal entries: S\\^2 = diag(1\\^2, i\\^2) = diag(1, −1).",
         "Compare S\\^2 = diag(1,−1) with the Pauli-Z matrix diag(1,−1). They are the same.",
@@ -59,7 +59,7 @@ const questions: Record<string, Question[]> = {
       options: ["|00⟩", "(|00⟩ + |11⟩) / √2", "(|01⟩ + |10⟩) / √2", "|11⟩"],
       correctAnswer: 1,
       explanation:
-        "After H: qubit 1 is (|0⟩+|1⟩)/√2, system is (|0⟩+|1⟩)/√2 ⊗ |0⟩ = (|00⟩+|10⟩)/√2. CNOT flips qubit 2 when qubit 1 is |1⟩: |00⟩\\to|00⟩, |10⟩\\to|11⟩. Result: (|00⟩+|11⟩)/√2, the \\Phi\\^+ Bell state.",
+        "Step 1 — Apply H to qubit 1 (initially |0\\rangle):\n\\[\nH|0\\rangle = \\frac{|0\\rangle + |1\\rangle}{\\sqrt{2}} = |+\\rangle.\n\\]\nThe two-qubit state is |+\\rangle \\otimes |0\\rangle = \\frac{|00\\rangle + |10\\rangle}{\\sqrt{2}}.\n\nStep 2 — Apply CNOT with qubit 1 as control and qubit 2 as target.  CNOT flips the target iff the control is |1\\rangle:\n\\[\n|00\\rangle \\to |00\\rangle, \\qquad |10\\rangle \\to |11\\rangle.\n\\]\nThe final state is therefore \\frac{|00\\rangle + |11\\rangle}{\\sqrt{2}}, the Bell state |\\Phi^+\\rangle.",
       hints: [
         "Expand |+⟩|0⟩ = (|0⟩+|1⟩)/√2 ⊗ |0⟩ = (|00⟩+|10⟩)/√2, then apply CNOT to each term.",
         "CNOT: |00⟩\\to|00⟩, |01⟩\\to|01⟩, |10⟩\\to|11⟩, |11⟩\\to|10⟩.",
@@ -73,7 +73,7 @@ const questions: Record<string, Question[]> = {
         "In a quantum circuit, gates must be applied in a strictly sequential order and cannot be parallelized across independent qubits.",
       correctAnswer: "False",
       explanation:
-        "Gates acting on disjoint sets of qubits commute and can be applied in parallel, which is exploited for circuit depth reduction and hardware efficiency. Circuit depth counts the longest sequential chain of non-commuting gates, not the total number of gates.",
+        "Gates acting on disjoint (non-overlapping) qubits commute and can be executed simultaneously on most quantum hardware.  This parallelism is explicitly used to minimise circuit depth — the critical metric for hardware where decoherence limits how many sequential operations can be performed.  Only gates that share a qubit must respect their ordering.",
       hints: [
         "Consider whether a gate on qubit 1 can possibly affect the state of qubit 3 if they are not entangled or connected by the circuit.",
         "Parallel execution of gates on independent qubits is a key strategy for reducing circuit depth on quantum hardware.",
@@ -93,7 +93,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "CNOT maps |00⟩\\to|00⟩, |01⟩\\to|01⟩, |10⟩\\to|11⟩, |11⟩\\to|10⟩. In matrix form with rows/columns ordered {|00⟩,|01⟩,|10⟩,|11⟩}, the 3rd and 4th rows are swapped relative to the identity: [[1,0,0,0],[0,1,0,0],[0,0,0,1],[0,0,1,0]].",
+        "In the computational basis \\{|00\\rangle, |01\\rangle, |10\\rangle, |11\\rangle\\}, CNOT is defined by which target state results from each two-qubit input:\n\n  - |00\\rangle \\to |00\\rangle  (control = 0, no flip)\n  - |01\\rangle \\to |01\\rangle  (control = 0, no flip)\n  - |10\\rangle \\to |11\\rangle  (control = 1, flip)\n  - |11\\rangle \\to |10\\rangle  (control = 1, flip)\n\nColumns of the matrix are the output vectors for each input basis state.  The third and fourth columns of the identity are swapped, giving:\n\\[\n\\begin{pmatrix} 1&0&0&0 \\\\ 0&1&0&0 \\\\ 0&0&0&1 \\\\ 0&0&1&0 \\end{pmatrix}.\n\\]",
       hints: [
         "CNOT leaves |00⟩ and |01⟩ unchanged (control is |0⟩), and flips the target when control is |1⟩: |10⟩\\leftrightarrow|11⟩.",
         "Read off each column: which basis state does each input map to? The column for |10⟩ must be |11⟩.",
@@ -115,7 +115,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Bell states are maximally entangled two-qubit states; (|00⟩ + |11⟩)/√2, known as \\Phi\\^+, is one of the four Bell states and cannot be written as a product of two single-qubit states.",
+        "Bell states are the four maximally entangled two-qubit states:\n\\[\n|\\Phi^\\pm\\rangle = \\frac{|00\\rangle \\pm |11\\rangle}{\\sqrt{2}}, \\qquad |\\Psi^\\pm\\rangle = \\frac{|01\\rangle \\pm |10\\rangle}{\\sqrt{2}}.\n\\]\nOption (|00\rangle + |11\rangle)/\sqrt{2} is exactly |\Phi^+\rangle, a Bell state.  All other options are either unentangled (|00\rangle, |01\rangle - |10\rangle) or single-qubit superpositions (|0\rangle + |1\rangle)/\sqrt{2}.",
       hints: [
         "A Bell state involves two qubits that are entangled - it cannot be factored into individual qubit states.",
         "Superposition of a single qubit is not entanglement; look for a two-qubit state with correlated outcomes.",
@@ -129,7 +129,7 @@ const questions: Record<string, Question[]> = {
         "Quantum entanglement allows two parties to communicate information faster than the speed of light.",
       correctAnswer: "False",
       explanation:
-        "Entanglement produces correlated measurement outcomes but no information is transmitted; the no-communication theorem proves that entanglement alone cannot be used for superluminal signaling.",
+        "Entanglement creates non-local correlations — measuring one qubit instantly fixes the other — but this cannot convey information because each party cannot control or predict their individual outcome.  The no-communication theorem proves that without a classical side-channel, no signal can be sent; the statistical correlations alone are insufficient.",
       hints: [
         "Consider whether the party measuring first can choose or predict what the other party will observe.",
         "The no-communication theorem is a fundamental result in quantum information theory.",
@@ -149,7 +149,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Quantum teleportation uses entanglement to transfer an unknown quantum state using non-local correlations plus two classical bits; the classical channel ensures no faster-than-light information transfer.",
+        "Quantum teleportation works in three steps: (1) Bell measurement on the input qubit and the sender's half of the entangled pair; (2) classical transmission of two measurement bits; (3) unitary correction on the receiver's qubit.  The entanglement provides the non-local correlations, but the classical bits are essential — without them the protocol conveys no quantum state.",
       hints: [
         "Teleportation always requires a classical side-channel - think about what that channel carries and why it is necessary.",
         "Cloning is forbidden by the no-cloning theorem, and FTL communication is ruled out.",
@@ -167,7 +167,7 @@ const questions: Record<string, Question[]> = {
       options: ["O(log N)", "O(N)", "O(√N)", "O(N\\^2)"],
       correctAnswer: 2,
       explanation:
-        "Grover\'s algorithm achieves a quadratic speedup over classical linear search, requiring O(√N) oracle queries to find a marked item with high probability.",
+        "Grover's algorithm uses amplitude amplification to boost the probability of the marked state.  Each iteration increases the amplitude of the target by O(1/\\sqrt{N}) and decreases others, requiring roughly \\sqrt{N} iterations to reach O(1) success probability.  This yields O(\\sqrt{N}) query complexity — a quadratic speed-up over classical O(N) linear search.",
       hints: [
         "Classical brute-force search is O(N); quantum algorithms can do better by a polynomial factor.",
         "The amplitude amplification technique at the heart of Grover repeats roughly √N times.",
@@ -181,7 +181,7 @@ const questions: Record<string, Question[]> = {
         "Shor\'s algorithm can factor large integers exponentially faster than the best known classical algorithms.",
       correctAnswer: "True",
       explanation:
-        "Shor\'s algorithm runs in polynomial time O((log N)\\^3) using quantum phase estimation and the quantum Fourier transform, versus sub-exponential but super-polynomial classical factoring algorithms.",
+        "Shor's algorithm reduces integer factorisation to period-finding, which the quantum Fourier transform (QFT) solves in polynomial time O((log N)^3).  The best classical algorithms (general number field sieve) run in sub-exponential time ~e^{O((log N)^{1/3} (log log N)^{2/3})}, so Shor gives an exponential speed-up.",
       hints: [
         "The best classical factoring algorithms (e.g., general number field sieve) are sub-exponential but not polynomial.",
         "Shor reduces factoring to period-finding, which quantum Fourier transform solves efficiently.",
