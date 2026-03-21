@@ -2362,10 +2362,11 @@ const extra: Record<string, Question[]> = {
         "It forces SentencePiece to normalise to lowercase before processing since ▁ replaces case information",
       ],
       correctAnswer: 1,
-      explanation: "SentencePiece treats text as a raw Unicode stream with no pre-tokenisation whitespace split. Whitespace is replaced by ▁ before segmentation, making it part of the token (e.g., ▁world). This encoding is reversible: concatenate all tokens and replace ▁ with a space to recover the original string exactly, including original whitespace positions. This is critical for generation tasks that need to produce correctly spaced output.",
+      explanation:
+        "First, let's recall how standard tokenisation works. Most tokenisation systems (like WordPiece or standard BPE) first split text on whitespace before applying subword merge rules. This pre-tokenisation step means whitespace is a structural delimiter, not part of the token vocabulary.\n\n**Step 1:** Understand SentencePiece's approach. SentencePiece treats the entire input as a raw Unicode byte stream — there is no pre-tokenisation whitespace split. Whitespace is replaced by the special character ▁ before segmentation. The token ▁world represents \"world that starts after a space\" as a single token.\n\n**Step 2:** Recognise the reversibility property. Because ▁ encodes whitespace information directly within each token, tokenisation becomes fully reversible. To recover the original string: concatenate all tokens, then replace every ▁ with a space. No separate detokenisation logic or lookup table is needed.\n\n**Step 3:** Compare with whitespace-delimited systems. In systems that split on whitespace first, detokenisation requires special rules to reconstruct spaces. SentencePiece eliminates this by encoding the space directly.\n\nTherefore, the answer is that it makes tokenisation fully reversible: joining tokens and replacing ▁ with a space exactly recovers the original string, without requiring a separate detokenisation step.",
       hints: [
-        "▁world means 'world that starts after a space'. It is a single token, not two.",
-        "Reversible tokenisation: tokens \\to join \\to replace ▁ with space \\to original string. Used in T5, mT5, XLNet.",
+        "▁world is a single token that encodes both the word 'world' AND the fact that it follows a space. Can standard whitespace-based tokenisers do this?",
+        "Reversible tokenisation means: tokens -> join all tokens -> replace ▁ with space -> original string. T5, mT5, and XLNet use SentencePiece specifically for this property.",
       ],
     },
     {
@@ -2380,10 +2381,11 @@ const extra: Record<string, Question[]> = {
         "It maps the entire word to the most similar vocabulary entry using cosine similarity of character n-grams",
       ],
       correctAnswer: 1,
-      explanation: "BPE handles out-of-vocabulary words by decomposing them into known subword units. 'ChatGPT' would be split based on which merges are in the vocabulary - common substrings like 'Chat', 'G', 'PT' or further decomposed to characters if no merge rules apply. The worst case is character-level tokenisation. This is why BPE eliminates <UNK>: any string is representable as a sequence of base characters (or bytes for byte-level BPE).",
+      explanation:
+        "First, let's recall how BPE handles unknown words. BPE starts with a base vocabulary of characters (or bytes) and learns merge rules from training data. At inference, it applies these rules greedily left to right to segment any input string.\n\n**Step 1:** Understand the segmentation process. When 'ChatGPT' appears, BPE scans from left to right, matching the longest vocabulary entry at each position. Common substrings like 'Chat', 'G', and 'PT' may each be in the vocabulary as single tokens. If not, they are further decomposed.\n\n**Step 2:** Recognise the fallback mechanism. In the worst case (no merges apply), BPE falls back to character-level tokenisation. Since every string is a sequence of base characters (or bytes), there is always a valid tokenisation — hence no <UNK> token is ever needed.\n\n**Step 3:** Evaluate the options. Option A (single <UNK> token) is wrong — BPE never produces <UNK>. Option C (raises an error) is wrong — BPE always produces a valid output. Option D (cosine similarity mapping) is not a BPE mechanism.\n\nTherefore, the answer is that it splits the word into known subword units using the learned merge rules, falling back to base characters if needed.",
       hints: [
-        "Apply merges greedily: find the longest vocabulary entry matching the current position.",
-        "New words get decomposed into familiar parts. No <UNK> needed.",
+        "BPE applies merge rules greedily from left to right. For 'ChatGPT', it would try to match the longest vocabulary token starting at each position. What happens if a substring is not in the vocabulary?",
+        "The key insight is that BPE NEVER produces <UNK> — any string is representable as subwords or individual characters/bytes.",
       ],
     },
     {
@@ -2392,10 +2394,11 @@ const extra: Record<string, Question[]> = {
       difficulty: "hard",
       question: "Increasing the BPE vocabulary size always improves downstream NLP task performance because more vocabulary coverage means fewer tokenisation splits.",
       correctAnswer: "false",
-      explanation: "Vocabulary size involves a trade-off. A very large vocabulary reduces the number of tokens per sentence (good for attention complexity) but increases the embedding matrix size, reduces the frequency of each subword in training data (hurting embedding quality for rare tokens), and may cause vocabulary mismatch when transferring to new domains. The optimal vocabulary size depends on the languages, domain, and model architecture. GPT-4's ~100K vocabulary is larger than BERT's ~30K, balancing these considerations for multilingual and code data.",
+      explanation:
+        "First, let's recall the trade-offs in BPE vocabulary size. The statement claims that increasing vocabulary size always improves downstream performance because more coverage means fewer tokenisation splits. This sounds intuitive but is an oversimplification.\n\n**Step 1:** Understand the benefits of a larger vocabulary. A larger vocabulary reduces the average number of tokens per sentence, which shortens sequences for self-attention (O(n²)) and reduces computation. More of the text is covered by single vocabulary tokens.\n\n**Step 2:** Understand the costs. A larger vocabulary increases the embedding matrix size (which must be learned and stored). More importantly, each subword token appears less frequently in the training corpus, which degrades the quality of learned embeddings for rare tokens. This hurts generalisation.\n\n**Step 3:** Consider domain transfer. A vocabulary optimised for one domain may not transfer well to another. Large vocabularies optimised for English web text may mismatch heavily on code or non-English languages.\n\n**Step 4:** Evaluate the claim. The statement says larger vocabulary \"always\" improves performance — the word \"always\" is the giveaway. Real-world systems like GPT-4 (~100K tokens) and BERT (~30K tokens) make different choices based on their specific trade-offs.\n\nTherefore, the statement is false — increasing vocabulary size does not always improve performance; it involves trade-offs between token count, embedding quality, and domain transfer.",
       hints: [
-        "Larger vocabulary: fewer tokens per sequence, larger embedding table, rarer individual tokens in training.",
-        "For code-heavy models, a larger vocabulary is beneficial to represent keywords and identifiers as single tokens.",
+        "Consider the embedding matrix: if you double the vocabulary, what happens to its size? Now think about how often each token appears in training data.",
+        "Different models make different choices: BERT uses ~30K (WordPiece), GPT-4 uses ~100K. If larger were always better, why wouldn't BERT also use 100K?",
       ],
     },
     {
@@ -2410,10 +2413,11 @@ const extra: Record<string, Question[]> = {
         "Byte-level BPE with a vocabulary of 50,257 tokens (same as GPT-2)",
       ],
       correctAnswer: 1,
-      explanation: "T5 (Raffel et al., 2020) uses SentencePiece with the unigram language model trained on a large text corpus (C4 - Colossal Clean Crawled Corpus). The 32,000-token vocabulary is shared across all tasks. mT5 extends this to 250,000 tokens for 101 languages. SentencePiece's language-agnostic segmentation without pre-tokenisation makes it well-suited for multilingual models and text-to-text frameworks.",
+      explanation:
+        "First, let's recall the tokenisation approaches used by major models. BERT uses WordPiece (~30K tokens). GPT-2 uses byte-level BPE (~50K tokens). The question asks about T5's approach.\n\n**Step 1:** Identify T5's tokenisation method. T5 (Raffel et al., 2020) uses SentencePiece with the unigram language model, trained on the C4 corpus (Colossal Clean Crawled Corpus). The vocabulary size is 32,000 tokens.\n\n**Step 2:** Compare with the other options. Option A (character-level ASCII) is used by no major transformer. Option C (WordPiece, 30,522 tokens) is BERT's approach, not T5's. Option D (byte-level BPE, 50,257 tokens) is GPT-2's approach, not T5's.\n\n**Step 3:** Understand why SentencePiece suits T5. T5 frames all NLP tasks as text-to-text problems (translation, summarisation, QA all use the same input-output format). SentencePiece's language-agnostic, reversible tokenisation (with ▁ for whitespace) handles multilingual text uniformly, making it ideal for the text-to-text framework.\n\nTherefore, the answer is SentencePiece with the unigram language model, using a vocabulary of 32,000 tokens.",
       hints: [
-        "BERT: WordPiece, 30,522 tokens. GPT-2: byte-level BPE, 50,257 tokens. T5: SentencePiece unigram, 32,000 tokens.",
-        "T5 frames all NLP tasks as text-to-text - the same vocabulary handles both input and output for all tasks.",
+        "Remember: BERT = WordPiece (~30K), GPT-2 = byte-level BPE (~50K). T5 uses SentencePiece with unigram LM — this is a distinct third approach.",
+        "T5's text-to-text framework means the same model handles translation, summarisation, and QA. SentencePiece's reversible, language-agnostic tokenisation supports this unified approach.",
       ],
     },
   ],
@@ -2431,10 +2435,11 @@ const extra: Record<string, Question[]> = {
         "DPR is pretrained with masked passage modelling where question tokens are masked and the model reconstructs them from the passage",
       ],
       correctAnswer: 1,
-      explanation: "DPR requires supervised training on labelled (question, positive passage, negative passages) triples. In-batch negatives: for a batch of B question-passage pairs, each question treats the other B-1 positive passages as negatives - efficient with large batches. Hard negatives from BM25 (retrieved but wrong passages) teach the model to distinguish semantically related but incorrect passages from the true answer passage. This supervised signal allows DPR to capture semantic relevance beyond keyword overlap.",
+      explanation:
+        "First, let's recall how DPR works as a bi-encoder retrieval system. DPR encodes queries and passages with separate BERT models, producing dense embedding vectors. At query time, the query embedding is compared against all passage embeddings using inner product similarity.\n\n**Step 1:** Understand the training setup. DPR requires supervised training with labelled (question, positive passage, negative passages) triples. The positive passage is the one that actually answers the question; negative passages are incorrect.\n\n**Step 2:** Understand in-batch negatives. For a batch of B (question, positive passage) pairs, each question treats the other B-1 positive passages as negatives. This gives B x (B-1) negatives efficiently without needing separate negative sampling.\n\n**Step 3:** Understand hard negatives. In-batch negatives are \"easy\" — they are from different questions entirely. Hard negatives are passages retrieved by BM25 that look relevant but are not the gold passage. These \"confusable\" examples teach the model to distinguish related-but-wrong passages from the true answer.\n\n**Step 4:** Evaluate the other options. Option A (unsupervised) is wrong — DPR requires labelled triples. Option C (cross-encoder distillation) describes a different pipeline (colbert, reranking). Option D (masked passage modelling) is a pretrained objective, not the training strategy.\n\nTherefore, the answer is that DPR is trained with in-batch negatives plus hard negatives mined from BM25 top-k.",
       hints: [
-        "In-batch negatives: B pairs \\to B questions \\times (B-1) negatives each. Efficient use of GPU memory.",
-        "Hard negatives: BM25 top-k that look relevant but are wrong answers. These 'confusable' examples most improve retrieval quality.",
+        "In-batch negatives: B question-passage pairs give you B questions x (B-1) negatives for free. This is an efficient use of batch parallelism.",
+        "Hard negatives are crucial: easy negatives (passages from unrelated questions) are trivial to distinguish. The model needs \"confusable\" negatives — BM25 top-k results that look relevant but aren't correct.",
       ],
     },
     {
@@ -2449,10 +2454,11 @@ const extra: Record<string, Question[]> = {
         "RRF(d) = r_s \\times r_d (product of ranks; lower is better)",
       ],
       correctAnswer: 1,
-      explanation: "RRF (Cormack et al., 2009): score(d) = sum over retrievers of 1/(k + rank_i(d)). k=60 is standard: rank 1 gives 1/61\\approx0.016; rank 10 gives 1/70\\approx0.014. RRF is robust to score distribution differences between systems (BM25 scores in [0,30] vs. dense scores in [-1,1]) because it uses only rank order, not raw scores. Documents ranked highly by both retrievers receive high combined scores.",
+      explanation:
+        "First, let's recall why RRF is needed. BM25 produces scores in [0, 30] while DPR produces scores in [-1, 1]. Simply adding raw scores would let one retriever dominate. RRF solves this by converting ranks to a normalised score.\n\n**Step 1:** Understand the RRF formula. RRF(d) = 1/(k + r_s) + 1/(k + r_d), where k is a constant (typically 60) and r_s, r_d are the document's ranks in each retriever's output.\n\n**Step 2:** Understand why ranks, not raw scores. Ranks are ordinal — rank 1 is always \"best\" regardless of whether the underlying scores are [30, 29, 28] or [1.0, 0.9, 0.8]. RRF uses only the rank order, making it robust to incompatible score distributions.\n\n**Step 3:** Understand the role of k. With k=60, rank 1 gives 1/61 $\approx$ 0.0164 and rank 10 gives 1/70 $\approx$ 0.0143. The ratio is only about 1.15x — so a document at rank 10 is still rewarded substantially. Without k, rank 1 would dominate completely (1/1 = 1 vs 1/2 = 0.5, a 2x difference).\n\n**Step 4:** Evaluate the other options. Option A (linear combination of raw scores) ignores score incompatibility. Option C (max of ranks) discards useful position information from the worse retriever. Option D (product of ranks) is not used in RRF.\n\nTherefore, the answer is RRF(d) = 1/(k + r_s) + 1/(k + r_d) where k is typically 60.",
       hints: [
-        "RRF avoids normalising scores from different retrievers - rank is comparable; raw scores are not.",
-        "k=60 prevents top-ranked documents from dominating: 1/(1+60) vs 1/(60+60) is only a 2\\times difference.",
+        "BM25 scores and DPR cosine similarities are on completely different scales. RRF's key insight: rank order is comparable even when raw scores are not. What does this suggest about using ranks vs raw scores?",
+        "The constant k=60 controls how much the top-ranked document dominates. If k were 0, rank 1 would contribute 1.0 vs rank 2 contributing 0.5 — a 2x difference. With k=60, the ratio shrinks to ~1.15x. Why might we want this damping?",
       ],
     },
     {
@@ -2461,10 +2467,11 @@ const extra: Record<string, Question[]> = {
       difficulty: "medium",
       question: "In a RAG system, increasing the number of retrieved passages (top-k) always improves answer quality because more context is better.",
       correctAnswer: "false",
-      explanation: "Increasing k has diminishing returns and can degrade performance. Problems: (1) Noise dilution - irrelevant passages distract the generator and may introduce false information. (2) Lost-in-the-middle effect (Liu et al., 2023) - LLMs attend better to content at the start and end of context; information in the middle of long contexts is often ignored. (3) Context length limits - each passage consumes tokens from the fixed context window. Optimal k is task-dependent, typically 3-10 for most QA tasks.",
+      explanation:
+        "First, let's recall the intuition that \"more context is better.\" In RAG, the generator receives k retrieved passages as context. Intuitively, more passages should give more information. But this intuition is wrong for three reasons.\n\n**Step 1:** Understand noise dilution. Not all retrieved passages are relevant. As k increases, the fraction of relevant passages typically decreases. Irrelevant passages can confuse the generator or even introduce false information (hallucination from noisy context).\n\n**Step 2:** Understand the lost-in-the-middle effect (Liu et al., 2023). LLMs — especially when fine-tuned — attend more strongly to content at the beginning and end of their context window. Information in the middle of a long context is often effectively ignored. This means adding more passages in the middle does not proportionally increase useful information.\n\n**Step 3:** Understand context length constraints. Every passage consumes tokens from the fixed context window. A longer context also means more self-attention computation (O(n²) in the length). There is a fixed budget, and increasing k means fewer tokens are available per passage.\n\n**Step 4:** Evaluate the claim. The statement says \"always improves answer quality.\" The word \"always\" is the giveaway — these three effects mean more passages can actually hurt performance.\n\nTherefore, the statement is false — increasing the number of retrieved passages does not always improve answer quality; optimal k is typically 3-10 for most QA tasks.",
       hints: [
-        "Lost-in-the-middle: LLMs attend better to context at the beginning and end of their window.",
-        "More passages = more noise. A perfect retriever with k=1 (always correct passage) would be ideal.",
+        "Lost-in-the-middle: LLMs attend best to the first and last tokens of their context window. What happens to information in the middle when you add more and more passages?",
+        "Think about the ideal retriever: if it always retrieved the single perfect passage, would you ever want more? The \"more is better\" intuition assumes all retrieved passages are equally relevant — but real retrievers are imperfect.",
       ],
     },
     {
@@ -2479,10 +2486,11 @@ const extra: Record<string, Question[]> = {
         "Multi-hop RAG only applies to structured knowledge graphs, not free-text corpora",
       ],
       correctAnswer: 1,
-      explanation: "Bridge questions require chained reasoning: 'What is the capital of the country where X was born?' needs (1) retrieve X's birthplace, (2) retrieve that country's capital. Single-step RAG cannot retrieve the second document without knowing the answer to the first sub-question. IRCoT interleaves CoT reasoning steps with retrieval: each reasoning step generates a new query, retrieves new evidence, and informs the next reasoning step.",
+      explanation:
+        "First, let's recall how single-step RAG works. Single-step RAG retrieves the top-k passages for the original user query, then passes them all to the generator. This works well when all required facts are retrievable with a single query.\n\n**Step 1:** Understand multi-hop reasoning. Consider the question: \"What is the capital of the country where Marie Curie was born?\" Answering this requires two steps: (1) find that Marie Curie was born in Warsaw, then (2) find Warsaw's country (Poland) and then find Poland's capital (Warsaw is the capital — wait, this is actually a bad example because Warsaw is both the birthplace and capital). Consider instead: \"Who was the president of the country where Einstein was born?\" — first find Einstein's birthplace (Ulm, Germany), then find who was president of Germany at a given time.\n\n**Step 2:** Recognise the retrieval dependency. In multi-hop questions, the second retrieval query depends on the answer to the first. Single-step RAG cannot perform the second retrieval because it does not yet know that Einstein was born in Ulm, Germany.\n\n**Step 3:** Understand IRCoT's approach. IRCoT (Trivedi et al., 2022) interleaves Chain-of-Thought reasoning with retrieval. Each reasoning step generates a query that is used to retrieve new evidence, which informs the next reasoning step. This creates an alternating retrieve -> reason -> retrieve -> reason cycle.\n\n**Step 4:** Evaluate the other options. Option A (reduces cost) is not the primary purpose. Option C (LLM as retriever) is not IRCoT. Option D (knowledge graphs only) is wrong — IRCoT applies to free-text corpora.\n\nTherefore, the answer is that multi-hop reasoning requires evidence chains where the second retrieval depends on the first step's answer.",
       hints: [
-        "Bridge question: answer requires an intermediate fact not discoverable from the original query alone.",
-        "IRCoT: reason \\to retrieve \\to reason further \\to retrieve again. Each retrieval is conditioned on previously gathered evidence.",
+        "Multi-hop questions have a structural dependency: the second retrieval query cannot be formulated without knowing the answer to the first sub-question. Single-step RAG makes only one retrieval call — how can it know the second query?",
+        "IRCoT alternates between reasoning (producing an intermediate answer or query) and retrieval (fetching evidence for that reasoning step). Think of it as CoT where each thought triggers a retrieval.",
       ],
     },
     {
@@ -2497,10 +2505,11 @@ const extra: Record<string, Question[]> = {
         "Locality-sensitive hashing with random projections",
       ],
       correctAnswer: 1,
-      explanation: "FAISS (Johnson et al., 2017) is the standard library for billion-scale dense retrieval. IVF partitions vectors into Voronoi cells; at query time only the nearest cells are searched. PQ compresses each vector from 768 floats to ~64 bytes using product quantization, reducing memory 10-100x. Together IVF-PQ achieves sub-millisecond retrieval over 100M+ vectors with modest recall loss. DPR and RAG papers use FAISS as the ANN backend.",
+      explanation:
+        "First, let's recall the retrieval scale problem. A production RAG system may have 100M+ passage embeddings, each 768 dimensions. Computing inner product with all 100M vectors per query is O(100M) — far too slow.\n\n**Step 1:** Understand brute force limitations. Option A (brute-force exact search) requires O(N) dot products per query, where N is the corpus size. At 100M vectors, this is computationally infeasible for real-time retrieval.\n\n**Step 2:** Understand FAISS IVF-PQ. FAISS (Johnson et al., 2017) is the standard library for billion-scale similarity search. IVF (Inverted File Index) partitions the vector space into Voronoi cells — at query time, only the nearest cells are searched. PQ (Product Quantization) compresses each 768-dim float vector into ~64 bytes (from ~3072 bytes), reducing memory 10-100x.\n\n**Step 3:** Understand why trees and LSH are not the answer. Binary search trees (Option C) do not scale well to high-dimensional spaces (the curse of dimensionality). LSH with random projections (Option D) is used but not the most common production choice for dense retrieval.\n\n**Step 4:** Recognise FAISS's dominance. DPR, RAG, and most production dense retrieval systems use FAISS as the ANN backend. IVF-PQ achieves sub-millisecond retrieval over 100M+ vectors with modest recall loss (~95%).\n\nTherefore, the answer is FAISS (Facebook AI Similarity Search), particularly IVF-PQ (Inverted File Index with Product Quantization).",
       hints: [
-        "Brute force O(N) per query - infeasible for N > 10M. FAISS IVF-PQ achieves O(sqrt(N)) probe cost.",
-        "Product quantization: split 768-dim vector into 8 subspaces of 96 dims, quantize each to 256 centroids. 8 bytes instead of 3072.",
+        "Brute-force search is O(N) per query — N = 100M means computing 100M dot products per query. Not feasible. What indexing strategy makes this faster?",
+        "Product Quantization: a 768-dim float vector can be split into 8 sub-vectors of 96 dims each. Each sub-vector is quantized to one of 256 centroids (1 byte per sub-vector). Total: 8 bytes instead of 3072 bytes — a 384x reduction in memory.",
       ],
     },
     {
@@ -2509,10 +2518,11 @@ const extra: Record<string, Question[]> = {
       difficulty: "hard",
       question: "ColBERT (Khattab & Zaharia, 2020) uses a late-interaction architecture where query and document token embeddings interact at retrieval time via MaxSim, giving higher retrieval quality than bi-encoders while maintaining efficiency through pre-computed document embeddings.",
       correctAnswer: "true",
-      explanation: "ColBERT encodes queries and documents as matrices of token embeddings. Similarity: MaxSim(Q,D) = sum_{q in Q} max_{d in D} q\\cdotd - each query token finds its best matching document token. Documents are encoded offline; at query time only O(|Q|*|D|) dot products are needed. This late interaction captures fine-grained semantic matching that single-vector bi-encoders compress away. ColBERT outperforms bi-encoders and is competitive with cross-encoders at retrieval speed.",
+      explanation:
+        "First, let's recall bi-encoder retrieval. A bi-encoder encodes the query into a single vector and the document into a single vector, then computes cosine similarity. This is efficient — documents are encoded once and stored — but loses fine-grained token-level information.\n\n**Step 1:** Understand ColBERT's late-interaction architecture. ColBERT (Khattab & Zaharia, 2020) encodes both query and document as matrices of per-token embeddings (not single vectors). At retrieval time, it computes the MaxSim operator: MaxSim(Q, D) = sum_{q in Q} max_{d in D} q · d. Each query token finds its best-matching document token, then these matching scores are summed.\n\n**Step 2:** Understand the efficiency trade-off. Documents are encoded offline (stored as matrices), so encoding cost is paid once. At query time, the query is encoded on-the-fly, and only O(|Q| x |D|) dot products are computed — far less than a cross-encoder's O(|Q| x |D|) full interaction but more than a bi-encoder's single dot product. This is the \"late interaction\" — deferring token-level interaction to query time.\n\n**Step 3:** Understand why this outperforms bi-encoders. Bi-encoders compress an entire document into one vector, losing which specific tokens matched. ColBERT's MaxSim preserves which query token matched which document token, capturing richer semantic alignment.\n\n**Step 4:** Verify the statement. The statement says ColBERT uses late-interaction via MaxSim, is higher quality than bi-encoders, and maintains efficiency via pre-computed document embeddings. All of these are accurate.\n\nTherefore, the statement is true.",
       hints: [
-        "Bi-encoder: one vector per document, cosine similarity. ColBERT: token-level matrix, MaxSim. Richer interaction.",
-        "MaxSim: each query token votes for the document it matches best. Sum over query tokens - weighted voting across all query terms.",
+        "Bi-encoder: one document vector vs one query vector -> single cosine similarity. ColBERT: many query tokens x many document tokens -> MaxSim. What information does MaxSim preserve that the bi-encoder's single similarity score loses?",
+        "Pre-computed document embeddings mean the document encoding is done offline once. Only the query encoding and the MaxSim computation happen at query time. Why is this more efficient than a cross-encoder?",
       ],
     },
   ],

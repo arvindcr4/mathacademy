@@ -1084,7 +1084,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The SHIVA trial randomized patients to molecularly matched vs. physician\'s choice treatment and found no PFS benefit, illustrating that simple biomarker-drug matching without understanding tumor biology context often fails.",
+        "First, let's recall that the SHIVA trial was a landmark precision medicine trial in oncology that tested a molecularly targeted therapy approach. " +
+        "The trial randomized patients to either molecularly matched therapy (based on genomic profiling) or physician's choice of treatment. " +
+        "The key finding was surprising: there was no significant improvement in progression-free survival for molecularly matched versus unmatched therapies overall. " +
+        "**Step 1:** Understand that SHIVA randomized patients to molecularly matched versus physician's choice treatment. " +
+        "**Step 2:** Recognize that the trial found no significant improvement in progression-free survival for the molecularly matched group. " +
+        "**Step 3:** Note that this result highlighted the complexity of tumor biology - simple biomarker-drug matching without understanding context often fails. " +
+        "Therefore, the answer is no significant improvement in progression-free survival for molecularly matched versus unmatched therapies overall, highlighting the complexity of tumor biology.",
       hints: [
         "The SHIVA result was surprising and cautionary - simple genomic matching is not always sufficient.",
         "Cancer biology is complex: a mutation does not always mean the corresponding targeted drug will work.",
@@ -1106,7 +1112,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Drug repurposing leverages existing safety and pharmacokinetic data for approved or abandoned compounds, dramatically reducing development time and cost compared to de novo drug discovery.",
+        "First, let's recall that traditional drug discovery involves identifying a new molecular target and developing a compound from scratch, which takes many years and billions of dollars. " +
+        "Drug repurposing (also called repositioning) takes a different approach by finding new therapeutic uses for drugs that have already been approved or are already in development for other conditions. " +
+        "Since safety and pharmacokinetic data already exist for these compounds, the development timeline and cost are dramatically reduced. " +
+        "**Step 1:** Understand that drug repurposing finds new therapeutic uses for drugs already approved or in development for other conditions. " +
+        "**Step 2:** Recognize that this leverages existing safety and pharmacokinetic data, avoiding the need for early-stage safety testing. " +
+        "**Step 3:** Note that a famous example is thalidomide, originally developed as a sedative, which was repurposed for multiple myeloma and leprosy. " +
+        "Therefore, the answer is finding new therapeutic uses for drugs already approved or in development for other conditions.",
       hints: [
         "A famous example: thalidomide, originally a sedative, was repurposed for multiple myeloma.",
         "If safety is already established, the development timeline to a new indication is much shorter.",
@@ -1120,7 +1132,13 @@ const questions: Record<string, Question[]> = {
         "Knowledge graphs for drug repurposing integrate heterogeneous biomedical data (genes, drugs, diseases, proteins) as nodes and relationships between them as edges to predict novel drug-disease associations.",
       correctAnswer: "True",
       explanation:
-        "Biomedical knowledge graphs (e.g., Hetionet) represent drugs, genes, diseases, and pathways as nodes with typed edges (treats, binds, causes); graph embedding and link prediction then score plausible new drug-disease edges.",
+        "First, let's recall that knowledge graphs are graph-structured databases that represent biomedical entities as nodes and relationships between them as edges. " +
+        "In drug repurposing, these graphs integrate heterogeneous data sources including genes, drugs, diseases, proteins, and pathways. " +
+        "By analyzing the patterns of connections, computational methods can predict novel drug-disease associations that may represent repurposing opportunities. " +
+        "**Step 1:** Understand that biomedical knowledge graphs represent drugs, genes, diseases, and pathways as nodes with typed edges (treats, binds, causes). " +
+        "**Step 2:** Recognize that graph embedding and link prediction methods can score plausible new drug-disease edges in the existing graph. " +
+        "**Step 3:** Note that examples like Hetionet demonstrate this approach, enabling computational prediction of novel drug-disease associations. " +
+        "Therefore, the answer is True.",
       hints: [
         "A knowledge graph connects entities - think of drugs, targets, diseases all linked by biological relationships.",
         "Link prediction asks: given the existing graph, which drug-disease edge is most likely to be true?",
@@ -1140,7 +1158,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "KG embedding methods learn low-dimensional vectors for entities and relations such that the embedding geometry preserves relational structure - TransE models relation as translation (h + r \\approx t), enabling scoring of candidate drug-disease links.",
+        "First, let's recall that knowledge graph embedding methods learn low-dimensional vector representations of entities and relationships in a knowledge graph. " +
+        "These embeddings preserve the structural relationships in the graph, such that similar entities or relationships have similar vector representations. " +
+        "Methods like TransE, RotatE, and DistMult learn these embeddings by optimizing an objective that encodes relational structure. " +
+        "**Step 1:** Understand that knowledge graph embedding methods learn low-dimensional vectors for entities and relations. " +
+        "**Step 2:** Recognize that TransE models relations as translations in embedding space (h + r ~ t), where h is head entity, r is relation, and t is tail entity. " +
+        "**Step 3:** Note that these embeddings preserve relational structure, enabling scoring of candidate drug-disease links for repurposing predictions. " +
+        "Therefore, the answer is Knowledge graph embedding methods (e.g., TransE, RotatE, DistMult).",
       hints: [
         "These methods learn embeddings of nodes and edges jointly, so entity vectors encode the graph topology.",
         "TransE is named because it models a relation as a translation (vector addition) in embedding space.",
@@ -1163,7 +1187,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "SIR divides the population into Susceptible (can get infected), Infectious (currently spreading the disease), and Recovered (immune or removed) compartments, with transitions governed by transmission and recovery rates.",
+        "First, let's recall that the SIR compartmental model is one of the simplest and most widely used frameworks for epidemic modeling. " +
+        "It divides a population into three compartments based on disease status: Susceptible, Infectious, and Recovered. " +
+        "Individuals transition between these compartments based on transmission and recovery rates. " +
+        "**Step 1:** Understand that S (Susceptible) represents individuals who can become infected. " +
+        "**Step 2:** Recognize that I (Infectious) represents individuals who are currently infected and can transmit the disease. " +
+        "**Step 3:** Note that R (Recovered) represents individuals who have recovered and are either immune or removed from the population. " +
+        "Therefore, the answer is Susceptible, Infected (Infectious), Recovered.",
       hints: [
         "The first compartment contains people who have not yet had the disease.",
         "The last compartment includes people who can no longer spread the infection.",
@@ -1177,7 +1207,13 @@ const questions: Record<string, Question[]> = {
         "ML-based epidemic forecasting models like those used by the CDC FluSight challenge have consistently outperformed mechanistic SIR-type models across all time horizons.",
       correctAnswer: "False",
       explanation:
-        "Ensemble and mechanistic-ML hybrid models tend to perform best; purely ML models often excel at short-term forecasts but mechanistic models may outperform at longer horizons where biological constraints matter more.",
+        "First, let's recall that epidemic forecasting models can be broadly categorized into mechanistic models (like SIR) that incorporate biological assumptions, and purely data-driven ML models that learn patterns from historical data. " +
+        "Different models have different strengths depending on the forecast time horizon. " +
+        "The CDC FluSight challenge has provided benchmark data showing that no single approach consistently dominates. " +
+        "**Step 1:** Understand that purely ML models often excel at short-term forecasts because they can capture recent trends and patterns in the data. " +
+        "**Step 2:** Recognize that mechanistic models incorporate biological constraints that remain relevant at longer horizons where pure data-driven models may produce implausible predictions. " +
+        "**Step 3:** Note that ensemble and hybrid models that combine mechanistic and ML approaches tend to perform best overall across different time horizons. " +
+        "Therefore, the answer is False.",
       hints: [
         "FluSight results show that no single model dominates - ensemble approaches win.",
         "Think about what happens at longer time horizons: pure data-driven models can violate biological constraints.",
@@ -1197,7 +1233,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Mobility data (from Google, Apple, SafeGraph) served as a proxy for contact rate changes - reduction in mobility correlated with reduced transmission rate \\beta in SIR-type models, helping quantify intervention effectiveness.",
+        "First, let's recall that during COVID-19, mobility data from smartphones became an important data source for epidemic modeling. " +
+        "Companies like Google, Apple, and SafeGraph collected aggregated location data showing how much people moved around. " +
+        "This mobility data served as a proxy for contact rates, which directly affect disease transmission. " +
+        "**Step 1:** Understand that mobility data shows how much people moved around and gathered, which correlates with contact rates. " +
+        "**Step 2:** Recognize that reductions in mobility (from social distancing) correlated with reduced transmission rates in epidemic models. " +
+        "**Step 3:** Note that researchers used this data to inform transmission parameters and quantify the effectiveness of interventions like lockdowns and social distancing. " +
+        "Therefore, the answer is estimate contact rate reductions from social distancing interventions and inform transmission parameters.",
       hints: [
         "Mobility data tells you how much people moved around - more movement implies more potential contacts.",
         "In epidemic models, the transmission rate depends on how frequently susceptible and infectious people come into contact.",
@@ -1220,7 +1262,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Digital phenotyping captures passively sensed behaviors - GPS mobility, screen time, call/text frequency, accelerometry - and infers mental health states like depression or mania episodes without active user input.",
+        "First, let's recall that digital phenotyping is an approach that uses passive data collected from smartphones to infer mental health states. " +
+        "Modern smartphones continuously collect data about user behavior through sensors (GPS, accelerometer) and usage patterns (app usage, call logs). " +
+        "This data can reveal behavioral patterns that correlate with mental health conditions without requiring active user input. " +
+        "**Step 1:** Understand that digital phenotyping uses passively sensed behaviors like GPS mobility, screen time, and call/text frequency. " +
+        "**Step 2:** Recognize that accelerometry data can track activity levels and sleep patterns. " +
+        "**Step 3:** Note that these behavioral indicators can be used to infer mental health states like depression or mania episodes. " +
+        "Therefore, the answer is behavioral and psychological indicators (mood, activity, social patterns) from sensor and usage data.",
       hints: [
         "Think about what your phone knows about you without you telling it: location, app usage, movement.",
         "The goal is to detect changes in behavior that correlate with mental health episodes.",
@@ -1234,7 +1282,13 @@ const questions: Record<string, Question[]> = {
         "NLP analysis of social media text (e.g., Twitter posts) has been validated as a reliable, HIPAA-compliant replacement for clinical psychiatric assessment.",
       correctAnswer: "False",
       explanation:
-        "Social media NLP shows research promise for population-level mental health surveillance but is not a clinical diagnostic tool - it lacks the clinical validity, individual-level accuracy, and privacy protections required for HIPAA-compliant patient care.",
+        "First, let's recall that social media platforms like Twitter have been studied as a data source for mental health research because people often express their mental states in posts. " +
+        "Researchers have developed NLP models to analyze this text and detect signals related to mental health conditions. " +
+        "However, there is a significant gap between research applications and clinical deployment. " +
+        "**Step 1:** Understand that social media NLP shows promise for population-level mental health surveillance research. " +
+        "**Step 2:** Recognize that it is not a clinical diagnostic tool because it lacks clinical validity and individual-level accuracy. " +
+        "**Step 3:** Note that it also lacks the privacy protections required for HIPAA-compliant patient care. " +
+        "Therefore, the answer is False.",
       hints: [
         "Population-level trends from social media are different from individual-level clinical diagnosis.",
         "Clinical assessments require validated instruments and professional judgment - social media analysis cannot replace these.",
@@ -1254,7 +1308,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Suicide risk models face dual harm from errors: false positives trigger costly, stigmatizing involuntary holds; false negatives miss at-risk patients. Historical EHR biases also risk perpetuating racial and socioeconomic disparities in care.",
+        "First, let's recall that AI systems for predicting suicide risk are being developed using EHR and behavioral data. " +
+        "These models face a dual-harm problem: both false positives and false negatives carry serious consequences. " +
+        "Additionally, historical biases in healthcare data can be perpetuated by these models. " +
+        "**Step 1:** Understand that false positives can lead to unnecessary and potentially harmful interventions like involuntary psychiatric holds. " +
+        "**Step 2:** Recognize that false negatives miss at-risk individuals who may harm themselves. " +
+        "**Step 3:** Note that models trained on historical EHR data may reflect and perpetuate existing racial and socioeconomic disparities in mental health care. " +
+        "Therefore, the answer is that high false positive rates can lead to unnecessary and potentially harmful interventions, while false negatives miss at-risk individuals, and the models may reflect historical disparities in care.",
       hints: [
         "Think about the consequences of being wrong in either direction - too many alerts vs. missing someone at risk.",
         "If the training data reflects historical disparities in who received care, those disparities are encoded in the model.",
@@ -1277,7 +1337,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The commercial algorithm predicted future healthcare costs as a proxy for health needs; because Black patients had historically lower access to care (and thus lower costs), the model systematically assigned them lower risk scores despite similar or worse health status.",
+        "First, let's recall that the 2019 Obermeyer et al. study was a landmark investigation into racial bias in healthcare algorithms. " +
+        "The study examined a widely used commercial algorithm that predicted patient risk scores to guide care management decisions. " +
+        "The key finding was that the algorithm used healthcare costs as a proxy for health needs, which introduced racial bias. " +
+        "**Step 1:** Understand that the algorithm predicted future healthcare costs as a proxy for health needs. " +
+        "**Step 2:** Recognize that Black patients historically had lower access to healthcare due to systemic inequities, resulting in lower healthcare spending. " +
+        "**Step 3:** Note that because the model used cost as a proxy, it systematically assigned Black patients lower risk scores despite having similar or worse health status compared to white patients. " +
+        "Therefore, the answer is The algorithm used healthcare cost as a proxy for health need, underestimating the health needs of Black patients who had historically lower healthcare spending.",
       hints: [
         "The proxy variable used - healthcare cost - is itself shaped by systemic inequities in healthcare access.",
         "Lower spending does not mean better health if some groups have historically had less access to care.",
@@ -1291,7 +1357,13 @@ const questions: Record<string, Question[]> = {
         "It is mathematically impossible to simultaneously satisfy demographic parity, equalized odds, and calibration fairness criteria in a binary classifier when base rates differ across groups.",
       correctAnswer: "True",
       explanation:
-        "Chouldechova\'s impossibility theorem and Kleinberg et al. prove that when base rates differ between groups, no classifier can simultaneously satisfy calibration and equal false positive/negative rates - fairness criteria are fundamentally in tension.",
+        "First, let's recall that when developing fair machine learning models, several different fairness criteria have been proposed. " +
+        "These include demographic parity (equal positive prediction rates), equalized odds (equal true positive and false positive rates), and calibration (predictions are correct on average across groups). " +
+        "A key mathematical result shows that these criteria cannot all be satisfied simultaneously when base rates differ between groups. " +
+        "**Step 1:** Understand Chouldechova's impossibility theorem and Kleinberg et al.'s result that when base rates differ between groups. " +
+        "**Step 2:** Recognize that no classifier can simultaneously satisfy calibration and equal false positive/negative rates. " +
+        "**Step 3:** Note that this means fairness criteria are fundamentally in tension and must be traded off based on the specific application context. " +
+        "Therefore, the answer is True.",
       hints: [
         "When disease prevalence differs between groups, making a test equally accurate for all cannot also make it equally calibrated across groups.",
         "This is a mathematical impossibility result, not just an empirical observation.",
@@ -1311,7 +1383,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Comprehensive fairness audits disaggregate performance by race, sex, age, insurance status, site, and intersectional groups - overall metrics can mask severe underperformance in minority subgroups that are underrepresented in training data.",
+        "First, let's recall that healthcare AI models are often evaluated using overall performance metrics like AUC, but these can mask disparities in subgroups. " +
+        "Comprehensive fairness audits require disaggregating performance across multiple demographic dimensions to identify where the model underperforms. " +
+        "This is especially important because minority subgroups are often underrepresented in training data. " +
+        "**Step 1:** Understand that comprehensive fairness audits disaggregate performance by race, sex, age, insurance status, and geographic region. " +
+        "**Step 2:** Recognize that overall metrics can mask severe underperformance in minority subgroups. " +
+        "**Step 3:** Note that intersectional analysis (e.g., Black women, elderly men) may reveal disparities invisible to single-axis subgroup analysis. " +
+        "Therefore, the answer is race/ethnicity, sex, age, socioeconomic status, geographic region, and any other clinically relevant subgroups.",
       hints: [
         "Overall AUC can mask severe underperformance in minority subgroups that are underrepresented in training data.",
         "Intersectional analysis (e.g., Black women, elderly men) may reveal disparities invisible to single-axis subgroup analysis.",
@@ -1334,7 +1412,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The VAE latent space encodes molecules as continuous vectors; nearby points correspond to chemically similar molecules, enabling gradient-based optimization and interpolation to navigate chemical space toward desired property targets.",
+        "First, let's recall that Variational Autoencoders (VAEs) are generative models that learn a compressed representation of data in a latent space. " +
+        "In molecular generation, VAEs learn to encode molecules as continuous vectors in a latent space, where each point represents a molecule. " +
+        "The key advantage of this continuous representation is that it enables interpolation and gradient-based optimization. " +
+        "**Step 1:** Understand that the VAE latent space encodes molecules as continuous vectors, where nearby points correspond to chemically similar molecules. " +
+        "**Step 2:** Recognize that this smooth, continuous representation enables interpolation between molecules to explore intermediate structures. " +
+        "**Step 3:** Note that gradient-based optimization can be applied in this space to navigate toward molecules with desired property targets. " +
+        "Therefore, the answer is To provide a continuous, smooth representation of chemical space that enables interpolation and optimization between molecules.",
       hints: [
         "A smooth, continuous space allows you to move gradually between two molecules and explore intermediate structures.",
         "Bayesian optimization can be applied in this continuous space to find molecules with target properties.",
@@ -1348,7 +1432,13 @@ const questions: Record<string, Question[]> = {
         "Diffusion models have been applied to molecular generation by learning to denoise molecular structures from Gaussian noise back to valid 3D conformations.",
       correctAnswer: "True",
       explanation:
-        "Models like DiffSBDD, TargetDiff, and DiffMol apply the diffusion framework to 3D molecular geometry - iteratively refining random noise into valid atom coordinates and types conditioned on a protein pocket or desired properties.",
+        "First, let's recall that diffusion models are a class of generative models that learn to reverse a noise process. " +
+        "They have achieved remarkable success in image generation (DALL-E, Stable Diffusion) and are now being applied to molecular generation. " +
+        "In molecular generation, diffusion models learn to denoise molecular structures, starting from random noise and iteratively refining toward valid 3D conformations. " +
+        "**Step 1:** Understand that diffusion models like DiffSBDD, TargetDiff, and DiffMol apply the diffusion framework to 3D molecular geometry. " +
+        "**Step 2:** Recognize that these models iteratively refine random noise into valid atom coordinates and types. " +
+        "**Step 3:** Note that they can be conditioned on a protein pocket or desired properties to generate molecules with specific characteristics. " +
+        "Therefore, the answer is True.",
       hints: [
         "Diffusion models learn to reverse a noise process - the same framework used for image generation (DALL-E, Stable Diffusion).",
         "Applying this to molecules means starting from random atom positions and refining them toward a valid structure.",
@@ -1368,7 +1458,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Standard metrics (validity, uniqueness, novelty) are necessary but insufficient; generated molecules must also be drug-like (Lipinski, QED) and synthetically accessible (SA score, ASKCOS route prediction) to be practically useful.",
+        "First, let's recall that molecular generation models can produce vast numbers of candidate molecules, but basic metrics like validity and novelty are not enough. " +
+        "For practical drug discovery applications, generated molecules must be drug-like and synthesizable. " +
+        "This includes satisfying Lipinski's Rule of Five for drug-like properties and having a predicted synthetic route. " +
+        "**Step 1:** Understand that standard metrics like validity, uniqueness, and novelty are necessary but insufficient for evaluating molecular generation. " +
+        "**Step 2:** Recognize that generated molecules must be drug-like, satisfying properties like Lipinski's Rule of Five and QED (Quantitative Estimate of Drug-likeness). " +
+        "**Step 3:** Note that synthesizability is critical - molecules must have a predicted synthetic route (using tools like ASKCOS) to be practically useful. " +
+        "Therefore, the answer is drug-like and synthesizable - satisfying properties like Lipinski's Rule of Five and having a predicted synthetic route.",
       hints: [
         "Generating a valid SMILES is easy - the hard part is generating something a chemist can actually make.",
         "Lipinski\'s Rule of Five captures the properties of orally bioavailable drugs: molecular weight, logP, H-bond donors/acceptors.",
