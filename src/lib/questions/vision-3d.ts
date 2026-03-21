@@ -2198,4 +2198,109 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
 
 Object.assign(questions, additionalVision3dQuestions)
 
+const moreVision3dQuestions: Record<string, Question[]> = {
+  'nerf-volume-rendering': [
+    {
+      id: 'q-cv3d-kp43-1',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'The NeRF volume rendering equation computes the expected color C(r) of a ray r(t) = o + td. Which expression is correct?',
+      options: [
+        'C(r) = ∫ T(t) · σ(r(t)) · c(r(t), d) dt, where T(t) = exp(−∫₀ᵗ σ(r(s)) ds) is the accumulated transmittance from ray origin to t',
+        'C(r) = ∫ σ(r(t)) · c(r(t), d) dt, where σ is the volume density and c is the emitted color at each point',
+        'C(r) = ∑ᵢ αᵢ · cᵢ where αᵢ = 1 − exp(−σᵢ·δᵢ) and the transmittance Tᵢ = ∏ⱼ<ᵢ (1 − αⱼ) is omitted',
+        'C(r) = softmax(σ(r(t₁)), …, σ(r(tₙ))) · c, using softmax to normalize opacity weights',
+      ],
+      correctAnswer: 0,
+      explanation: 'NeRF (Mildenhall et al. 2020) models the scene as a continuous volumetric radiance field. The rendering integral is C(r) = ∫_{t_n}^{t_f} T(t)·σ(r(t))·c(r(t),d) dt where T(t) = exp(−∫_{t_n}^t σ(r(s))ds) is the accumulated transmittance — the probability that the ray travels from t_n to t without hitting any particle. In discretised form: Cˆ(r) = ∑ᵢ Tᵢ·(1−exp(−σᵢδᵢ))·cᵢ where Tᵢ = exp(−∑ⱼ<ᵢ σⱼδⱼ). This is the standard alpha-compositing formula from classical volume rendering.',
+      hints: [
+        'Transmittance T(t): the fraction of light that reaches point t unobstructed — multiply all previous absorption terms.',
+        'The discrete alpha values αᵢ = 1 − exp(−σᵢδᵢ) convert density × interval into opacity; Tᵢ = ∏ⱼ<ᵢ(1 − αⱼ) is accumulated transmittance.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp43-2',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'NeRF uses positional encoding γ(p) = (sin(2⁰πp), cos(2⁰πp), …, sin(2^{L−1}πp), cos(2^{L−1}πp)) for input coordinates. Why is this encoding necessary?',
+      options: [
+        'Positional encoding normalises the input coordinates to the range [−1, 1] for numerical stability during training',
+        'MLPs are biased toward learning low-frequency functions (spectral bias); positional encoding maps inputs into a higher-frequency Fourier feature space, enabling the MLP to represent sharp edges, fine textures, and high-frequency geometry',
+        'Positional encoding converts Cartesian coordinates to spherical coordinates, which are more natural for radiance fields',
+        'Positional encoding is required to break the symmetry between x, y, and z coordinates in the MLP',
+      ],
+      correctAnswer: 1,
+      explanation: 'MLPs with ReLU activations exhibit spectral bias (Rahaman et al. 2019): they learn low-frequency components of a function much faster than high-frequency ones. Without encoding, a NeRF MLP learns a blurry radiance field. The Fourier feature mapping γ(p) with L=10 for positions and L=4 for view directions lifts inputs to a 2L-dimensional sinusoidal basis, allowing the MLP to represent high-frequency signals efficiently. This was independently theorised as the Neural Tangent Kernel perspective in "Fourier Features Let Networks Learn High Frequency Functions in Low Dimensional Domains" (Tancik et al. 2020).',
+      hints: [
+        'Spectral bias: without encoding, the MLP converges to a blurry average of the scene — losing fine details.',
+        'L=10 for (x,y,z) gives 60 encoding dimensions; L=4 for viewing direction (θ,φ) gives 24 dimensions.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp43-3',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'NeRF training convergence on a single scene typically requires 100K–300K gradient steps and takes hours to days on a single GPU, which is the primary motivation for instant-NGP and subsequent accelerated NeRF methods.',
+      correctAnswer: 'True',
+      explanation: 'Original NeRF training takes 1–2 days on a single V100 GPU for 300K iterations over one scene. The bottleneck is querying the MLP at thousands of points per ray for millions of rays. Instant-NGP (Müller et al. 2022) replaces the large MLP with a multi-resolution hash grid encoding + tiny MLP, reducing training to 5 seconds and rendering to real-time. TensoRF, Zip-NeRF, and Gaussian Splatting are further alternatives addressing the same convergence speed problem.',
+      hints: [
+        'Per-scene optimisation: NeRF trains one model per scene — it does not generalise across scenes without additional work.',
+        "Instant-NGP's multi-resolution hash grid amortises the spatial structure, making the MLP query much cheaper.",
+      ],
+    },
+  ],
+  'gaussian-splatting-core': [
+    {
+      id: 'q-cv3d-kp44-1',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: '3D Gaussian Splatting (3DGS) achieves real-time novel view synthesis at 100+ FPS — far faster than NeRF. What is the primary architectural reason for this speed advantage?',
+      options: [
+        '3DGS uses a smaller MLP than NeRF (3 layers instead of 8), reducing per-sample compute',
+        '3DGS represents the scene as explicit 3D Gaussians that are rasterised via differentiable splatting onto the image plane — eliminating per-ray MLP queries entirely and leveraging GPU-optimised tile-based rasterisation that is orders of magnitude faster than volumetric ray marching',
+        '3DGS trains on lower-resolution images (128×128) and upsamples to full resolution with a super-resolution network',
+        '3DGS uses pre-computed light fields that cache all possible view directions, trading memory for speed',
+      ],
+      correctAnswer: 1,
+      explanation: '3DGS (Kerbl et al. 2023) initialises Gaussians from SfM point clouds, each defined by position μ, covariance Σ (represented as rotation R and scale S: Σ=RSS^T R^T), opacity α, and view-dependent colour (spherical harmonics coefficients). Rendering projects 3D Gaussians to 2D screen-space ellipses via Σ′ = JWΣ(JW)^T and sorts them by depth for alpha compositing. The tile-based rasteriser processes 16×16 pixel tiles in parallel on the GPU. No MLP query is needed at render time — each Gaussian is an explicit, parameterised primitive evaluated analytically.',
+      hints: [
+        'Alpha compositing of sorted Gaussians in screen space is a classical graphics operation, easily GPU-parallelised.',
+        'Spherical harmonics for colour: degree-3 SH gives view-dependent colour with 48 coefficients per Gaussian.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp44-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: '3D Gaussian Splatting optimises scene parameters (Gaussian positions, covariances, opacities, and spherical harmonic colour coefficients) using standard backpropagation through a differentiable rasteriser with a photometric loss against training images.',
+      correctAnswer: 'True',
+      explanation: "3DGS trains all Gaussian parameters end-to-end via gradient descent. The differentiable tile rasteriser (CUDA implementation) allows gradients to flow back from pixel-level L1 + SSIM photometric loss to each Gaussian's μ, Σ, α, and SH coefficients. Adaptive density control (splitting, cloning, pruning) is applied every 100 iterations based on positional gradient magnitudes. After training (~30 minutes on a V100), the explicit Gaussian scene can be rendered at real-time rates.",
+      hints: [
+        'The CUDA rasteriser is custom-written with backward passes for each Gaussian parameter — not using standard autograd.',
+        'Loss = λ·L1(render, gt) + (1−λ)·(1−SSIM(render, gt)) with λ=0.8.',
+      ],
+    },
+    {
+      id: 'q-cv3d-kp44-3',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'PointNet (Qi et al. 2017) processes unordered point clouds by applying shared MLPs to each point independently, then using a global max pooling operation. Why is max pooling specifically chosen as the aggregation function?',
+      options: [
+        'Max pooling is differentiable everywhere, unlike mean pooling which has zero gradient for non-maximum elements',
+        'Max pooling produces a permutation-invariant global feature: regardless of the order points are fed into the network, max pooling always selects the same maximum-response elements — making the model insensitive to point ordering',
+        'Max pooling reduces memory usage by a factor equal to the number of points, enabling processing of large point clouds',
+        'Max pooling selects the geometrically most distant point from the centroid, providing a compact shape descriptor',
+      ],
+      correctAnswer: 1,
+      explanation: "Point clouds have no canonical ordering — the same shape can be represented as any permutation of its points. PointNet's key insight: applying a symmetric function (one whose output is invariant to input permutation) solves this. Max pooling is a symmetric function: max(f(p₁), f(p₂), …) = max(f(p_{π(1)}), f(p_{π(2)}), …) for any permutation π. The network architecture: T-Net (input transform) → shared MLP → T-Net (feature transform) → shared MLP → max pool → global feature → classification/segmentation head.",
+      hints: [
+        'Symmetry requirement: any function g(p₁, …, pₙ) = g(p_{π(1)}, …, p_{π(n)}) for all π is a valid aggregation for unordered sets.',
+        "Max pooling is also a 'critical point set' selector: the global feature is determined by a sparse subset of points that achieve the maximum response — PointNet's theoretical robustness guarantee.",
+      ],
+    },
+  ],
+}
+
+Object.assign(questions, moreVision3dQuestions)
+
 export default questions;
