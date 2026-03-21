@@ -12373,4 +12373,222 @@ export const courses: Course[] = [
       },
     ],
   },
+  {
+    id: "ai-engineering-sdks",
+    slug: "ai-engineering-sdks",
+    name: "AI Engineering SDKs & APIs",
+    description:
+      "Master the APIs and SDKs for building AI applications: OpenAI, Anthropic, Google AI, LangChain, and production patterns.",
+    category: "software-engineering",
+    icon: "🔌",
+    color: "#3B82F6",
+    topicCount: 6,
+    estimatedHours: 10,
+    topics: [
+      {
+        id: "openai-api",
+        slug: "openai-api",
+        name: "OpenAI API Mastery",
+        description:
+          "Complete guide to OpenAI's API including chat, embeddings, and advanced features.",
+        knowledgePoints: [
+          {
+            id: "sdk-kp-1",
+            slug: "openai-auth-setup",
+            name: "Authentication & Client Setup",
+          },
+          {
+            id: "sdk-kp-2",
+            slug: "chat-completions-api",
+            name: "Chat Completions API",
+          },
+          {
+            id: "sdk-kp-3",
+            slug: "streaming-responses-openai",
+            name: "Streaming with OpenAI",
+          },
+          {
+            id: "sdk-kp-4",
+            slug: "function-calling-openai",
+            name: "Function Calling & Tools",
+          },
+          {
+            id: "sdk-kp-5",
+            slug: "openai-embeddings",
+            name: "Embeddings API",
+          },
+        ],
+      },
+      {
+        id: "anthropic-api",
+        slug: "anthropic-api",
+        name: "Anthropic Claude API",
+        description:
+          "Working with Claude through Anthropic's Messages API.",
+        knowledgePoints: [
+          {
+            id: "sdk-kp-6",
+            slug: "claude-messages-api",
+            name: "Messages API Structure",
+          },
+          {
+            id: "sdk-kp-7",
+            slug: "system-prompt-patterns",
+            name: "System Prompts & Prompt Caching",
+          },
+          {
+            id: "sdk-kp-8",
+            slug: "claude-tool-use",
+            name: "Tool Use with Claude",
+          },
+          {
+            id: "sdk-kp-9",
+            slug: "claude-vision",
+            name: "Vision & Multimodal",
+          },
+          {
+            id: "sdk-kp-10",
+            slug: "prompt-caching",
+            name: "Prompt Caching for Cost Optimization",
+          },
+        ],
+      },
+      {
+        id: "google-ai-api",
+        slug: "google-ai-api",
+        name: "Google AI & Vertex AI",
+        description:
+          "Using Gemini and other Google AI services.",
+        knowledgePoints: [
+          {
+            id: "sdk-kp-11",
+            slug: "gemini-api-basics",
+            name: "Gemini API Fundamentals",
+          },
+          {
+            id: "sdk-kp-12",
+            slug: "vertex-ai-vs-aistudio",
+            name: "Vertex AI vs AI Studio",
+          },
+          {
+            id: "sdk-kp-13",
+            slug: "google-grounding",
+            name: "Grounding with Google Search",
+          },
+          {
+            id: "sdk-kp-14",
+            slug: "google-context-caching",
+            name: "Context Caching",
+          },
+          {
+            id: "sdk-kp-15",
+            slug: "gemini-safety-settings",
+            name: "Safety Settings & Content Filtering",
+          },
+        ],
+      },
+      {
+        id: "langchain-basics",
+        slug: "langchain-basics",
+        name: "LangChain Fundamentals",
+        description:
+          "Building LLM applications with LangChain framework.",
+        knowledgePoints: [
+          {
+            id: "sdk-kp-16",
+            slug: "langchain-architecture",
+            name: "LangChain Architecture",
+          },
+          {
+            id: "sdk-kp-17",
+            slug: "chains-lcel",
+            name: "Chains & LCEL",
+          },
+          {
+            id: "sdk-kp-18",
+            slug: "langchain-retrievers",
+            name: "Retrievers & Document Loaders",
+          },
+          {
+            id: "sdk-kp-19",
+            slug: "langchain-agents",
+            name: "Agents & Tools",
+          },
+          {
+            id: "sdk-kp-20",
+            slug: "langsmith-debugging",
+            name: "LangSmith for Debugging",
+          },
+        ],
+      },
+      {
+        id: "llamaindex-rag",
+        slug: "llamaindex-rag",
+        name: "LlamaIndex for RAG",
+        description:
+          "Building production RAG systems with LlamaIndex.",
+        knowledgePoints: [
+          {
+            id: "sdk-kp-21",
+            slug: "llamaindex-overview",
+            name: "LlamaIndex Architecture",
+          },
+          {
+            id: "sdk-kp-22",
+            slug: "node-parser",
+            name: "Node Parsers & Chunking",
+          },
+          {
+            id: "sdk-kp-23",
+            slug: "index-types",
+            name: "Index Types (Vector, Summary, Keyword)",
+          },
+          {
+            id: "sdk-kp-24",
+            slug: "query-engines",
+            name: "Query Engines",
+          },
+          {
+            id: "sdk-kp-25",
+            slug: "llamaindex-evaluation",
+            name: "Built-in Evaluation",
+          },
+        ],
+      },
+      {
+        id: "production-patterns",
+        slug: "production-patterns",
+        name: "Production API Patterns",
+        description:
+          "Best practices for production AI applications.",
+        knowledgePoints: [
+          {
+            id: "sdk-kp-26",
+            slug: "api-error-handling",
+            name: "Error Handling & Retries",
+          },
+          {
+            id: "sdk-kp-27",
+            slug: "rate-limiting",
+            name: "Rate Limiting & Backoff",
+          },
+          {
+            id: "sdk-kp-28",
+            slug: "cost-tracking",
+            name: "Cost Tracking & Optimization",
+          },
+          {
+            id: "sdk-kp-29",
+            slug: "multi-provider-patterns",
+            name: "Multi-Provider Architectures",
+          },
+          {
+            id: "sdk-kp-30",
+            slug: "observability-logging",
+            name: "Observability & Logging",
+          },
+        ],
+      },
+    ],
+  },
 ];

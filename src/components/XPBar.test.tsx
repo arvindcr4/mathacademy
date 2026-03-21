@@ -1,3 +1,4 @@
+/** @jsxImportSource react */
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import XPBar from "./XPBar";
@@ -83,6 +84,21 @@ describe("XPBar", () => {
 
       // 20% is more than 15%, so percentage text should appear
       expect(screen.getByText("20%")).toBeInTheDocument();
+    });
+
+    it("should handle zero goal gracefully (no division by zero)", () => {
+      // This should not throw or show NaN/Infinity
+      render(<XPBar current={50} goal={0} />);
+
+      expect(screen.getByText("50 / 0")).toBeInTheDocument();
+      // Should not show any percentage (0% is <= 15%)
+      expect(screen.queryByText("0%")).not.toBeInTheDocument();
+    });
+
+    it("should handle both current and goal being zero", () => {
+      render(<XPBar current={0} goal={0} />);
+
+      expect(screen.getByText("0 / 0")).toBeInTheDocument();
     });
   });
 });

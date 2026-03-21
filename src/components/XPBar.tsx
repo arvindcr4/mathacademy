@@ -16,7 +16,7 @@ export default function XPBar({
   const [animatedCurrent, setAnimatedCurrent] = useState(
     showDaily ? 0 : current,
   );
-  const percentage = Math.min((animatedCurrent / goal) * 100, 100);
+  const percentage = goal > 0 ? Math.min((animatedCurrent / goal) * 100, 100) : 0;
 
   useEffect(() => {
     if (!showDaily) {
