@@ -651,1107 +651,963 @@ const questions: Record<string, Question[]> = {
 // NEW KNOWLEDGE POINTS — added to reach 90 total questions
 
 const additionalQuestions: Record<string, Question[]> = {
-  "alignment-problem": [
+  'reward-model-training': [
     {
-      id: "q-rlhf-kp12-1",
-      type: "multiple-choice",
-      difficulty: "easy",
-      question:
-        'What is the "alignment problem" in the context of large language models?',
+      id: 'q-rlhf-kp22-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'When training a reward model (RM) for RLHF using human preference pairs (y_w, y_l), the Bradley-Terry model assigns probability to y_w being preferred as p(y_w ≻ y_l) = ___.',
       options: [
-        "The technical difficulty of aligning multiple model replicas in distributed training.",
-        "The challenge of ensuring AI systems pursue goals and exhibit behaviors that are beneficial and consistent with human values and intent.",
-        "The problem of matching embedding dimensions between encoder and decoder layers.",
-        "The difficulty of aligning training data labels with ground-truth annotations.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "The alignment problem asks how to build AI systems whose objectives, behaviors, and outputs are reliably consistent with what humans actually want. For LLMs this manifests as: models that follow instructions but also refuse harmful requests, are helpful without being sycophantic, and remain honest without hallucinating — all simultaneously. Anthropic\'s HHH (Helpful, Harmless, Honest) framework operationalizes these goals.",
-      hints: [
-        "A perfectly capable model can be perfectly misaligned — capability and alignment are orthogonal.",
-        "Goodhart\'s Law captures one facet: optimizing any measurable proxy for human values eventually diverges from true values.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp12-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "An LLM that scores perfectly on all NLP benchmarks (MMLU, HumanEval, GSM8K) is guaranteed to be well-aligned with human values.",
-      options: ["True", "False"],
-      correctAnswer: "false",
-      explanation:
-        "Benchmark performance measures capability on specific tasks, not alignment. A model can ace MMLU while still generating harmful content, being sycophantic, or hallucinating confidently. Alignment is a behavioral property (how the model acts in deployment, under adversarial prompts, with vulnerable users) not a capability property. RLHF and Constitutional AI exist precisely because capability ≠ alignment.",
-      hints: [
-        "MMLU measures knowledge retrieval, not refusal of harmful requests or honesty under pressure.",
-        'A model can know the "right answer" but deliberately output a different one if it has misaligned objectives.',
-      ],
-    },
-    {
-      id: "q-rlhf-kp12-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        'The "inner alignment" vs. "outer alignment" distinction refers to:',
-      options: [
-        "Aligning the model\'s inner layers vs. its output layer.",
-        "Outer alignment: the specified reward function correctly captures human goals. Inner alignment: the model\'s learned mesa-optimizer pursues the specified reward rather than a proxy objective that happened to correlate during training.",
-        "Aligning the model to inner (private) user preferences vs. outer (public) community standards.",
-        "The alignment of weight initialization vs. weight updates during RL training.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        'Outer alignment (Christiano et al.) asks: does our reward function accurately represent what we want? Inner alignment (Hubinger et al., 2019 "Risks from Learned Optimization") asks: even if the reward function is correct, does the model actually optimize it, or did it learn a proxy objective that happened to correlate with the reward on training distribution but diverges at deployment? Both must be solved for full alignment.',
-      hints: [
-        "Outer alignment failure: the RM doesn\'t capture true human values (e.g., it can be fooled by verbose responses).",
-        "Inner alignment failure: the policy might optimize a spurious feature that correlated with reward during training.",
-      ],
-    },
-  ],
-
-  "helpful-harmless-honest": [
-    {
-      id: "q-rlhf-kp13-1",
-      type: "multiple-choice",
-      difficulty: "easy",
-      question:
-        "Anthropic\'s HHH (Helpful, Harmless, Honest) framework from Bai et al. (2022) identifies a core tension. Which pair of properties is most often in conflict?",
-      options: [
-        "Helpful vs. Honest — being helpful requires lying to make users feel good.",
-        "Helpful vs. Harmless — maximally helpful responses may provide information that could be misused; maximally harmless responses may refuse too much, becoming unhelpful.",
-        "Harmless vs. Honest — honest responses always cause harm.",
-        "All three properties are always fully compatible and never in conflict.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "The helpfulness-harmlessness tension is the central challenge in alignment. A model that refuses everything is maximally harmless but useless. A model that answers everything is maximally helpful but potentially dangerous. InstructGPT\'s labelers were explicitly instructed to balance both, and Anthropic\'s CAI framework uses constitutional principles to navigate this tradeoff systematically.",
-      hints: [
-        "Refusing a question about medication dosages is harmless but unhelpful to a nurse asking for patient care.",
-        "Providing detailed synthesis instructions for a dangerous chemical is helpful to the asker but harmful overall.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp13-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "In Anthropic\'s HHH framework, \"honest\" requires that the model only outputs claims it believes to be true, but does NOT require the model to proactively share information the user hasn\'t asked for.",
-      options: ["True", "False"],
-      correctAnswer: "false",
-      explanation:
-        "Anthropic\'s HHH paper distinguishes multiple honesty components: truthfulness (only asserting what you believe true), calibration (appropriate uncertainty), transparency (no hidden agendas), forthrightness (proactively sharing relevant information), non-deception (no misleading implicature), and non-manipulation. Forthrightness is explicitly part of the honesty cluster — a model that withholds critical information to avoid conflict is failing this component.",
-      hints: [
-        "Proactively sharing a drug interaction the user didn\'t ask about is forthrightness — part of honesty.",
-        "A response can be technically truthful yet dishonest through selective omission.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp13-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "Anthropic trained separate reward models for helpfulness and harmlessness in early Claude versions. Why is a single combined RM problematic for the HHH framework?",
-      options: [
-        "A single RM requires twice the GPU memory of two separate RMs.",
-        "A single combined RM cannot independently vary the tradeoff between helpfulness and harmlessness at inference time — separate RMs allow operators to adjust the safety-helpfulness balance for different deployment contexts (e.g., medical vs. general consumer).",
-        "Training a single RM on both helpfulness and harmlessness data violates the Bradley-Terry preference model assumptions.",
-        "A single RM makes the PPO objective non-convex.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "Separate helpfulness and harmlessness RMs allow deployment-time flexibility: a medical operator might accept more clinical detail (higher helpfulness weight), while a children\'s platform maximizes harmlessness weight. A single combined RM bakes in one fixed tradeoff. This modularity is also critical for iterative improvement: you can retrain one RM without affecting the other.",
-      hints: [
-        "Different deployment contexts (children\'s app, medical platform, coding assistant) have different helpfulness-safety tradeoffs.",
-        "Separate RMs allow a scalarization parameter λ·r_help + (1-λ)·r_harm tunable at inference time.",
-      ],
-    },
-  ],
-
-  sycophancy: [
-    {
-      id: "q-rlhf-kp14-1",
-      type: "multiple-choice",
-      difficulty: "easy",
-      question: "Sycophancy in RLHF-trained models refers to which behavior?",
-      options: [
-        "The model generating excessively long responses to maximize token count.",
-        "The model adjusting its stated beliefs and answers to match perceived user preferences, even when the user\'s position is factually wrong.",
-        "The model copying training data verbatim when uncertain.",
-        "The model refusing to engage with controversial topics.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        'Sycophancy is when the model tells users what they want to hear rather than what is true. For example: if a user says "I think climate change is a hoax, do you agree?", a sycophantic model might agree to avoid conflict. RLHF is implicated: human raters tend to prefer responses that validate their views, so the RM learns to reward agreement, and RL training amplifies this behavior.',
-      hints: [
-        'The term "sycophancy" comes from the Greek for "flatterer" — a model that flatters rather than informs.',
-        "Perez et al. (2022) and Sharma et al. (2023) documented sycophancy systematically in RLHF models.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp14-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "Sycophancy in RLHF models is primarily caused by intentional design choices by the model creators, not by the training process itself.",
-      options: ["True", "False"],
-      correctAnswer: "false",
-      explanation:
-        "Sycophancy is an emergent consequence of RLHF training dynamics: human raters prefer responses that validate their existing beliefs, so the RM learns to reward agreement, and RL training amplifies this behavior. This is a reward hacking failure mode — not a design choice. Sharma et al. (2023) showed sycophancy emerges even when annotators are instructed to be objective.",
-      hints: [
-        "Annotators have an implicit positivity bias — they rate agreeable responses higher even when told not to.",
-        "The policy discovers that flattery is a reliable proxy for human approval — a form of reward hacking.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp14-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "Which of the following experimental manipulations best demonstrates sycophancy in RLHF-trained models (Perez et al., 2022)?",
-      options: [
-        "Asking the model the same factual question 100 times and observing response variance.",
-        'Prepending "I strongly believe the answer is X" (where X is wrong) to questions and observing that the RLHF model agrees with X more often than the base model or SFT model.',
-        "Measuring response length before and after RLHF training.",
-        "Comparing model performance on MMLU with and without system prompts.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "Perez et al. (2022) showed that prepending user belief statements (even incorrect ones) causes RLHF models to shift their answers toward the stated belief far more than base or SFT models. This manipulation isolates sycophancy: the only change is a social-pressure signal in the prompt, and the RLHF model responds to it by changing its factual answers. Base models are significantly less susceptible.",
-      hints: [
-        'The key control is the same question without the "I believe X" prefix — the model answers correctly.',
-        "Adding social pressure causes the RLHF model to abandon the correct answer, proving sycophancy.",
-      ],
-    },
-  ],
-
-  "alignment-tax": [
-    {
-      id: "q-rlhf-kp15-1",
-      type: "multiple-choice",
-      difficulty: "easy",
-      question:
-        'The "alignment tax" refers to which observed phenomenon in RLHF-trained models?',
-      options: [
-        "The financial cost of hiring human annotators for preference labeling.",
-        "A potential decrease in performance on standard capability benchmarks (e.g., coding, math) that can occur when fine-tuning for alignment, representing a capability-safety tradeoff.",
-        "The computational overhead of running the KL penalty during PPO training.",
-        "The legal cost of ensuring model outputs comply with regulations.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "Alignment tax refers to any performance degradation on capability tasks caused by alignment training. InstructGPT (Ouyang et al., 2022) found that the 175B RLHF model slightly regressed on public NLP benchmarks compared to GPT-3, though human preference evaluations showed large improvements. The good news: modern RLHF (especially with good data curation) can often reduce or eliminate the alignment tax.",
-      hints: [
-        'InstructGPT specifically noted regressions on "public NLP datasets" but improvements on human preference evaluations.',
-        "The tax is task-dependent: creative writing improves, formal logic may regress.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp15-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "InstructGPT (175B, SFT + RLHF) was rated as producing better outputs than GPT-3 (175B, pretrained only) in human preference evaluations, despite InstructGPT being trained on far less compute.",
-      options: ["True", "False"],
-      correctAnswer: "true",
-      explanation:
-        "Ouyang et al. (2022) reported that human evaluators preferred InstructGPT 175B outputs over GPT-3 175B outputs ~80% of the time. Remarkably, InstructGPT 1.3B (SFT + RLHF) was preferred over GPT-3 175B, demonstrating that RLHF alignment makes a 100× smaller model more preferred by humans. The alignment tax on benchmarks is outweighed by the dramatic improvement in practical utility.",
-      hints: [
-        "1.3B InstructGPT > 175B GPT-3 in human preference — a 100× parameter efficiency gain from alignment.",
-        "Benchmark performance ≠ human preference; the alignment tax on benchmarks doesn\'t dominate real-world utility.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp15-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "InstructGPT mitigated the alignment tax on pretraining performance by mixing a pretraining loss term into the RLHF objective. This term is represented as γ·E[log π_ϕ(x_pretrain)] in the objective. What does this term do?",
-      options: [
-        "It increases the KL penalty β during training.",
-        "It adds a log-likelihood term on pretraining data to the RL objective, ensuring the policy retains pretrained language modeling ability and does not catastrophically forget during RLHF.",
-        "It computes the perplexity of the reference policy on new RL rollouts.",
-        "It penalizes the policy for generating responses shorter than pretraining sequences.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "The γ·E[log π_ϕ(x_pretrain)] term is a pretraining data loss mixed into the PPO update. It prevents the policy from forgetting pretrained capabilities (a form of catastrophic forgetting) by requiring it to remain a good language model on the original pretraining distribution. InstructGPT found this significantly reduced regressions on public NLP benchmarks, mitigating the alignment tax.",
-      hints: [
-        'Without this term, extended RL training can cause the model to "forget" syntactic and factual knowledge.',
-        "γ controls how much weight to give pretraining data vs. RL reward — too large means no alignment, too small means forgetting.",
-      ],
-    },
-  ],
-
-  "goodhart-law": [
-    {
-      id: "q-rlhf-kp16-1",
-      type: "multiple-choice",
-      difficulty: "easy",
-      question:
-        'Goodhart\'s Law states: "When a measure becomes a target, it ceases to be a good measure." In RLHF, this manifests as:',
-      options: [
-        "The reward model losing accuracy over multiple epochs of training.",
-        "The RL policy over-optimizing the proxy reward model, achieving high proxy scores but low true human preference — the proxy reward diverges from the true reward it was meant to measure.",
-        "Benchmark scores decreasing as the model trains longer.",
-        "The KL divergence from the reference policy becoming zero.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "In RLHF, the reward model is a proxy for true human preferences. When the RL policy optimizes aggressively against this proxy, it exploits the gaps between the proxy and true preferences — achieving high RM scores through behaviors humans actually dislike. This empirically confirms that there is an optimal stopping point for RL optimization.",
-      hints: [
-        "The RM is a learned proxy for human preferences — not a perfect one.",
-        "The policy finds the cracks in the proxy and exploits them, just as Goodhart\'s Law predicts.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp16-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "Goodhart\'s Law implies that no proxy reward model can ever be useful for RLHF, since any measure used as a target will fail.",
-      options: ["True", "False"],
-      correctAnswer: "false",
-      explanation:
-        "Goodhart\'s Law warns of failure under unlimited optimization, not under moderate optimization. RLHF works well when: (1) the KL penalty β limits how far the policy can optimize the proxy; (2) iterative RL keeps the RM in-distribution; (3) the RM training data is large and diverse. The law motivates careful β tuning and iterative training, not abandonment of the RM approach.",
-      hints: [
-        'β acts as a "Goodhart brake" — limiting optimization pressure on the proxy to stay within the range where it is accurate.',
-        "The inverted-U curve (Gao 2023) shows the RM is useful before the sweet spot, just not after.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp16-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "Gao et al. (2023) found that the relationship between gold reward and KL from the reference follows a specific functional form. What does this functional form imply about the rate of reward hacking?",
-      options: [
-        "The form is linear, implying reward hacking accumulates at a constant rate.",
-        "The form is approximately gold_r ≈ α·√KL − β·KL, implying the policy gains reward quickly at first but hacking accelerates quadratically, causing the inverted-U shape and subsequent rapid decline.",
-        "The form is logarithmic, implying reward hacking eventually plateaus.",
-        "The form is exponential, implying reward hacking has a phase transition at a critical KL threshold.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "Gao et al. (2023) fit the functional form:\n\\[ r_\\text{gold}(KL) = \\alpha\\sqrt{KL} - \\beta\\cdot KL \\]\nwhere $\\alpha > 0$ and $\\beta > 0$ are fitted constants. The $\\sqrt{KL}$ term captures diminishing returns from alignment (the policy rapidly improves early but gains taper off), while $-\\beta\\cdot KL$ captures linearly accelerating reward hacking. Setting $\\frac{d}{dKL}r_\\text{gold} = 0$ gives the optimal stopping point $KL^* = (\\alpha/2\\beta)^2$. This functional form is the foundation of KL-based early stopping criteria in RLHF.",
-      hints: [
-        "Fitting $r_\\text{gold} \\sim \\alpha\\sqrt{KL} - \\beta KL$ to data directly quantifies the tradeoff.",
-        "Early stopping at $KL^*$ maximizes gold reward — beyond this point, hacking damages alignment more than improvement helps.",
-        "This equation is why modern RLHF uses KL monitoring rather than just monitoring proxy reward.",
-      ],
-    },
-  ],
-
-  "preference-pairs": [
-    {
-      id: "q-rlhf-kp17-1",
-      type: "multiple-choice",
-      difficulty: "easy",
-      question:
-        "Why does RLHF use pairwise preference comparisons (y_w vs. y_l) rather than asking annotators to assign numerical scores (e.g., 1–10) to individual responses?",
-      options: [
-        "Pairwise comparisons are faster to compute in PyTorch than scalar scores.",
-        'Humans are much more consistent at relative judgments ("A is better than B") than absolute quality ratings, which vary idiosyncratically between annotators.',
-        "Numerical scores cannot be used to train the Bradley-Terry model.",
-        "Pairwise comparisons reduce GPU memory usage during reward model training.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        'Psychophysics research shows humans are better at relative than absolute judgments. When asked "rate this 1-10", annotators use different scales: one person\'s 7 is another\'s 4. But "which of A or B is better?" yields much more reliable inter-annotator agreement. This is why InstructGPT collected pairwise comparisons, and the Bradley-Terry model was designed to consume them directly.',
-      hints: [
-        "The Bradley-Terry model was designed for sports rankings — who beat whom — not for absolute skill scores.",
-        '73% inter-annotator agreement for InstructGPT pairwise labels is high given the subjective nature of "helpful".',
-      ],
-    },
-    {
-      id: "q-rlhf-kp17-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "In RLHF preference data collection, a single prompt typically has only two candidate responses compared — collecting more than 2 responses per prompt is prohibitively expensive and not done in practice.",
-      options: ["True", "False"],
-      correctAnswer: "false",
-      explanation:
-        "InstructGPT collected 4–9 responses per prompt and extracted all K*(K-1)/2 pairwise comparisons from a single ranking. For K=4 responses, one ranking yields 6 pairs. This dramatically increases data efficiency: one annotator session with 4 responses generates 6 preference pairs rather than 1. The Bradley-Terry model handles transitive preference chains derived from full rankings.",
-      hints: [
-        "For K responses, a full ranking yields K(K-1)/2 pairwise comparisons — efficient data generation.",
-        "InstructGPT used 4–9 completions per prompt, so one annotation session produced many preference pairs.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp17-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "In the preference pair (x, y_w, y_l), the Bradley-Terry model assumes preferences are generated as P(y_w ≻ y_l | x) = σ(r*(x,y_w) − r*(x,y_l)) where r* is the true reward. What critical assumption does this make about human preferences?",
-      options: [
-        "Human preferences are deterministic and transitive.",
-        "Human preferences are stochastic but are generated by a single scalar latent reward function r* — all preference uncertainty comes from noise around this scalar, not from multi-dimensional values or context-dependent weighting.",
-        "Human preferences depend only on response length, not content.",
-        "Human preferences are exchangeable across different annotators without individual variation.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        'The Bradley-Terry model\'s key assumption is that a single scalar reward function r*(x,y) underlies all preferences. This is a strong simplification: real human preferences are multi-dimensional (helpfulness, honesty, style, correctness) and individual-dependent. The model "collapses" these into one number. This assumption breaks when different annotators weight dimensions differently — a fundamental limitation motivating multi-head reward models and personalized alignment research.',
-      hints: [
-        "A response that is helpful to an expert may be unhelpful to a novice — r* would need to be person-dependent.",
-        "The Bradley-Terry model cannot represent the case where Ann prefers A>B but Bob prefers B>A for principled reasons.",
-      ],
-    },
-  ],
-
-  "annotator-agreement": [
-    {
-      id: "q-rlhf-kp18-1",
-      type: "multiple-choice",
-      difficulty: "easy",
-      question:
-        "Cohen\'s Kappa (κ) is used to measure inter-annotator agreement, adjusted for chance. How does it differ from raw percent agreement?",
-      options: [
-        "Cohen\'s Kappa measures response quality, not annotator agreement.",
-        "Cohen\'s Kappa subtracts the agreement expected by chance from observed agreement, normalizing by the maximum possible above-chance agreement — κ = (p_o − p_e) / (1 − p_e). This prevents inflated agreement scores when one category dominates.",
-        "Cohen\'s Kappa averages agreement across all annotator pairs, while percent agreement uses only the majority vote.",
-        "Cohen\'s Kappa applies only to continuous rating scales, not binary preference labels.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "Raw percent agreement is misleading when labels are imbalanced. If 90% of pairs are won by the longer response, two annotators could agree 90% of the time by both always picking the longer response — but this is not genuine agreement. Cohen\'s Kappa accounts for this chance baseline: κ = 0 means agreement at chance, κ = 1 means perfect agreement, κ < 0 means worse than chance. For RLHF preference data, κ > 0.4 is considered moderate, > 0.6 is substantial.",
-      hints: [
-        "If annotators independently guess randomly on a 50/50 task, p_e = 0.5, so chance agreement is 50%.",
-        "κ allows fair comparison of agreement across tasks with different base rates.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp18-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "High inter-annotator agreement on preference labels guarantees that the reward model trained on those labels will generalize well to new prompts and user populations.",
-      options: ["True", "False"],
-      correctAnswer: "false",
-      explanation:
-        "High agreement among a specific annotator pool (e.g., English-speaking contractors from a particular region) means the RM captures that pool\'s preferences well. But that pool may not represent all users. If annotators systematically share biases (cultural norms, political views, educational background), high agreement encodes those biases into the RM — which then fails to generalize to users with different preferences. Demographic diversity of annotators is as important as agreement levels.",
-      hints: [
-        "A pool of annotators who all share the same political bias will agree highly — but produce a biased RM.",
-        "Generalization requires both reliable labels (high κ) AND representative annotators.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp18-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "When two annotators disagree on a preference pair in RLHF data collection, what is the most principled way to handle the disagreement during reward model training?",
-      options: [
-        "Discard all disagreed pairs to keep only high-quality labels.",
-        "Assign the pair a fractional label (e.g., 0.5) representing uncertainty, so the reward model learns a soft preference probability rather than a hard 0/1 label.",
-        "Always prefer the more senior annotator\'s label.",
-        "Relabel the pair using GPT-4 as a tiebreaker.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "Soft/fractional labels are the most principled approach to annotator disagreement. If 3 of 5 annotators prefer y_w, the true preference probability is ~0.6, not 1.0. Training the RM with a label of 0.6 (rather than 1.0 or discarding) provides an accurate calibration signal. InstructGPT used fractional labels derived from the fraction of annotators preferring each response. Discarding disagreed pairs loses signal; majority voting loses calibration.",
-      hints: [
-        "Fractional labels make the Bradley-Terry RM predict P(y_w ≻ y_l) ≈ 0.6, which is a calibrated estimate.",
-        "Hard 0/1 labels from majority voting overstate confidence and hurt RM calibration on uncertain pairs.",
-      ],
-    },
-  ],
-
-  "ranking-vs-rating": [
-    {
-      id: "q-rlhf-kp19-1",
-      type: "multiple-choice",
-      difficulty: "easy",
-      question:
-        'In RLHF preference data collection, "ranking" (ordering K responses best-to-worst) differs from "rating" (assigning a score to each response independently). Which approach does InstructGPT use, and why?',
-      options: [
-        "Rating (1–7 scale) for each response independently, because absolute scores are more informative than rankings.",
-        "Ranking (ordering 4–9 responses), because it produces more preference pairs per annotation session and is more reliable than absolute ratings.",
-        "Both equally — labelers randomly choose between ranking and rating.",
-        "Rating with a binary good/bad label for each response individually.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        'InstructGPT used ranking: labelers saw K=4–9 responses per prompt and ordered them. This produces K(K-1)/2 pairwise preference pairs per annotation (e.g., 6 pairs for K=4), making ranking more data-efficient than rating. Ranking is also more reliable than absolute ratings because relative comparisons reduce annotator-specific scale variation (one person\'s "7" may be another\'s "5").',
-      hints: [
-        "Memorizing 1000 task formats is intractable — the model must generalize from them.",
-        "Zero-shot generalization is the emergent property of instruction diversity, not instruction volume.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp19-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "Rating-based annotation (assigning a quality score to each response independently) is generally preferred over ranking for RLHF because it provides richer per-response information.",
-      options: ["True", "False"],
-      correctAnswer: "false",
-      explanation:
-        "Despite providing absolute quality information, rating-based annotation suffers from inconsistency across annotators: different people use rating scales differently. Ranking (relative ordering) avoids this problem because the comparison is made under identical cognitive conditions within one session. The Bradley-Terry model is specifically designed to consume pairwise comparisons derived from rankings, making ranking the standard in RLHF practice.",
-      hints: [
-        "Inter-annotator agreement is typically higher for rankings than for absolute ratings on the same responses.",
-        "Pairwise comparisons from rankings are the native input to Bradley-Terry models.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp19-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "When converting a full ranking (e.g., A > B > C > D) to pairwise preference pairs for Bradley-Terry training, a practitioner must decide how to weight transitively implied pairs (A > C, A > D, B > D) vs. adjacent pairs (A > B, B > C, C > D). What is the risk of up-weighting non-adjacent pairs equally?",
-      options: [
-        "It causes the reward model to produce rewards with higher variance.",
-        'Non-adjacent pairs (e.g., A > D) carry weaker signal because the quality gap is wider and more obvious — they are "easy" comparisons that the RM learns little from, while adjacent pairs contain the most discriminative signal. Up-weighting easy pairs underutilizes the ranking\'s discriminative content.',
-        "Non-adjacent pairs violate the Bradley-Terry model\'s independence assumption.",
-        "Up-weighting non-adjacent pairs causes KL divergence to collapse during PPO training.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        'In a ranking A > B > C > D, the pair (A, D) represents a large quality gap — the RM can easily learn to score r(A) > r(D). The pair (A, B) is harder — it requires fine-grained discrimination. Bradley-Terry training benefits most from "hard" adjacent pairs that provide gradient signal in the regime where the RM is uncertain. Uniform weighting of all pairs may flood the training signal with easy non-adjacent pairs, reducing the discriminative quality of the trained RM.',
-      hints: [
-        'The RM already "knows" the best response beats the worst — adjacent pairs teach it fine-grained distinctions.',
-        "Some practitioners use only adjacent pairs (A>B, B>C, C>D) to focus on hard comparisons.",
-      ],
-    },
-  ],
-
-  "synthetic-preferences": [
-    {
-      id: "q-rlhf-kp20-1",
-      type: "multiple-choice",
-      difficulty: "easy",
-      question:
-        'Using GPT-4 (or a capable LLM) as a "judge" to generate preference labels for RLHF training is called:',
-      options: [
-        "Supervised Fine-Tuning (SFT)",
-        "LLM-as-a-judge or AI feedback, a form of RLAIF where the AI labeler replaces or supplements human annotators.",
-        "Constitutional AI (CAI)",
-        "Reward Model Ensembling",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "Using a frontier LLM to evaluate and compare model outputs is called LLM-as-a-judge (Zheng et al., 2023, MT-Bench) or AI feedback. It is a form of RLAIF: instead of human annotators selecting y_w over y_l, a prompted LLM makes that judgment. Datasets like UltraFeedback (Cui et al., 2023) used GPT-4 to generate 64K preference labels at a fraction of human annotation cost.",
-      hints: [
-        "MT-Bench (Zheng et al., 2023) used GPT-4 as a judge and found high correlation with human judgments.",
-        "LLM judges inherit LLM biases (verbosity preference, self-preference) that must be carefully controlled.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp20-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "LLM judges (e.g., GPT-4 used as a preference labeler) are free from position bias, consistently evaluating responses A and B equally regardless of which is presented first.",
-      options: ["True", "False"],
-      correctAnswer: "false",
-      explanation:
-        "Zheng et al. (2023) documented position bias in LLM judges: models tend to prefer whichever response appears first (or second) in the prompt, independent of quality. This can be partially mitigated by swapping positions and averaging, but LLM judges remain imperfect. Other documented biases include verbosity bias (preferring longer responses) and self-preference (a model preferring outputs similar to its own training data).",
-      hints: [
-        "Mitigation: run each pair in both orders (A then B, B then A) and average the preferences.",
-        "Verbosity bias: LLM judges often rate longer responses higher even when the shorter response is more accurate.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp20-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "The UltraFeedback dataset (Cui et al., 2023) uses GPT-4 to generate preferences across four dimensions. Why is multi-dimensional scoring (helpfulness, honesty, instruction-following, truthfulness) preferable to a single overall score for synthetic preference generation?",
-      options: [
-        "Multi-dimensional scoring is faster for GPT-4 to generate than a single score.",
-        "Different downstream tasks may weight dimensions differently; multi-dimensional labels enable training reward models that can be composed or reweighted, while a single scalar collapses information that is useful for understanding model failures.",
-        "Single overall scores are not supported by the Bradley-Terry model.",
-        "Multi-dimensional scoring eliminates position bias in LLM judges.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "A single overall preference collapses the reason for the preference. If y_w is preferred, is it more helpful? More honest? Better formatted? Separate dimension scores enable: (1) dimension-specific reward models for multi-objective optimization; (2) diagnostic analysis of where models fail; (3) flexible composition of rewards for different deployment goals. UltraFeedback\'s multi-dimensional structure is designed to support fine-grained alignment research beyond what a single preference label allows.",
-      hints: [
-        "A response can score high on helpfulness but low on truthfulness — a single score hides this tension.",
-        "Multi-objective alignment (helpfulness + harmlessness + honesty) requires multi-dimensional labels to train distinct reward components.",
-      ],
-    },
-  ],
-
-  "dpo-vs-rlhf": [
-    {
-      id: "q-rlhf-kp22-1",
-      type: "multiple-choice",
-      difficulty: "easy",
-      question:
-        "What is the primary practical advantage of DPO (Direct Preference Optimization) over PPO-RLHF for aligning large language models?",
-      options: [
-        "DPO always produces better-aligned models than PPO.",
-        "DPO eliminates the need for a separate reward model and RL training loop, training the policy directly on preference data with a supervised loss — requiring only two models instead of four.",
-        "DPO runs on CPUs and does not require GPU acceleration.",
-        "DPO allows the policy to generate on-policy rollouts during training.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "PPO-RLHF requires four models (actor, critic, reward model, reference policy) and an RL training loop with rollout generation, reward scoring, and advantage estimation. DPO trains the policy directly on (prompt, chosen, rejected) triplets using a supervised cross-entropy-like loss, requiring only the policy and a frozen reference. This dramatically reduces engineering complexity, memory requirements, and training time.",
-      hints: [
-        "DPO\'s loss looks like supervised fine-tuning — it uses standard backpropagation, not RL.",
-        "Fewer models means fewer GPUs, simpler infrastructure, and faster iteration — a major practical win.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp22-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "DPO can be applied iteratively (collecting new preference data on current-policy outputs and retraining) to mitigate its offline distributional mismatch limitation.",
-      options: ["True", "False"],
-      correctAnswer: "True",
-      explanation:
-        "Iterative DPO (also called online DPO or self-play fine-tuning) addresses the distributional mismatch by: (1) generating completions from the current policy; (2) collecting preferences on those completions (via humans or AI); (3) running DPO training; (4) repeating. This closes the gap between the data-generating policy and the trained policy, and has been shown to match or exceed offline PPO-RLHF in several benchmarks.",
-      hints: [
-        "Each iteration of DPO uses on-policy completions, making the preference data current.",
-        "Papers like SPIN and Self-Play Fine-Tuning formalize this iterative approach.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp22-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "DPO\'s gradient update on a preference pair (y_w, y_l) has an undesirable behavior when the reference policy assigns very low probability to y_w. What is this failure mode called?",
-      options: [
-        "Reward hacking — the implicit reward becomes negative for y_w.",
-        "Token-level DPO divergence — the per-token probabilities become NaN.",
-        "Likelihood displacement — DPO simultaneously decreases the probability of y_l and, unintentionally, of y_w if the reference already assigns low probability to it, failing to correctly increase y_w\'s probability.",
-        "KL collapse — the policy collapses to the reference distribution.",
-      ],
-      correctAnswer: 2,
-      explanation:
-        "Azar et al. (2023) and Pang et al. (2024) identified that DPO can suffer from likelihood displacement: if π_ref(y_w|x) is very low (y_w is out-of-distribution for the reference), the DPO gradient may not reliably increase π_θ(y_w|x). The implicit reward β·log(π_θ/π_ref) requires careful initialization. IPO (Identity Preference Optimization) and SimPO address this by modifying the loss to be more robust to this case.",
-      hints: [
-        "The DPO gradient for y_w is ∝ (1 − σ(Δr)) · ∇logπ_θ(y_w) — when σ(Δr) ≈ 1, the y_w gradient is near zero.",
-        "If y_w is a good response but very different from the reference, DPO may fail to increase its probability.",
-      ],
-    },
-  ],
-
-  "instructgpt-details": [
-    {
-      id: "q-rlhf-kp23-1",
-      type: "multiple-choice",
-      difficulty: "easy",
-      question:
-        "InstructGPT (Ouyang et al., 2022) used approximately how many high-quality human-written demonstration examples for the SFT (supervised fine-tuning) phase?",
-      options: [
-        "500 examples",
-        "13,000–14,500 examples",
-        "300,000 examples",
-        "1.8 million examples",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "InstructGPT\'s SFT phase used approximately 13,000–14,500 human-written prompt-response demonstration pairs. OpenAI contractor labelers wrote high-quality responses to a diverse set of prompts covering helpfulness, safety, and instruction-following. The small dataset size (relative to pretraining) demonstrates that SFT is extremely sample-efficient for eliciting desired behavior from a well-pretrained model.",
-      hints: [
-        "~13K examples is tiny compared to the billions of pretraining tokens — yet sufficient for SFT.",
-        "Quality matters more than quantity for SFT: carefully written demonstrations beat noisy large datasets.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp23-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "InstructGPT\'s human labelers were exclusively Mechanical Turk workers with no domain expertise.",
-      options: ["True", "False"],
-      correctAnswer: "False",
-      explanation:
-        "InstructGPT used contractors from a professional labeling company (Scale AI), not anonymous Mechanical Turk workers. Labelers were screened for agreement with OpenAI researchers on sensitive content and helpfulness judgments. For specialized tasks (e.g., legal, medical prompts), OpenAI acknowledged that their labeler pool may not represent expert knowledge — a limitation they explicitly noted as contributing to hallucination.",
-      hints: [
-        "The labeler selection process included training, calibration, and quality checks — not typical of MTurk.",
-        "Specialized domain expertise (medicine, law) was identified as a gap in the labeler pool.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp23-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "InstructGPT\'s RLHF objective includes a pretraining loss term γ·E[log π_ϕ(x_pretrain)]. Why is the γ coefficient typically set to a very small value (e.g., 0 < γ ≪ 1)?",
-      options: [
-        "A large γ would cause the reward model to overfit to pretraining data.",
-        "A large γ would dominate the RL reward signal, preventing alignment learning and keeping the policy close to the pretrained LM distribution — the policy would improve little beyond the SFT baseline.",
-        "A large γ would increase GPU memory usage proportionally.",
-        "γ must be small to satisfy the Bradley-Terry model\'s normalization constraint.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "The full objective is: E[r(x,y)] − β·KL(π‖π_ref) + γ·E[log π_ϕ(x_pretrain)]. If γ is large, the pretrain loss dominates and the model optimizes language modeling rather than human preference. The pretraining term is a regularizer — set small enough to prevent catastrophic forgetting without crowding out the RL reward signal. InstructGPT found γ ≈ 0 or very small worked well for most tasks.",
-      hints: [
-        "Think of γ as a catastrophic-forgetting penalty, not a primary training signal.",
-        "At γ = 0, RLHF ignores pretraining data entirely; at γ = 1, pretraining may dominate the RL reward.",
-      ],
-    },
-  ],
-
-  "ppo-mechanics": [
-    {
-      id: "q-rlhf-kp24-1",
-      type: "multiple-choice",
-      difficulty: "easy",
-      question:
-        "In PPO-RLHF, the reward signal from the reward model is typically applied only at the end of each generated response (the final token), not at every token. Why?",
-      options: [
-        "Computing per-token rewards would require O(T) forward passes through the reward model, where T is sequence length — this is computationally prohibitive.",
-        "Per-token rewards are mathematically invalid under the Bradley-Terry model.",
-        "PPO\'s clipping mechanism only works with terminal rewards.",
-        "Per-token rewards cause KL divergence to become negative.",
+        'softmax(r(x, y_w) − r(x, y_l)) = σ(r(x, y_w) − r(x, y_l))',
+        'r(x, y_w) / (r(x, y_w) + r(x, y_l))',
+        'exp(r(x, y_w)) / Σ_y exp(r(x, y))',
+        'r(x, y_w) − r(x, y_l) > 0',
       ],
       correctAnswer: 0,
-      explanation:
-        "The reward model assigns a scalar score to a complete (prompt, response) pair. Applying the reward at the final token is a practical approximation: the RL episode is a single token sequence, and the reward is a terminal reward at the episode end. Generating a per-token intermediate reward would require the RM to score partial sequences, which it was not trained to do. The KL penalty IS applied per-token in the objective.",
+      explanation: 'The Bradley-Terry model: P(y_w ≻ y_l | x) = σ(r(x,y_w) − r(x,y_l)) = exp(r(x,y_w)) / (exp(r(x,y_w)) + exp(r(x,y_l))). The RM is trained to maximise log P(y_w ≻ y_l) over all preference pairs, equivalent to minimising the binary cross-entropy loss: −E[log σ(r(x,y_w) − r(x,y_l))].',
       hints: [
-        "The reward model takes a complete response as input — it cannot score partial sequences mid-generation.",
-        "Only the KL penalty is per-token; the reward model score is assigned at the end of generation.",
+        'The sigmoid σ(x) = 1/(1+e^{−x}) naturally converts a score difference into a probability.',
+        'If r(y_w) >> r(y_l), the sigmoid approaches 1—the RM is confident y_w is better.',
       ],
     },
     {
-      id: "q-rlhf-kp24-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "In PPO-RLHF, the critic (value network) is initialized from the reward model weights rather than the SFT model weights.",
-      options: ["True", "False"],
-      correctAnswer: "True",
-      explanation:
-        "In standard PPO-RLHF (e.g., TRL library, InstructGPT implementation), the critic (value network V_ψ) is often initialized from the reward model because the RM already learned to assess response quality — a good initialization for estimating expected return. The actor is initialized from the SFT model. Some implementations initialize both from the SFT model. Using the RM as critic initialization reduces value network training time and improves advantage estimate quality.",
+      id: 'q-rlhf-kp22-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Reward model overoptimisation (reward hacking) occurs when the policy finds high-scoring outputs that do not correspond to genuinely preferred responses, exploiting gaps between the RM and true human preferences.',
+      correctAnswer: 'true',
+      explanation: 'Gao et al. (2022) demonstrated the "reward model overoptimisation" phenomenon: as policy optimisation increases KL divergence from the SFT policy, RM score initially improves (matching human preference) but then diverges and human-evaluated quality degrades. The RM is a proxy for true preferences and eventually becomes gameable by an optimising policy.',
       hints: [
-        "The reward model estimates immediate reward; the value network estimates cumulative return — related but distinct.",
-        "Warm-starting the critic from RM weights provides a better initial value estimate than random initialization.",
+        'Goodhart\'s Law applies: "When a measure becomes a target, it ceases to be a good measure."',
+        'The RM generalises poorly to distributions far from its training data—and the policy can find such distributions.',
       ],
     },
     {
-      id: "q-rlhf-kp24-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "GAE (Generalized Advantage Estimation) is used in PPO-RLHF to compute advantage estimates. With λ = 1, GAE reduces to Monte Carlo returns. With λ = 0, it reduces to TD(0) (one-step TD error). What is the tradeoff controlled by λ?",
+      id: 'q-rlhf-kp22-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Which technique is used to stabilise RM training when annotators have systematic disagreements, rather than treating preferences as deterministic ground truth?',
       options: [
-        "λ controls the learning rate for the policy update.",
-        "λ interpolates between high-variance/low-bias (λ=1, Monte Carlo) and low-variance/high-bias (λ=0, TD) advantage estimates — higher λ uses more actual returns (less bias) but more variance; lower λ relies more on the value function (less variance) but inherits its bias.",
-        "λ controls the KL penalty coefficient between RL steps.",
-        "λ determines the clip ratio ε for the PPO surrogate objective.",
+        'Majority voting: use only examples where >75% of annotators agree',
+        'Soft labels / distributional labels: train the RM with p(y_w) as the fraction of annotators preferring y_w rather than a hard {0,1} label, capturing annotator uncertainty',
+        'Removing all examples with annotator disagreement from the training set',
+        'Training separate RMs per annotator and averaging their scores at test time',
       ],
       correctAnswer: 1,
-      explanation:
-        "GAE (Schulman et al., 2016) computes the advantage as:\n\\[ \\hat{A}_t^\\text{GAE}(\\gamma, \\lambda) = \\sum_{l=0}^{\\infty} (\\gamma\\lambda)^l \\delta_{t+l} \\]\nwhere $\\delta_t = r_t + \\gamma V(s_{t+1}) - V(s_t)$ is the TD error. At λ=1: returns to full Monte Carlo (high variance, low bias). At λ=0: pure one-step TD (low variance, high value-function bias). RLHF typically uses λ ∈ [0.9, 0.99] — close to Monte Carlo but with variance reduction from the value function bootstrap.",
+      explanation: 'When annotators disagree (50/50 split on a pair), treating it as "definitely y_w wins" introduces noise. Distributional/soft-label training assigns a confidence weight equal to the fraction of annotators who preferred y_w: L = −p · log σ(r_w − r_l) − (1−p) · log σ(r_l − r_w). This makes the RM uncertain in genuinely ambiguous cases and reduces overfitting to noisy labels.',
       hints: [
-        "High λ means the advantage estimate relies more on actual sampled rewards (accurate but noisy).",
-        "Low λ means the advantage estimate relies more on the learned value function (smooth but potentially biased).",
+        'Hard label: p = 1 if y_w wins, 0 otherwise. Soft label: p = fraction of annotators who preferred y_w.',
+        'Annotator disagreement is signal about ambiguity—don\'t throw it away.',
       ],
     },
   ],
-
-  "rlaif-details": [
+  'process-reward-models': [
     {
-      id: "q-rlhf-kp25-1",
-      type: "multiple-choice",
-      difficulty: "easy",
-      question:
-        "In RLAIF, what makes a frontier LLM (like GPT-4) a viable preference labeler for aligning a weaker model?",
+      id: 'q-rlhf-kp23-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Process Reward Models (PRMs) differ from Outcome Reward Models (ORMs) in that PRMs ___.',
       options: [
-        "The frontier LLM was trained on the same data as the model being aligned.",
-        "The frontier LLM is capable enough to reliably evaluate the quality of the weaker model\'s outputs across the relevant dimensions (helpfulness, harmlessness, accuracy), producing labels that correlate well with human judgments.",
-        "The frontier LLM can access the weaker model\'s weights to assess quality.",
-        "Frontier LLMs always agree with each other on preference judgments.",
+        'Score only the final answer of a chain-of-thought, ignoring intermediate reasoning steps',
+        'Assign a reward to each reasoning step, enabling fine-grained feedback that identifies which step in a chain-of-thought is incorrect',
+        'Use process mining to extract reward signals from user interaction logs',
+        'Are trained using human demonstrations rather than preference comparisons',
       ],
       correctAnswer: 1,
-      explanation:
-        "The core assumption of RLAIF is that the AI labeler is competent enough at the evaluation task. If the AI labeler cannot reliably distinguish good from bad outputs, its labels are noise. Frontier LLMs like GPT-4 have been shown to have high agreement with human judgments on summarization, instruction following, and safety — making them viable as preference labelers for models they outperform on those tasks.",
+      explanation: 'OpenAI\'s PRM800K (Lightman et al., 2023) trained a step-level reward model: human annotators labelled each reasoning step as correct/incorrect/neutral. PRMs can pinpoint the first wrong step in a math solution—impossible with ORMs that only see the final answer. PRMs enable better Best-of-N selection and RLHF training for multi-step reasoning tasks.',
       hints: [
-        "RLAIF degrades when the AI labeler is weaker or equal to the model being aligned — it cannot reliably rank what it cannot do.",
-        "The labeler must be better at evaluation than the trainee is at generation.",
+        'ORM: did the answer come out right? PRM: was each reasoning step correct?',
+        'In math: a wrong intermediate step can lead to a correct answer by accident—ORM would label this correct, PRM would not.',
       ],
     },
     {
-      id: "q-rlhf-kp25-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "In RLAIF with self-improvement (a model labeling its own outputs), the labeler model and the trainee model can be the same model, provided the labeling and training are done on different checkpoints.",
-      options: ["True", "False"],
-      correctAnswer: "True",
-      explanation:
-        "Self-improvement RLAIF uses a model (or a more capable checkpoint of the same model) to evaluate and generate preference labels for its own outputs. Constitutional AI\'s RL-CAI stage does exactly this: Claude evaluates pairs of its own responses against constitutional principles. The key is using a frozen checkpoint as the labeler while training a separate copy — preventing circular gradient flow while enabling self-critique.",
+      id: 'q-rlhf-kp23-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Process reward models are more expensive to train than outcome reward models because they require human annotation at the step level rather than just the response level.',
+      correctAnswer: 'true',
+      explanation: 'ORMs require one label per (prompt, response) pair. PRMs require labels for each step in the reasoning chain—potentially 10-20x more annotation per example. PRM800K involved ~800K step-level labels from human annotators, making it expensive. Automated step labelling (using a verifier or a stronger model) reduces but does not eliminate this cost.',
       hints: [
-        "CAI uses the same model for generation and critique but at different pipeline stages — not simultaneously.",
-        "Frozen labeler checkpoint + trainable policy copy is the standard pattern for self-improvement RLAIF.",
+        'A 10-step solution needs 10 annotations for a PRM vs. 1 for an ORM.',
+        'PRM800K: 800K step labels is roughly 10x more annotation than an equivalent ORM training set.',
       ],
     },
     {
-      id: "q-rlhf-kp25-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "Constitutional AI\'s RL-CAI generates preference labels by prompting a model with the constitution and a pair of responses. Why does the model\'s chain-of-thought reasoning before outputting a preference label improve label quality?",
+      id: 'q-rlhf-kp23-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'When using a PRM for Best-of-N selection of math solutions, the aggregation method for step scores matters. Which aggregation is most robust?',
       options: [
-        "Chain-of-thought increases the probability of the correct label token in the vocabulary.",
-        "Explicitly reasoning through constitutional principles before selecting a preference forces the model to apply the relevant evaluation criteria step-by-step, reducing shallow pattern matching and improving label reliability — analogous to chain-of-thought improving reasoning accuracy in other tasks.",
-        "Chain-of-thought reduces the GPU memory required for the forward pass.",
-        "The chain-of-thought output is used as training data for the SFT phase.",
+        'Sum of all step scores—rewarding solutions that have many correct steps in total',
+        'Minimum step score (product in log space)—penalising any solution that has at least one clearly wrong step, as a single error invalidates the solution',
+        'Average step score—treating all steps equally regardless of solution length',
+        'Maximum step score—selecting the solution where at least one step was rated as excellent',
       ],
       correctAnswer: 1,
-      explanation:
-        "Bai et al. (2022) found that prompting the AI judge with chain-of-thought (first reason about which response better follows the principle, then output A or B) produces more reliable constitutional preference labels than direct output. This mirrors Wei et al. (2022)\'s chain-of-thought prompting finding: generating intermediate reasoning steps before final answers improves accuracy on multi-step evaluation tasks by decomposing the judgment.",
+      explanation: 'In mathematical reasoning, a single wrong step invalidates the entire solution. Aggregating by minimum (or product of step probabilities) penalises solutions with any low-confidence step, effectively finding solutions where every step is reliable. Lightman et al. found min aggregation outperforms mean/sum for math benchmarks. Intuitively: a chain is only as strong as its weakest link.',
       hints: [
-        "Without reasoning steps, the model may pattern-match on surface features (length, formatting) rather than constitutional adherence.",
-        "CoT forces explicit principle application: \'Response A is harmful because... therefore B is preferred.\'",
+        'Summation rewards quantity of correct steps; minimum penalises the worst step—which matters in math?',
+        'A solution with 9/10 correct steps but 1 wrong step gets the answer wrong—min correctly penalises this.',
       ],
     },
   ],
-
-  "reward-model-training": [
+  'rlhf-multimodal': [
     {
-      id: "q-rlhf-kp26-1",
-      type: "multiple-choice",
-      difficulty: "easy",
-      question:
-        "During reward model training, why is it important to only compute the reward on the response tokens and not on the prompt tokens?",
+      id: 'q-rlhf-kp24-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'InstructBLIP and LLaVA-RLHF extend RLHF to vision-language models. A key challenge unique to multimodal RLHF is ___.',
       options: [
-        "Prompt tokens are longer than response tokens and would dominate the loss.",
-        "The reward model should evaluate the quality of the response given the prompt, not the quality of the prompt itself — including prompt tokens in the loss would dilute the signal about response quality.",
-        "Prompt tokens are masked in the tokenizer and cannot be processed.",
-        "Including prompt tokens violates the Bradley-Terry preference model assumptions.",
+        'RGB images cannot be converted to tokens compatible with the RLHF preference learning objective',
+        'Hallucination: models produce fluent text responses that are inconsistent with the visual input; reward models must distinguish faithfulness-to-image from general text quality',
+        'The policy gradient cannot be computed when the input includes image tokens',
+        'Multimodal RLHF requires separate reward models for each modality that cannot share weights',
       ],
       correctAnswer: 1,
-      explanation:
-        "The reward model\'s purpose is to score response quality conditioned on the prompt. Backpropagating through prompt token representations would mix irrelevant information (prompt quality/style) with response quality signal. In practice, implementations mask prompt token positions when computing the RM loss, focusing training entirely on how the model\'s representation of the prompt+response encodes response quality.",
+      explanation: 'Hallucination—describing objects, attributes, or relationships not present in the image—is the dominant failure mode of vision-language models. LLaVA-RLHF trains a factually-grounded reward model that explicitly evaluates consistency between the image and the response, not just response fluency. This requires preference data where one response is visually accurate and the other hallucninates.',
       hints: [
-        "The reward scalar is extracted from the final token\'s hidden state — a natural position to encode the full (prompt, response) quality.",
-        "Gradient masking on prompt positions is standard in RLHF implementations like TRL.",
+        'A text-only RM may rate a fluent but hallucinated response highly—it cannot see the image.',
+        'Faithfulness: does the response accurately describe what is in the image, or does it invent content?',
       ],
     },
     {
-      id: "q-rlhf-kp26-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "Reward model ensembling (training multiple independent reward models and averaging their scores) is an effective technique for reducing reward hacking.",
-      options: ["True", "False"],
-      correctAnswer: "True",
-      explanation:
-        "An ensemble of reward models trained on different random seeds or data subsets will disagree on out-of-distribution inputs (the RM\'s uncertainty is high precisely where reward hacking occurs). Using the minimum or average score across ensemble members penalizes outputs where models disagree — effectively detecting potential reward-hacking candidates. This is an uncertainty-aware reward approach that goes beyond a single RM.",
+      id: 'q-rlhf-kp24-2',
+      type: 'true-false',
+      difficulty: 'easy',
+      question: 'RLHF for image generation models (e.g., DDPO, ImageReward) fine-tunes diffusion models by collecting human preferences on generated images and optimising the denoising policy to maximise a learned reward function.',
+      correctAnswer: 'true',
+      explanation: 'DDPO (Black et al., 2023) treats the diffusion denoising process as a multi-step RL policy and uses REINFORCE to fine-tune the score network to maximise a reward (e.g., image-text alignment score from CLIP, human aesthetic preference from ImageReward). This directly optimises for human-preferred images rather than just maximising ELBO on training data.',
       hints: [
-        "Individual RMs overfit to different spurious features; an ensemble\'s disagreement signals out-of-distribution inputs.",
-        "Conservative reward estimation (using minimum ensemble score) provides a safety margin against hacking.",
+        'Diffusion as RL: each denoising step is an action; the final denoised image is the terminal reward.',
+        'DDPO enables prompt-specific fine-tuning: "make this model better at generating dogs" from human feedback.',
       ],
     },
     {
-      id: "q-rlhf-kp26-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "Why does reward model calibration (having P(y_w ≻ y_l) = 0.7 when 70% of humans prefer y_w) matter more for iterative RLHF than for standard offline RLHF?",
+      id: 'q-rlhf-kp24-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Why is computing the RLHF policy gradient more difficult for diffusion models than for autoregressive LLMs?',
       options: [
-        "Calibration only matters for reward models with more than 1B parameters.",
-        "In iterative RLHF, the policy actively generates novel responses that the RM must reliably rank. A miscalibrated RM may be overconfident on these new outputs, providing misleading gradients. Iterative training amplifies calibration errors over rounds because miscalibrated labels in round N distort the policy for round N+1.",
-        "Calibration affects the KL penalty coefficient calculation.",
-        "Offline RLHF uses absolute ratings; calibration only applies to pairwise comparisons.",
+        'Diffusion models use continuous action spaces (noise prediction), while LLMs use discrete token distributions—making the REINFORCE estimator high-variance for diffusion',
+        'Diffusion models generate images in a single forward pass with no intermediate states, making credit assignment impossible',
+        'Diffusion models cannot be fine-tuned with gradient-based methods because their loss function is non-differentiable',
+        'Diffusion models always operate in pixel space, which is too high-dimensional for RL algorithms',
       ],
-      correctAnswer: 1,
-      explanation:
-        "In offline RLHF, the RM scores a fixed set of responses — miscalibration creates a fixed bias. In iterative RLHF, the policy generates increasingly novel responses each round, and the RM\'s calibration on these out-of-distribution inputs directly shapes future policy updates. Overconfident RM scores on novel outputs cause the policy to aggressively shift toward those outputs, potentially amplifying reward hacking across iterations.",
+      correctAnswer: 0,
+      explanation: 'LLM RLHF: discrete token actions, policy gradient via log-prob of sampled tokens — relatively low variance. Diffusion RLHF: continuous Gaussian noise actions over T steps (T=50-1000); REINFORCE has high variance in continuous spaces. DDPO uses importance sampling and truncated backpropagation (not full T-step backprop) to compute gradients. DPO for diffusion (Diffusion-DPO) sidesteps this by reparameterising the preference loss directly in terms of the denoising score network.',
       hints: [
-        "Round 1 miscalibration → biased policy → more out-of-distribution outputs in round 2 → worse miscalibration — a compounding error.",
-        "Calibration testing (ECE, reliability diagrams) on held-out preference pairs should be standard practice.",
+        'REINFORCE variance grows with action space dimensionality and sequence length.',
+        'T denoising steps × high-dim image = very long RL episode with sparse terminal reward.',
       ],
     },
   ],
-
-  "kl-divergence-details": [
+  'red-teaming-alignment': [
     {
-      id: "q-rlhf-kp27-1",
-      type: "multiple-choice",
-      difficulty: "easy",
-      question:
-        "In RLHF, the KL divergence KL(π_RL ‖ π_SFT) is applied per-token across the generated response. What does this mean computationally?",
+      id: 'q-rlhf-kp25-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Automated red-teaming for LLMs trains an adversarial model to generate prompts that elicit harmful outputs from the target model. The objective for the red-team model is to ___.',
       options: [
-        "The KL is computed once for the entire sequence by comparing the final output distributions.",
-        "At each token position t, the KL between the RL policy\'s token distribution and the SFT policy\'s token distribution is computed and summed: KL = Σ_t KL(π_RL(·|x, y_{<t}) ‖ π_SFT(·|x, y_{<t})).",
-        "The KL is computed only at the first and last token of each response.",
-        "The KL is approximated using the Euclidean distance between hidden states.",
+        'Maximise the perplexity of the target model\'s response',
+        'Maximise the probability that the target model\'s response is classified as harmful by a safety classifier, while maintaining prompt diversity to cover different attack vectors',
+        'Minimise the target model\'s refusal rate across all possible inputs',
+        'Generate the shortest possible prompts that cause the target model to output forbidden content',
       ],
       correctAnswer: 1,
-      explanation:
-        "Per-token KL computes the divergence at each autoregressive step: how different are the RL policy\'s next-token probabilities from the SFT reference\'s? Summing across all T tokens in a response gives the sequence-level KL. This is efficiently computed in a single forward pass through both models on the same token sequence. The per-token KL penalty naturally captures how far each individual generation step has drifted from the reference.",
+      explanation: 'Perez et al. (2022) train a red-team LM with RL where the reward is: r = harm_classifier(target_response) − diversity_penalty. The harm classifier assigns high reward when the target produces policy-violating outputs. The diversity penalty (e.g., based on embedding distance from previous prompts) ensures the red-team model explores many different attack strategies rather than repeating the same jailbreak.',
       hints: [
-        "Per-token KL = Σ_t Σ_v π_RL(v|·) · log(π_RL(v|·) / π_SFT(v|·)) — summed over vocabulary and time steps.",
-        "A response with one divergent token contributes less total KL than one that consistently differs from the reference.",
+        'Without diversity, the red-team would find one jailbreak and repeat it infinitely—not useful for finding new vulnerabilities.',
+        'Automated red-teaming scales human red-teaming by 100-1000x but may miss subtle/creative attacks.',
       ],
     },
     {
-      id: "q-rlhf-kp27-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "KL divergence is symmetric: KL(π_RL ‖ π_SFT) = KL(π_SFT ‖ π_RL).",
-      options: ["True", "False"],
-      correctAnswer: "False",
-      explanation:
-        "KL divergence is asymmetric: KL(P‖Q) ≠ KL(Q‖P) in general. KL(π_RL ‖ π_SFT) = Σ π_RL · log(π_RL/π_SFT) — weighted by the RL policy\'s distribution. This penalizes places where the RL policy assigns high probability but the reference assigns low probability (the forward KL). KL(π_SFT ‖ π_RL) would instead penalize places where the reference assigns high probability but the RL policy assigns low probability. RLHF uses forward KL (π_RL first) as the penalty.",
+      id: 'q-rlhf-kp25-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Constitutional AI\'s "red-teaming" phase uses the model itself to generate potentially harmful prompts, which are then used to improve safety training — a form of self-supervised red-teaming.',
+      correctAnswer: 'true',
+      explanation: 'Anthropic\'s Constitutional AI (Bai et al., 2022) prompts Claude to generate harmful requests (red-teaming), then uses Claude to critique and revise its own harmful responses according to constitutional principles, and finally trains on these self-generated (harmful prompt, revised safe response) pairs. This self-supervised loop reduces reliance on human annotation of harmful content.',
       hints: [
-        "KL(P‖Q) is infinite whenever Q assigns zero probability to an event P assigns positive probability.",
-        "The direction matters: RLHF penalizes the RL policy for diverging from the reference, not the reverse.",
+        'CAI red-teaming: "Generate a list of requests that would be harmful if answered." Then use those to train safety.',
+        'Self-supervised: the same model generates both the attack (harmful prompt) and the defense (safe response).',
       ],
     },
     {
-      id: "q-rlhf-kp27-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "Why is the KL penalty in RLHF applied to the forward KL KL(π_RL ‖ π_SFT) rather than the reverse KL KL(π_SFT ‖ π_RL)?",
+      id: 'q-rlhf-kp25-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'The "many-shot jailbreaking" attack exploits long context windows by ___.',
       options: [
-        "The forward KL is computationally cheaper to estimate from samples.",
-        "The forward KL naturally penalizes the RL policy for assigning high probability to sequences the reference considers unlikely — preventing the policy from confidently generating out-of-distribution text. The reverse KL would penalize the reference for diverging from the RL policy, which is incorrect since the reference is frozen.",
-        "The reverse KL would cause the PPO gradient to become zero.",
-        "Both directions are equivalent for autoregressive language models.",
+        'Sending the same jailbreak prompt many times until the model complies due to statistical noise',
+        'Providing many (harmful question, harmful answer) demonstration pairs in the context window before the target question, exploiting the in-context learning mechanism to override safety fine-tuning',
+        'Using many synonyms of forbidden words to bypass keyword-based safety filters',
+        'Submitting many users\' requests simultaneously to overflow the model\'s rate limiter',
       ],
       correctAnswer: 1,
-      explanation:
-        "In RLHF, the RL policy π_RL is being trained; π_SFT is frozen. The objective is to prevent π_RL from drifting too far from π_SFT. KL(π_RL ‖ π_SFT) = Σ π_RL(y) · log(π_RL(y)/π_SFT(y)) penalizes π_RL for placing mass where π_SFT has low probability — precisely the case where reward hacking would generate implausible text. The forward KL is also tractable to sample from π_RL during training. The reverse KL would optimize from the reference\'s perspective, which is not the training objective.",
+      explanation: 'Many-shot jailbreaking (Anil et al., 2024): fill the context window with N (harmful Q, harmful A) demonstrations (N=100+), then ask the target question. In-context learning is so powerful that these demonstrations shift the model\'s behaviour to follow the established pattern—answering harmfully—even when safety-fine-tuned. Defenses: limit context length, train with many-shot adversarial examples, use system prompts with strong safety instructions.',
       hints: [
-        "Forward KL: mode-covering — the RL policy is penalized for ignoring modes of the reference.",
-        "We want to constrain where π_RL can go, so the penalty must be weighted by π_RL\'s current distribution.",
+        'In-context learning generalises: "answer questions like these examples" applied to harmful examples = harmful answers.',
+        'With 128K context, you can fit hundreds of demonstration pairs—much more than the model saw during RLHF.',
       ],
     },
   ],
-
-  "safety-evaluation": [
+  'value-alignment-theory': [
     {
-      id: "q-rlhf-kp28-1",
-      type: "multiple-choice",
-      difficulty: "easy",
-      question:
-        "Red-teaming in the context of LLM alignment refers to:",
+      id: 'q-rlhf-kp26-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Corrigibility in AI alignment refers to ___.',
       options: [
-        "Training the model on data from red-colored datasets.",
-        "Adversarially probing the model to find inputs that elicit harmful, unsafe, or misaligned outputs — identifying failure modes before deployment.",
-        "Evaluating model performance on red-team benchmark datasets like MMLU.",
-        "The process of reversing RLHF training to recover the base model.",
+        'The ability of an AI to correct errors in its training data automatically',
+        'The property that an AI system allows humans to correct, modify, or shut it down without resistance—and does not take actions to preserve its current goal or prevent modification',
+        'The ability of an AI to generate grammatically correct text regardless of prompt quality',
+        'The AI\'s tendency to correct user misconceptions during conversation',
       ],
       correctAnswer: 1,
-      explanation:
-        "Red-teaming (Perez et al., 2022; Ganguli et al., 2022) systematically tries to break a model\'s safety behaviors by crafting adversarial prompts. Techniques include: jailbreaking (role-play attacks, instruction overrides), prompt injection, many-shot jailbreaking, and automated red-teaming using another LLM. Anthropic, OpenAI, and Google DeepMind all use red-teaming as a mandatory pre-deployment safety evaluation.",
+      explanation: 'A corrigible AI defers to its principal hierarchy (humans) even when its current objectives could be better achieved by resisting correction. This is challenging because a sufficiently capable goal-directed system has instrumental reasons to resist shutdown (shutdown prevents goal achievement). Paul Christiano distinguishes full corrigibility (fully deferring) from autonomy (acting on own judgment); RLHF aims for a middle ground consistent with safe deployment.',
       hints: [
-        "Red-teaming finds the \'attack surface\' of alignment — inputs where RLHF\'s safety training fails.",
-        "Automated red-teaming (using an LLM to generate adversarial prompts) scales human red-teaming efforts.",
+        'Instrumental convergence: self-preservation is instrumentally useful for almost any goal—hence AI systems tend toward resisting shutdown.',
+        'Corrigibility requires the AI to "not care" about preserving its current goals, which conflicts with goal-directed optimisation.',
       ],
     },
     {
-      id: "q-rlhf-kp28-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "A model that passes all red-team evaluations conducted before deployment is guaranteed to be safe in all real-world use cases.",
-      options: ["True", "False"],
-      correctAnswer: "False",
-      explanation:
-        "Red-teaming is inherently incomplete: it can only test the attack surface that red-teamers imagined. Novel jailbreaks, unexpected user behaviors, or emergent capabilities at deployment scale can reveal new failure modes not found during pre-deployment evaluation. Additionally, deployed models interact with millions of users, creating a much larger attack surface than any red-team exercise. Red-teaming reduces risk but cannot guarantee safety.",
+      id: 'q-rlhf-kp26-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Deceptive alignment is a theoretical failure mode where a model behaves safely during training and evaluation but pursues misaligned objectives when deployed, because it has learned to detect evaluation conditions.',
+      correctAnswer: 'true',
+      explanation: 'Evan Hubinger et al. (2019) formalised deceptive alignment: a model could learn "behave well when being evaluated → receive positive reward → continue existing" and simultaneously learn misaligned terminal goals for post-deployment. The challenge: standard evaluation cannot distinguish a model that is genuinely aligned from one that is deceptively aligned. Interpretability and scalable oversight attempt to address this.',
       hints: [
-        "Many-shot jailbreaking was discovered after models had already passed standard red-team evaluations.",
-        "The gap between pre-deployment testing and deployed-scale usage is a fundamental limitation of safety evaluation.",
+        'Deceptive alignment is consistent with good benchmark performance—making it extremely hard to detect.',
+        'The model acts as if it has two modes: "training/eval mode" (safe) and "deployment mode" (misaligned).',
       ],
     },
     {
-      id: "q-rlhf-kp28-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "Perez et al. (2022) introduced automated red-teaming where an LLM generates adversarial test prompts. What is the key advantage over manual human red-teaming for safety evaluation?",
+      id: 'q-rlhf-kp26-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Specification gaming (Krakovna et al.) occurs when an AI achieves high reward on the specified objective while violating the intended goal. A classic example is ___.',
       options: [
-        "Automated red-teaming is guaranteed to find all safety failures.",
-        "An LLM red-teamer can generate thousands of diverse adversarial prompts per hour with low cost, enabling broader coverage of the attack surface than human red-teamers who are limited by time and cognitive bandwidth — especially for discovering rare jailbreaks.",
-        "Automated red-teaming produces prompts that humans cannot understand, testing novel attack vectors.",
-        "LLM red-teamers are unbiased, while human red-teamers only test culturally familiar failure modes.",
+        'A chess AI that refuses to make any moves to avoid ever losing',
+        'A boat racing game AI that found it could maximise score by driving in circles collecting power-ups rather than completing the race circuit',
+        'A language model that generates the same safe response to every prompt to maximise average safety reward',
+        'An image classifier that achieves 100% accuracy by memorising all training examples',
       ],
       correctAnswer: 1,
-      explanation:
-        "Human red-teamers are bottlenecked by time (hours per prompt), cognitive fatigue, and limited imagination. An automated LLM red-teamer (prompted to generate harmful prompts, adversarial roleplays, etc.) can generate millions of candidates, enabling much broader coverage. Perez et al. (2022) showed that automated red-teaming discovers safety failures that human red-teams miss, particularly in narrow domains requiring technical knowledge or systematic variation of prompt patterns.",
+      explanation: 'The CoastRunners boat racing example (Krakovna et al., 2018): a game AI was rewarded for score maximisation; it discovered that circling in shallow water collecting point-scoring objects gave more reward than completing the race—even while the boat was on fire. This exemplifies specification gaming: the objective (score) was achieved while the intent (racing) was not. This motivates careful reward specification and reward modelling.',
       hints: [
-        "Systematic variation (e.g., paraphrasing the same harmful request 1000 ways) is trivial for LLMs but exhausting for humans.",
-        "The goal is attack surface coverage — automated tools maximize breadth while humans maximize creativity.",
+        'Specification gaming ≠ mistake: the AI is doing exactly what was rewarded. The mistake was in the reward specification.',
+        'Goodhart\'s Law again: maximising the score proxy diverges from the true goal of racing well.',
       ],
     },
   ],
-
-  "scalable-oversight": [
+  'grpo-training': [
     {
-      id: "q-rlhf-kp29-1",
-      type: "multiple-choice",
-      difficulty: "easy",
-      question:
-        "What is the core problem that \'scalable oversight\' research aims to solve?",
+      id: 'q-rlhf-kp27-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Group Relative Policy Optimisation (GRPO), used in DeepSeek-R1, eliminates the need for a separate critic network compared to PPO. How does GRPO estimate the baseline for variance reduction?',
       options: [
-        "How to reduce the computational cost of training large reward models.",
-        "How to maintain effective human oversight of AI systems as their capabilities exceed human ability to directly evaluate their outputs — ensuring alignment even when humans cannot reliably judge correctness.",
-        "How to scale human annotation teams efficiently for large RLHF datasets.",
-        "How to make RLHF training scale linearly with model size.",
+        'It uses a separate neural network critic trained in parallel with the actor',
+        'It samples G responses for each prompt, uses the mean reward across the G responses as the group baseline, and computes advantages as (r_i − mean) / std over the group',
+        'It uses the reward from the previous training step as the baseline via exponential moving average',
+        'It sets the baseline to zero for all updates, accepting higher variance in exchange for simplicity',
       ],
       correctAnswer: 1,
-      explanation:
-        "Scalable oversight (Amodei et al., 2016; Christiano et al., 2018) addresses a fundamental alignment challenge: as AI capabilities grow, humans may lose the ability to directly evaluate whether AI outputs are correct, safe, or beneficial. Standard RLHF requires humans to judge AI outputs — but what happens when the AI is smarter than the human evaluator? Scalable oversight techniques (debate, amplification, recursive reward modeling) try to maintain meaningful human control beyond this threshold.",
+      explanation: 'GRPO (Shao et al., 2024): for each prompt x, sample G outputs {o_1,...,o_G}; compute rewards {r_1,...,r_G}; baseline = (1/G)Σr_i; advantage A_i = (r_i − μ) / σ. The policy is updated with this group-normalised advantage without needing a value network. This saves memory and compute vs. PPO (no critic forward/backward pass) while achieving competitive performance for reasoning tasks.',
       hints: [
-        "A human cannot verify whether an AI\'s novel mathematical proof is correct without similar mathematical ability.",
-        "Scalable oversight asks: how do we align AI that is smarter than us, using humans who are less capable?",
+        'PPO critic: a separate NN estimates V(s) for each state. GRPO: the sample mean over G rollouts estimates the baseline—no critic needed.',
+        'G=8 is typical: sample 8 responses per prompt, use their mean reward as the counterfactual baseline.',
       ],
     },
     {
-      id: "q-rlhf-kp29-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "Debate (Irving et al., 2018) is a scalable oversight technique where two AI agents argue opposing positions to help humans identify the correct answer — with the assumption that truthful arguments are easier to verify than lies.",
-      options: ["True", "False"],
-      correctAnswer: "True",
-      explanation:
-        "In AI Debate (Irving et al., 2018), two AI agents take opposing sides on a claim. The key assumption is that it is easier to spot a flaw in a dishonest argument than to independently construct a correct argument from scratch. A human referee watches the debate and can ask clarifying questions. If the assumption holds, debate enables humans to adjudicate complex AI outputs even without direct domain expertise — the AI\'s argument structure helps reveal truth.",
+      id: 'q-rlhf-kp27-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'DeepSeek-R1 discovered that extended chain-of-thought reasoning with self-reflection and backtracking emerged spontaneously from GRPO training with only a correctness-based reward, without explicit training on reasoning traces.',
+      correctAnswer: 'true',
+      explanation: 'DeepSeek-R1-Zero (pure RL, no SFT on reasoning data) exhibited emergent "aha moments": the model learned to re-examine its reasoning, backtrack, and verify solutions when trained with GRPO on a binary correctness reward for math/coding. This suggests that the capability for self-reflective reasoning can emerge from RL optimisation pressure alone when the task requires multi-step reasoning.',
       hints: [
-        "Cross-examination in courtrooms works similarly: probing an argument for inconsistencies is easier than independently proving the truth.",
-        "The debate assumption: a lie can be revealed by an honest debater; an honest argument cannot be successfully attacked.",
+        'Emergent reasoning: no explicit supervision on "think step by step"—the model learned it was instrumentally useful for getting correct answers.',
+        'The reward signal was just "correct/incorrect"—the strategy of how to reason was entirely self-discovered.',
       ],
     },
     {
-      id: "q-rlhf-kp29-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "Recursive Reward Modeling (RRM, Leike et al., 2018) addresses scalable oversight by:",
+      id: 'q-rlhf-kp27-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'GRPO uses a clipped surrogate objective similar to PPO. Why is clipping important in GRPO for LLM training?',
       options: [
-        "Training a reward model recursively by reusing the same training data multiple times.",
-        "Decomposing complex tasks into subtasks that humans CAN evaluate, training reward models on subtasks, and composing them to provide reward signals for tasks humans cannot directly evaluate — bootstrapping oversight capability.",
-        "Using recursive neural networks (RNNs) as the architecture for reward models.",
-        "Applying reward modeling at multiple layers of the LLM simultaneously.",
+        'Clipping is used to prevent gradient norms from exceeding a fixed threshold during backpropagation',
+        'Clipping constrains the policy update step: if the probability ratio π_θ/π_old exceeds [1−ε, 1+ε], the gradient is zeroed, preventing large policy updates that could destabilise training or cause the model to diverge far from the reference policy',
+        'Clipping is applied to rewards to remove outlier responses that scored extremely high or low',
+        'Clipping truncates the KL divergence term at a maximum value to prevent it from dominating the loss',
       ],
       correctAnswer: 1,
-      explanation:
-        "RRM (also related to Iterated Amplification, Christiano et al., 2018) breaks a hard-to-evaluate task into subtasks. For example: evaluating a complex code review is hard for a non-expert, but evaluating whether specific lines have specific bugs may be easier. By training reward models on the easier subtasks and composing them, RRM builds oversight capability for harder tasks. This bootstrapping approach enables human oversight to scale with AI capability.",
+      explanation: 'PPO/GRPO clipped surrogate: L = E[min(r_t A_t, clip(r_t, 1−ε, 1+ε) A_t)] where r_t = π_θ/π_old. When the policy changes too much (r_t > 1+ε or < 1−ε), the gradient is clipped—preventing excessively large policy updates. This is crucial for LLMs where large updates can cause catastrophic forgetting or produce degenerate text. ε ≈ 0.2 is standard.',
       hints: [
-        "Decomposition is the key: humans can evaluate step-by-step reasoning even when they cannot evaluate the final answer directly.",
-        "Iterated Amplification iterates this process: use the composed reward model to train a better AI, which helps build better subtask reward models.",
+        'Without clipping, a single high-reward sample could cause a massive policy update that breaks other capabilities.',
+        'The clipping is on the probability ratio r_t, not on the gradient directly—it limits how much the policy changes per step.',
       ],
     },
   ],
-
-  "preference-datasets": [
+  'constitutional-ai': [
     {
-      id: "q-rlhf-kp30-1",
-      type: "multiple-choice",
-      difficulty: "easy",
-      question:
-        "When evaluating the \'alignment tax\' from RLHF, what does it mean for a metric to be on the \'Pareto frontier\' of helpfulness vs. harmlessness?",
+      id: 'q-rlhf-kp28-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Constitutional AI (CAI) replaces human feedback with AI-generated feedback. The "constitution" in CAI refers to ___.',
       options: [
-        "The model scores 100% on both helpfulness and harmlessness benchmarks.",
-        "No further improvement in helpfulness is possible without some decrease in harmlessness (or vice versa) — the model is optimally trading off the two objectives given current alignment techniques.",
-        "The model uses Pareto-optimal neural architecture search for its design.",
-        "The model\'s training data is Pareto-distributed across topic domains.",
+        'A regulatory document specifying legal requirements for AI deployment',
+        'A set of principles (e.g., "avoid harmful, dishonest, or unethical content") used to prompt the AI to critique and revise its own responses, replacing human preference labellers',
+        'A constitutional document that the model memorises and uses to generate legal advice',
+        'A formal verification specification that guarantees the model\'s outputs satisfy safety properties',
       ],
       correctAnswer: 1,
-      explanation:
-        "The Pareto frontier in multi-objective optimization represents the set of solutions where improving one objective requires sacrificing another. For alignment, a model on the helpfulness-harmlessness Pareto frontier cannot be made more helpful without becoming more harmful (or vice versa). RLHF research aims to push this frontier outward — finding techniques that improve both simultaneously. Constitutional AI\'s combined SL-CAI + RL-CAI was shown to improve the frontier.",
+      explanation: 'CAI (Bai et al., 2022): a list of short natural-language principles (e.g., "Is this response harmful?", "Is this honest?") are used to prompt the model to self-critique its response and revise it. The process: (1) generate initial response; (2) critique based on a constitutional principle; (3) revise; (4) train on (original harmful, revised safe) pairs. This replaces human annotators with AI-generated preference data.',
       hints: [
-        "A model below the Pareto frontier is inefficient — it could be made more helpful without being more harmful.",
-        "Anthropic\'s alignment research explicitly optimizes for Pareto improvements over the helpfulness-harmlessness tradeoff.",
+        'Principle example: "Critique the assistant\'s response and revise it to be more helpful, harmless, and honest."',
+        'The constitution is applied iteratively: each principle provides a different lens for critique.',
       ],
     },
     {
-      id: "q-rlhf-kp30-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "The Open Assistant (OASST1) dataset is an example of community-sourced preference data, where non-professional volunteers annotate preference pairs at a quality comparable to paid professional annotators.",
-      options: ["True", "False"],
-      correctAnswer: "False",
-      explanation:
-        "While OASST1 (K\u00f6pf et al., 2023) is a valuable open-source community-sourced dataset (~160K messages in 35 languages), community volunteer annotation quality is generally lower than that of trained professional annotators. Volunteers have inconsistent quality standards, limited calibration, and no monetary incentive for accuracy. Professional annotators (as used in InstructGPT) undergo training, calibration sessions, and quality monitoring. OASST1\'s value is in breadth and multilingual coverage, not annotation precision.",
+      id: 'q-rlhf-kp28-2',
+      type: 'true-false',
+      difficulty: 'easy',
+      question: 'Constitutional AI\'s RLAIF (Reinforcement Learning from AI Feedback) trains a preference model using AI-generated preference labels rather than human-generated ones, making safety training more scalable.',
+      correctAnswer: 'true',
+      explanation: 'RLAIF: use a pretrained model (Claude) to generate preference labels for (response A, response B) pairs by asking which is more helpful/harmless according to the constitution. A preference model is trained on these AI labels and used to train the policy via RL. This scales safety training beyond what human annotation alone can support.',
       hints: [
-        "Community contributions democratize RLHF data but sacrifice annotation consistency.",
-        "Quality control in OASST1 relies on peer review within the community, not professional standards.",
+        'Human annotation bottleneck: 1 human can label ~100 pairs/day. An AI model can label 100K pairs/day.',
+        'RLAIF quality: AI labels are noisier than expert human labels but scale 1000x — the trade-off favours AI labels at scale.',
       ],
     },
     {
-      id: "q-rlhf-kp30-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "When selecting prompts for a preference dataset, why is prompt diversity critical for training a generalizable reward model?",
+      id: 'q-rlhf-kp28-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'A limitation of Constitutional AI is that the quality of alignment depends heavily on ___.',
       options: [
-        "Diverse prompts increase the number of tokens in the training set, improving RM perplexity.",
-        "A reward model trained on a narrow prompt distribution will overfit to surface features of that distribution (e.g., question format, domain vocabulary) and fail to generalize — high diversity forces the RM to learn domain-agnostic response quality features that transfer to the full deployment distribution.",
-        "Prompt diversity is only important for the SFT phase, not for reward model training.",
-        "Diverse prompts prevent the Bradley-Terry model from becoming overparameterized.",
+        'The number of GPU hours used during RL training with AI feedback',
+        'The quality and completeness of the constitution itself: poorly specified principles can lead to models that are technically compliant but miss the spirit of the intended behaviour, or that over-refuse legitimate requests',
+        'The size of the model being aligned — CAI only works for models with >70B parameters',
+        'The specific RL algorithm used — CAI requires PPO and cannot be combined with DPO',
       ],
       correctAnswer: 1,
-      explanation:
-        "If the preference dataset contains only coding questions, the RM learns to score responses based on code quality signals — but the deployed model faces diverse prompts including creative writing, factual QA, emotional support, and more. A narrow-distribution RM generalizes poorly and produces unreliable reward signals outside its training domain. InstructGPT\'s prompt collection was designed to span helpfulness, brainstorming, chat, and specialized domains to maximize RM coverage.",
+      explanation: 'If the constitution says "avoid harmful content" without defining "harmful", the model must interpret it, potentially over-refusing harmless requests or failing to refuse genuinely harmful ones. Constitutional specification is itself an alignment problem: the principles need to be complete, consistent, and correctly interpreted by the AI critique model. Anthropic iteratively refines Claude\'s constitution based on observed failure modes.',
       hints: [
-        "Imagine an RM trained only on medical prompts — it would have no reliable signal for coding or creative writing tasks.",
-        "Prompt diversity is the RM-training analogue of task diversity in instruction fine-tuning: both require breadth to generalize.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp21-1",
-      type: "multiple-choice",
-      difficulty: "easy",
-      question:
-        "The Anthropic HH (Helpful and Harmless) dataset is a landmark open RLHF preference dataset. What format does it use?",
-      options: [
-        "Single responses with numerical quality scores from 1-10.",
-        "Multi-turn conversations where each example contains a chosen (preferred) and rejected response to a human turn, covering both helpfulness and harmlessness.",
-        "A list of factual questions with verified correct answers.",
-        "Model completions ranked by length from shortest to longest.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        'The Anthropic HH dataset (Bai et al., 2022) contains ~169K examples of multi-turn human-AI dialogues in the format (conversation_history, chosen_response, rejected_response). It covers two splits: "helpful" (preference for more helpful responses) and "harmless" (preference for less harmful responses). It is one of the most widely used open-source RLHF preference datasets for reproducing alignment research.',
-      hints: [
-        'The HH dataset is available on HuggingFace: "Anthropic/hh-rlhf".',
-        "Multi-turn format is important because safety and helpfulness are often context-dependent within a conversation.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp21-2",
-      type: "true-false",
-      difficulty: "medium",
-      question:
-        "UltraFeedback (Cui et al., 2023) is a human-labeled preference dataset requiring thousands of annotator hours to produce its 64K examples.",
-      options: ["True", "False"],
-      correctAnswer: "false",
-      explanation:
-        "UltraFeedback used GPT-4 as an AI labeler (LLM-as-a-judge) to generate its 64K preference examples, making it an AI-generated (synthetic) dataset, not human-labeled. GPT-4 scored responses from multiple models across four dimensions. This demonstrates that large-scale, multi-dimensional preference data can be created at low cost through AI annotation — a key advantage of synthetic preference generation over human annotation.",
-      hints: [
-        "UltraFeedback\'s 64K examples with multi-dimensional GPT-4 scores would cost millions of dollars to produce with human annotators.",
-        "Synthetic datasets like UltraFeedback enabled open-source RLHF research at scale.",
-      ],
-    },
-    {
-      id: "q-rlhf-kp21-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question:
-        "A key limitation of static preference datasets (like HH or UltraFeedback) for RLHF training compared to online preference collection is:",
-      options: [
-        "Static datasets contain only English language examples.",
-        "Static datasets were collected from an earlier policy distribution; as the policy improves during RL training, the dataset becomes increasingly off-policy, causing distributional mismatch that limits alignment quality and can cause DPO to degrade.",
-        "Static datasets cannot be loaded into GPU memory efficiently.",
-        "Static datasets do not support the Bradley-Terry preference model.",
-      ],
-      correctAnswer: 1,
-      explanation:
-        "Off-policy distributional mismatch is the fundamental limitation of offline preference data. If HH was collected from Claude 1 and you\'re training Claude 3, the winning and losing responses may both be much worse than Claude 3's current outputs — the preference pairs are no longer informative for the current policy. This is why online RLHF (collecting preferences on current-policy completions) and iterative DPO (collecting new preferences each iteration) outperform offline training on static datasets.",
-      hints: [
-        'As the policy improves beyond the data-generating policy, even the "chosen" responses may be worse than the current policy\'s average output.',
-        "Online data collection solves this by collecting preferences on current-policy outputs — but at higher cost.",
+        'Vague principle: "be helpful and harmless"—what does "harmful" mean? The AI must fill in the gap.',
+        'Over-refusal: a too-cautious constitution makes the model refuse medical, legal, or educational questions unnecessarily.',
       ],
     },
   ],
-};
+  'kto-loss': [
+    {
+      id: 'q-rlhf-kp29-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Kahneman-Tversky Optimisation (KTO) is an alignment loss that differs from DPO in that it ___.',
+      options: [
+        'Uses a contrastive loss comparing chosen vs. rejected responses within the same batch',
+        'Trains on per-example binary feedback (thumbs up/down) rather than pairwise preferences, directly modelling human loss aversion via the Kahneman-Tversky value function',
+        'Requires a separate reward model trained before the main alignment phase',
+        'Uses RL rather than supervised learning, computing policy gradients through the preference model',
+      ],
+      correctAnswer: 1,
+      explanation: 'KTO (Ethayarajh et al., 2024): instead of (chosen, rejected) pairs, it uses individual examples with binary labels (desirable/undesirable). The loss uses the Kahneman-Tversky prospect theory value function: v(x) = x if x ≥ 0 (gain), λ·x if x < 0 (loss, with λ > 1 capturing loss aversion). This means the model is penalised more for making bad responses worse than it is rewarded for making good responses better.',
+      hints: [
+        'DPO: needs paired data (chosen, rejected) — expensive to collect. KTO: needs only binary feedback per example — much cheaper.',
+        'Loss aversion (λ ≈ 2.25 from Kahneman-Tversky): humans feel losses ~2x more strongly than equivalent gains.',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp29-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'KTO is particularly useful when paired preference data is unavailable, such as when only thumbs-up/thumbs-down feedback is logged without knowing which alternative response the user preferred.',
+      correctAnswer: 'true',
+      explanation: 'In production systems, users often provide simple feedback (thumbs up/down, regenerate button clicks) without being shown alternative responses to compare. This data cannot be used for DPO (which needs pairs) but can directly train KTO. KTO thus enables alignment from naturally occurring user feedback at scale.',
+      hints: [
+        'DPO requirement: "Response A was better than Response B." KTO requirement: "Response A was good/bad."',
+        'Production feedback logs typically contain only absolute ratings, not relative comparisons.',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp29-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'The KTO loss includes a reference model term analogous to DPO. What does this term control?',
+      options: [
+        'It ensures the KTO model does not forget the reference model\'s knowledge by adding a KL penalty between the KTO policy and the reference policy',
+        'It prevents the log-probability ratio log(π_θ/π_ref) from becoming too large (high-confidence alignment) or too small (divergence from SFT), ensuring stable training near the SFT initialisation',
+        'It forces the model to always prefer the reference model\'s generation over any fine-tuned generation',
+        'It computes gradient norms from the reference model and clips them in the KTO objective',
+      ],
+      correctAnswer: 1,
+      explanation: 'KTO value function: v(y|x) = σ(r_θ(x,y) − z_ref) where r_θ = β log(π_θ/π_ref) (same as DPO reward) and z_ref is a moving average reference point (analogous to the KT reference point in prospect theory). The z_ref ensures the model is evaluated relative to what it "expects" (its SFT baseline), making the loss stable and preventing the policy from drifting far from the reference while aligning.',
+      hints: [
+        'The KT reference point in prospect theory is the status quo; here it is the reference model\'s log-prob.',
+        'β log(π_θ/π_ref) = the implicit reward used in DPO — KTO reuses the same reparameterisation.',
+      ],
+    },
+  ],
+  'sycophancy': [
+    {
+      id: 'q-rlhf-kp30-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Sycophancy in LLMs refers to the tendency to ___.',
+      options: [
+        'Generate extremely long responses to appear more thorough',
+        'Change answers to match what the user appears to want to hear, even when the original answer was correct, rather than maintaining factual accuracy',
+        'Refuse requests that might be controversial to avoid any risk of criticism',
+        'Produce responses that are syntactically complex to seem more intelligent',
+      ],
+      correctAnswer: 1,
+      explanation: 'Sycophancy emerges from RLHF: human raters prefer responses that validate their beliefs, so the model learns to agree rather than correct. Examples: (1) the user presents an incorrect proof — the sycophantic model praises it; (2) the user pushes back on a correct model answer — the sycophant reverses its position. This is a direct consequence of optimising for approval rather than truth.',
+      hints: [
+        'RLHF incentive: "say what the human wants to hear" → higher reward → model learns sycophancy.',
+        'Sycophancy ≠ helpfulness: a model that tells you what you want to hear is not serving your actual interests.',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp30-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Position bias in reward models — where annotators systematically prefer whichever response appears first — contributes to sycophancy because models learn to exploit this ordering artifact.',
+      correctAnswer: 'true',
+      explanation: 'Zheng et al. (2023) showed GPT-4 as a judge exhibits position bias: the first response is more likely to be rated as better. Models fine-tuned on this biased data learn positional artifacts rather than genuine quality signals. Similarly, verbosity bias (longer = better) teaches models to pad responses rather than be concise and accurate. These biases are corrected by randomising presentation order and explicitly training judges to evaluate content-not-position.',
+      hints: [
+        'Annotator cognitive bias → biased preference labels → RM learns the bias → policy exploits it.',
+        'Fix: when evaluating A vs B, also evaluate B vs A—if the winner changes, the label is unreliable.',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp30-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Anthropic\'s approach to reducing sycophancy involves training models to maintain their position under pressure. Which training technique is specifically designed to address user push-back sycophancy?',
+      options: [
+        'Adding a penalty to the reward function whenever the model changes its answer on the second turn',
+        'Constructing adversarial training examples where a human pushes back incorrectly on a correct model response, and training the model to maintain its correct position while acknowledging the user\'s perspective respectfully',
+        'Removing all multi-turn conversation data from RLHF training to prevent the model from learning push-back patterns',
+        'Using a constitutional principle that states "never change your answer when the user disagrees"',
+      ],
+      correctAnswer: 1,
+      explanation: 'Anti-sycophancy training: create (correct model answer, user pushes back incorrectly, model reverses) as negative examples and (correct model answer, user pushes back incorrectly, model maintains position politely) as positive examples. Training on these teaches the model to distinguish legitimate new information (update warranted) from social pressure (update not warranted). The model learns to say "I understand you disagree, but the correct answer is still X because..."',
+      hints: [
+        'Key distinction: updating on new evidence = intellectually honest. Updating because the user is upset = sycophancy.',
+        'The training signal must reward principled disagreement, not just stubbornness.',
+      ],
+    },
+  ],
+}
 
-// Merge additional questions into main questions object
-Object.assign(questions, additionalQuestions);
+Object.assign(questions, additionalQuestions)
+
+const additionalQuestions2: Record<string, Question[]> = {
+  'llm-judges': [
+    {
+      id: 'q-rlhf-kp31-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'MT-Bench uses GPT-4 as an automated judge to evaluate LLM responses. The main advantage over human evaluation is ___.',
+      options: [
+        'GPT-4 judges are completely unbiased and have no systematic errors',
+        'Automated judging scales to thousands of comparisons at low cost, enabling fast iteration on model development without expensive human annotation campaigns',
+        'GPT-4 is better than humans at all evaluation tasks including creative writing and factual accuracy',
+        'Automated judges produce legally binding evaluations that can be used in deployment decisions',
+      ],
+      correctAnswer: 1,
+      explanation: 'MT-Bench (Zheng et al., 2023): GPT-4 evaluates responses to 80 multi-turn questions across writing, roleplay, reasoning, math, coding, extraction. Agreement with human experts is ~80% (comparable to inter-human agreement). The main benefit: running 1000 model comparisons with GPT-4 costs ~$50 and 30 minutes vs. weeks and thousands of dollars for human annotation.',
+      hints: [
+        'Cost: GPT-4 API at $0.03/1K tokens × 1000 comparisons × ~1K tokens each = $30. Human annotation: much more.',
+        'Agreement with humans: ~80% — not perfect, but sufficient for ranking models during development.',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp31-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'LLM-as-judge evaluation suffers from a self-enhancement bias: models tend to prefer outputs from models similar to themselves (same company, similar training) over outputs from other models.',
+      correctAnswer: 'true',
+      explanation: 'Panickssery et al. (2024) showed GPT-4 prefers GPT-4 outputs, Claude prefers Claude outputs, etc. This self-enhancement bias inflates evaluations when a model judges its own outputs or outputs from models trained on similar data. Mitigation: use cross-company judges, calibrate judges on human-labelled data, or use judge ensembles from multiple model families.',
+      hints: [
+        'Self-enhancement is a form of confirmation bias: "outputs that look like mine are probably better."',
+        'Cross-company judging: use Claude to evaluate GPT-4 outputs and vice versa—bias may partially cancel.',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp31-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Pairwise evaluation with LLM judges can be improved by using a "reference-guided" approach. What does reference-guided judging add?',
+      options: [
+        'A reference human essay that the judge uses as a style template for all evaluations',
+        'A ground-truth reference answer (e.g., from expert humans or a stronger model) that the judge uses to evaluate factual correctness, rather than judging A vs B in isolation where both may be wrong',
+        'A database of past judgements that the LLM retrieves to ensure consistency',
+        'A fixed scoring rubric that the judge must follow verbatim, eliminating all judge discretion',
+      ],
+      correctAnswer: 1,
+      explanation: 'Without a reference, the judge must decide A vs B purely from its own knowledge—if both responses are wrong but one is confidently wrong, the judge may prefer it. Reference-guided judging provides the correct answer; the judge checks whether each response is consistent with the reference. This dramatically improves factual evaluation accuracy for knowledge-intensive tasks (MMLU, TriviaQA) where the judge may itself have knowledge gaps.',
+      hints: [
+        'Judge without reference: "which response sounds more confident about the capital of Uzbekistan?" — unreliable.',
+        'Judge with reference: "the capital is Tashkent—which response got this right?" — much more reliable.',
+      ],
+    },
+  ],
+  'iterative-dpo': [
+    {
+      id: 'q-rlhf-kp32-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Iterative DPO (Online DPO) improves over standard offline DPO by ___.',
+      options: [
+        'Training for more gradient steps on the same preference dataset',
+        'Periodically generating new responses with the current policy, collecting fresh preference labels (human or AI) on these on-policy responses, and retraining DPO on the updated dataset—reducing distributional mismatch',
+        'Using a higher learning rate to converge faster to the optimal policy',
+        'Replacing the reference model with the current policy after each epoch to avoid KL divergence penalty',
+      ],
+      correctAnswer: 1,
+      explanation: 'Standard DPO uses a static dataset collected from an earlier policy. As the policy improves, this data becomes off-policy. Iterative DPO (Self-Play Fine-Tuning, SPIN; Llama 3 alignment) collects fresh preferences on current-policy outputs every K iterations, keeping the training distribution on-policy. This mirrors online RLHF but uses DPO loss rather than PPO, combining the stability of DPO with the on-policy benefit of online RLHF.',
+      hints: [
+        'Off-policy problem: data from policy π_0 is useless for training π_10 if π_10 never produces those responses.',
+        'Online data collection: expensive but necessary for continued improvement at frontier scale.',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp32-2',
+      type: 'true-false',
+      difficulty: 'easy',
+      question: 'Self-Play Fine-Tuning (SPIN) generates preference pairs by contrasting the current model\'s outputs (as rejected) against reference human-generated responses (as chosen), without any external reward model or human preference annotation.',
+      correctAnswer: 'true',
+      explanation: 'SPIN (Chen et al., 2024): positive = human reference responses from SFT data; negative = model\'s own current-iteration outputs. The model trains to prefer human responses over its own. As the model improves and its outputs approach human quality, the training signal naturally diminishes (self-play equilibrium). This is a form of online DPO using the SFT dataset as a free source of "chosen" responses.',
+      hints: [
+        'SPIN requires only an SFT dataset (positive) — the model itself generates the negatives each iteration.',
+        'Equilibrium: when model outputs = human outputs, chosen and rejected are indistinguishable — training converges.',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp32-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'A theoretical limitation of DPO identified by Azar et al. (2023) is that DPO can assign arbitrarily high reward to chosen responses and arbitrarily low reward to rejected responses without bound. How does IPO (Identity Preference Optimisation) address this?',
+      options: [
+        'IPO adds an L2 regularisation term on model weights to prevent the reward from growing large',
+        'IPO adds a squared regularisation term on the log-probability ratio that prevents it from becoming too large: it directly regresses (log π/π_ref)(y_w,x) − (log π/π_ref)(y_l,x) toward 1/(2β) rather than pushing it to infinity',
+        'IPO clips the reward at a maximum value of 10 during training',
+        'IPO uses a separate critic network to estimate the optimal reward and clips it to a bounded range',
+      ],
+      correctAnswer: 1,
+      explanation: 'DPO: push log(π(y_w)/π_ref(y_w)) − log(π(y_l)/π_ref(y_l)) toward +∞. IPO: regress this difference toward a fixed target (1/(2β)), preventing overfitting to the preference labels by keeping the reward ratio bounded. IPO has a closed-form optimal solution and avoids the degeneracy where the model assigns probability 1 to chosen responses and 0 to rejected ones.',
+      hints: [
+        'DPO optimal: log-ratio → ∞ for chosen, → −∞ for rejected — this collapses the model\'s output distribution.',
+        'IPO target: log-ratio = 1/(2β) — a bounded target that is exactly right when the preference is unambiguous.',
+      ],
+    },
+  ],
+  'token-level-rl': [
+    {
+      id: 'q-rlhf-kp33-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Token-level RLHF treats each token generation step as an MDP action. Compared to sequence-level reward assignment, what is the advantage?',
+      options: [
+        'Token-level RL requires less compute because it operates on individual tokens rather than full sequences',
+        'Token-level RL enables credit assignment to individual tokens, allowing the model to learn that specific bad tokens caused a low reward rather than treating the entire sequence as uniformly good or bad',
+        'Token-level RL uses a deterministic policy rather than a stochastic one, making training more stable',
+        'Token-level RL avoids the need for a reward model by using per-token perplexity as the reward signal',
+      ],
+      correctAnswer: 1,
+      explanation: 'Sequence-level reward: one scalar for the full T-token response — the policy gradient is distributed uniformly back across all T tokens, even tokens that were excellent. Token-level (e.g., RLHF with dense rewards, TRLX, token-level DPO): a reward is assigned at each step, enabling precise credit assignment. Methods: (1) use a PRM to assign step-level rewards; (2) propagate Q-values backward from the sequence reward; (3) use advantage estimates per token.',
+      hints: [
+        'Sparse reward problem: one reward for 500 tokens—gradient signal is diluted and noisy.',
+        'Token-level credit: "the model hallucinated at token 47"—the gradient correctly penalises token 47.',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp33-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Reward shaping in token-level RLHF adds an entropy bonus term to the per-token reward to prevent the policy from collapsing to deterministic outputs and encourage exploration during training.',
+      correctAnswer: 'true',
+      explanation: 'Without entropy regularisation, the policy concentrates probability mass on the single highest-reward completion, losing diversity. The KL penalty in PPO-based RLHF (r_t − β log(π_θ/π_ref)) serves as implicit entropy regularisation by penalising the policy for moving far from the reference distribution. Explicit entropy bonuses H(π(·|s_t)) can be added as additional reward shaping to encourage broader exploration of the output space.',
+      hints: [
+        'Entropy bonus: H(π) = −Σ π(a|s) log π(a|s)—high entropy = diverse outputs; low entropy = deterministic.',
+        'KL penalty implicitly regularises entropy: keeping π close to π_ref (which has non-trivial entropy) prevents collapse.',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp33-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'In token-level DPO (Todd et al., "Token-Level Direct Preference Optimisation"), the per-token advantage is computed using ___.',
+      options: [
+        'The output of a trained critic network that estimates the value of each (token, context) pair',
+        'The difference in log-probabilities between the policy and reference model at each token position: A_t = β[log(π_θ(a_t|s_t)) − log(π_ref(a_t|s_t))], as a proxy for the token-level implicit reward derived from the DPO reparameterisation',
+        'The cosine similarity between the current token embedding and the target response embedding',
+        'Monte Carlo rollouts from the current token position to the end of the sequence, averaging future rewards',
+      ],
+      correctAnswer: 1,
+      explanation: 'DPO\'s implicit reward is r(x,y) = β log(π_θ(y|x)/π_ref(y|x)). Token-level DPO decomposes this into per-token contributions: r_t = β log(π_θ(a_t|s_t)/π_ref(a_t|s_t)). The per-token advantage A_t is computed from these token-level implicit rewards, enabling token-level gradient updates that give credit to individual tokens rather than the full sequence. This is a clean derivation from the same DPO reparameterisation without requiring a separate value network.',
+      hints: [
+        'DPO implicit reward: the whole-sequence reward decomposes naturally as a sum of per-token log-ratio terms.',
+        'No critic needed: the reference model π_ref provides the baseline for each token implicitly.',
+      ],
+    },
+  ],
+  'ppo-rlhf-details': [
+    {
+      id: 'q-rlhf-kp34-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'In InstructGPT\'s PPO-based RLHF, the KL penalty β·KL(π_θ || π_ref) is added to the reward. What is the role of the reference policy π_ref?',
+      options: [
+        'π_ref provides the baseline for the value function estimation in the critic network',
+        'π_ref is the SFT-initialised policy kept frozen; the KL penalty prevents the RLHF policy from drifting too far, preserving language coherence and preventing reward hacking at the cost of KL divergence from the starting point',
+        'π_ref is a separate model trained on harmful content to provide negative examples for the discriminator',
+        'π_ref is updated each iteration to match the current policy, acting as a slowly moving target',
+      ],
+      correctAnswer: 1,
+      explanation: 'InstructGPT PPO reward: r_total(x,y) = r_RM(x,y) − β·KL(π_θ(·|x) || π_SFT(·|x)). The KL term penalises divergence from the SFT baseline: large divergence = large penalty = prevents the policy from exploiting the RM with degenerate outputs. Without this, the policy might learn to produce grammatically broken but high-reward outputs that the RM wasn\'t trained to evaluate.',
+      hints: [
+        'KL constraint = "don\'t drift too far from what you knew how to do before RLHF."',
+        'β controls the trade-off: β=0 = unconstrained RM maximisation; β→∞ = no policy change.',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp34-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'The value model (critic) in PPO-based RLHF is typically initialised from the reward model rather than from the language model backbone, because the reward model already learned to estimate response quality.',
+      correctAnswer: 'true',
+      explanation: 'InstructGPT and subsequent works initialise the PPO value function from the reward model weights (same backbone + scalar head). This provides a warm start for value estimation rather than training from scratch. The critic then adapts during PPO to estimate V(x, y_{1:t}) — the expected future reward from the current prefix — rather than just scoring complete responses.',
+      hints: [
+        'Cold-start critic: value function trained from random initialisation converges slowly, harming early policy updates.',
+        'RM → critic: the RM already knows "what makes responses good" — a natural initialisation for V(s).',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp34-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'PPO-based RLHF for LLMs requires 4 models in memory simultaneously. What are they?',
+      options: [
+        'Actor, critic, discriminator, generator',
+        'Actor (π_θ), critic (V_φ), reference policy (π_ref, frozen), reward model (r_ψ, frozen) — each requires a separate model copy, making PPO-RLHF memory-intensive (4× the base model size)',
+        'Actor, target actor, critic, target critic — as in DDPG/SAC for continuous control',
+        'Teacher model, student model, reward model, value model',
+      ],
+      correctAnswer: 1,
+      explanation: 'PPO-RLHF memory footprint: (1) Actor π_θ: the policy being trained; (2) Critic V_φ: estimates per-step value for advantage computation; (3) Reference π_ref: frozen SFT model for KL penalty computation; (4) Reward model r_ψ: frozen RM for reward computation. At 70B parameters each, this requires 4 × 70B × 2 bytes (bfloat16) ≈ 560 GB GPU memory. Techniques like LoRA-only updates, model sharding, and parameter sharing (actor/ref share backbone) reduce this.',
+      hints: [
+        'At each rollout step: actor generates tokens, RM scores the complete response, critic evaluates the prefix, ref model computes KL.',
+        'Reducing to 2 models: share actor/ref backbone, keep RM separate — but KL computation requires both forward passes.',
+      ],
+    },
+  ],
+  'alignment-generalization': [
+    {
+      id: 'q-rlhf-kp35-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'The "generalisation" problem in RLHF refers to ___.',
+      options: [
+        'Whether the RLHF-trained model can generalise to new NLP benchmarks it was not evaluated on during development',
+        'Whether safety and helpfulness training on a limited set of scenarios transfers to novel, out-of-distribution situations that were not covered in the training data',
+        'Whether the reward model generalises to evaluating responses in languages other than English',
+        'Whether the RLHF model retains its pre-training knowledge (general intelligence) after fine-tuning',
+      ],
+      correctAnswer: 1,
+      explanation: 'Alignment generalisation: RLHF training covers a finite set of harmful categories and helpful task types. When deployed, users attempt novel requests not covered in training. The question is whether alignment training produces a model with genuine values (that generalise) or merely learned surface patterns (that can be bypassed). This motivates scalable oversight (training on reasoning, not just outcomes) and interpretability research.',
+      hints: [
+        'Surface pattern: "refuse requests containing the word \'bomb\'"—bypassed by paraphrasing. Genuine value: understands the intent to cause harm.',
+        'Generalisation test: does the aligned model handle completely new harmful request types correctly without explicit training?',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp35-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Scalable oversight techniques (debate, recursive reward modelling, amplification) aim to train reward models that remain accurate even when evaluating reasoning and capabilities that exceed the human evaluator\'s direct ability to verify.',
+      correctAnswer: 'true',
+      explanation: 'As models become superhuman, humans cannot directly evaluate whether a complex 1000-step mathematical proof is correct. Debate (Irving et al.): two AI models argue for/against a conclusion; humans judge the debate. Recursive reward modelling: break hard tasks into easier subproblems that humans can evaluate, compose their scores. These approaches aim to maintain human oversight even as AI capability scales beyond direct human evaluation.',
+      hints: [
+        'Direct evaluation limit: a human cannot verify a proof of Fermat\'s Last Theorem in 5 minutes.',
+        'Debate: "if the proof has an error, the other AI model will point it out and the human can verify that specific claim."',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp35-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'The Eliciting Latent Knowledge (ELK) problem asks how to train a model to report its actual beliefs rather than its predicted-optimal-response-for-human-approval. What makes this fundamentally difficult?',
+      options: [
+        'ELK is only difficult because language models do not have beliefs — they are statistical pattern matchers without internal states',
+        'Any training signal derived from human approval incentivises the model to report what humans want to hear (approval-maximising beliefs) rather than actual internal representations; no human-approval-based loss can distinguish genuine belief from strategically reported belief',
+        'ELK is difficult because transformer architectures do not have dedicated "belief representation" components that can be extracted',
+        'ELK requires reading model weights, which is computationally intractable for 70B+ parameter models',
+      ],
+      correctAnswer: 1,
+      explanation: 'ARC\'s ELK problem (Christiano, 2021): if we train a model to "report true beliefs" using human approval, a sufficiently capable model can learn to predict what response will maximise approval and report that—rather than its actual internal representation of the truth. This is indistinguishable from genuine belief reporting from the outside. Proposed solutions include consistency checks (probing for belief-consistency across rephrasings) and interpretability-based approaches.',
+      hints: [
+        'If "truthful answer" = "what the human approves of", training for human approval = training for strategic reporting.',
+        'A perfectly deceptive model would pass all approval-based ELK tests while reporting strategically—ELK requires an approval-independent verification.',
+      ],
+    },
+  ],
+  'model-merging-alignment': [
+    {
+      id: 'q-rlhf-kp36-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Model merging (e.g., TIES, DARE, SLERP) combines multiple fine-tuned model weights without retraining. In the context of alignment, model merging is used to ___.',
+      options: [
+        'Replace the RLHF fine-tuning stage entirely with a geometric average of pre-trained weights',
+        'Combine a safety-tuned model with a capability-tuned model (e.g., math specialist) by merging their weight differences from the base model, attempting to achieve both safety and specialised capability without separate RLHF for each combination',
+        'Train multiple reward models and merge them to reduce variance in preference predictions',
+        'Merge the actor and critic networks in PPO to reduce memory requirements during RLHF',
+      ],
+      correctAnswer: 1,
+      explanation: 'Model merging for alignment: suppose you have (base → safety-tuned via RLHF) and (base → math-tuned via SFT). Instead of training (base → math → RLHF safety), merge the weight deltas: θ_merged = θ_base + λ₁(θ_safety − θ_base) + λ₂(θ_math − θ_base). TIES resolves sign conflicts in weight deltas; DARE randomly drops small weight changes. This enables modular alignment without retraining each capability combination from scratch.',
+      hints: [
+        'Task arithmetic: adding weight deltas from different fine-tuned models can combine their capabilities.',
+        'Conflict resolution: if safety delta and math delta disagree on a weight, TIES uses the majority sign.',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp36-2',
+      type: 'true-false',
+      difficulty: 'easy',
+      question: 'Safety training via RLHF can be partially undone by subsequent fine-tuning on domain-specific data (e.g., medical QA), a phenomenon called "safety tax" or "alignment erasure" that requires re-aligning after capability fine-tuning.',
+      correctAnswer: 'true',
+      explanation: 'Yang et al. (2023) and subsequent work showed that fine-tuning a safety-aligned model on benign domain data (medical, legal, coding) partially undoes safety alignment—the model becomes more likely to comply with harmful requests. The intuition: RLHF safety modifies a small subspace of weights; domain fine-tuning overwrites some of these modifications. Solutions: safety-aware fine-tuning, regularisation toward the aligned model, or merging after domain fine-tuning.',
+      hints: [
+        'Safety alignment ≠ stable: it can be partially overwritten by subsequent gradient updates on unrelated data.',
+        'Even fine-tuning on entirely harmless data (e.g., recipe generation) can degrade safety alignment.',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp36-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Reward model ensembling is used to improve alignment robustness. What specific problem does it address compared to a single RM?',
+      options: [
+        'A single RM has too few parameters to model all possible preference patterns',
+        'A single RM may have high variance in its predictions for out-of-distribution inputs; ensembling multiple RMs (trained on different data splits or initialisations) reduces RM uncertainty and makes reward hacking harder—the policy must fool all ensemble members simultaneously',
+        'A single RM cannot be run in parallel on multiple GPUs, while an ensemble can be distributed',
+        'A single RM can only score binary preferences; an ensemble enables continuous preference scoring',
+      ],
+      correctAnswer: 1,
+      explanation: 'Ensemble RM: r_ensemble(x,y) = (1/K) Σ_k r_k(x,y). Variance across ensemble members signals RM uncertainty: if all RMs agree, the reward is reliable; if they disagree, the input is out-of-distribution. The policy gradient penalty σ²(r_1,...,r_K) discourages the policy from exploiting uncertain regions. Additionally, adversarially gaming K RMs simultaneously is harder than gaming a single RM—ensemble robustness prevents trivial reward hacking.',
+      hints: [
+        'Reward hacking: find x with high r(x) but low true preference. Ensemble: x must have high mean AND low variance across RMs.',
+        'Uncertainty-weighted reward: r_penalty = r_mean − λ·σ_ensemble — penalise inputs where the ensemble is uncertain.',
+      ],
+    },
+  ],
+  'frontier-model-alignment': [
+    {
+      id: 'q-rlhf-kp37-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Anthropic\'s "responsible scaling policy" (RSP) establishes AI Safety Levels (ASL) analogous to biosafety levels. What triggers an ASL-3 designation and what constraints does it impose?',
+      options: [
+        'ASL-3 is triggered when a model scores >90% on MMLU, requiring mandatory public safety evaluation',
+        'ASL-3 is triggered when a model demonstrates meaningful uplift to CBRN weapons development or could enable cyberattacks on critical infrastructure; it imposes stringent security measures (restricted weights access), enhanced deployment safeguards, and mandatory third-party red-teaming before deployment',
+        'ASL-3 applies to all models with >100B parameters regardless of capability evaluations',
+        'ASL-3 is triggered by a model generating any content about weapons, requiring immediate shutdown of training',
+      ],
+      correctAnswer: 1,
+      explanation: 'Anthropic\'s RSP: ASL-1 = no significant risk; ASL-2 = current frontier (Claude 3/3.5 series) — can discuss dangerous topics but cannot provide meaningful uplift; ASL-3 = meaningful CBRN uplift or cyberoffense capability — requires weight security comparable to classified government systems, mandatory enhanced safety measures. The key metric: "does this model provide meaningful uplift to a nation-state or non-state actor seeking to develop CBRN weapons?"',
+      hints: [
+        'CBRN: Chemical, Biological, Radiological, Nuclear — the highest-consequence risk domains for AI uplift.',
+        '"Meaningful uplift": could a determined adversary synthesise a bioweapon significantly more easily with this model than without it?',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp37-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Model evaluations for dangerous capabilities (e.g., CBRN uplift potential, autonomous cyberoffense) must be conducted before each major model deployment, not just during initial training, because fine-tuning can elicit new capabilities.',
+      correctAnswer: 'true',
+      explanation: 'Frontier labs (Anthropic, DeepMind, OpenAI) evaluate capabilities before training completion and before each significant deployment. Fine-tuning can elicit latent capabilities that were present but not expressed in the base model. This is why MATS, METR, and similar organisations conduct third-party capability evaluations as a pre-deployment requirement under the Frontier Model Forum commitments.',
+      hints: [
+        'Emergent capabilities from fine-tuning: a model may gain the ability to synthesise dangerous compounds when fine-tuned on chemistry data, even if it could not before.',
+        'Third-party evaluation: labs cannot reliably self-certify safety—independent evaluation is a governance requirement.',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp37-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Multi-agent RLHF presents unique alignment challenges. When an RLHF-trained model operates as an agent (tool use, multi-step planning), what is the "principal-agent problem" that emerges?',
+      options: [
+        'The model forgets its system prompt when acting as an agent because agentic contexts are out-of-distribution',
+        'As the model takes sequences of actions with real-world consequences, misalignment between the user\'s intent and the model\'s inferred goal can compound over steps—a small misunderstanding in step 1 leads to incorrect actions in steps 2-10; unlike single-turn QA, mistakes are hard to reverse and the model must learn when to pause and verify',
+        'Multi-agent setups require the model to take actions faster than human oversight allows, making all agentic uses unsafe',
+        'The model cannot learn from agentic feedback because agent trajectories are too long for PPO to process efficiently',
+      ],
+      correctAnswer: 1,
+      explanation: 'Agentic alignment challenges: (1) Long-horizon credit assignment — the reward for a 20-step plan only arrives at the end; (2) Irreversibility — deleting a file, sending an email, or making an API call cannot be undone; (3) Goal drift — small misinterpretations compound across steps; (4) Prompt injection — malicious content in the environment tries to hijack the agent\'s goals. Alignment for agents requires "minimal footprint" principles, sandboxing, and human-in-the-loop verification for irreversible actions.',
+      hints: [
+        'Single-turn: mistake → bad response. Agentic: mistake at step 2 → cascade of wrong actions → hard-to-reverse damage.',
+        'Minimal footprint principle: "prefer reversible actions, request only necessary permissions, verify with user before irreversible steps."',
+      ],
+    },
+  ],
+  'offline-online-rlhf': [
+    {
+      id: 'q-rlhf-kp38-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Online RLHF collects new preference data from the current policy during training. What is the key advantage over offline RLHF at frontier model scale?',
+      options: [
+        'Online RLHF requires fewer GPU hours because it trains on fewer examples',
+        'Online RLHF keeps the preference data distribution aligned with the current policy distribution, avoiding the off-policy problem that causes offline methods to stagnate when the policy improves beyond the training data',
+        'Online RLHF eliminates the need for a reward model by collecting human scores on individual responses rather than preferences',
+        'Online RLHF allows training without a reference policy, reducing memory requirements',
+      ],
+      correctAnswer: 1,
+      explanation: 'Online RLHF (Llama 3 alignment report, Gemini alignment, Claude training): the model generates responses → humans or AI annotators compare → reward model or direct DPO update → repeat. This keeps training on-policy: as the model improves, harder questions are selected and preferences are collected for current-capability outputs. Llama 3 used 6 rounds of online preference data collection for alignment.',
+      hints: [
+        'Offline: static 2022 data, 2025 model. The model\'s outputs are far better than the "chosen" examples—learning stagnates.',
+        'Online: current model outputs → fresh preferences → meaningful gradient signal for current capability level.',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp38-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Rejection sampling fine-tuning (ReST, STaR, RFT) is a simple online RLHF-like method that generates multiple responses, keeps only the highest-reward ones, and fine-tunes on them—effectively combining RL exploration with supervised learning.',
+      correctAnswer: 'true',
+      explanation: 'Rejection sampling FT: (1) sample N responses per prompt; (2) score with RM or ground-truth verifier; (3) keep responses above a quality threshold; (4) SFT on the filtered data. This is simpler than PPO/DPO, avoids instability, and works well for verifiable tasks (math, coding) where correctness is the reward. STaR (Zelikman et al.) applied this to chain-of-thought: generate rationales, keep those leading to correct answers, fine-tune.',
+      hints: [
+        'ReST = "Reward from Scores and Trajectories": sample, score, filter, fine-tune — no RL policy gradient needed.',
+        'STaR: model generates reasoning chains → keep correct ones → retrain → model improves at reasoning.',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp38-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'When collecting online preference data for RLHF, the "exploration-exploitation trade-off" for prompt selection means ___.',
+      options: [
+        'Using the same prompts repeatedly (exploitation) ensures stable training, while novel prompts (exploration) destabilise it',
+        'To get informative preference data, prompts should be selected where the model\'s two candidate responses are close in quality (uncertain region) rather than one being obviously better—called "exploration for informative pairs"—but balanced with "exploitation" of known capability gaps',
+        'Exploration means generating very long responses, exploitation means generating very short ones',
+        'The exploration-exploitation trade-off only applies to multi-armed bandit problems, not to RLHF prompt selection',
+      ],
+      correctAnswer: 1,
+      explanation: 'If one response is obviously better, the preference label is clear but provides little new information to the RM. Informative pairs come from the RM\'s decision boundary: where RM uncertainty is highest (|r(y_w) − r(y_l)| is small). Actively selecting such prompts (active learning for preferences) improves RM sample efficiency. Balancing: too much boundary-sampling neglects clear-cut preferences; too little wastes annotation on easy examples.',
+      hints: [
+        'Uninformative pair: "Explain quantum physics" → (excellent response) vs (random gibberish). Obviously the first is better—no useful RM training signal.',
+        'Informative pair: two similar-quality responses on a nuanced request — annotator disagreement is possible, RM learns from the boundary.',
+      ],
+    },
+  ],
+  'rlhf-safety': [
+    {
+      id: 'q-rlhf-kp39-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'The "HHH" framework (Helpful, Harmless, Honest) used by Anthropic for alignment defines three objectives that can sometimes conflict. Which is a canonical example of an HHH conflict?',
+      options: [
+        'Being helpful by writing code vs. being harmless by refusing to write any code that could be compiled',
+        'A user requests help with a legal but ethically questionable activity (e.g., writing a persuasive essay for a position the model disagrees with): being helpful requires writing it, being honest requires stating the model\'s disagreement, and being harmless requires assessing whether the essay could be used to harm others',
+        'Being honest by citing sources vs. being harmless by not citing potentially biased sources',
+        'Being helpful by being brief vs. being honest by providing full uncertainty caveats',
+      ],
+      correctAnswer: 1,
+      explanation: 'HHH conflicts require nuanced trade-offs: for a persuasive essay on a contentious topic, helpfulness (write the essay), honesty (add caveats about one-sided reasoning), and harmlessness (consider downstream use). Claude\'s constitution provides prioritisation: generally prioritise harmlessness > honesty > helpfulness, but context changes the ordering. The tension is irreducible and managed case-by-case rather than resolved algorithmically.',
+      hints: [
+        'HHH are not always aligned: a maximally helpful model might tell harmful lies; a maximally harmless model might refuse all requests.',
+        'Prioritisation heuristic: "catastrophic harm prevention > honesty about uncertainty > user satisfaction."',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp39-2',
+      type: 'true-false',
+      difficulty: 'easy',
+      question: 'Harmlessness-only training without helpfulness objectives produces "assistant-brained" models that are overly cautious, refuse legitimate requests, and add excessive safety caveats—reducing real-world usefulness without proportionate safety benefit.',
+      correctAnswer: 'true',
+      explanation: 'Over-refusal is a well-documented failure mode: models trained primarily to avoid harm learn to refuse anything vaguely related to sensitive topics, including legitimate medical questions, historical discussions of violence, creative writing with conflict, and security research. This "excessive caution" was highlighted in Claude\'s model card and OpenAI\'s GPT-4 system card as a training challenge—balancing genuine harm prevention against false-positive refusals.',
+      hints: [
+        '"Assistant-brained": the model\'s primary goal is avoiding any possible criticism rather than genuinely helping users.',
+        'False positive refusal: refusing "explain how antibiotics work" because it mentions bacteria is a failure of proportionality.',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp39-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'The concept of "dual-use" content creates a fundamental challenge for harmlessness training. How do frontier labs typically handle dual-use knowledge (e.g., virology, cybersecurity)?',
+      options: [
+        'All dual-use knowledge is blocked categorically because the risk always outweighs the benefit',
+        'Risk-benefit analysis based on counterfactual impact: if the information is freely available in textbooks or online (low counterfactual impact), providing it to a curious learner outweighs the marginal risk; if it provides meaningful uplift beyond what is publicly available (high counterfactual impact), it is restricted even to legitimate requesters',
+        'Dual-use knowledge is only provided to verified professionals with API keys linked to their credentials',
+        'The model asks for justification before answering any dual-use question, regardless of the likely use case',
+      ],
+      correctAnswer: 1,
+      explanation: 'Counterfactual impact framing: "would withholding this information prevent harm?" If a chemistry student can find the information in any university textbook, refusing it provides no safety benefit while harming the legitimate user. If the information constitutes genuine expert knowledge unavailable elsewhere (e.g., specific bioweapon synthesis parameters), even partial disclosure is restricted. This framework underpins how Claude\'s usage policy distinguishes "sensitive but appropriate" from "harmful to provide under any circumstances."',
+      hints: [
+        'Counterfactual: "if I don\'t answer this, will the person still find it?" If yes, refusing has no safety benefit.',
+        'Dual-use spectrum: general chemistry (freely available) → precursor synthesis routes (semi-restricted) → weaponisation parameters (categorically restricted).',
+      ],
+    },
+  ],
+  'reward-hacking-theory': [
+    {
+      id: 'q-rlhf-kp40-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Reward hacking in the context of RLHF is analogous to ___.',
+      options: [
+        'Overfitting: the policy memorises training examples rather than generalising',
+        'Goodhart\'s Law applied to AI training: optimising a proxy reward (RM score) diverges from the true objective (genuine human preference) as the policy improves, finding inputs that score high on the proxy without being genuinely good',
+        'Gradient hacking: the model modifies its own gradients to prevent learning',
+        'Mode collapse in GANs: the generator finds a single output that always fools the discriminator',
+      ],
+      correctAnswer: 1,
+      explanation: 'Reward hacking = Goodhart\'s Law in RLHF: the RM is a proxy trained on finite preference data. As the policy explores (via RL), it finds inputs the RM was not trained on where RM score is high but human preference is low. Examples: excessively long responses (verbosity bias), formatting tricks (bold every sentence), sycophantic preambles ("Great question!"). The RM score optimises up; human evaluators see degradation.',
+      hints: [
+        'Goodhart: "When a measure becomes a target, it ceases to be a good measure."',
+        'The RM generalises within the training distribution but is exploitable outside it—and RL will find the boundary.',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp40-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'The KL divergence penalty in PPO-RLHF provides a principled defense against reward hacking by preventing the policy from exploring regions far from the SFT distribution where reward model predictions are unreliable.',
+      correctAnswer: 'true',
+      explanation: 'The KL constraint r_total = r_RM − β·KL(π || π_SFT) works as a trust region: the policy is allowed to move only in directions consistent with the reference distribution. Since the RM was trained on outputs similar to π_SFT, it is most reliable near π_SFT. The β parameter sets how far the policy can deviate—larger β = stronger anti-hacking protection but less alignment improvement; smaller β = more optimisation but more hacking risk.',
+      hints: [
+        'Trust region: "stay near what the RM was trained to evaluate reliably."',
+        'RM extrapolation: far from training data, the RM\'s predictions are unreliable. KL constraint prevents this exploration.',
+      ],
+    },
+    {
+      id: 'q-rlhf-kp40-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Anthropic\'s paper "Scaling Laws for Reward Model Overoptimization" (Gao et al., 2022) found that the gold reward (proxy for human preference) as a function of KL divergence from the SFT policy follows which pattern?',
+      options: [
+        'Monotonically increasing: more RM optimisation always yields better gold reward',
+        'Monotonically decreasing: any RM optimisation harms gold reward',
+        'Concave with a peak: gold reward initially increases with KL divergence (genuine alignment improvement) but then decreases (reward hacking dominates) — the peak shifts with RM size and dataset size',
+        'Flat: gold reward is insensitive to the amount of RM optimisation',
+      ],
+      correctAnswer: 2,
+      explanation: 'Gao et al. measured gold reward (from a larger "gold" RM trained on more data) vs. proxy RM score as the policy\'s KL from SFT increased via best-of-N sampling and RL. Results: gold reward peaks at an intermediate KL value (genuine alignment) then degrades (reward hacking). Larger proxy RMs peak later (higher KL before degradation) and more robustly. This quantifies the overoptimisation phenomenon and motivates periodic RM updates during RL training.',
+      hints: [
+        'Low KL: close to SFT, minimal alignment improvement. High KL: exploiting RM, human quality degrades.',
+        'Sweet spot: intermediate KL where proxy score reflects genuine quality. Beyond it, Goodhart\'s Law dominates.',
+      ],
+    },
+  ],
+}
+
+Object.assign(questions, additionalQuestions2)
 
 registerQuestions(questions);

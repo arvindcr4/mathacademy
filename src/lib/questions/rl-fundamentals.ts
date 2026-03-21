@@ -1702,7 +1702,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-rl-kp36-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "In n-step TD learning, increasing n generally increases the variance but decreases the bias of the value estimate. Why?",
       options: [
@@ -1722,7 +1722,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-rl-kp36-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "n-step Tree Backup extends n-step TD to off-policy learning without importance sampling weights. How does it achieve this?",
       options: [
@@ -1738,7 +1738,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-rl-kp36-3",
       type: "true-false",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "Q(sigma) is a unifying algorithm that generalizes between TD(0), Expected Sarsa, and n-step Tree Backup by using a parameter sigma that controls how much sampling versus expectation is used at each step.",
       correctAnswer: "True",
@@ -1751,7 +1751,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-rl-kp37-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is the deadly triad in reinforcement learning, and why does it cause instability?",
       options: [
@@ -1771,7 +1771,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-rl-kp37-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "Semi-gradient TD methods update the weights in the direction that reduces the TD error on the current estimate, but not in the direction that would also account for the change in the target. Why does this matter?",
       options: [
@@ -1800,7 +1800,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-rl-kp38-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "The policy gradient theorem states that ∇J(θ) ∝ Σ_s μ(s) Σ_a Q^π(s,a) ∇π(a|s,θ). Why is this result significant?",
       options: [
@@ -1816,7 +1816,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-rl-kp38-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "REINFORCE with a baseline b(s) uses the update ∇θ J ≈ (Gₜ - b(Sₜ)) ∇θ log π(Aₜ|Sₜ,θ). Why does subtracting a baseline reduce variance without introducing bias?",
       options: [
@@ -1845,7 +1845,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-rl-kp39-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is the Dyna architecture in model-based RL, and how does it combine real and simulated experience?",
       options: [
@@ -1865,7 +1865,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-rl-kp39-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "Model-based RL can suffer from model exploitation: the agent learns to exploit errors in the learned model to achieve artificially high simulated returns. What architectures mitigate this problem?",
       options: [
@@ -1894,7 +1894,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-rl-kp40-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is the exploration-exploitation dilemma in RL, and how does epsilon-greedy address it?",
       options: [
@@ -1914,7 +1914,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-rl-kp40-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "Intrinsic motivation methods for exploration assign reward bonuses based on state novelty or prediction error. What is the key advantage over epsilon-greedy in sparse-reward environments?",
       options: [
@@ -1943,7 +1943,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-rl-kp41-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What was the key algorithmic innovation of AlphaGo that allowed it to defeat world champion Go players?",
       options: [
@@ -1963,7 +1963,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-rl-kp41-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "AlphaZero uses a single neural network f(s) = (p, v) for both the policy and value function in MCTS. What is the advantage over AlphaGo's separate networks?",
       options: [
@@ -1992,7 +1992,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-rl-kp42-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is offline (batch) reinforcement learning, and what is the core challenge that distinguishes it from online RL?",
       options: [
@@ -2012,7 +2012,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-rl-kp42-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "Conservative Q-Learning (CQL) adds a regularization term to the standard Bellman update. What does it minimize and why does it enable safe offline learning?",
       options: [
@@ -2041,7 +2041,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-rl-kp43-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is non-stationarity in multi-agent reinforcement learning, and why does it make standard single-agent RL algorithms difficult to apply directly?",
       options: [
@@ -2061,7 +2061,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-rl-kp43-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "In competitive multi-agent settings, self-play can lead to strategy cycling (rock-paper-scissors dynamics). How does population-based training address this?",
       options: [
@@ -2090,7 +2090,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-rl-kp44-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is Reinforcement Learning from Human Feedback (RLHF), and why is it used to align large language models?",
       options: [
@@ -2110,7 +2110,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-rl-kp44-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "Direct Preference Optimization (DPO) is proposed as an alternative to RLHF-PPO. What is its key innovation and advantage?",
       options: [
@@ -2139,7 +2139,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-rl-kp45-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is safe reinforcement learning, and what types of constraints does it typically enforce?",
       options: [
@@ -2159,7 +2159,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-rl-kp45-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "An autonomous robot trained with RL must satisfy a safety constraint: joint torques must never exceed τ_max. During deployment, the policy sometimes violates this constraint by 5%. What approaches address this gap between training constraint satisfaction and deployment safety?",
       options: [

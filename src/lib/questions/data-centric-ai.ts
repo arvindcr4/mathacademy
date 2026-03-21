@@ -683,6 +683,60 @@ const questions: Record<string, Question[]> = {
         'The fine-tuning curriculum can also use the rate of loss decrease per step as a difficulty signal: examples whose loss decreases quickly are "learnable" and should come before those that require many gradient steps.',
       ],
     },
+    {
+      id: "q-dc-kp7-4",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "In curriculum learning for object detection, an example containing a single large centered object is typically considered easier than one containing multiple small overlapping objects.",
+      correctAnswer: "True",
+      explanation:
+        "Object detection difficulty measures are based on: (1) Object size: small objects (fewer than 32×32 pixels in COCO) are harder because they have fewer feature map activations. (2) Occlusion/truncation: overlapping objects require the model to infer from partial evidence. (3) Number of objects: more objects mean more potential anchor assignments and more bounding box regression targets. (4) Aspect ratio extremity: very wide/tall bounding boxes are harder to regress. A single large centered object is easy because: the anchor coverage is complete, features at multiple scales clearly activate, and there is no ambiguity in bounding box assignment. Curriculum training for detection (e.g., SimpleDet, Cascade RCNN training schedules) starts with large-object batches and progressively introduces small and occluded objects.",
+      hints: [
+        "COCO object size categorization: small < 32² pixels, medium 32²–96² pixels, large > 96² pixels. Small objects are notoriously difficult and drive most failure cases in detection benchmarks.",
+        "Focal loss (RetinaNet) can be viewed as an implicit curriculum: it down-weights easy examples (high-confidence correct predictions) and focuses training on hard examples.",
+      ],
+    },
+    {
+      id: "q-dc-kp7-5",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Focal Loss (Lin et al. 2017) is used in object detection to address class imbalance between background and foreground anchors. The loss is: FL(p_t) = −(1 − p_t)^γ log(p_t). With γ = 2, how does this affect easy vs. hard examples compared to standard cross-entropy?",
+      options: [
+        "Focal loss increases the gradient for easy examples (high p_t) and decreases it for hard examples (low p_t)",
+        "Focal loss down-weights easy, well-classified examples (high p_t → (1−p_t)^γ ≈ 0) and up-weights hard, misclassified examples (low p_t → (1−p_t)^γ ≈ 1), creating an automatic curriculum that focuses on hard examples",
+        "Focal loss is equivalent to cross-entropy with a class-weighted loss, scaling each class by its inverse frequency",
+        "Focal loss applies only to the bounding box regression component, not the classification loss",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Focal loss modulating factor (1 − p_t)^γ: For γ = 2 and an easy example with p_t = 0.95: (1 − 0.95)² = 0.0025 → loss is down-weighted by 400×. For a hard example with p_t = 0.3: (1 − 0.3)² = 0.49 → loss is down-weighted by only 2×. Effect: training is automatically focused on hard examples — exactly the cases where the model is wrong (low p_t). This is equivalent to a dynamic curriculum where the current model\'s confidence determines which examples receive learning signal. Context: in one-stage detectors like FCOS or RetinaNet, there are ~100K anchors per image but only ~10–100 foreground anchors. Without focal loss, the overwhelming background gradient (all easy negatives) drowns out the foreground gradient.",
+      hints: [
+        "γ = 0: focal loss = standard cross-entropy. γ = 2: easy examples contribute ~100× less gradient than hard examples. γ = 5: even more aggressive focus on hard examples.",
+        "Focal loss does not require predefined difficulty ordering — difficulty is determined dynamically by p_t at each training step, making it more adaptive than fixed curriculum schedules.",
+      ],
+    },
+    {
+      id: "q-dc-kp7-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Dynamic Data Weighting (DDW) assigns per-example weights wᵢ(t) that change during training based on the model\'s current loss Lᵢ(t). How does DDW differ from both curriculum learning and Focal Loss?",
+      options: [
+        "DDW uses a fixed external difficulty oracle; curriculum learning and Focal Loss use model-based difficulty",
+        "DDW learns the per-example weight function wᵢ(t) from a small clean validation set using meta-learning (bi-level optimization), while curriculum learning uses fixed difficulty and Focal Loss uses a fixed (1−p_t)^γ formula — DDW is the most adaptive because it optimizes weights to minimize validation loss rather than following a heuristic schedule",
+        "DDW applies only to the data collection phase, not model training",
+        "DDW is equivalent to importance weighting for domain adaptation and has no connection to curriculum learning",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "DDW (Shu et al. 2019, Meta-Weight-Net) meta-learns a weight function v(Lᵢ) → wᵢ using a small, clean validation set: outer loop: update v to minimize validation loss when the model is trained with current weights. Inner loop: update model parameters using weighted training loss Σᵢ v(Lᵢ)·Lᵢ. The learned weight function v can assign: high weight to hard examples (like Focal Loss), low weight to noisy examples (like curriculum learning\'s early-phase filtering), or any combination. This is more flexible than fixed γ in Focal Loss or fixed difficulty ordering in curriculum learning. Key insight: the clean validation set acts as a signal for what good training examples look like — examples whose gradient alignment with the validation set is high get higher weights.",
+      hints: [
+        "DDW vs. curriculum learning: curriculum uses a fixed difficulty measure and schedule. DDW dynamically learns which examples to weight up based on validation performance feedback.",
+        "DDW vs. Focal Loss: Focal Loss uses a fixed (1−p_t)^γ formula. DDW learns the weight function from data — it could learn to up-weight hard examples, down-weight noisy ones, or both.",
+      ],
+    },
   ],
 
   "data-programming": [
@@ -738,6 +792,60 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Data programming is not zero-cost: writing good LFs requires domain expertise (knowing which patterns are discriminative) and iteration (testing LF accuracy on a small labeled validation set).",
         'Best practice: use Snorkel to generate weak labels for 500K examples, then manually label 1,000–5,000 for validation and as a "gold standard" for evaluating LF quality.',
+      ],
+    },
+    {
+      id: "q-dc-kp8-4",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "In Snorkel\'s data programming framework, a labeling function that always returns ABSTAIN on every example contributes no useful information and effectively reduces the number of active labeling functions by one.",
+      correctAnswer: "True",
+      explanation:
+        "A labeling function with 100% ABSTAIN rate has zero coverage — it never votes on any example. In Snorkel\'s label model, such an LF contributes no information to the probabilistic label estimates because it never participates in any vote aggregation. The coverage of an LF is: cov(LFₖ) = P(LFₖ ≠ ABSTAIN). An LF with cov = 0 provides no signal. In practice, ABSTAIN-heavy LFs (very low coverage) are almost as bad: an LF with 0.1% coverage votes on only 500 out of 500,000 examples and contributes negligible influence on the label model. LF coverage vs. accuracy tradeoff: high coverage but 55% accuracy is often more valuable than 99% accuracy with 1% coverage, because the high-coverage LF provides more total information despite individual errors.",
+      hints: [
+        "Coverage: fraction of examples where the LF does not ABSTAIN. Accuracy: fraction of non-ABSTAIN votes that match the true label (estimated by Snorkel\'s label model).",
+        "Designing good LFs: aim for coverage > 10% with accuracy > 60%. Multiple lower-accuracy, high-coverage LFs combined by the label model usually outperform a single high-accuracy, low-coverage LF.",
+      ],
+    },
+    {
+      id: "q-dc-kp8-5",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In Snorkel, the empirical accuracy of a labeling function LFₖ on a validation set is 0.65, but the Snorkel label model estimates its accuracy as 0.82. The most likely explanation is:",
+      options: [
+        "The Snorkel label model has a bug that over-estimates LF accuracy",
+        "The validation set may be too small to give a reliable accuracy estimate, while the label model uses the full unlabeled dataset\'s LF correlation structure to estimate accuracy more reliably",
+        "LFₖ has a systematic bias toward positive labels that inflates its empirical accuracy",
+        "The validation set examples are drawn from a different distribution than the unlabeled training data",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Snorkel\'s label model estimates LF accuracies using the unlabeled data\'s LF co-occurrence statistics (without access to true labels), while the empirical accuracy uses a labeled validation set. Discrepancies can arise from: (1) Small validation set: with 100–500 labeled examples, the empirical accuracy has high variance. (2) Distribution mismatch: the validation set may sample different examples than the unlabeled pool — if LFₖ performs better on the specific types of examples in the unlabeled pool, label model accuracy may be higher. (3) The label model uses the correlation structure across ALL LFs to disentangle each LF\'s quality — this can be more accurate than direct measurement if LFs have complementary coverage. The label model\'s advantage: it uses 500,000 examples (via co-occurrence statistics) vs. the validation set\'s 500 labeled examples.",
+      hints: [
+        "Snorkel label model accuracy estimation: uses the unsupervised graphical model trained on LF output correlations across 500K examples — effectively using more data than the small validation set.",
+        "Best practice: use the validation set to identify clearly wrong LFs (empirical accuracy < 0.5 = worse than random) while trusting the label model for the remaining calibration.",
+      ],
+    },
+    {
+      id: "q-dc-kp8-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Programmatic weak supervision with labeling functions has been applied to relation extraction, named entity recognition (NER), and medical coding. For sequence labeling tasks like NER (where each token in a sentence must be labeled), what modification to standard LF design is required?",
+      options: [
+        "LFs cannot be used for sequence labeling; only classification tasks support data programming",
+        "LFs for NER must return a full token-level label sequence (e.g., BIO tags for each token), not a single document-level label — and the label model must aggregate these sequence-level LF outputs using a sequence-aware model (e.g., HMM or linear-chain CRF)",
+        "NER LFs must use neural sequence models rather than heuristic rules",
+        "Sequence labeling requires exact agreement between all LFs on every token before any label is assigned",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Standard Snorkel assumes: LF outputs are a single vote {−1, 0, +1} per example. For NER, each example is a sentence with T tokens, each requiring a label from {O, B-PER, I-PER, B-ORG, …}. LF adaptation for sequence labeling: LF returns a token-level annotation — e.g., a dictionary lookup LF marks all occurrences of known person names as B-PER/I-PER and leaves other tokens as O. Label model for sequences: instead of a per-example generative model, use a sequence-aware label model such as an HMM over token-level LF votes. The HMM propagates information between adjacent tokens (B-PER must be followed by I-PER or O). SKWEAK (Lison et al. 2021) and FlyingSquid extend Snorkel to sequence labeling tasks. Challenge: sequence LFs have exponentially more ways to disagree (full sequence disagreement vs. partial disagreement at specific token positions).",
+      hints: [
+        "Dictionary LFs for NER: look up each token in a gazeteer (list of known entities). High precision for recognized entities but 0 coverage for unknown entities — complements pattern-based LFs.",
+        "Spanner-based LF: a labeling function can return a set of character spans {(start, end, entity_type)} — the label model converts these spans to BIO sequences.",
       ],
     },
   ],
@@ -797,6 +905,60 @@ const questions: Record<string, Question[]> = {
         "Option A (p̂(cat) < 0.5) is too simple: a cat example with p̂ = [0.4, 0.35, 0.25] has p̂(cat) < 0.5 but the model is not confident about any alternative class — not a clear label error.",
       ],
     },
+    {
+      id: "q-dc-kp9-4",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "After running CleanLab on a 10,000-example training set, it flags 800 examples as likely label errors. A practitioner should:",
+      options: [
+        "Automatically delete all 800 flagged examples and retrain the model immediately",
+        "Manually review the flagged examples using the Confident Learning rank ordering (most confident errors first), correct genuine mislabels, confirm ambiguous cases, and retain truly correct labels even if flagged",
+        "Accept all 800 as errors and re-annotate them with a fresh annotator who has not seen the original labels",
+        "Ignore the flags and instead collect 800 additional new training examples to counterbalance the label noise",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "CleanLab flags likely errors but is not perfect — it has its own false positive rate (flagging correctly labeled examples). Best practice workflow: (1) Sort flagged examples by the Confident Learning quality score (the confident joint rank — most likely errors first). (2) Review the top-ranked flagged examples manually: for each flagged example, show the annotator the given label and the model-predicted label. (3) Correct genuine errors, confirm ambiguous cases (sometimes both labels are defensible), and retain correctly labeled examples that were false positives. (4) The bottom-ranked flagged examples (least certain errors) may not be worth reviewing — the cost-benefit of manual review decreases. Automated deletion of all flagged examples risks removing valid training data and can introduce bias if the false positive rate is class-dependent.",
+      hints: [
+        "CleanLab\'s precision-recall tradeoff: higher quality score threshold → fewer flagged examples but more confident each is a true error. Lower threshold → more comprehensive but more false positives.",
+        "Common finding: 40–60% of CleanLab flags are genuine label errors on typical crowdsourced datasets. The remaining 40–60% are borderline cases where the label is defensible but the model disagrees.",
+      ],
+    },
+    {
+      id: "q-dc-kp9-5",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "CleanLab\'s Confident Learning can be extended to multi-label classification (where each example can belong to multiple classes simultaneously) without modification, because it only requires a probability vector per example.",
+      correctAnswer: "False",
+      explanation:
+        "Multi-label classification breaks the Confident Learning assumption that class probabilities sum to 1 (simplex constraint). In multi-label: each class has an independent binary probability p̂_k ∈ [0, 1], and Σ_k p̂_k can exceed 1 — this is not a valid probability distribution over mutually exclusive classes. Confident Learning\'s confident joint construction assumes: a single true label per example, which determines which off-diagonal entry to place the example in. For multi-label data: CleanLab has a separate multi-label extension that treats each class independently (computing per-class label quality scores as binary classification problems) and combines them. The multi-label extension identifies: (1) examples with an incorrect extra label (false positive label), (2) examples missing a true label (false negative label). This is a more complex problem because a single example can have multiple simultaneous label errors.",
+      hints: [
+        "Multi-label Confident Learning: reduce to C independent binary problems, one per class. For each class k, treat examples as positive (label k present) or negative (label k absent) and apply binary Confident Learning.",
+        "The joint distribution matrix in binary Confident Learning is 2×2: C̃[given=0, true=1] (false negatives) and C̃[given=1, true=0] (false positives) are the two off-diagonal error types.",
+      ],
+    },
+    {
+      id: "q-dc-kp9-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Northcutt et al. (2021) applied Confident Learning to 10 benchmarks (MNIST, CIFAR-10, ImageNet, IMDB, Amazon reviews, etc.) and found that the estimated label error rate in ImageNet is approximately:",
+      options: [
+        "0.1%: ImageNet curation is rigorous and nearly error-free",
+        "5.8%: roughly 1 in 17 ImageNet validation labels is estimated to be erroneous, and many corrected labels show the original ImageNet label is simply the secondary rather than the primary subject",
+        "25%: approximately one quarter of ImageNet examples are systematically mislabeled due to ambiguous category boundaries",
+        "50%: ImageNet uses majority-voting from untrained workers, making approximately half the labels unreliable",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Northcutt et al. (2021) \'Pervasive Label Errors in Test Sets Destabilize Machine Learning Benchmarks\' estimated approximately 5.8% (1 in 17) label errors in the ImageNet validation set. Key findings: (1) Many \'errors\' are ambiguous cases where the image contains multiple valid classes (e.g., a lion sitting on a rock, labeled \'lion\' but a valid case for \'African rock python\' if the snake is more prominent). (2) After correcting labels, model rankings on ImageNet validation change — some models that appeared worse under original labels appear better under corrected labels. (3) The estimated label error rate was 6.0% on Amazon reviews, 10.9% on IMDB, 8.1% on 20 Newsgroups. Implication: benchmark accuracy numbers have measurement error of ~5% from label noise, potentially rendering small performance differences between models statistically meaningless.",
+      hints: [
+        "The 5.8% error rate applies to the validation/test set — the set used to measure model performance. Train set errors harm learning; test set errors corrupt benchmark evaluation.",
+        "Model ranking instability: if Model A beats Model B by 0.3% on a benchmark with 5.8% label noise, the difference may be within the noise — the \'better\' model may simply predict the incorrect label less often.",
+      ],
+    },
   ],
 
   "dataset-distillation": [
@@ -852,6 +1014,60 @@ const questions: Record<string, Question[]> = {
       hints: [
         "MMD measures distributional distance between two sets of samples without requiring explicit density estimates: MMD(P, Q) = ‖E_P[φ(x)] − E_Q[φ(x)]‖ using a kernel φ.",
         "DC (gradient matching) directly ensures that training on S* produces similar weight updates to training on D — this is why DC-distilled datasets work well for the target architecture but may not transfer to different architectures.",
+      ],
+    },
+    {
+      id: "q-dc-kp10-4",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Dataset distillation methods produce synthetic images that are always visually interpretable to humans, allowing experts to verify that the distilled dataset captures the essential features of the original data.",
+      correctAnswer: "False",
+      explanation:
+        "Dataset distillation synthesizes images optimized to encode maximum learning signal for a specific model and optimization algorithm — not images that are visually meaningful to humans. The distilled images are often highly unusual patterns: abstract textures, adversarial-like patterns, or blended features from multiple classes superimposed. These images look nothing like natural photographs but effectively communicate class information to the neural network during training. This is because the optimization targets the neural network\'s feature extraction pipeline, not human visual perception. The distilled images can be seen as a compressed encoding of the training signal that the network can decode but humans cannot interpret. This is both a limitation (uninterpretable) and a feature (very compact representation — e.g., 100 images for 60,000 MNIST images).",
+      hints: [
+        "Distilled images are optimized for a specific architecture. Changing the architecture (e.g., from ConvNet to ViT) requires re-running distillation, because the uninterpretable patterns exploit architecture-specific feature extraction.",
+        "Dataset Condensation with Differentiable Siamese Augmentation (DSA) produces slightly more interpretable distilled images by incorporating data augmentation in the optimization — but still far from natural images.",
+      ],
+    },
+    {
+      id: "q-dc-kp10-5",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "A team uses dataset distillation to compress 50,000 CIFAR-10 training images into 100 synthetic images (10 per class) for fast neural architecture search (NAS). The primary motivation is:",
+      options: [
+        "The distilled dataset has higher statistical diversity than the original 50,000 images",
+        "Evaluating candidate architectures on 100 synthetic images takes ~500× less time than on 50,000 real images, enabling exploration of a much larger architecture search space within the same compute budget while maintaining a useful proxy for final model ranking",
+        "The synthetic images are copyright-free, avoiding IP concerns during NAS experiments",
+        "Distilled images prevent overfitting during NAS because they are out-of-distribution",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "NAS computational bottleneck: evaluating each candidate architecture requires training on the full dataset (50,000 images × many epochs). With 1,000 candidate architectures and 50 epochs each: 50M gradient steps. Using distilled data (100 images): the same evaluation takes 100/50,000 = 0.2% of the compute. This enables evaluating 500× more architectures in the same time. The key requirement: the distilled dataset must produce a consistent model ranking — architectures that perform well on the distilled set should also perform well on the full set. Research (Zhao et al. 2021, Cui et al. 2022) shows this ranking correlation is approximately preserved for small-scale benchmarks, making distillation-accelerated NAS a practical approach. Limitation: the ranking correlation degrades for complex architectures (e.g., vision transformers vs. CNNs) due to architecture-specific feature extraction.",
+      hints: [
+        "The ranking correlation between distilled-data evaluation and full-data evaluation is the critical metric for NAS applications. Poor correlation (even if distilled accuracy is reasonable) makes NAS results unreliable.",
+        "Alternative fast NAS proxies: early stopping (train for 5 epochs instead of 100), weight sharing (DARTS, one-shot NAS), and zero-cost proxies (gradient statistics without training).",
+      ],
+    },
+    {
+      id: "q-dc-kp10-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Trajectory Matching (Cazenavette et al. 2022) improves dataset distillation by matching the long-range training trajectories of expert networks trained on real data with the trajectories of networks trained on synthetic data, rather than matching gradients at a single parameter checkpoint. The key advantage over single-step gradient matching (DC) is:",
+      options: [
+        "Trajectory matching requires less compute than gradient matching because it skips the Hessian computation",
+        "Matching long-range trajectories (sequences of model parameters over many training steps) captures the cumulative optimization dynamics including momentum effects and learning rate schedule interactions, producing distilled datasets that better support multi-step training rather than just single gradient steps",
+        "Trajectory matching uses a GAN discriminator to align synthetic and real data distributions",
+        "Trajectory matching directly minimizes test set loss through the training trajectory, bypassing bilevel optimization",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "DC (gradient matching, Zhao et al. 2020) matches: ‖∇_θ L(S*) − ∇_θ L(D)‖ at a single parameter θ. Problem: matching at one θ does not guarantee matching at subsequent θ values as training progresses — the model trained on S* may diverge from the model trained on D after multiple steps. Trajectory Matching (Cazenavette et al. 2022): pre-compute expert trajectories θ₀*, θ₁*, …, θ_T* by training on the full real data D. Then optimize S* so that a few gradient steps on S* from θ_t approximates the expert trajectory step from θ_t to θ_{t+M}: ‖θ_{t+M}^{S*} − θ_{t+M}^{expert}‖ is minimized over many sampled (t, M) pairs. This long-range matching ensures the distilled dataset supports sustained gradient-based learning, not just one-shot gradient alignment. Results: trajectory matching achieves significantly better distilled dataset quality vs. DC at the same images-per-class budget.",
+      hints: [
+        "Expert trajectories are pre-computed once (expensive) and reused across the distillation optimization — the inner loop of trajectory matching is cheap (just a few gradient steps on S*).",
+        "The number of steps M to match in each trajectory segment is a hyperparameter: small M ≈ DC (local matching), large M captures global training dynamics but makes the optimization harder.",
       ],
     },
   ],
@@ -911,6 +1127,60 @@ const questions: Record<string, Question[]> = {
         "DVRL is more flexible than Data Shapley (works with any predictor, not just the specific architecture) but provides approximate values and requires more computation (training both DVE and predictor).",
       ],
     },
+    {
+      id: "q-dc-kp11-4",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "A training example with a negative Data Shapley value (φᵢ < 0) always indicates a mislabeled example that should be removed from the training set.",
+      correctAnswer: "False",
+      explanation:
+        "Negative Data Shapley value φᵢ < 0 means: adding example i to any random subset S of training data tends to decrease validation performance (on average). This is a necessary but not sufficient condition for mislabeling. Causes of negative Shapley values: (1) Mislabeled examples: the most common cause — the example provides contradictory gradient signals. (2) Out-of-distribution examples: in-distribution for the training set but not for the validation set (different collection conditions). (3) Examples from underrepresented subgroups that happen to hurt validation set performance (if validation set doesn\'t represent that subgroup either). (4) Extreme outliers that generalize poorly. Correct action: inspect negative-Shapley examples manually, prioritizing the most negative. Some may be legitimate training examples whose removal would reduce model robustness, even if they hurt the specific validation metric used for Shapley computation.",
+      hints: [
+        "Data Shapley is a metric relative to the validation set. If the validation set has distribution mismatch with deployment, Shapley values may incorrectly flag useful examples.",
+        "Negative φᵢ: strong signal to inspect. Zero φᵢ: example doesn\'t help or hurt (redundant with other examples). Positive φᵢ: example actively improves model.",
+      ],
+    },
+    {
+      id: "q-dc-kp11-5",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Beta Shapley (Kwon & Zou 2022) generalizes Data Shapley by using a Beta(α, β) distribution over coalition sizes instead of the uniform distribution used by standard Shapley. Setting α=1, β=1 reduces to standard Shapley. Setting α=1, β→∞ focuses on marginal contributions to:",
+      options: [
+        "Empty coalitions (single-example marginal contributions only)",
+        "Full coalitions — the marginal contribution of each example when added to the full training dataset, focusing on which examples are necessary vs. redundant given all other data",
+        "Median coalition sizes — the marginal contribution at the dataset\'s 50th percentile size",
+        "The validation set only — it computes leave-one-out cross-validation error rather than Shapley values",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Beta Shapley weight function: w(|S|) ∝ Beta(|S|+α; n−|S|+β). With α=1, β→∞: w(|S|) concentrates all weight on |S| = n−1 (the largest coalition). This means: φᵢ^Beta ≈ V(D) − V(D \\ {i}) — the reduction in performance when example i is removed from the FULL training set. This is the Leave-One-Out (LOO) value, a classic influence function metric. With α→∞, β=1: w(|S|) concentrates on |S| = 0 — the marginal value of example i when added to the empty set (single example training). Standard Shapley (α=β=1) gives equal weight to all coalition sizes — providing the fairest allocation axiomatically. Beta Shapley allows practitioners to interpolate between LOO influence (α=1, β large) and empty-set contribution (α large, β=1) based on which questions are most relevant.",
+      hints: [
+        "LOO (Leave-One-Out) is a special case of Beta Shapley and is computationally cheaper: n model retrain runs vs. exponentially many for exact Shapley.",
+        "When to use LOO vs. Shapley: LOO measures redundancy in a large dataset (which examples are not needed given all others). Shapley measures fair value attribution accounting for all possible training set sizes.",
+      ],
+    },
+    {
+      id: "q-dc-kp11-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A data marketplace wants to fairly compensate data contributors (each contributing a subset of training examples) for their contribution to a shared ML model. Data Shapley is the principled solution because it satisfies four axioms. Which axiom prevents a situation where two contributors with identical datasets receive different payments?",
+      options: [
+        "Efficiency: total payment equals the total model value gained from all data",
+        "Symmetry: if contributors i and j have identical marginal contributions V(S ∪ {i}) = V(S ∪ {j}) for every coalition S, then φᵢ = φⱼ — they receive equal payment",
+        "Null player: contributors whose data adds no value receive zero payment",
+        "Additivity: payments for two separate tasks sum correctly",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The four Shapley axioms applied to data valuation: (1) Efficiency: Σᵢ φᵢ = V(D) − V(∅) — the total Shapley payments exactly account for the full value created by combining all data. (2) Symmetry: if two contributors have identical marginal contributions to every possible coalition, they receive equal payment. This prevents arbitrary discrimination between equivalent data sources. (3) Null player: if contributor i\'s data never improves any coalition (V(S ∪ {i}) = V(S) for all S), then φᵢ = 0. (4) Additivity (linearity): if a task decomposes into two independent subtasks, Shapley values sum correctly. Symmetry is specifically the axiom addressing the question: two contributors with identical data (same content and quality) would have identical marginal contributions to every coalition, and by symmetry, must receive equal payment — the unique Shapley allocation guarantees this.",
+      hints: [
+        "The Shapley value is the UNIQUE allocation satisfying all four axioms simultaneously (Shapley 1953 theorem). No other allocation is simultaneously efficient, symmetric, null-player, and additive.",
+        "Data marketplace application: contributors submit their data to a data pool. The model trains on the pool and achieves value V(D). Shapley values allocate the value V(D) − V(∅) fairly among contributors.",
+      ],
+    },
   ],
 
   "semi-supervised-dc": [
@@ -966,6 +1236,60 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Weak augment → stable prediction → generate pseudo-label. Strong augment → challenging input → enforce label consistency. The asymmetry is the key innovation.",
         "FixMatch vs. MeanTeacher: MeanTeacher uses an exponential moving average (EMA) of model weights to generate more stable pseudo-labels. FixMatch uses the same model but with weak augmentation for stability.",
+      ],
+    },
+    {
+      id: "q-dc-kp12-4",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Label Propagation is a graph-based semi-supervised learning method. Given a graph where nodes are examples (labeled and unlabeled) and edge weights reflect feature similarity, labels are propagated by:",
+      options: [
+        "Training a GNN on the labeled nodes and predicting labels for unlabeled nodes",
+        "Iteratively updating each unlabeled node\'s label as a weighted average of its neighbors\' labels until convergence, so that labels spread from labeled nodes through the similarity graph",
+        "Selecting the nearest labeled neighbor for each unlabeled node and assigning that label",
+        "Using a diffusion model to generate label distributions for unlabeled nodes",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Label Propagation (Zhu & Ghahramani 2002): construct a graph G = (V, E) where V = all examples (labeled L and unlabeled U) and edge weight w_ij ∝ exp(−‖xᵢ − xⱼ‖²/σ²). Transition matrix T_ij = w_ij / Σₖ w_ik. Update rule: F_U ← T_UU F_U + T_UL F_L, where F_L is fixed at the observed labels and F_U is the unlabeled label matrix being propagated. Iterate until convergence. Intuition: labels flow from labeled to unlabeled nodes through high-similarity edges — unlabeled nodes near a labeled cluster adopt that cluster\'s label. Convergence is guaranteed under mild conditions. Key assumption: connected regions of high-density feature space share the same label (cluster assumption). This is the same assumption underlying all semi-supervised methods.",
+      hints: [
+        "Label propagation has a closed-form solution: F_U* = (I − T_UU)⁻¹ T_UL F_L. For small datasets, this matrix inverse can be computed directly; for large datasets, iterative update is used.",
+        "Graph construction is the key design choice: k-NN graph (connect each node to its k nearest neighbors) is common. Edge weights that are too broad (large σ) propagate labels across class boundaries.",
+      ],
+    },
+    {
+      id: "q-dc-kp12-5",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "MixMatch (Berthelot et al. 2019) unifies pseudo-labeling and consistency regularization by generating soft pseudo-labels for unlabeled examples using an average of predictions over multiple augmented views, then applying MixUp to both labeled and pseudo-labeled examples.",
+      correctAnswer: "True",
+      explanation:
+        "MixMatch combines three ideas: (1) Pseudo-labeling with sharpening: for unlabeled example u, generate K augmented views, average the model predictions q̄ = (1/K) Σₖ p(y | aug_k(u)), then sharpen the distribution: q_sharp = q̄^(1/T) / Σⱼ q̄ⱼ^(1/T) (T < 1 reduces entropy). (2) Consistency regularization: predict consistently across all K augmented views. (3) MixUp: apply MixUp to the combined set of labeled examples (with one-hot labels) and pseudo-labeled examples (with sharpened soft labels). The sharpening step encourages the model to make confident predictions on unlabeled data (low-entropy soft labels), acting as entropy minimization. The full MixMatch training loss: L = L_supervised(labeled) + λ_U × L_unsupervised(pseudo-labeled MixUp). MixMatch outperformed prior semi-supervised methods with 250 CIFAR-10 labels by a large margin.",
+      hints: [
+        "Sharpening with T < 1: q_sharp_k = q̄_k^(1/T). As T → 0, sharpening becomes argmax (hard pseudo-label). T = 0.5 is a typical value for moderate sharpening.",
+        "MixMatch improvement: using K=2 augmented views for averaging gives more stable pseudo-labels than a single augmented view. K > 2 gives diminishing returns.",
+      ],
+    },
+    {
+      id: "q-dc-kp12-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "In semi-supervised learning, the cluster assumption states that decision boundaries should lie in low-density regions of the feature space. FixMatch implicitly enforces this by:",
+      options: [
+        "Using a graph-based label propagation that routes decision boundaries around high-density clusters",
+        "Assigning pseudo-labels only to high-confidence unlabeled examples (those far from the current decision boundary where density is low), and enforcing consistency on those examples — effectively placing gradient pressure to keep the boundary away from high-density regions where the model is uncertain",
+        "Applying explicit density estimation to the unlabeled data and penalizing decision boundaries that cross high-density regions",
+        "Using entropy regularization that penalizes high-entropy predictions on any unlabeled example regardless of density",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The cluster assumption connection to FixMatch: FixMatch\'s confidence threshold τ = 0.95 selects examples where the model predicts very confidently — these examples are far from the current decision boundary in probability space. By assigning pseudo-labels to high-confidence examples and training on strongly augmented versions of them, FixMatch places gradient pressure to maintain confident predictions across the region around each selected example. The strongly augmented view tests the model\'s robustness in a neighborhood of the example: if the model must predict the same class for x and its strong augmentation A(x), the decision boundary cannot pass through the local neighborhood of x. Since confident predictions are associated with high-density class regions (far from boundaries), this implicitly enforces that the boundary stays in low-density regions. The connection: high confidence ↔ away from boundary ↔ low-density region ↔ cluster assumption satisfied.",
+      hints: [
+        "The cluster assumption is equivalent to the low-density separation assumption: good classifiers place their decision boundaries in regions where P(x) is low, not in the interior of high-density clusters.",
+        "Entropy minimization (Grandvalet & Bengio 2005) directly minimizes H(p(y|x)) for unlabeled x — equivalent to pushing predictions toward the simplex vertices, enforcing the cluster assumption without a threshold.",
       ],
     },
   ],
@@ -1025,6 +1349,60 @@ const questions: Record<string, Question[]> = {
         "The reconstruction target is raw pixel values (not perceptual features), which is simpler to implement than contrastive SSL but still produces representations comparable to SimCLR.",
       ],
     },
+    {
+      id: "q-dc-kp13-4",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "DINO (Self-DIstillation with NO labels, Caron et al. 2021) trains a student network to match the output of a teacher network (an exponential moving average of the student), using only self-supervised objectives — no human labels required.",
+      correctAnswer: "True",
+      explanation:
+        "DINO framework: student network f_s (trainable) and teacher network f_t (EMA of student: θ_t ← m·θ_t + (1-m)·θ_s). Both networks see different augmented views of the same image. Training objective: student output distribution (sharpened) should match teacher output distribution — but the teacher is not explicitly trained (it emerges from the EMA). DINO uses a centering operation on teacher outputs to prevent collapse (all outputs going to one mode). The result: DINO-pretrained ViT features exhibit explicit semantic segmentation properties — attention maps highlight meaningful object boundaries without any segmentation supervision. This demonstrates that rich semantic structure emerges purely from the self-distillation objective applied to unlabeled image data.",
+      hints: [
+        "EMA teacher: θ_t = m·θ_t + (1−m)·θ_s with m = 0.996. The teacher changes slowly, providing stable targets for the student. If teacher = student (m=0), training collapses.",
+        "DINO without centering collapses: all examples get assigned to one cluster. Centering subtracts the running mean from teacher outputs, preventing dominant mode collapse.",
+      ],
+    },
+    {
+      id: "q-dc-kp13-5",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Barlow Twins (Zbontar et al. 2021) is a self-supervised method that avoids representation collapse by minimizing redundancy between representation dimensions. Its loss function encourages:",
+      options: [
+        "The representations of two augmented views to be identical across all dimensions (identical representations)",
+        "The cross-correlation matrix between embeddings of two augmented views to be close to the identity matrix: diagonal entries near 1 (same features should be correlated) and off-diagonal entries near 0 (different features should be decorrelated)",
+        "The cosine similarity between positive pairs to be maximized and negative pairs to be minimized",
+        "The reconstruction error of the representations through a decoder to be minimized",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Barlow Twins loss: L = Σᵢ (1 − Cᵢᵢ)² + λ Σᵢ Σⱼ≠ᵢ Cᵢⱼ², where C is the cross-correlation matrix between normalized embeddings of the two views, computed over a batch: Cᵢⱼ = Σ_b z^A_{b,i} z^B_{b,j} / (‖z^A_{:,i}‖₂ ‖z^B_{:,j}‖₂). The two terms: (1) invariance term: diagonal entries should equal 1 — the same feature should be perfectly correlated across the two views (feature i of view A ↔ feature i of view B). (2) redundancy reduction: off-diagonal entries should equal 0 — different features should be uncorrelated. This is inspired by neuroscience principle that efficient coding should use statistically independent features. Advantage over contrastive methods: does not require negative samples (no large batch size requirement). Advantage over BYOL/DINO: does not require asymmetric architectures (EMA teacher).",
+      hints: [
+        "The cross-correlation matrix C is computed over the batch dimension. Each row/column represents one feature dimension of the embedding. Identity matrix C = I means: each feature is perfectly invariant across views and uncorrelated with all other features.",
+        "λ controls the tradeoff: small λ emphasizes invariance over redundancy reduction; large λ emphasizes decorrelation. λ = 0.0051 was found optimal in the original paper.",
+      ],
+    },
+    {
+      id: "q-dc-kp13-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Linear evaluation protocol is the standard benchmark for self-supervised representation quality. A linear classifier is trained on frozen SSL representations using labeled data. Why does this benchmark specifically measure representation quality rather than fine-tuning quality?",
+      options: [
+        "Linear evaluation is faster to compute than full fine-tuning",
+        "By freezing the SSL encoder and training only a linear head, any performance gain must come from the pre-trained representation itself — a linear layer cannot learn nonlinear features, so the representation must already separate the classes linearly. Fine-tuning would allow the encoder to adapt, obscuring how much of the performance comes from the pre-training vs. the fine-tuning data",
+        "Linear classifiers are more interpretable than neural networks",
+        "Fine-tuning would overfit on the small labeled dataset used for evaluation",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Linear evaluation logic: if a linear classifier (a single weight matrix W: d → C) achieves high accuracy on frozen representations f_θ(x), then the representations must already be linearly separable by class — i.e., the representation space already separates classes well without task-specific adaptation. This tests what the SSL pre-training learned intrinsically. Fine-tuning allows the encoder to change, adapting to the downstream task — making it impossible to attribute performance to the pre-training alone. Analogy: linear evaluation tests whether the representation is a good measuring tape. Fine-tuning tests whether the full system (tape + adapter) works, which conflates SSL quality with fine-tuning efficiency. Benchmark comparison: DINO ViT-S achieves 77% linear evaluation on ImageNet vs. ~83% with full fine-tuning — the ~6% gap represents what fine-tuning adds beyond the pre-trained representation.",
+      hints: [
+        "The linear evaluation accuracy directly measures whether the SSL features lie on a linearly separable manifold in R^d. High linear evaluation accuracy = the representations are already class-structured.",
+        "k-NN evaluation is an even stricter probe: classify by majority vote of k nearest neighbors in the embedding space. No training at all — pure representation quality measurement.",
+      ],
+    },
   ],
 
   "few-shot-data": [
@@ -1082,6 +1460,60 @@ const questions: Record<string, Question[]> = {
         "Second-order MAML requires computing the Hessian of the inner loss — O(p²) memory for p parameters. FOMAML approximates this as 0, treating θ'_τ as if it doesn\'t depend on θ.",
       ],
     },
+    {
+      id: "q-dc-kp14-4",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "In few-shot learning, using a larger and more diverse meta-training dataset (more classes and more examples per class) generally improves few-shot performance on novel test classes.",
+      correctAnswer: "True",
+      explanation:
+        "Few-shot learning performance scales with meta-training diversity: (1) More meta-training classes: the model learns to represent more types of visual/semantic concepts, building a richer feature space that generalizes to novel test classes. A model meta-trained on 1,000 ImageNet classes generalizes better to novel classes than one trained on 100 classes. (2) More examples per class: better prototype estimation during meta-training, giving more stable gradient signals. (3) More diverse data sources: combining multiple datasets (ImageNet + CUB + CIFAR + tieredImageNet) provides broader coverage. Empirical results: (a) CLIP-pretrained encoders (trained on 400M image-text pairs) achieve SOTA few-shot performance with minimal meta-learning, demonstrating that broad pre-training is the single most important factor. (b) tieredImageNet splits classes carefully to ensure novel test classes are semantically distant from meta-training classes — measuring true generalization.",
+      hints: [
+        "The few-shot learning bottleneck has shifted from the meta-learning algorithm to the pre-training backbone. A strong SSL or CLIP backbone fine-tuned with simple nearest-neighbor classification often outperforms complex meta-learning algorithms.",
+        "Cross-domain few-shot learning (training on natural images, testing on medical images) is much harder than same-domain few-shot learning. The feature space shifts across domains.",
+      ],
+    },
+    {
+      id: "q-dc-kp14-5",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Matching Networks (Vinyals et al. 2016) classify a query example by computing a weighted sum over support set labels, where weights are attention scores between the query and each support example. The key difference from Prototypical Networks is:",
+      options: [
+        "Matching Networks use a different distance metric (cosine vs. Euclidean)",
+        "Matching Networks compute a separate attention weight for the query against EVERY individual support example (softmax over all support embeddings), while Prototypical Networks aggregate support examples into per-class prototype means before computing distance — making Matching Networks more flexible but less computationally efficient in K-shot settings",
+        "Matching Networks require more labeled examples per class than Prototypical Networks",
+        "Matching Networks use bidirectional LSTMs for the embedding function, while Prototypical Networks use CNNs",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Matching Networks: given query x and support set S = {(x₁,y₁),...,(xₖ,yₖ)}, classify as: ŷ = Σᵢ a(x, xᵢ)·yᵢ, where a(x, xᵢ) = softmax(cosine_sim(f(x), g(xᵢ))). The attention considers every individual support example. Prototypical Networks: compute class prototype cₖ = (1/K) Σᵢ f(xᵢᵏ) and classify by nearest prototype. In 1-shot (K=1): Matching Networks = Prototypical Networks (only one support example per class, so the prototype IS the example). In K-shot (K > 1): Matching Networks keep all K support examples separate and attend to each individually, while Prototypical Networks average them into one prototype. Matching Networks are more flexible (can differentially weight support examples) but compute similarity to N×K individual examples rather than N prototypes — slower at inference.",
+      hints: [
+        "The 1-shot equivalence: with K=1 per class, the Prototypical Network prototype is just the single support embedding. Matching Networks attend to that same single embedding. Both reduce to nearest-neighbor in embedding space.",
+        "Full context embedding: Matching Networks optionally use bidirectional LSTMs to embed support examples in the context of the full support set — allowing examples to influence each other\'s embeddings.",
+      ],
+    },
+    {
+      id: "q-dc-kp14-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Transductive few-shot learning uses unlabeled query examples during inference to improve classification. How does Transductive Information Maximization (TIM, Boudiaf et al. 2020) leverage the query set?",
+      options: [
+        "TIM augments the support set with pseudo-labeled query examples and retrains the model",
+        "TIM optimizes the classifier parameters at test time by maximizing mutual information between the query features and their predicted labels — encouraging confident, diverse predictions across query examples without requiring gradient steps through the full network",
+        "TIM applies label propagation from labeled support examples to unlabeled query examples through a k-NN graph",
+        "TIM averages query predictions across multiple augmented views to produce more stable classifications",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "TIM (Transductive Information Maximization) objective: given support set S and query set Q, optimize a linear classifier w on top of frozen embeddings by maximizing: I(Q; w) = H(Ȳ) − E_Q[H(Y|x)], where Ȳ is the marginal label distribution over Q. This decomposes as: (1) H(Ȳ) = entropy of marginal: high → diverse predictions across Q (avoid predicting the same class for all queries). (2) E_Q[H(Y|x)] = expected conditional entropy: low → confident predictions for each individual query example. The information-theoretic objective encourages: confident predictions on each query + diverse usage of all class labels across queries. This is optimized at test time via gradient descent on w (not on the backbone). Transductive advantage: queries are classified jointly, leveraging cluster structure in the query set, rather than independently as in inductive methods.",
+      hints: [
+        "Transductive vs. inductive few-shot: inductive classifies each query independently using only the support set. Transductive uses all query examples collectively, leveraging their distribution.",
+        "The TIM objective is equivalent to maximizing I(Y; X) over the query distribution — a classic information-theoretic principle for unsupervised clustering applied to the transductive few-shot setting.",
+      ],
+    },
   ],
 
   "web-scraping-data": [
@@ -1137,6 +1569,60 @@ const questions: Record<string, Question[]> = {
       hints: [
         'MinHash: represent each document as a set of n-gram "shingles," compute min-hash signatures, and use LSH to find documents with Jaccard similarity > 0.8. Deduplicate by keeping one representative per near-duplicate cluster.',
         'Memorization + duplicates: if "The quick brown fox jumps over the lazy dog." appears 1,000× in training, the model will reproduce it verbatim and with high confidence — this is memorization, not learning.',
+      ],
+    },
+    {
+      id: "q-dc-kp15-4",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "HTML boilerplate (navigation menus, footer links, cookie banners, ads) should be stripped from web-scraped text before using it for LLM training because it adds low-information repetitive tokens that increase memorization without improving language modeling.",
+      correctAnswer: "True",
+      explanation:
+        "Web page boilerplate includes: (1) Navigation menus: 'Home | About | Products | Contact | Login' repeated on every page of a domain. (2) Footer text: copyright notices, privacy policy links, social media links. (3) Cookie consent banners: 'This website uses cookies to enhance your experience.' (4) Ad text: 'Advertisement. Click here to learn more.' These strings: (a) are semantically meaningless in isolation, (b) appear millions of times across CommonCrawl (every page of a domain has the same nav), (c) teach the model to reproduce boilerplate rather than meaningful content, (d) inflate training token counts without adding information. Extraction tools: Trafilatura, readability-lxml, and Newspaper3k use heuristics (text block density, link density, XPath patterns) to extract main content while removing boilerplate. FineWeb and DCLM apply aggressive boilerplate removal as a standard preprocessing step.",
+      hints: [
+        "Link density heuristic: if a text block has many hyperlinks per word, it is likely navigation or footer content rather than main article text.",
+        "Text block density: main content paragraphs have high word-to-tag ratios. Boilerplate elements (lists of links, short menu items) have low word-to-tag ratios.",
+      ],
+    },
+    {
+      id: "q-dc-kp15-5",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "A team builds a training corpus for a customer service chatbot by scraping the company\'s public FAQ pages, product documentation, and support forums. Which data quality issue is most likely to cause the chatbot to give outdated or incorrect information?",
+      options: [
+        "Duplicate content: the FAQ answers appear in multiple pages with identical text",
+        "Temporal staleness: scraped data reflects a past snapshot of policies, prices, and product features that may have since changed — the model will confidently state outdated information",
+        "NSFW content from the support forums requiring content filtering",
+        "Language inconsistency: FAQ pages and forums use different terminology for the same product features",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Temporal staleness is the primary failure mode for knowledge-intensive applications: (1) Policies change: refund policy updated from 30 days to 15 days — the chatbot confidently states the old policy. (2) Prices change: product pricing updated — the chatbot quotes stale prices. (3) Product features deprecated: the scraping happened before a feature was discontinued — chatbot gives instructions for a non-existent feature. (4) The model has no mechanism to signal knowledge cutoff — it answers confidently regardless of whether the information is current. Solutions: (a) Retrieval-Augmented Generation (RAG): instead of baking knowledge into weights, retrieve live documentation at query time. (b) Regular retraining/fine-tuning with fresher snapshots. (c) Timestamp-aware data weighting: up-weight recent pages during training. For live products with frequent updates, RAG over a continuously updated knowledge base is strongly preferred over fine-tuning on a static corpus.",
+      hints: [
+        "RAG (Retrieval-Augmented Generation) solves temporal staleness by separating knowledge storage (a retrieval index updated frequently) from language modeling (the generation model).",
+        "Scraping timestamp: always record when each page was scraped. This allows filtering out pages older than a threshold and tracking data freshness.",
+      ],
+    },
+    {
+      id: "q-dc-kp15-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "MinHash locality-sensitive hashing (LSH) is used for near-duplicate detection in web corpora. Given two documents A and B represented as sets of n-gram shingles, the MinHash estimate of their Jaccard similarity is:",
+      options: [
+        "The fraction of hash functions h for which min_{s ∈ A} h(s) < min_{s ∈ B} h(s)",
+        "The fraction of hash functions h for which min_{s ∈ A} h(s) = min_{s ∈ B} h(s) — the probability that the minimum hash value over all shingles is the same for A and B, which equals the Jaccard similarity |A ∩ B| / |A ∪ B|",
+        "The cosine similarity between the MinHash signature vectors of A and B",
+        "The Hamming distance between the binary MinHash signatures divided by the signature length",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "MinHash property: for a uniformly random hash function h and two sets A, B: P[min_{s ∈ A} h(s) = min_{s ∈ B} h(s)] = |A ∩ B| / |A ∪ B| = Jaccard(A, B). Proof sketch: the minimum hash value is the hash of the element of A ∪ B with the smallest hash value. That element belongs to A ∩ B (both sets agree) with probability |A ∩ B| / |A ∪ B|. Practical MinHash: use k independent hash functions h₁, …, hₖ and compute signature sig(A)ᵢ = min_{s ∈ A} hᵢ(s). Estimate: Jaccard(A, B) ≈ (1/k) Σᵢ 𝟙[sig(A)ᵢ = sig(B)ᵢ]. For k = 200 hash functions, the standard error of the estimate is ~1/√200 ≈ 7%. LSH bands: group the k MinHash values into b bands of r values each; documents with an identical band are candidate near-duplicates for exact comparison.",
+      hints: [
+        "MinHash is a dimensionality reduction: represent a document with thousands of shingles as a k-dimensional signature (k = 200). Near-duplicate detection becomes a comparison of 200-element vectors instead of thousands of shingles.",
+        "The bandwidth b and band size r tradeoff: more bands (larger b) → higher recall (find more near-duplicates) but more false positives. Larger band size r → higher precision but lower recall.",
       ],
     },
   ],

@@ -30,7 +30,7 @@ const questions: Record<string, Question[]> = {
       question:
         "The discrete cosine transform (DCT) step in MFCC computation is used to decorrelate the log mel filterbank energies, producing compact and approximately uncorrelated coefficients.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Adjacent mel filterbank channels overlap and are correlated; the DCT projects the log-energy vector into a space where most information is concentrated in the first ~13 coefficients and the coefficients are nearly decorrelated, making MFCCs compact features for downstream models.",
       hints: [
@@ -88,7 +88,7 @@ const questions: Record<string, Question[]> = {
       question:
         "In HMM-based ASR, Gaussian Mixture Models (GMMs) were historically used as emission distributions because they can approximate arbitrary continuous distributions over MFCC feature vectors.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "GMMs model P(MFCCs | HMM state) as a weighted sum of Gaussians, allowing flexible approximation of the typically non-Gaussian acoustic feature distributions for each phoneme state; they were the dominant acoustic modelling approach before DNNs.",
       hints: [
@@ -147,7 +147,7 @@ const questions: Record<string, Question[]> = {
       question:
         "CTC uses a special blank token in the output alphabet; consecutive repeated characters or characters separated only by blanks collapse to the same label, enabling multiple frames to emit the same phoneme.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         'The CTC collapsing rule removes consecutive repeated tokens and then removes blanks, so "a-blank-a-a" collapses to "aa" (two a\'s) while "a-a-blank-a" also collapses to "aa"; this allows multiple-frame emissions without explicit segmentation.',
       hints: [
@@ -206,7 +206,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Whisper uses a standard encoder-decoder transformer architecture, where the encoder processes mel spectrogram frames and the decoder autoregressively generates text tokens.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Whisper applies a standard transformer encoder to the mel spectrogram and a causal transformer decoder to generate transcription tokens; special tokens encode the task (transcribe vs. translate), language, and timestamp mode.",
       hints: [
@@ -263,7 +263,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Shallow fusion in ASR combines acoustic model scores with language model scores at every beam search step by simple log-probability addition, whereas deep fusion integrates the LM into the acoustic model training.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Shallow fusion adds λ·log P_LM(w) to the acoustic log-score at each step during decoding (no retraining required); deep fusion (and cold/warm fusion variants) incorporates LM hidden states into the end-to-end model during training for tighter integration.",
       hints: [
@@ -321,7 +321,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Tacotron uses location-sensitive attention to prevent common failure modes such as attention jumping backward or skipping words during synthesis.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Location-sensitive attention incorporates the previous attention distribution as a convolutional feature, encouraging monotonically advancing alignment and reducing failure modes like repeated phonemes or skipped words common in content-based attention.",
       hints: [
@@ -378,7 +378,7 @@ const questions: Record<string, Question[]> = {
       question:
         "HiFi-GAN achieves faster-than-real-time audio synthesis by using a generator with multi-receptive field fusion and discriminators that operate at multiple resolutions and periods.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "HiFi-GAN\'s generator uses multi-receptive field fusion (parallel dilated convolutions with different kernel sizes) for high-quality mel inversion; its multi-period and multi-scale discriminators enforce both fine-grained and macro-level waveform quality, enabling high-fidelity synthesis at high speed.",
       hints: [
@@ -437,7 +437,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Non-autoregressive TTS models like FastSpeech generate mel spectrogram frames in parallel, making synthesis much faster than autoregressive models at the cost of some naturalness.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "FastSpeech predicts all mel frames simultaneously (after length regulation to match predicted phoneme durations), enabling GPU-parallel inference that is orders of magnitude faster than autoregressive decoding, with marginal quality loss on most benchmarks.",
       hints: [
@@ -496,7 +496,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Speaker adaptation via fine-tuning on target speaker data (many-shot cloning) generally produces higher similarity to the target voice than zero-shot embedding-based approaches, at the cost of requiring more data and computation.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Fine-tuning updates model weights specifically for the target speaker, capturing fine-grained prosodic and acoustic idiosyncrasies that a fixed embedding cannot fully encode; however, it requires minutes-to-hours of training data and GPU time per new speaker.",
       hints: [
@@ -555,7 +555,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Zero-shot TTS systems can theoretically synthesise any speaker\'s voice from a short reference clip without any speaker-specific training, but they typically produce lower speaker similarity than fine-tuned systems.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Zero-shot systems generalise across speakers seen during large-scale training but cannot fully capture every nuance of an unseen speaker\'s voice from a 3–10 second clip; fine-tuned systems that update weights for a specific speaker achieve higher similarity at the cost of per-speaker training.",
       hints: [
@@ -613,7 +613,7 @@ const questions: Record<string, Question[]> = {
       question:
         "After self-supervised pre-training, wav2vec 2.0 can be fine-tuned for ASR with as little as 10 minutes of labelled speech data and still achieve competitive word error rates.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The rich representations learned during self-supervised pre-training on unlabelled audio encode phonetic structure; subsequent fine-tuning with CTC loss on very small labelled sets (10 min, 1 hour) achieves WERs competitive with supervised models trained on hundreds of hours.",
       hints: [
@@ -672,7 +672,7 @@ const questions: Record<string, Question[]> = {
       question:
         "HuBERT training is iterative: in the first iteration, k-means clusters are computed on MFCCs; in subsequent iterations, clusters are recomputed on the representations of the previously trained HuBERT model.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Iterative refinement improves the pseudo-label quality: MFCC-based clusters are phonetically coarse, while clusters from a trained HuBERT capture richer linguistic structure; retraining on better pseudo-labels bootstraps progressively more informative representations.",
       hints: [
@@ -731,7 +731,7 @@ const questions: Record<string, Question[]> = {
       question:
         "AST can leverage ImageNet pre-trained ViT weights for audio classification by adapting the positional embeddings to the spectrogram patch grid via interpolation.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "AST transfers ViT weights pre-trained on ImageNet; since the patch grid shape may differ between images and spectrograms, positional embeddings are bilinearly interpolated to match the new 2D grid, enabling cross-modal transfer learning from vision to audio.",
       hints: [
@@ -790,7 +790,7 @@ const questions: Record<string, Question[]> = {
       question:
         "A CLAP-trained model can perform zero-shot audio classification by comparing the audio embedding to text embeddings of class descriptions, selecting the class with highest cosine similarity.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         'Because CLAP aligns audio and text in a shared semantic space, a query like "sound of a dog barking" can be encoded as text and compared to audio embeddings, enabling classification without any audio examples for those classes—just text descriptions.',
       hints: [
@@ -849,7 +849,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Residual Vector Quantisation (RVQ) in audio codecs uses multiple codebooks sequentially, where each codebook quantises the residual error left by the previous codebook.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "RVQ applies the first codebook to the raw latent, computes the quantisation residual, applies a second codebook to that residual, and so on; more codebook layers mean lower reconstruction error and higher bitrate (since more code indices must be transmitted).",
       hints: [
@@ -907,7 +907,7 @@ const questions: Record<string, Question[]> = {
       question:
         'I-vectors (ivectors) preceded x-vectors and represent a speaker\'s utterance as a single point in a low-dimensional "total variability space" estimated from a Universal Background Model and a factor analysis model.',
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "I-vectors compress the speaker-plus-channel variability captured by a GMM-UBM into a low-rank factor analysis subspace (total variability space); x-vectors replaced them by using discriminative neural network training instead of generative factor analysis.",
       hints: [
@@ -965,7 +965,7 @@ const questions: Record<string, Question[]> = {
       question:
         "PLDA (Probabilistic Linear Discriminant Analysis) is used in speaker verification to model within-speaker and between-speaker variability in the x-vector space, producing a well-calibrated log-likelihood ratio score.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "PLDA models the x-vector distribution as a linear Gaussian model with speaker and channel factors; the PLDA score is the log-likelihood ratio of the hypothesis 'same speaker' vs 'different speaker,' providing better-calibrated decisions than raw cosine similarity.",
       hints: [
@@ -1023,7 +1023,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Traditional modular diarization pipelines first segment speech into speaker-homogeneous regions, extract speaker embeddings per segment, then apply spectral clustering to assign speaker labels.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The classical pipeline consists of: Voice Activity Detection → speaker change detection or fixed-length segmentation → x-vector/d-vector extraction → agglomerative hierarchical or spectral clustering → (optional) re-segmentation with HMM.",
       hints: [
@@ -1082,7 +1082,7 @@ const questions: Record<string, Question[]> = {
       question:
         "LFCC (Linear Frequency Cepstral Coefficients) features are often more effective than MFCCs for anti-spoofing because TTS artefacts are more distinctive on a linear frequency scale.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "TTS and voice conversion systems often leave artefacts in high-frequency regions that the mel scale compresses; LFCC treats all frequency bands equally, preserving high-frequency artefact information that helps distinguish synthesised from genuine speech.",
       hints: [
@@ -1141,7 +1141,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Low-Rank Adaptation (LoRA) can be used for speaker-specific fine-tuning of a large speech model, updating only a small fraction of parameters via low-rank weight matrices for efficiency.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "LoRA inserts trainable low-rank decomposition matrices alongside frozen pre-trained weights; for speaker adaptation, only these small matrices are updated on speaker-specific data, dramatically reducing storage and compute compared to full fine-tuning.",
       hints: [
@@ -1200,7 +1200,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Random cropping and mixup augmentation are commonly applied to audio spectrograms during training to improve generalisation on environmental sound classification tasks.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Random time and frequency crops expose the model to partial views of sounds (robustness to start/end time variability); mixup linearly interpolates two spectrogram-label pairs, acting as a regulariser that smooths decision boundaries and reduces overfitting on small datasets like ESC-50.",
       hints: [
@@ -1259,7 +1259,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Sound source localisation using a microphone array typically uses the Time Difference of Arrival (TDOA) between microphones to estimate the direction of a sound source.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "TDOA measures the delay with which a sound reaches different microphones; using the known geometry of the array, the TDOA values triangulate the direction of arrival (DOA) and, with multiple arrays, the 3D position of the source.",
       hints: [
@@ -1318,7 +1318,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Music mood classification is more subjective than genre classification because mood labels depend on listener perception, cultural context, and emotional state, leading to higher inter-annotator disagreement.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         'Genre categories are relatively stable and consensus-driven, while mood labels (e.g., "happy", "melancholic") involve affective perception that varies across listeners; datasets like Valence-Arousal annotations reflect this through wider label distributions and lower inter-rater reliability.',
       hints: [
@@ -1376,7 +1376,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Mean Teacher training is used in semi-supervised SED to leverage large amounts of unlabelled audio, where a student model is trained to match the outputs of a slowly updated exponential moving average (EMA) teacher model.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Mean Teacher enforces consistency: the student is trained on labelled data with ground-truth loss and on unlabelled data by matching the teacher\'s (EMA-averaged student) predictions; the EMA teacher provides stable pseudo-labels, improving semi-supervised learning significantly.",
       hints: [
@@ -1434,7 +1434,7 @@ const questions: Record<string, Question[]> = {
       question:
         "AudioCaps is the largest AAC dataset available and was created by having human annotators write captions for 10-second AudioSet clips sourced from YouTube.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "AudioCaps contains ~46k audio clips from AudioSet (10 seconds each) with human-written captions collected via Amazon Mechanical Turk; it remains a primary training and evaluation benchmark for automated audio captioning models.",
       hints: [
@@ -1492,7 +1492,7 @@ const questions: Record<string, Question[]> = {
       question:
         "MusicLM (Google) uses a hierarchical sequence-to-sequence modelling approach, where a semantic token model first generates coarse tokens and an acoustic model then generates fine-grained audio tokens.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "MusicLM conditions on MuLan music-text joint embeddings and generates audio in two stages: a semantic model produces tokens from w2v-BERT (coarse semantic structure), then an acoustic model (SoundStream tokens) renders the final audio at full quality.",
       hints: [
@@ -1550,7 +1550,7 @@ const questions: Record<string, Question[]> = {
       question:
         "PESQ (Perceptual Evaluation of Speech Quality) and STOI (Short-Time Objective Intelligibility) are objective metrics that correlate with human perception of speech quality and intelligibility respectively.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "PESQ (ITU-T P.862) models the human auditory system to estimate perceived quality (MOS-LQO score), while STOI measures the correlation between clean and enhanced short-time spectral envelopes to predict intelligibility; both are standard benchmarks for speech enhancement evaluation.",
       hints: [
@@ -1608,7 +1608,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Permutation Invariant Training (PIT) is needed for source separation because the model must learn to assign separated outputs to the correct source regardless of which output channel they appear in.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Since there is no canonical ordering of sources, PIT computes the loss for all permutations of output-to-reference assignments and uses the minimum-loss permutation for backpropagation, avoiding the ambiguity problem in training multi-source separation models.",
       hints: [
@@ -1666,7 +1666,7 @@ const questions: Record<string, Question[]> = {
       question:
         "AudioLDM operates the diffusion process in a compressed latent space rather than directly on mel spectrograms, enabling faster generation while maintaining quality.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "AudioLDM uses a VAE to encode mel spectrograms into a compact latent space, runs the diffusion denoising process in this low-dimensional latent space conditioned on CLAP audio embeddings, then decodes with the VAE decoder and a vocoder—dramatically reducing computational cost vs. pixel-space diffusion.",
       hints: [
@@ -1725,7 +1725,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Speech LLMs like SpeechGPT can not only transcribe speech but also generate speech responses directly from the LLM without a separate TTS system, by predicting discrete speech tokens.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "SpeechGPT unifies speech understanding and generation by extending the LLM vocabulary with discrete speech tokens (from HuBERT or EnCodec); the model generates both text and speech token sequences, which are decoded by a vocoder into audio—enabling end-to-end spoken dialogue.",
       hints: [
