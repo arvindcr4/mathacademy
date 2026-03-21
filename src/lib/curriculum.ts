@@ -782,4 +782,190 @@ export const courses: Course[] = [
         ] },
     ]
   },
+
+  // MATHEMATICS FOR ML
+  {
+    id: 'math-for-ml',
+    slug: 'math-for-ml',
+    name: 'Mathematics for ML',
+    description: 'Build the mathematical foundations essential for understanding machine learning: linear algebra, calculus, probability, and optimization.',
+    category: 'fine-tuning',
+    icon: '📐',
+    color: '#6366F1',
+    topicCount: 6,
+    estimatedHours: 30,
+    topics: [
+      {
+        id: 'linear-algebra',
+        slug: 'linear-algebra',
+        name: 'Linear Algebra for ML',
+        description: 'Vectors, matrices, and operations that underpin neural networks.',
+        knowledgePoints: [
+          { id: 'ml-kp-1', slug: 'vectors-matrices', name: 'Vectors and Matrices' },
+          { id: 'ml-kp-2', slug: 'matrix-multiplication', name: 'Matrix Multiplication' },
+          { id: 'ml-kp-3', slug: 'eigenvalues-eigenvectors', name: 'Eigenvalues & Eigenvectors' },
+          { id: 'ml-kp-4', slug: 'svd', name: 'Singular Value Decomposition (SVD)' },
+          { id: 'ml-kp-5', slug: 'pca-linear-algebra', name: 'PCA via Linear Algebra' },
+        ]
+      },
+      {
+        id: 'calculus-optimization',
+        slug: 'calculus-optimization',
+        name: 'Calculus & Optimization',
+        description: 'Derivatives, gradients, and optimization algorithms for training models.',
+        knowledgePoints: [
+          { id: 'ml-kp-6', slug: 'derivatives-chain-rule', name: 'Derivatives & Chain Rule' },
+          { id: 'ml-kp-7', slug: 'partial-derivatives', name: 'Partial Derivatives & Gradients' },
+          { id: 'ml-kp-8', slug: 'gradient-descent', name: 'Gradient Descent Variants' },
+          { id: 'ml-kp-9', slug: 'second-order-methods', name: 'Second-Order Optimization Methods' },
+          { id: 'ml-kp-10', slug: 'convexity', name: 'Convexity & Local vs Global Minima' },
+        ]
+      },
+      {
+        id: 'probability-stats',
+        slug: 'probability-stats',
+        name: 'Probability & Statistics',
+        description: 'Probabilistic reasoning, distributions, and statistical inference for ML.',
+        knowledgePoints: [
+          { id: 'ml-kp-11', slug: 'probability-basics', name: 'Probability Basics & Bayes Theorem' },
+          { id: 'ml-kp-12', slug: 'distributions', name: 'Common Probability Distributions' },
+          { id: 'ml-kp-13', slug: 'mle-map', name: 'MLE and MAP Estimation' },
+          { id: 'ml-kp-14', slug: 'hypothesis-testing', name: 'Hypothesis Testing & p-values' },
+          { id: 'ml-kp-15', slug: 'central-limit-theorem', name: 'Central Limit Theorem' },
+        ]
+      },
+      {
+        id: 'information-theory',
+        slug: 'information-theory',
+        name: 'Information Theory',
+        description: 'Entropy, mutual information, and KL divergence as tools for ML.',
+        knowledgePoints: [
+          { id: 'ml-kp-16', slug: 'entropy', name: 'Shannon Entropy' },
+          { id: 'ml-kp-17', slug: 'cross-entropy', name: 'Cross-Entropy Loss' },
+          { id: 'ml-kp-18', slug: 'kl-divergence', name: 'KL Divergence' },
+          { id: 'ml-kp-19', slug: 'mutual-information', name: 'Mutual Information' },
+          { id: 'ml-kp-20', slug: 'information-bottleneck', name: 'Information Bottleneck Principle' },
+        ]
+      },
+      {
+        id: 'numerical-methods',
+        slug: 'numerical-methods',
+        name: 'Numerical Methods',
+        description: 'Numerical stability, floating-point arithmetic, and computational efficiency.',
+        knowledgePoints: [
+          { id: 'ml-kp-21', slug: 'floating-point', name: 'Floating-Point Arithmetic & Precision' },
+          { id: 'ml-kp-22', slug: 'numerical-stability', name: 'Numerical Stability in Deep Learning' },
+          { id: 'ml-kp-23', slug: 'finite-differences', name: 'Finite Differences & Gradient Checking' },
+          { id: 'ml-kp-24', slug: 'matrix-decomposition', name: 'Matrix Decompositions (LU, QR, Cholesky)' },
+          { id: 'ml-kp-25', slug: 'sparse-representations', name: 'Sparse Representations & Compression' },
+        ]
+      },
+      {
+        id: 'graph-theory-ml',
+        slug: 'graph-theory-ml',
+        name: 'Graph Theory for ML',
+        description: 'Graph structures, GNNs, and applications in ML.',
+        knowledgePoints: [
+          { id: 'ml-kp-26', slug: 'graph-basics', name: 'Graph Basics & Representations' },
+          { id: 'ml-kp-27', slug: 'spectral-graph-theory', name: 'Spectral Graph Theory' },
+          { id: 'ml-kp-28', slug: 'graph-neural-networks', name: 'Graph Neural Networks (GNNs)' },
+          { id: 'ml-kp-29', slug: 'message-passing', name: 'Message Passing Framework' },
+          { id: 'ml-kp-30', slug: 'knowledge-graphs', name: 'Knowledge Graphs & Embeddings' },
+        ]
+      },
+    ]
+  },
+
+  // TRANSFORMERS & LLMs
+  {
+    id: 'transformers-llms',
+    slug: 'transformers-llms',
+    name: 'Transformers & LLMs',
+    description: 'Deep-dive into transformer architecture, attention mechanisms, and modern large language models from GPT to Llama.',
+    category: 'fine-tuning',
+    icon: '🤖',
+    color: '#8B5CF6',
+    topicCount: 6,
+    estimatedHours: 35,
+    topics: [
+      {
+        id: 'attention-mechanism',
+        slug: 'attention-mechanism',
+        name: 'Attention Mechanism',
+        description: 'Self-attention, multi-head attention, and the core innovation behind transformers.',
+        knowledgePoints: [
+          { id: 'tr-kp-1', slug: 'scaled-dot-product', name: 'Scaled Dot-Product Attention' },
+          { id: 'tr-kp-2', slug: 'multi-head-attention', name: 'Multi-Head Attention' },
+          { id: 'tr-kp-3', slug: 'cross-attention', name: 'Cross-Attention (Encoder-Decoder)' },
+          { id: 'tr-kp-4', slug: 'attention-complexity', name: 'Attention Complexity & Flash Attention' },
+          { id: 'tr-kp-5', slug: 'sparse-attention', name: 'Sparse & Linear Attention Variants' },
+        ]
+      },
+      {
+        id: 'transformer-architecture',
+        slug: 'transformer-architecture',
+        name: 'Transformer Architecture',
+        description: 'Complete transformer architecture from embeddings to output layers.',
+        knowledgePoints: [
+          { id: 'tr-kp-6', slug: 'positional-encoding', name: 'Positional Encoding (Absolute & RoPE)' },
+          { id: 'tr-kp-7', slug: 'layer-normalization', name: 'Layer Normalization & Pre-LN vs Post-LN' },
+          { id: 'tr-kp-8', slug: 'feed-forward-layers', name: 'Feed-Forward Layers & Activation Functions' },
+          { id: 'tr-kp-9', slug: 'residual-connections', name: 'Residual Connections & Skip Connections' },
+          { id: 'tr-kp-10', slug: 'tokenization', name: 'Tokenization (BPE, WordPiece, SentencePiece)' },
+        ]
+      },
+      {
+        id: 'pretraining',
+        slug: 'pretraining',
+        name: 'LLM Pre-Training',
+        description: 'How large language models are trained from scratch at scale.',
+        knowledgePoints: [
+          { id: 'tr-kp-11', slug: 'causal-lm', name: 'Causal Language Modeling (Next Token Prediction)' },
+          { id: 'tr-kp-12', slug: 'masked-lm', name: 'Masked Language Modeling (BERT-style)' },
+          { id: 'tr-kp-13', slug: 'scaling-laws', name: 'Scaling Laws (Chinchilla Optimal)' },
+          { id: 'tr-kp-14', slug: 'data-curation', name: 'Pre-Training Data Curation & Quality' },
+          { id: 'tr-kp-15', slug: 'distributed-pretraining', name: 'Distributed Pre-Training (FSDP, Megatron)' },
+        ]
+      },
+      {
+        id: 'modern-llms',
+        slug: 'modern-llms',
+        name: 'Modern LLM Architectures',
+        description: 'GPT, Llama, Mistral, Gemma and other modern LLM innovations.',
+        knowledgePoints: [
+          { id: 'tr-kp-16', slug: 'gpt-architecture', name: 'GPT Architecture Family' },
+          { id: 'tr-kp-17', slug: 'llama-architecture', name: 'Llama & Llama-2/3 Architecture' },
+          { id: 'tr-kp-18', slug: 'grouped-query-attention', name: 'Grouped Query Attention (GQA & MQA)' },
+          { id: 'tr-kp-19', slug: 'mixture-of-experts', name: 'Mixture of Experts (MoE)' },
+          { id: 'tr-kp-20', slug: 'sliding-window-attention', name: 'Sliding Window & Long-Context Attention' },
+        ]
+      },
+      {
+        id: 'inference-techniques',
+        slug: 'inference-techniques',
+        name: 'LLM Inference',
+        description: 'Decoding strategies, KV-cache, and serving LLMs efficiently.',
+        knowledgePoints: [
+          { id: 'tr-kp-21', slug: 'kv-cache', name: 'KV Cache & Memory Management' },
+          { id: 'tr-kp-22', slug: 'decoding-strategies', name: 'Decoding: Greedy, Beam, Sampling' },
+          { id: 'tr-kp-23', slug: 'speculative-decoding', name: 'Speculative Decoding' },
+          { id: 'tr-kp-24', slug: 'continuous-batching', name: 'Continuous Batching & Throughput' },
+          { id: 'tr-kp-25', slug: 'quantization-llm', name: 'Quantization for LLM Inference (GGUF, AWQ)' },
+        ]
+      },
+      {
+        id: 'prompt-engineering',
+        slug: 'prompt-engineering',
+        name: 'Prompt Engineering',
+        description: 'Techniques to get the best results from LLMs without fine-tuning.',
+        knowledgePoints: [
+          { id: 'tr-kp-26', slug: 'few-shot-prompting', name: 'Few-Shot & Zero-Shot Prompting' },
+          { id: 'tr-kp-27', slug: 'chain-of-thought', name: 'Chain-of-Thought Prompting' },
+          { id: 'tr-kp-28', slug: 'structured-outputs', name: 'Structured Outputs & JSON Mode' },
+          { id: 'tr-kp-29', slug: 'system-prompts', name: 'System Prompts & Instruction Following' },
+          { id: 'tr-kp-30', slug: 'rag-architecture', name: 'Retrieval-Augmented Generation (RAG)' },
+        ]
+      },
+    ]
+  },
 ]
