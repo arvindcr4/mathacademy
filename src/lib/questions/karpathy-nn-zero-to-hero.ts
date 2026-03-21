@@ -14,8 +14,7 @@ registerQuestions({
         "To define the architecture of a multi-layer perceptron.",
         "To perform matrix multiplication between the inputs and weights.",
       ],
-      correctAnswer:
-        "To recursively calculate local gradients backwards through the computational graph, multiplying them to find the global gradient.",
+      correctAnswer: 1,
       explanation:
         "The chain rule from calculus allows us to calculate the derivative of a composite function by multiplying the local gradients of each operation, propagating the error from the output back to the inputs or weights.",
       hints: [
