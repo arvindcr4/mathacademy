@@ -11,6 +11,47 @@ const difficultyRank: Record<Question['difficulty'], number> = {
   hard: 2,
 }
 
+type QuestionOverride = Partial<
+  Pick<Question, 'question' | 'options' | 'correctAnswer' | 'explanation' | 'hints'>
+>
+
+const questionOverrides: Record<string, QuestionOverride> = {
+  'q-ra-1': {
+    correctAnswer: 1,
+    explanation: 'A right rotation by 3 moves the last three elements, [5,6,7], to the front. The result is [5,6,7,1,2,3,4].',
+    hints: ['This is a right rotation, so the tail moves to the front.', 'Take the last three elements [5,6,7] and place them before [1,2,3,4].'],
+  },
+  'q-rnn-4': {
+    options: ['1→2→3→4', '1→2→3→5', '1→3→4→5', '2→3→4→5'],
+    correctAnswer: 1,
+    explanation: 'Counting from the end gives 5 as first and 4 as second, so the node with value 4 is removed. The remaining list is 1→2→3→5.',
+    hints: ['Count backward from the tail: 5 is first, 4 is second.', 'Delete the node with value 4 and reconnect 3 directly to 5.'],
+  },
+  'q-vbst-2': {
+    options: ['[10,5,15,null,null,6,20]', '[5,3,7,1,4,6,8]', '[2,1,3]', '[1,null,2]'],
+    correctAnswer: 0,
+    explanation: 'The tree [10,5,15,null,null,6,20] passes the immediate-child check at node 15 because 6 < 15, but it is still invalid because 6 lies in the right subtree of 10 and must therefore be greater than 10.',
+    hints: ['A node in the right subtree must respect every ancestor bound, not only its parent.', 'Here the value 6 is in the right subtree of 10, so it violates the global lower bound.'],
+  },
+  'q-mfml-kp12-1': {
+    question: 'Let f(u) = u³ and u = g(x) = 2x. Compute df/dx at x = 2.',
+    correctAnswer: 3,
+    explanation: 'By the chain rule, df/dx = (df/du)(du/dx). Here f(u)=u³ so df/du = 3u², and u=2x so du/dx = 2. At x=2, u=4, so df/dx = 3(4²)·2 = 96.',
+  },
+  'q-rl-kp12-3': {
+    options: ['1', '1 + 0.5·V^π(s₂)', '4/3', '2'],
+    explanation: 'Apply the Bellman equations simultaneously: V^π(s₁) = 1 + 0.5·V^π(s₂) and V^π(s₂) = 0.5·V^π(s₁). Substituting gives V^π(s₁) = 1 + 0.25·V^π(s₁), so 0.75·V^π(s₁) = 1 and V^π(s₁) = 4/3. The same result comes from the return series 1 + 0 + 0.25 + 0 + 0.0625 + … = 1/(1−0.25) = 4/3.',
+  },
+  'q-dc-kp3-2': {
+    correctAnswer: 'true',
+    explanation: 'Asymmetric label noise is generally more damaging because it pushes the decision boundary in one direction instead of adding balanced uncertainty to both classes. If only class A is flipped to class B, the model learns a systematic bias against class A. Under symmetric noise at the same rate, the corruption is more evenly distributed and partially cancels out.',
+  },
+  'q-eval-kp10-2': {
+    correctAnswer: 'true',
+    explanation: 'MRR only uses the rank of the first relevant result for each query. If the first relevant result is at rank 3, the reciprocal rank is 1/3, and later relevant documents at ranks 5 and 7 do not affect that query\'s MRR contribution.',
+  },
+}
+
 function normalizeText(text: string): string {
   return text.replace(/\s+/g, ' ').trim()
 }
@@ -145,12 +186,15 @@ function normalizeHints(question: Question, explanation: string): string[] {
 }
 
 function normalizeQuestion(question: Question): Question {
-  const explanation = ensureSentence(cleanExplanation(question.explanation))
+  const overriddenQuestion = questionOverrides[question.id]
+    ? { ...question, ...questionOverrides[question.id] }
+    : question
+  const explanation = ensureSentence(cleanExplanation(overriddenQuestion.explanation))
 
   return {
-    ...question,
+    ...overriddenQuestion,
     explanation,
-    hints: normalizeHints(question, explanation),
+    hints: normalizeHints(overriddenQuestion, explanation),
   }
 }
 
@@ -214,3 +258,4 @@ import './coding-interviews-1'
 import './coding-interviews-2'
 import './coding-interviews-3'
 import './gemini-multimodal'
+import './karpathy-nn-zero-to-hero'
