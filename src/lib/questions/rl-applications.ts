@@ -123,7 +123,12 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Uniform sampling gives equal probability to all stored transitions, including those with small TD errors (already well-learned). Prioritized experience replay addresses this by sampling transitions with larger Bellman errors more frequently.",
+        "First, let's recall that the TD error $\\delta = r + \\gamma Q(s',a') - Q(s,a)$ measures how surprising a transition is - large $|\\delta|$ means the network predicted poorly and the transition is highly informative.\n\n**Step 1.** Uniform sampling gives equal probability to all stored transitions, regardless of whether they have large or small TD errors.\n\n**Step 2.** Transitions with small $|\\delta|$ are already well-learned - the network already predicts their outcomes accurately, so spending training compute on these provides little learning signal.\n\n**Step 3.** Meanwhile, high-error transitions (which are most informative) receive the same sampling probability as low-error ones, wasting capacity on less useful data and slowing learning.\n\nTherefore, the answer is All transitions are treated as equally important regardless of their learning value.",
+      stepByStep: {
+        step1: "Uniform sampling gives equal probability to all stored transitions, regardless of whether they have large or small TD errors.",
+        step2: "Transitions with small TD errors are already well-learned, so spending training compute on them provides little learning signal.",
+        step3: "High-error (most informative) transitions receive the same sampling probability as low-error ones, wasting capacity on less useful data.",
+      },
       hints: [
         "Should a transition the agent already predicts well receive the same training attention as one with a large error?",
         "Think about which transitions provide the most learning signal.",
