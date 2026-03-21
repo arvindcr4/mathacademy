@@ -430,7 +430,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "First, let's recall that Tinker is a training-only platform, so the key question is: what algorithms does it support? Step-by-step: (1) Tinker specializes in LoRA-based RL training—meaning it doesn't require full parameter fine-tuning. (2) The core algorithm is GRPO (Group Relative Policy Optimization), which we discussed earlier—it estimates advantages by comparing outputs within a group rather than using a value function. (3) Tinker also uses importance sampling, allowing gradient updates from older samples (more sample-efficient). (4) This combination—LoRA + GRPO + importance sampling—makes RL fine-tuning practical on consumer GPUs with limited memory. Therefore, Tinker supports modern memory-efficient RL algorithms.",
+        "Tinker is a training-only platform, so the key question is: what algorithms does it support? **Step 1:** Tinker specializes in LoRA-based RL training—meaning it doesn't require full parameter fine-tuning. **Step 2:** The core algorithm is GRPO (Group Relative Policy Optimization), which estimates advantages by comparing outputs within a group rather than using a value function. **Step 3:** Tinker also uses importance sampling, allowing gradient updates from older samples (more sample-efficient). This combination—LoRA + GRPO + importance sampling—makes RL fine-tuning practical on consumer GPUs with limited memory. Therefore, Tinker supports modern memory-efficient RL algorithms.",
       hints: [
         "LoRA = Low-Rank Adaptation: instead of training all weights, only train small 'adapter' matrices (~0.1-1% of parameters)",
         "GRPO is a policy gradient method that avoids the value function by comparing samples within each group",
@@ -453,7 +453,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "First, let's recall the open-source vs managed service trade-off: managed platforms are easier but less flexible; open-source frameworks give you control but require more setup. Step-by-step: (1) Atropos is an open-source RL framework—you download and run it on your own infrastructure. (2) Infrastructure options include Lambda Labs, RunPod, or any GPU provider. (3) You set up the training environment yourself, which means installing dependencies, configuring distributed training, etc. (4) In return, you get complete control: custom reward functions, modified training loops, different model architectures. Therefore, Atropos suits teams with ML infrastructure expertise who need maximum flexibility.",
+        "The open-source vs managed service trade-off: managed platforms are easier but less flexible; open-source frameworks give you control but require more setup. **Step 1:** Atropos is an open-source RL framework—you download and run it on your own infrastructure. **Step 2:** Infrastructure options include Lambda Labs, RunPod, or any GPU provider. **Step 3:** You set up the training environment yourself, which means installing dependencies, configuring distributed training, etc. In return, you get complete control: custom reward functions, modified training loops, different model architectures. Therefore, Atropos suits teams with ML infrastructure expertise who need maximum flexibility.",
       hints: [
         "Open-source RL frameworks are like owning your own lab equipment—you can modify everything, but you also maintain everything",
         "Consider the 'total cost': infrastructure costs + your engineering time for setup vs just paying for managed service",
@@ -476,7 +476,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "First, let's clarify what veRL and OpenRLHF are: they're not cloud services you sign up for, but code libraries you use in your own infrastructure. Step-by-step: (1) veRL (from VolcEngine, a Chinese cloud provider) and OpenRLHF are open-source libraries implementing RLHF algorithms. (2) They provide building blocks: PPO, DPO, GRPO, and other RLHF components you can compose. (3) You run these on your own infrastructure (Lambda Labs, RunPod, etc.)—they're frameworks, not services. (4) Think of them like PyTorch or TensorFlow, but specifically for RLHF rather than general deep learning. Therefore, use these when you want to build custom RL training pipelines with full control.",
+        "veRL and OpenRLHF are not cloud services you sign up for, but code libraries you use in your own infrastructure. **Step 1:** veRL (from VolcEngine, a Chinese cloud provider) and OpenRLHF are open-source libraries implementing RLHF algorithms. **Step 2:** They provide building blocks: PPO, DPO, GRPO, and other RLHF components you can compose. **Step 3:** You run these on your own infrastructure (Lambda Labs, RunPod, etc.)—they're frameworks, not services. Think of them like PyTorch or TensorFlow, but specifically for RLHF rather than general deep learning. Therefore, use these when you want to build custom RL training pipelines with full control.",
       hints: [
         "These are 'code libraries' you integrate into your training pipeline, not 'platforms' with web interfaces",
         "Consider the analogy: just as you use PyTorch to build custom neural networks, you use veRL/OpenRLHF to build custom RLHF training",
@@ -499,7 +499,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "First, let's recall the difference between single-turn RLHF and agentic RL: single-turn RLHF improves responses to one prompt, while agentic RL trains models to use tools and plan multi-step actions. Step-by-step: (1) General RLHF frameworks (like veRL, OpenRLHF) are designed for improving single-turn responses. (2) OpenClaw-RL specializes in agentic AI—systems that use tools (web search, calculators, code execution), plan sequences of actions, and handle multi-step reasoning. (3) It includes environment abstractions for tool integration—ways to connect RL training to external tools. (4) It provides reward shaping specifically for agentic behaviors—rewarding successful tool use and planning. Therefore, OpenClaw-RL is the right choice for building agents, not just better chat responses.",
+        "The difference between single-turn RLHF and agentic RL: single-turn RLHF improves responses to one prompt, while agentic RL trains models to use tools and plan multi-step actions. **Step 1:** General RLHF frameworks (like veRL, OpenRLHF) are designed for improving single-turn responses. **Step 2:** OpenClaw-RL specializes in agentic AI—systems that use tools (web search, calculators, code execution), plan sequences of actions, and handle multi-step reasoning. **Step 3:** It includes environment abstractions for tool integration—ways to connect RL training to external tools. It also provides reward shaping specifically for agentic behaviors—rewarding successful tool use and planning. Therefore, OpenClaw-RL is the right choice for building agents, not just better chat responses.",
       hints: [
         "The 'Claw' in OpenClaw suggests grasping and using tools—think robotic arm picking up objects",
         "Agentic RL differs from single-turn RLHF the way a chef differs from a taste tester: one plans and executes sequences, the other evaluates single responses",
@@ -522,7 +522,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "First, let's recall the Tinker workflow: training happens on Tinker's infrastructure, but hosting doesn't. Step-by-step deployment process: (1) After training, Tinker makes weights available at tinker://<run_id>/sampler_weights/final. (2) You download the LoRA weights—these are small adapter matrices (~100MB for a 70B model). (3) You merge these LoRA weights with the base model using HuggingFace PEFT library. (4) Finally, convert to your target format: GGUF for Ollama local deployment, or deploy via vLLM/Together/Fireworks for cloud hosting. This workflow gives flexibility in hosting choice but requires additional DevOps steps.",
+        "The Tinker workflow: training happens on Tinker's infrastructure, but hosting doesn't. **Step 1:** After training, Tinker makes weights available at tinker://<run_id>/sampler_weights/final. **Step 2:** You download the LoRA weights—these are small adapter matrices ($\\sim$100MB for a 70B model). **Step 3:** You merge these LoRA weights with the base model using HuggingFace PEFT library. Finally, convert to your target format: GGUF for Ollama local deployment, or deploy via vLLM/Together/Fireworks for cloud hosting. This workflow gives flexibility in hosting choice but requires additional DevOps steps.",
       hints: [
         "LoRA weights are 'deltas' to the base model—think of them as improvement patches you apply to get a specialized version",
         "The conversion step matters: Ollama expects GGUF format, cloud providers may have their own format requirements",
@@ -546,7 +546,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "First, let's recall the KV cache bottleneck: during LLM inference, each token generates key and value vectors stored in GPU memory. With many concurrent requests, this cache becomes fragmented and inefficient. Step-by-step: (1) Traditional attention requires storing all KV pairs contiguously in GPU memory. (2) When memory is fragmented (partially filled blocks), you can't use it efficiently. (3) PagedAttention solves this by borrowing OS virtual memory concepts: KV cache is stored in non-contiguous blocks allocated on-demand. (4) Like how OS virtual memory maps physical memory pages to virtual addresses, PagedAttention maps logical cache positions to physical GPU memory blocks. Therefore, PagedAttention dramatically improves throughput by eliminating memory fragmentation.",
+        "The KV cache bottleneck: during LLM inference, each token generates key and value vectors stored in GPU memory. With many concurrent requests, this cache becomes fragmented and inefficient. **Step 1:** Traditional attention requires storing all KV pairs contiguously in GPU memory. **Step 2:** When memory is fragmented (partially filled blocks), you can't use it efficiently. **Step 3:** PagedAttention solves this by borrowing OS virtual memory concepts: KV cache is stored in non-contiguous blocks allocated on-demand. Like how OS virtual memory maps physical memory pages to virtual addresses, PagedAttention maps logical cache positions to physical GPU memory blocks. Therefore, PagedAttention dramatically improves throughput by eliminating memory fragmentation.",
       hints: [
         "Think of PagedAttention like a smart memory manager: instead of requiring large contiguous memory blocks, it uses smaller blocks that can be allocated flexibly",
         "The KV cache bottleneck is why serving many requests simultaneously was impossible before PagedAttention—the memory fragmentation made it impractical",
@@ -566,7 +566,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "First, let's clarify vLLM's role: it's a serving solution, not a training platform. After RL fine-tuning produces weights, vLLM helps deploy them. Step-by-step why vLLM is recommended: (1) It handles efficiency challenges: PagedAttention for memory management and continuous batching for throughput. (2) It supports loading LoRA adapters directly—the same format that RL training tools (Tinker, Atropos) produce. (3) It integrates with HuggingFace model formats out of the box. (4) Production deployment requires reliability: vLLM is battle-tested at scale. Therefore, vLLM is the natural choice for hosting RL-fine-tuned models.",
+        "vLLM's role is a serving solution, not a training platform—after RL fine-tuning produces weights, vLLM helps deploy them. **Step 1:** It handles efficiency challenges: PagedAttention for memory management and continuous batching for throughput. **Step 2:** It supports loading LoRA adapters directly—the same format that RL training tools (Tinker, Atropos) produce. **Step 3:** It integrates with HuggingFace model formats out of the box. Production deployment requires reliability: vLLM is battle-tested at scale. Therefore, vLLM is the natural choice for hosting RL-fine-tuned models.",
       hints: [
         "vLLM is the 'deployment' piece after you've done the 'training'—think of it as the engine that serves predictions, not trains models",
         "Consider what's critical for production: memory efficiency (PagedAttention), high throughput (continuous batching), and LoRA support for the weights your training produced",
@@ -589,7 +589,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "First, let's recall the hosting challenge: after fine-tuning, you need to serve your model in production, which requires GPU infrastructure and engineering. Step-by-step: (1) Together AI is an inference platform—not a training platform. (2) You upload your fine-tuned weights (from Tinker, Atropos, etc.) to Together's servers. (3) They provide a simple API to serve your model at competitive rates (~$0.20/M tokens). (4) You avoid managing GPU infrastructure—just call the API. This is ideal for teams who've invested in custom fine-tuning and want production hosting without the DevOps overhead.",
+        "The hosting challenge: after fine-tuning, you need to serve your model in production, which requires GPU infrastructure and engineering. **Step 1:** Together AI is an inference platform—not a training platform. **Step 2:** You upload your fine-tuned weights (from Tinker, Atropos, etc.) to Together's servers. **Step 3:** They provide a simple API to serve your model at competitive rates ($\\sim\\$0.20$/M tokens). You avoid managing GPU infrastructure—just call the API. This is ideal for teams who've invested in custom fine-tuning and want production hosting without the DevOps overhead.",
       hints: [
         "Together AI bridges 'model trained' to 'model in production'—they handle the infrastructure, you handle the API calls",
         "Consider the cost model: per-token pricing means you pay proportionally to usage, not for idle GPU time",
@@ -612,7 +612,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Fireworks AI is optimized for low-latency inference, achieving sub-100ms response times. This makes it ideal for real-time applications (chatbots, assistants) where response latency directly impacts user experience, even if it's not the cheapest option.",
+        "Fireworks AI is optimized for low-latency inference. **Step 1:** It achieves sub-100ms response times, which is critical for real-time applications. **Step 2:** This makes it ideal for chatbots and assistants where response latency directly impacts user experience. **Step 3:** The trade-off is that it's not the cheapest option, but the speed advantage justifies the premium for interactive applications.",
       hints: [
         "Fireworks = speed",
         "What metric matters most for interactive applications?",
@@ -635,7 +635,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "RunPod Serverless provides GPU endpoints where you pay only for actual compute time (per-second billing). Upload your model, get an API endpoint, and requests spin up GPU instances on-demand. This is cost-effective for variable or low-traffic workloads.",
+        "RunPod Serverless provides GPU endpoints where you pay only for actual compute time. **Step 1:** Upload your model and get an API endpoint. **Step 2:** Requests spin up GPU instances on-demand. **Step 3:** Billing is per-second, making it cost-effective for variable or low-traffic workloads. This is ideal compared to paying for idle GPU time.",
       hints: [
         "Serverless = pay only when processing requests",
         "Think AWS Lambda but for GPU inference",
@@ -658,7 +658,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Ollama runs models locally on your CPU/GPU for free, making it perfect for personal use, development, or privacy-sensitive applications. After merging LoRA weights and converting to GGUF format, you can run the model entirely offline without cloud costs or data leaving your machine.",
+        "Ollama runs models locally on your CPU/GPU for free. **Step 1:** After merging LoRA weights, convert them to GGUF format. **Step 2:** Load the model in Ollama and run it entirely offline. **Step 3:** This makes it perfect for personal use, development, or privacy-sensitive applications without cloud costs or data leaving your machine.",
       hints: [
         "Ollama = local, free, offline",
         "What's the trade-off vs cloud hosting?",
@@ -682,7 +682,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Lambda Labs provides GPU instances specifically optimized for ML workloads (proper drivers, pre-installed frameworks) at $2.49/hr for H100s. Unlike general cloud providers, everything is ML-focused, and you can run any training stack (Atropos, veRL, OpenRLHF) on the raw GPU.",
+        "Lambda Labs provides GPU instances specifically optimized for ML workloads. **Step 1:** They offer proper drivers and pre-installed frameworks at $\\$2.49$/hr for H100s. **Step 2:** Unlike general cloud providers, everything is ML-focused. **Step 3:** You can run any training stack (Atropos, veRL, OpenRLHF) on the raw GPU, giving you full control while still having ML-optimized infrastructure.",
       hints: [
         "Lambda = ML-specialized cloud",
         "Think about what makes ML different from general computing",
@@ -705,7 +705,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "RunPod GPU rental ($2.39/hr H100) gives you a persistent VM where you install your training stack and run long jobs. This is cheaper than serverless for training workloads that run continuously. Use serverless only for on-demand inference.",
+        "RunPod GPU rental gives you a persistent VM where you install your training stack. **Step 1:** At $\\$2.39$/hr for H100s, you get full control over the environment. **Step 2:** This is cheaper than serverless for training workloads that run continuously. **Step 3:** Use serverless only for on-demand inference where you don't need persistent access. The key distinction is persistent VM control vs pay-per-request.",
       hints: [
         "GPU rental = VM you control",
         "Serverless = pay per request",
@@ -728,7 +728,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Modal uses a code-first approach where you annotate Python functions with @modal.gpu() and they automatically scale to GPUs on-demand. Unlike RunPod's VM model, you write normal Python and Modal handles infrastructure. It's more expensive ($4.76/hr H100) but simpler for developers.",
+        "Modal uses a code-first approach for serverless GPU access. **Step 1:** You annotate Python functions with @modal.gpu() decorators. **Step 2:** Modal automatically scales to GPUs on-demand without managing infrastructure. **Step 3:** Unlike RunPod's VM model, you write normal Python and Modal handles the underlying infrastructure. It's more expensive ($$4.76$/hr H100) but simpler for developers who prefer not to manage servers.",
       hints: [
         "Modal = code-first, serverless",
         "Think function-level GPU access vs VM-level",
@@ -751,7 +751,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CoreWeave provides Kubernetes-native GPU infrastructure with InfiniBand networking, essential for distributed training across hundreds of GPUs. This is overkill for single-GPU work but critical for training large models where inter-GPU communication is the bottleneck.",
+        "CoreWeave provides Kubernetes-native GPU infrastructure for serious scale. **Step 1:** It offers InfiniBand networking, essential for distributed training across hundreds of GPUs. **Step 2:** This handles inter-GPU communication efficiently, which is often the bottleneck in large-scale training. **Step 3:** It's overkill for single-GPU work but critical for training large models where distributed compute is essential.",
       hints: [
         "CoreWeave = infrastructure for serious scale",
         "What makes distributed training fast?",
@@ -774,7 +774,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Spheron creates a marketplace of distributed GPU providers, achieving $1.33/hr for H100 access. The trade-off is less reliability/consistency than dedicated providers, but for cost-sensitive workloads that can handle occasional interruptions, it offers significant savings.",
+        "Spheron creates a marketplace of distributed GPU providers. **Step 1:** This achieves lower costs at $\\$1.33$/hr for H100 access compared to dedicated providers. **Step 2:** The trade-off is less reliability and consistency than dedicated providers. **Step 3:** For cost-sensitive workloads that can handle occasional interruptions, it offers significant savings. Consider whether your workload can tolerate variability in exchange for lower pricing.",
       hints: [
         "Decentralized = community resources",
         "What's the trade-off for lower cost?",
@@ -798,7 +798,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Tinker provides managed RL training without needing your own GPUs. After training, download the LoRA weights (~100MB vs full 70B model) and host on cheap infrastructure like RunPod Serverless or Together AI. This avoids the premium of end-to-end platforms while getting managed training.",
+        "Tinker provides managed RL training without needing your own GPUs. **Step 1:** Upload your preference data and training prompts—Tinker handles the compute-intensive RL training. **Step 2:** After training, download the LoRA weights ($\\sim$100MB vs full 70B model). **Step 3:** Host on cheap infrastructure like RunPod Serverless or Together AI. This separates training from hosting, avoiding the premium of end-to-end platforms while getting managed training.",
       hints: [
         "LoRA weights are small and portable",
         "What can you separate: training vs hosting?",
@@ -821,7 +821,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Fireworks AI specifically optimizes for sub-100ms inference latency, making it ideal for real-time applications. Local CPU inference (Ollama) is too slow for 70B models, and while vLLM on RunPod can be fast, it requires more setup and optimization work.",
+        "Fireworks AI specifically optimizes for sub-100ms inference latency. **Step 1:** This makes it ideal for real-time applications like voice assistants where delay degrades user experience. **Step 2:** Local CPU inference (Ollama) is too slow for 70B models. **Step 3:** While vLLM on RunPod can be fast, it requires more setup and optimization work. Fireworks provides optimized low-latency inference out of the box.",
       hints: [
         "Voice assistants need very fast responses",
         "Which platform specifically targets low latency?",
@@ -844,7 +844,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "AWS Bedrock offers HIPAA compliance with Business Associate Agreements (BAA) and VPC deployment where data never leaves your network. Tinker + external hosting creates compliance complexity, and most GPU rental platforms don't offer HIPAA BAAs.",
+        "AWS Bedrock offers HIPAA compliance with Business Associate Agreements. **Step 1:** BAA is the legal document required for HIPAA cloud services that defines responsibilities for handling PHI. **Step 2:** VPC deployment ensures data never leaves your network, maintaining data sovereignty. **Step 3:** Tinker + external hosting creates compliance complexity because you'd need BAAs with multiple providers. Most GPU rental platforms don't offer HIPAA BAAs, making Bedrock the practical choice for healthcare.",
       hints: [
         "Healthcare = strict data handling requirements",
         "What document do you need for HIPAA cloud services?",
@@ -867,7 +867,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "HUD's value proposition is simplicity: one platform handles RL training AND hosting. Tinker+RunPod requires managing two services, handling weight export/merge, and more DevOps. Choose HUD when your team's time is more valuable than the convenience premium.",
+        "HUD's value proposition is simplicity: one platform handles RL training AND hosting. **Step 1:** With HUD, you upload data and get a hosted model—no weight exports or integrations needed. **Step 2:** Tinker+RunPod requires managing two services, handling weight export/merge, and more DevOps work. **Step 3:** Choose HUD when your team's time is more valuable than the convenience premium. The extra cost buys back your engineering hours.",
       hints: [
         "Managed services trade cost for simplicity",
         "What's your team good at?",
@@ -890,7 +890,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The hybrid pattern separates concerns: use Tinker (no GPU needed) for RL training, download tiny LoRA weights, then deploy to specialized inference providers. This combines managed training convenience with inference provider choice for latency/cost optimization.",
+        "The hybrid pattern separates concerns across providers. **Step 1:** Use Tinker for RL training—no GPU needed from you, and they handle the managed training process. **Step 2:** Download the tiny LoRA weights (small delta files, not full model). **Step 3:** Deploy to specialized inference providers like Together or Fireworks, optimizing for latency and cost separately. This combines managed training convenience with inference provider flexibility.",
       hints: [
         "Why use different providers for training vs hosting?",
         "LoRA weights are portable and small",
