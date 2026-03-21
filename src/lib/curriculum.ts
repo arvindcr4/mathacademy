@@ -644,7 +644,7 @@ export const courses: Course[] = [
     category: 'software-engineering',
     icon: '💻',
     color: '#3B82F6',
-    topicCount: 12,
+    topicCount: 13,
     estimatedHours: 60,
     topics: [
       { id: 'arrays', slug: 'arrays', name: 'Arrays & Strings', description: 'Foundational array manipulation and string algorithms.', knowledgePoints: [
@@ -743,6 +743,18 @@ export const courses: Course[] = [
           { id: 'ci-kp-71', slug: 'dijkstra-algorithm', name: 'Dijkstra\'s Shortest Path' },
           { id: 'ci-kp-72', slug: 'floyd-warshall', name: 'Floyd-Warshall All-Pairs Shortest Path' },
           { id: 'ci-kp-73', slug: 'bellman-ford', name: 'Bellman-Ford Algorithm' },
+        ] },
+      { id: 'string-algorithms', slug: 'string-algorithms', name: 'String Algorithms', description: 'String hashing, pattern matching, tries, and advanced string techniques.', knowledgePoints: [
+          { id: 'ci-kp-74', slug: 'string-hashing', name: 'String Hashing (Rabin-Karp)' },
+          { id: 'ci-kp-75', slug: 'kmp-algorithm', name: 'KMP Algorithm' },
+          { id: 'ci-kp-76', slug: 'trie-data-structure', name: 'Trie Data Structure' },
+          { id: 'ci-kp-77', slug: 'suffix-tree', name: 'Suffix Tree' },
+          { id: 'ci-kp-78', slug: 'anagram-checking', name: 'Anagram Checking' },
+          { id: 'ci-kp-79', slug: 'palindrome-checking', name: 'Palindrome Checking' },
+          { id: 'ci-kp-80', slug: 'string-compression', name: 'String Compression' },
+          { id: 'ci-kp-81', slug: 'longest-common-subsequence', name: 'Longest Common Subsequence' },
+          { id: 'ci-kp-82', slug: 'regex-matching', name: 'Regex Matching' },
+          { id: 'ci-kp-83', slug: 'minimum-window-substring', name: 'Minimum Window Substring' },
         ] },
     ]
   },
