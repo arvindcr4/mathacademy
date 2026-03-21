@@ -1546,6 +1546,88 @@ export const courses: Course[] = [
       },
     ]
   },
+  // GRAPH NEURAL NETWORKS & GEOMETRIC DEEP LEARNING
+  {
+    id: 'graph-neural-networks',
+    slug: 'graph-neural-networks',
+    name: 'Graph Neural Networks & Geometric DL',
+    description: 'Message passing, graph convolutions, and geometric deep learning for structured data.',
+    topics: [
+      {
+        id: 'graph-foundations',
+        name: 'Graph Theory & Representations',
+        description: 'Graph data structures, adjacency matrices, and graph properties for ML.',
+        knowledgePoints: [
+          { id: 'gnn-kp-1', slug: 'graph-representations', name: 'Graph Representations & Adjacency Matrices' },
+          { id: 'gnn-kp-2', slug: 'graph-laplacian', name: 'Graph Laplacian & Spectral Properties' },
+          { id: 'gnn-kp-3', slug: 'graph-features', name: 'Node, Edge & Graph-Level Features' },
+          { id: 'gnn-kp-4', slug: 'heterogeneous-graphs', name: 'Heterogeneous & Dynamic Graphs' },
+          { id: 'gnn-kp-5', slug: 'graph-datasets', name: 'Graph Datasets & Benchmarks (OGB, TU)' },
+        ]
+      },
+      {
+        id: 'message-passing',
+        name: 'Message Passing Neural Networks',
+        description: 'MPNN framework, aggregation functions, and graph convolution variants.',
+        knowledgePoints: [
+          { id: 'gnn-kp-6', slug: 'mpnn-framework', name: 'Message Passing Neural Network (MPNN) Framework' },
+          { id: 'gnn-kp-7', slug: 'gcn', name: 'Graph Convolutional Networks (GCN)' },
+          { id: 'gnn-kp-8', slug: 'graphsage', name: 'GraphSAGE & Inductive Learning' },
+          { id: 'gnn-kp-9', slug: 'gat', name: 'Graph Attention Networks (GAT)' },
+          { id: 'gnn-kp-10', slug: 'gin', name: 'Graph Isomorphism Networks (GIN)' },
+        ]
+      },
+      {
+        id: 'graph-transformers',
+        name: 'Graph Transformers & Scalable GNNs',
+        description: 'Attention mechanisms on graphs, scalable training, and graph foundation models.',
+        knowledgePoints: [
+          { id: 'gnn-kp-11', slug: 'graph-transformer', name: 'Graph Transformers & Global Attention' },
+          { id: 'gnn-kp-12', slug: 'positional-encoding-graphs', name: 'Positional Encoding for Graphs' },
+          { id: 'gnn-kp-13', slug: 'scalable-gnn', name: 'Scalable GNNs (Cluster-GCN, GraphBELL)' },
+          { id: 'gnn-kp-14', slug: 'over-smoothing', name: 'Over-Smoothing & Over-Squashing' },
+          { id: 'gnn-kp-15', slug: 'gnn-expressiveness', name: 'GNN Expressiveness & WL Test' },
+        ]
+      },
+      {
+        id: 'graph-generative',
+        name: 'Graph Generation & Molecular ML',
+        description: 'Generating graphs, molecular property prediction, and drug discovery.',
+        knowledgePoints: [
+          { id: 'gnn-kp-16', slug: 'graph-vae', name: 'Graph VAE & Generative Models' },
+          { id: 'gnn-kp-17', slug: 'mol-property-prediction', name: 'Molecular Property Prediction' },
+          { id: 'gnn-kp-18', slug: 'drug-discovery-gnn', name: 'Drug Discovery with GNNs' },
+          { id: 'gnn-kp-19', slug: 'diffusion-graphs', name: 'Diffusion Models for Graph Generation' },
+          { id: 'gnn-kp-20', slug: 'protein-structure', name: 'Protein Structure Prediction (AlphaFold)' },
+        ]
+      },
+      {
+        id: 'knowledge-graphs',
+        name: 'Knowledge Graphs & Link Prediction',
+        description: 'Knowledge graph embeddings, relation learning, and reasoning.',
+        knowledgePoints: [
+          { id: 'gnn-kp-21', slug: 'knowledge-graph-embeddings', name: 'Knowledge Graph Embeddings (TransE, RotatE)' },
+          { id: 'gnn-kp-22', slug: 'link-prediction', name: 'Link Prediction & Graph Completion' },
+          { id: 'gnn-kp-23', slug: 'relation-networks', name: 'Relational Networks & Reasoning' },
+          { id: 'gnn-kp-24', slug: 'graph-rag', name: 'Graph RAG & Knowledge-Augmented LLMs' },
+          { id: 'gnn-kp-25', slug: 'temporal-knowledge-graphs', name: 'Temporal Knowledge Graphs' },
+        ]
+      },
+      {
+        id: 'geometric-dl',
+        name: 'Geometric Deep Learning',
+        description: 'Symmetry, equivariance, and learning on manifolds and point clouds.',
+        knowledgePoints: [
+          { id: 'gnn-kp-26', slug: 'equivariance-symmetry', name: 'Equivariance & Symmetry in Neural Networks' },
+          { id: 'gnn-kp-27', slug: 'point-clouds', name: 'Point Cloud Learning (PointNet, PointNet++)' },
+          { id: 'gnn-kp-28', slug: 'mesh-neural-networks', name: 'Mesh & Surface Neural Networks' },
+          { id: 'gnn-kp-29', slug: 'se3-equivariant', name: 'SE(3)-Equivariant Networks' },
+          { id: 'gnn-kp-30', slug: 'topological-dl', name: 'Topological Deep Learning & TDA' },
+        ]
+      },
+    ]
+  },
+
   {
     id: 'probabilistic-ml',
     slug: 'probabilistic-ml',
