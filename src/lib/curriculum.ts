@@ -1546,6 +1546,88 @@ export const courses: Course[] = [
       },
     ]
   },
+  // MULTIMODAL LEARNING & FOUNDATION MODELS
+  {
+    id: 'multimodal-learning',
+    slug: 'multimodal-learning',
+    name: 'Multimodal Learning & Foundation Models',
+    description: 'Vision-language models, audio-visual learning, and large multimodal foundation models.',
+    topics: [
+      {
+        id: 'vision-language-models',
+        name: 'Vision-Language Models',
+        description: 'CLIP, ALIGN, and contrastive vision-language pretraining.',
+        knowledgePoints: [
+          { id: 'ml2-kp-1', slug: 'clip-model', name: 'CLIP & Contrastive Language-Image Pretraining' },
+          { id: 'ml2-kp-2', slug: 'align-coca', name: 'ALIGN, CoCa & Scaling VLP' },
+          { id: 'ml2-kp-3', slug: 'visual-grounding', name: 'Visual Grounding & Referring Expression' },
+          { id: 'ml2-kp-4', slug: 'image-text-retrieval', name: 'Image-Text Retrieval & Cross-Modal Search' },
+          { id: 'ml2-kp-5', slug: 'zero-shot-vision', name: 'Zero-Shot Image Classification with VLMs' },
+        ]
+      },
+      {
+        id: 'large-multimodal-models',
+        name: 'Large Multimodal Models (LMMs)',
+        description: 'GPT-4V, LLaVA, Gemini, and instruction-tuned multimodal LLMs.',
+        knowledgePoints: [
+          { id: 'ml2-kp-6', slug: 'llava', name: 'LLaVA & Visual Instruction Tuning' },
+          { id: 'ml2-kp-7', slug: 'flamingo', name: 'Flamingo & Few-Shot Multimodal Learning' },
+          { id: 'ml2-kp-8', slug: 'gemini-architecture', name: 'Gemini Architecture & Native Multimodality' },
+          { id: 'ml2-kp-9', slug: 'gpt4v-capabilities', name: 'GPT-4V & Vision Capabilities' },
+          { id: 'ml2-kp-10', slug: 'multimodal-rag', name: 'Multimodal RAG & Document Understanding' },
+        ]
+      },
+      {
+        id: 'audio-speech-models',
+        name: 'Audio, Speech & Music Models',
+        description: 'Whisper, speech synthesis, music generation, and audio-visual models.',
+        knowledgePoints: [
+          { id: 'ml2-kp-11', slug: 'whisper-asr', name: 'Whisper & End-to-End ASR' },
+          { id: 'ml2-kp-12', slug: 'tts-models', name: 'TTS (VITS, NaturalSpeech, Bark)' },
+          { id: 'ml2-kp-13', slug: 'music-generation', name: 'Music Generation (MusicGen, AudioCraft)' },
+          { id: 'ml2-kp-14', slug: 'audio-visual-learning', name: 'Audio-Visual Learning & Video Understanding' },
+          { id: 'ml2-kp-15', slug: 'speech-llm', name: 'Speech LLMs & Voice Assistants' },
+        ]
+      },
+      {
+        id: 'foundation-model-theory',
+        name: 'Foundation Model Theory & Scaling',
+        description: 'Scaling laws, emergent abilities, and foundation model training.',
+        knowledgePoints: [
+          { id: 'ml2-kp-16', slug: 'scaling-laws-mm', name: 'Scaling Laws for Multimodal Models' },
+          { id: 'ml2-kp-17', slug: 'emergent-abilities', name: 'Emergent Abilities & Phase Transitions' },
+          { id: 'ml2-kp-18', slug: 'pretraining-data', name: 'Pretraining Data Curation & Quality' },
+          { id: 'ml2-kp-19', slug: 'modality-alignment', name: 'Modality Alignment & Cross-Modal Fusion' },
+          { id: 'ml2-kp-20', slug: 'mixture-of-experts-mm', name: 'Mixture of Experts for Multimodal Models' },
+        ]
+      },
+      {
+        id: 'embodied-ai',
+        name: 'Embodied AI & Robotics Foundation Models',
+        description: 'RT-2, Gato, and foundation models for robot control.',
+        knowledgePoints: [
+          { id: 'ml2-kp-21', slug: 'rt2-model', name: 'RT-2 & Vision-Language-Action Models' },
+          { id: 'ml2-kp-22', slug: 'gato-generalist', name: 'Gato & Generalist Agent Models' },
+          { id: 'ml2-kp-23', slug: 'embodied-qa', name: 'Embodied QA & Visual Navigation' },
+          { id: 'ml2-kp-24', slug: 'world-model-robotics', name: 'World Models for Robot Planning' },
+          { id: 'ml2-kp-25', slug: 'sim-to-real', name: 'Sim-to-Real Transfer & Domain Randomization' },
+        ]
+      },
+      {
+        id: 'multimodal-evaluation',
+        name: 'Multimodal Evaluation & Benchmarks',
+        description: 'Benchmarks for VQA, image captioning, and multimodal reasoning.',
+        knowledgePoints: [
+          { id: 'ml2-kp-26', slug: 'vqa-benchmarks', name: 'VQA, GQA & Visual Reasoning Benchmarks' },
+          { id: 'ml2-kp-27', slug: 'mmmu-benchmark', name: 'MMMU & Multi-Discipline Multimodal Benchmarks' },
+          { id: 'ml2-kp-28', slug: 'hallucination-multimodal', name: 'Hallucination in Multimodal Models' },
+          { id: 'ml2-kp-29', slug: 'multimodal-safety', name: 'Multimodal Safety & Red-Teaming' },
+          { id: 'ml2-kp-30', slug: 'eval-infrastructure', name: 'Evaluation Infrastructure & Leaderboards' },
+        ]
+      },
+    ]
+  },
+
   // EFFICIENT ML & MODEL COMPRESSION
   {
     id: 'efficient-ml',
