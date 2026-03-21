@@ -1546,6 +1546,88 @@ export const courses: Course[] = [
       },
     ]
   },
+  // DATA-CENTRIC AI & DATASET ENGINEERING
+  {
+    id: 'data-centric-ai',
+    slug: 'data-centric-ai',
+    name: 'Data-Centric AI & Dataset Engineering',
+    description: 'Improve ML by improving data: labeling, augmentation, data quality, and dataset curation at scale.',
+    topics: [
+      {
+        id: 'data-labeling',
+        name: 'Data Labeling & Annotation',
+        description: 'Human annotation workflows, active learning, and weak supervision.',
+        knowledgePoints: [
+          { id: 'dc-kp-1', slug: 'annotation-workflows', name: 'Annotation Workflows & Quality Control' },
+          { id: 'dc-kp-2', slug: 'active-learning-label', name: 'Active Learning for Efficient Labeling' },
+          { id: 'dc-kp-3', slug: 'weak-supervision', name: 'Weak Supervision & Snorkel' },
+          { id: 'dc-kp-4', slug: 'crowdsourcing-ml', name: 'Crowdsourcing (MTurk) & Disagreement Modeling' },
+          { id: 'dc-kp-5', slug: 'llm-labeling', name: 'LLM-Assisted Labeling & Data Generation' },
+        ]
+      },
+      {
+        id: 'data-augmentation-advanced',
+        name: 'Advanced Data Augmentation',
+        description: 'AutoAugment, mixup, CutMix, and augmentation policy search.',
+        knowledgePoints: [
+          { id: 'dc-kp-6', slug: 'autoaugment', name: 'AutoAugment & Augmentation Policy Search' },
+          { id: 'dc-kp-7', slug: 'mixup-cutmix', name: 'Mixup, CutMix & Manifold Mixup' },
+          { id: 'dc-kp-8', slug: 'randaugment', name: 'RandAugment & TrivialAugment' },
+          { id: 'dc-kp-9', slug: 'synthetic-augmentation', name: 'Synthetic Data Augmentation with Diffusion' },
+          { id: 'dc-kp-10', slug: 'augmentation-nlp', name: 'NLP Data Augmentation (EDA, Back-Translation)' },
+        ]
+      },
+      {
+        id: 'data-quality',
+        name: 'Data Quality & Cleaning',
+        description: 'Data validation, deduplication, label noise, and dataset curation.',
+        knowledgePoints: [
+          { id: 'dc-kp-11', slug: 'label-noise-correction', name: 'Label Noise Correction & Confident Learning' },
+          { id: 'dc-kp-12', slug: 'data-deduplication', name: 'Data Deduplication (MinHash, Fuzzy Matching)' },
+          { id: 'dc-kp-13', slug: 'data-validation-ml', name: 'Data Validation with TFX & Great Expectations' },
+          { id: 'dc-kp-14', slug: 'dataset-curation', name: 'Dataset Curation Principles & Quality Metrics' },
+          { id: 'dc-kp-15', slug: 'data-slicing', name: 'Data Slicing & Failure Mode Analysis' },
+        ]
+      },
+      {
+        id: 'dataset-distillation',
+        name: 'Dataset Distillation & Coreset Selection',
+        description: 'Compress datasets while preserving performance.',
+        knowledgePoints: [
+          { id: 'dc-kp-16', slug: 'dataset-distillation', name: 'Dataset Distillation & Learning to Summarize' },
+          { id: 'dc-kp-17', slug: 'coreset-selection', name: 'Coreset Selection & Herding' },
+          { id: 'dc-kp-18', slug: 'influence-functions', name: 'Influence Functions & Data Valuation' },
+          { id: 'dc-kp-19', slug: 'data-shapley', name: 'Data Shapley & Marginal Contribution' },
+          { id: 'dc-kp-20', slug: 'curriculum-learning', name: 'Curriculum Learning & Data Ordering' },
+        ]
+      },
+      {
+        id: 'pretraining-data',
+        name: 'Pretraining Data Curation',
+        description: 'Web-scale data collection, filtering, and pretraining dataset design.',
+        knowledgePoints: [
+          { id: 'dc-kp-21', slug: 'common-crawl', name: 'Common Crawl & Web-Scale Data Processing' },
+          { id: 'dc-kp-22', slug: 'data-filtering', name: 'Quality Filtering (FastText, Perplexity, Rules)' },
+          { id: 'dc-kp-23', slug: 'dolma-redpajama', name: 'Dolma, RedPajama & Open Pretraining Datasets' },
+          { id: 'dc-kp-24', slug: 'domain-mixture', name: 'Domain Mixture & Data Blending for LLMs' },
+          { id: 'dc-kp-25', slug: 'instruction-data', name: 'Instruction Tuning Data Curation (Alpaca, FLAN)' },
+        ]
+      },
+      {
+        id: 'data-privacy-ethics',
+        name: 'Data Privacy & Ethics in ML',
+        description: 'Consent, data provenance, copyright, and ethical dataset practices.',
+        knowledgePoints: [
+          { id: 'dc-kp-26', slug: 'data-consent', name: 'Data Consent, Provenance & Licensing' },
+          { id: 'dc-kp-27', slug: 'copyright-ml', name: 'Copyright & Fair Use in ML Training Data' },
+          { id: 'dc-kp-28', slug: 'pii-detection', name: 'PII Detection & De-Identification' },
+          { id: 'dc-kp-29', slug: 'representational-bias', name: 'Representational Bias in Datasets' },
+          { id: 'dc-kp-30', slug: 'data-cards', name: 'Data Cards & Dataset Documentation' },
+        ]
+      },
+    ]
+  },
+
   // ADVANCED OPTIMIZATION FOR ML
   {
     id: 'advanced-optimization-ml',
