@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getQuestions, getAllQuestions, registerQuestions } from './registry'
+import { getQuestions, getAllQuestions, registerQuestions, questionOverrides } from './registry'
 import type { QuestionsMap } from './registry'
 
 // Import all question files to trigger registration

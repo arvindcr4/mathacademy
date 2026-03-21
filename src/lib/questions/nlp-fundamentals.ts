@@ -67,19 +67,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        'The phrase "The bank can guarantee deposits will eventually cover future tuition costs" contains an ambiguous word. Which word is it, and why?',
+        "Word2Vec and GloVe produce static (context-independent) word embeddings, while BERT produces contextualised embeddings. What key difference does this make for the representation of ambiguous words like \"bank\"?",
       options: [
-        '"guarantee" - it can mean either legal promise or mathematical certainty',
-        '"bank" - it could refer to a financial institution or the bank of a river',
-        '"cover" - it can mean pay for or physically cover something',
-        '"deposits" - it could be financial deposits or geological sediment deposits',
+        "Static embeddings assign a different vector to each distinct meaning of a polysemous word; contextualised embeddings assign the same vector regardless of meaning",
+        "Static embeddings assign a single vector to \"bank\" that averages over all its uses; BERT produces different vectors for \"bank\" depending on whether it appears in a financial or geographic context",
+        "There is no meaningful difference - both represent words as fixed-length vectors regardless of context",
+        "BERT's contextualised embeddings are shorter than static embeddings because they encode less information per token",
       ],
       correctAnswer: 1,
       explanation:
-        'This classic example (Jurafsky & Martin) illustrates lexical ambiguity. "Bank" has multiple word senses: financial institution vs. river bank. Static embeddings (Word2Vec, GloVe) assign a single vector to "bank" that blurs these senses. Contextualised models (BERT) produce different vectors for "bank" depending on whether nearby words are financial (deposits, tuition) or geographic (river, shore), directly addressing this polysemy problem.',
+        "Static embeddings (Word2Vec, GloVe) assign exactly one vector per word form, regardless of context. For a polysemous word like \"bank\", the vector is trained as an average over all occurrences in the training corpus - financial uses and geographic uses are merged into a single representation. BERT avoids this averaging problem by producing a different vector for each token occurrence, conditioned on the full left and right context through bidirectional self-attention. When BERT processes \"bank\" near financial words (deposits, tuition), the resulting vector differs from when it processes \"bank\" near geographic words (river, shore). This contextual conditioning is what allows BERT to resolve polysemy, whereas a static embedding cannot.",
       hints: [
-        "Static embeddings assign one vector per word form regardless of context - what problem arises for words with two very different meanings?",
-        "BERT\'s key innovation over Word2Vec is producing context-sensitive representations. Why would that help here?",
+        "Static embeddings: one vector per word form. What gets averaged together when \"bank\" is used in two completely different senses?",
+        "BERT's attention heads see the full context to the left and right of each token. How does this allow \"bank\" to receive different representations in different sentences?",
       ],
     },
     {

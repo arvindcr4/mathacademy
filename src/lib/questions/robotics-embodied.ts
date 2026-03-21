@@ -10,13 +10,13 @@ const questions: Record<string, Question[]> = {
         "EKF-SLAM linearizes the nonlinear motion and observation models using first-order Taylor expansion. What is the primary computational bottleneck that makes EKF-SLAM scale poorly to large maps?",
       options: [
         "The number of laser scan points per frame exceeds GPU memory",
-        "The covariance matrix grows as O(N\^{2}) in the number of landmarks N, making updates O(N\^{2}) per step",
+        "The covariance matrix grows as O(N^{2}) in the number of landmarks N, making updates O(N^{2}) per step",
         "EKF requires computing the Jacobian of the neural network policy at each step",
         "The linearization error accumulates multiplicatively, not additively, with map size",
       ],
       correctAnswer: 1,
       explanation:
-        "In EKF-SLAM, the state vector contains the robot pose and all N landmark positions. The covariance matrix is (3+2N) \\times (3+2N), growing quadratically with landmarks. Each observation update requires O(N\^{2}) operations, making EKF-SLAM impractical beyond a few hundred landmarks. Factor graph SLAM (e.g., iSAM2, GTSAM) overcomes this by exploiting sparsity in the information matrix.",
+        "In EKF-SLAM, the state vector contains the robot pose and all N landmark positions. The covariance matrix is (3+2N) \\times (3+2N), growing quadratically with landmarks. Each observation update requires O(N^{2}) operations, making EKF-SLAM impractical beyond a few hundred landmarks. Factor graph SLAM (e.g., iSAM2, GTSAM) overcomes this by exploiting sparsity in the information matrix.",
       hints: [
         "The state vector in EKF-SLAM grows linearly with N landmarks; the covariance matrix (state \\times state) grows quadratically.",
         "Compare to factor graph SLAM where the information (Fisher) matrix is sparse, enabling efficient incremental updates.",
@@ -30,7 +30,7 @@ const questions: Record<string, Question[]> = {
         "In factor graph SLAM (as implemented in GTSAM or g2o), the key computational advantage over EKF-SLAM is that the information (Fisher) matrix is sparse, enabling efficient incremental updates via methods like iSAM2 without full matrix inversion.",
       correctAnswer: "True",
       explanation:
-        "Factor graphs represent SLAM as a bipartite graph of variable nodes (poses, landmarks) and factor nodes (motion, measurement). The resulting information matrix is sparse because each factor connects only a small number of variables. iSAM2 exploits this sparsity with a Bayes tree data structure, enabling O(log N) incremental updates for most steps rather than O(N\^{2}) full relinearization.",
+        "Factor graphs represent SLAM as a bipartite graph of variable nodes (poses, landmarks) and factor nodes (motion, measurement). The resulting information matrix is sparse because each factor connects only a small number of variables. iSAM2 exploits this sparsity with a Bayes tree data structure, enabling O(log N) incremental updates for most steps rather than O(N^{2}) full relinearization.",
       hints: [
         "In EKF, every new measurement updates the full covariance matrix; in factor graph SLAM, only the variables directly connected to the new factor are affected.",
         "iSAM2 uses a Bayes tree (a junction tree over the factor graph) to efficiently update only the affected cliques when new measurements arrive.",
@@ -805,8 +805,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Action chunking predicts a chunk of K future actions at once; the robot executes these open-loop, then re-queries the policy. This reduces the temporal precision required at inference time and helps handle compounding errors in reactive closed-loop control.",
       hints: [
-        "Think about what happens when the assumed correspondences are wrong at early iterations.",
-        "Consider why a good initial estimate is always recommended before running ICP.",
+        "Predicting K actions at once and executing them open-loop reduces how often the policy must make decisions, lowering the compounding error horizon.",
+        "The CVAE in ACT captures different valid demonstration strategies via its latent variable, enabling the policy to handle multi-modal behaviors.",
       ],
     },
     {
@@ -819,8 +819,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The CVAE style encoder captures demonstration variability during training, providing the decoder with a latent code; at inference (without access to future actions), the encoder is replaced by a zero vector, and the decoder generates actions conditioned only on the current observation.",
       hints: [
-        "Think about what is different between labeling a floor region and labeling individual chairs.",
-        'Consider what "stuff" vs "things" means in the context of visual perception.',
+        "The CVAE encoder sees future actions during training but not at inference - the zero vector replaces this missing information.",
+        "A zero latent vector forces the decoder to generate actions from observation alone, without conditioning on demonstration style.",
       ],
     },
     {
@@ -1456,8 +1456,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "In simulation, privileged information such as exact foot contact forces, terrain height fields, and object masses is directly accessible; providing this to the critic during RL training produces a better teacher signal, enabling the actor - trained on only proprioceptive observations - to learn more robust policies.",
       hints: [
-        "Think about how the human operator\'s arm movements are translated into robot commands.",
-        "Leader-follower systems provide direct kinematic correspondence without complex motion mapping.",
+        "The critic with privileged information can provide accurate value estimates because it sees ground-truth dynamics unavailable to the actor.",
+        "Proprioceptive observations (joint angles, IMU) are all the real robot has at deployment - the critic\'s extra information compensates during training.",
       ],
     },
     {

@@ -222,4 +222,60 @@ describe('Question Files Validation', () => {
       ).toBe(true)
     }
   })
+
+  it('should have minimum questions per bank', () => {
+    for (const [bankName, questions] of Object.entries(questionBanks)) {
+      expect(
+        (questions as Question[]).length,
+        `${bankName} should have at least 3 questions`
+      ).toBeGreaterThanOrEqual(3)
+    }
+  })
+
+  it('should have reasonable explanation lengths', () => {
+    for (const [bankName, questions] of Object.entries(questionBanks)) {
+      for (const q of questions as Question[]) {
+        expect(
+          q.explanation.length,
+          `${bankName}: ${q.id} explanation should be at least 20 chars`
+        ).toBeGreaterThanOrEqual(20)
+        expect(
+          q.explanation.length,
+          `${bankName}: ${q.id} explanation should be under 5000 chars`
+        ).toBeLessThanOrEqual(5000)
+      }
+    }
+  })
+
+  it('should have reasonable question text lengths', () => {
+    for (const [bankName, questions] of Object.entries(questionBanks)) {
+      for (const q of questions as Question[]) {
+        expect(
+          q.question.length,
+          `${bankName}: ${q.id} question should be at least 10 chars`
+        ).toBeGreaterThanOrEqual(10)
+        expect(
+          q.question.length,
+          `${bankName}: ${q.id} question should be under 2000 chars`
+        ).toBeLessThanOrEqual(2000)
+      }
+    }
+  })
+
+  it('should have valid coding questions with codeSnippet', () => {
+    for (const [bankName, questions] of Object.entries(questionBanks)) {
+      for (const q of questions as Question[]) {
+        if (q.type === 'coding') {
+          expect(
+            q.codeSnippet,
+            `${bankName}: ${q.id} coding question should have codeSnippet`
+          ).toBeDefined()
+          expect(
+            q.codeSnippet!.length,
+            `${bankName}: ${q.id} codeSnippet should not be empty`
+          ).toBeGreaterThan(0)
+        }
+      }
+    }
+  })
 })
