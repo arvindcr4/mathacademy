@@ -1546,6 +1546,104 @@ export const courses: Course[] = [
       },
     ]
   },
+  // SPEECH & AUDIO PROCESSING
+  {
+    id: 'speech-audio',
+    slug: 'speech-audio',
+    name: 'Speech & Audio Processing',
+    description: 'Automatic speech recognition, text-to-speech, audio ML, speaker recognition, and sound classification.',
+    category: 'ai',
+    icon: 'microphone',
+    color: '#9333EA',
+    topicCount: 6,
+    estimatedHours: 40,
+    topics: [
+      {
+        id: 'asr-fundamentals',
+        name: 'Automatic Speech Recognition',
+        slug: 'asr-fundamentals',
+        description: 'Core ASR techniques from HMMs to end-to-end neural models.',
+        order: 1,
+        knowledgePoints: [
+          { id: 'aud-kp-1', slug: 'acoustic-models', name: 'Acoustic Models and Feature Extraction (MFCC, Mel Spectrogram)' },
+          { id: 'aud-kp-2', slug: 'hmm-asr', name: 'HMM-based ASR and Viterbi Decoding' },
+          { id: 'aud-kp-3', slug: 'ctc-loss', name: 'CTC Loss and Sequence-to-Sequence ASR' },
+          { id: 'aud-kp-4', slug: 'whisper-model', name: 'Whisper and Large-Scale ASR Pretraining' },
+          { id: 'aud-kp-5', slug: 'language-model-rescoring', name: 'Language Model Rescoring and Beam Search' },
+        ],
+      },
+      {
+        id: 'tts-synthesis',
+        name: 'Text-to-Speech & Voice Synthesis',
+        slug: 'tts-synthesis',
+        description: 'Neural TTS, vocoders, and voice cloning.',
+        order: 2,
+        knowledgePoints: [
+          { id: 'aud-kp-6', slug: 'tacotron', name: 'Tacotron and Sequence-to-Sequence TTS' },
+          { id: 'aud-kp-7', slug: 'vocoders', name: 'Neural Vocoders: WaveNet, WaveGlow, HiFi-GAN' },
+          { id: 'aud-kp-8', slug: 'fastspeech', name: 'FastSpeech and Non-Autoregressive TTS' },
+          { id: 'aud-kp-9', slug: 'voice-cloning', name: 'Voice Cloning and Speaker Adaptation' },
+          { id: 'aud-kp-10', slug: 'zero-shot-tts', name: 'Zero-Shot TTS and VALL-E' },
+        ],
+      },
+      {
+        id: 'audio-representation',
+        name: 'Audio Representation Learning',
+        slug: 'audio-representation',
+        description: 'Self-supervised and contrastive learning for audio.',
+        order: 3,
+        knowledgePoints: [
+          { id: 'aud-kp-11', slug: 'wav2vec', name: 'wav2vec 2.0 and Self-Supervised Speech Representations' },
+          { id: 'aud-kp-12', slug: 'hubert', name: 'HuBERT and Masked Prediction for Audio' },
+          { id: 'aud-kp-13', slug: 'audio-spectrogram-transformer', name: 'Audio Spectrogram Transformer (AST)' },
+          { id: 'aud-kp-14', slug: 'contrastive-audio', name: 'Contrastive Learning for Audio (CLAP)' },
+          { id: 'aud-kp-15', slug: 'audio-tokenization', name: 'Audio Tokenization: EnCodec and SoundStream' },
+        ],
+      },
+      {
+        id: 'speaker-recognition',
+        name: 'Speaker Recognition & Diarization',
+        slug: 'speaker-recognition',
+        description: 'Speaker verification, identification, and diarization.',
+        order: 4,
+        knowledgePoints: [
+          { id: 'aud-kp-16', slug: 'x-vectors', name: 'X-Vectors and Speaker Embeddings' },
+          { id: 'aud-kp-17', slug: 'speaker-verification', name: 'Speaker Verification with PLDA and Cosine Scoring' },
+          { id: 'aud-kp-18', slug: 'diarization', name: 'Speaker Diarization: Clustering and End-to-End' },
+          { id: 'aud-kp-19', slug: 'anti-spoofing', name: 'Anti-Spoofing and Deepfake Audio Detection' },
+          { id: 'aud-kp-20', slug: 'speaker-adaptation', name: 'Speaker Adaptation and Personalization' },
+        ],
+      },
+      {
+        id: 'sound-classification',
+        name: 'Sound Classification & Event Detection',
+        slug: 'sound-classification',
+        description: 'Environmental sound, music, and audio event detection.',
+        order: 5,
+        knowledgePoints: [
+          { id: 'aud-kp-21', slug: 'environmental-sound', name: 'Environmental Sound Classification and ESC-50' },
+          { id: 'aud-kp-22', slug: 'audio-event-detection', name: 'Audio Event Detection and Sound Source Localization' },
+          { id: 'aud-kp-23', slug: 'music-classification', name: 'Music Genre, Mood, and Instrument Classification' },
+          { id: 'aud-kp-24', slug: 'sed-polyphonic', name: 'Polyphonic Sound Event Detection (SED)' },
+          { id: 'aud-kp-25', slug: 'audio-captioning', name: 'Automated Audio Captioning and AudioCaps' },
+        ],
+      },
+      {
+        id: 'audio-generation',
+        name: 'Audio Generation & Enhancement',
+        slug: 'audio-generation',
+        description: 'Music generation, speech enhancement, and source separation.',
+        order: 6,
+        knowledgePoints: [
+          { id: 'aud-kp-26', slug: 'music-generation', name: 'Music Generation with Transformers (MusicLM, MusicGen)' },
+          { id: 'aud-kp-27', slug: 'speech-enhancement', name: 'Speech Enhancement and Noise Suppression' },
+          { id: 'aud-kp-28', slug: 'source-separation', name: 'Source Separation: Conv-TasNet and Demucs' },
+          { id: 'aud-kp-29', slug: 'audio-diffusion', name: 'Diffusion Models for Audio Generation' },
+          { id: 'aud-kp-30', slug: 'audio-llms', name: 'Audio-Language Models and Speech LLMs' },
+        ],
+      },
+    ],
+  },
   // FINANCIAL ML & ALGORITHMIC TRADING
   {
     id: 'financial-ml',
@@ -1560,6 +1658,7 @@ export const courses: Course[] = [
     topics: [
       {
         id: 'market-prediction',
+        slug: 'market-prediction',
         name: 'Market Prediction & Factor Models',
         description: 'Predicting asset returns, factor exposure, and alpha generation.',
         knowledgePoints: [
@@ -1572,6 +1671,7 @@ export const courses: Course[] = [
       },
       {
         id: 'algo-trading',
+        slug: 'algo-trading',
         name: 'Algorithmic Trading & Execution',
         description: 'Order execution, market microstructure, and high-frequency trading ML.',
         knowledgePoints: [
@@ -1584,6 +1684,7 @@ export const courses: Course[] = [
       },
       {
         id: 'risk-modeling',
+        slug: 'risk-modeling',
         name: 'Risk Modeling & Portfolio Optimization',
         description: 'VaR, CVaR, covariance estimation, and portfolio construction.',
         knowledgePoints: [
@@ -1596,6 +1697,7 @@ export const courses: Course[] = [
       },
       {
         id: 'nlp-finance',
+        slug: 'nlp-finance',
         name: 'NLP for Finance',
         description: 'Earnings call analysis, sentiment, and LLMs for finance.',
         knowledgePoints: [
@@ -1608,6 +1710,7 @@ export const courses: Course[] = [
       },
       {
         id: 'credit-scoring',
+        slug: 'credit-scoring',
         name: 'Credit Scoring & Lending AI',
         description: 'Credit models, alternative data, and fair lending.',
         knowledgePoints: [
@@ -1620,6 +1723,7 @@ export const courses: Course[] = [
       },
       {
         id: 'derivatives-quant',
+        slug: 'derivatives-quant',
         name: 'Derivatives & Quantitative Methods',
         description: 'Options pricing, volatility modeling, and neural network Greeks.',
         knowledgePoints: [
@@ -1647,6 +1751,7 @@ export const courses: Course[] = [
     topics: [
       {
         id: 'medical-imaging-ai',
+        slug: 'medical-imaging-ai',
         name: 'Medical Imaging AI',
         description: 'Deep learning for radiology, pathology, and medical image analysis.',
         knowledgePoints: [
@@ -1659,6 +1764,7 @@ export const courses: Course[] = [
       },
       {
         id: 'clinical-nlp',
+        slug: 'clinical-nlp',
         name: 'Clinical NLP & EHR Analysis',
         description: 'Processing clinical notes, ICD coding, and clinical BERT models.',
         knowledgePoints: [
@@ -1671,6 +1777,7 @@ export const courses: Course[] = [
       },
       {
         id: 'drug-discovery-ai',
+        slug: 'drug-discovery-ai',
         name: 'Drug Discovery & Molecular Design',
         description: 'Virtual screening, ADMET prediction, and de novo drug design.',
         knowledgePoints: [
@@ -1683,6 +1790,7 @@ export const courses: Course[] = [
       },
       {
         id: 'genomics-ml',
+        slug: 'genomics-ml',
         name: 'Genomics & Precision Medicine',
         description: 'Variant calling, gene expression, and multi-omics integration.',
         knowledgePoints: [
@@ -1695,6 +1803,7 @@ export const courses: Course[] = [
       },
       {
         id: 'clinical-trials-ai',
+        slug: 'clinical-trials-ai',
         name: 'Clinical Trials & Treatment Optimization',
         description: 'Patient stratification, trial optimization, and treatment effect estimation.',
         knowledgePoints: [
@@ -1707,6 +1816,7 @@ export const courses: Course[] = [
       },
       {
         id: 'healthcare-ai-deployment',
+        slug: 'healthcare-ai-deployment',
         name: 'Healthcare AI Deployment & Regulation',
         description: 'FDA clearance, clinical validation, and responsible AI in medicine.',
         knowledgePoints: [
@@ -1734,6 +1844,7 @@ export const courses: Course[] = [
     topics: [
       {
         id: 'pinns',
+        slug: 'pinns',
         name: 'Physics-Informed Neural Networks (PINNs)',
         description: 'Embedding physical laws as loss terms for scientific simulation.',
         knowledgePoints: [
@@ -1746,6 +1857,7 @@ export const courses: Course[] = [
       },
       {
         id: 'neural-operators',
+        slug: 'neural-operators',
         name: 'Neural Operators',
         description: 'FNO, DeepONet, and operator learning for function spaces.',
         knowledgePoints: [
@@ -1758,6 +1870,7 @@ export const courses: Course[] = [
       },
       {
         id: 'molecular-ml',
+        slug: 'molecular-ml',
         name: 'ML for Molecular Simulation',
         description: 'Force fields, molecular dynamics, and ML for chemistry.',
         knowledgePoints: [
@@ -1770,6 +1883,7 @@ export const courses: Course[] = [
       },
       {
         id: 'ml-inverse-problems',
+        slug: 'ml-inverse-problems',
         name: 'ML for Inverse Problems',
         description: 'Solving inverse problems with neural networks and regularization.',
         knowledgePoints: [
@@ -1782,6 +1896,7 @@ export const courses: Course[] = [
       },
       {
         id: 'scientific-foundation-models',
+        slug: 'scientific-foundation-models',
         name: 'Scientific Foundation Models',
         description: 'Large pretrained models for biology, chemistry, and physics.',
         knowledgePoints: [
@@ -1794,6 +1909,7 @@ export const courses: Course[] = [
       },
       {
         id: 'neuro-ml',
+        slug: 'neuro-ml',
         name: 'ML for Neuroscience',
         description: 'Neural decoding, brain-computer interfaces, and computational neuroscience.',
         knowledgePoints: [
