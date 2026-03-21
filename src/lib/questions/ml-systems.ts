@@ -1722,13 +1722,13 @@ const questions: Record<string, Question[]> = {
       ],
     },
   ],
-};
+
 
   "ml-interpretability-systems": [
     {
       id: "q-mls-kp31-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is the primary purpose of SHAP (SHapley Additive exPlanations) values in ML systems?",
       options: [
@@ -1748,7 +1748,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-mls-kp31-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "A loan approval model uses 50 features. SHAP analysis reveals that a protected attribute (ethnicity) has high importance. What is the correct engineering response?",
       options: [
@@ -1777,7 +1777,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-mls-kp32-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is the purpose of a model card in ML governance?",
       options: [
@@ -1797,7 +1797,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-mls-kp32-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "An ML governance framework for a financial institution must ensure models are compliant with SR 11-7 (Fed model risk management guidance). What technical controls are required?",
       options: [
@@ -1826,7 +1826,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-mls-kp33-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is behavioral testing for NLP models, as proposed by Ribeiro et al.?",
       options: [
@@ -1846,7 +1846,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-mls-kp33-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "How should regression testing for ML models be designed to detect silent model degradation across releases?",
       options: [
@@ -1875,7 +1875,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-mls-kp34-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is the primary driver of inference cost in transformer-based language models, and what is the most effective technique to reduce it?",
       options: [
@@ -1895,7 +1895,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-mls-kp34-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "Your ML training job costs $50,000 per run and takes 3 days on 256 A100 GPUs. GPU utilization monitoring shows 45% average utilization. What is the most impactful optimization?",
       options: [
@@ -1924,7 +1924,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-mls-kp35-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is the key challenge when scaling an ML system from 1 million to 1 billion users?",
       options: [
@@ -1940,7 +1940,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-mls-kp35-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "What is the purpose of the two-phase commit pattern in distributed ML feature stores, and when is it necessary?",
       options: [
@@ -1969,7 +1969,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-mls-kp36-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is the primary advantage of using a workflow orchestration system (e.g., Apache Airflow, Prefect, Kubeflow Pipelines) for ML pipelines over cron jobs?",
       options: [
@@ -1989,7 +1989,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-mls-kp36-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "An ML pipeline DAG has a step that takes 6 hours to compute a feature matrix used by 5 downstream training jobs. How should this be optimized?",
       options: [
@@ -2018,7 +2018,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-mls-kp37-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is the difference between blue-green deployment and canary deployment for ML models?",
       options: [
@@ -2034,7 +2034,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-mls-kp37-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "A canary deployment of a new recommendation model shows 0.3% better CTR but 0.5% higher p99 latency. How should you evaluate whether to proceed with full rollout?",
       options: [
@@ -2063,7 +2063,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-mls-kp38-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is the multiple comparisons problem in ML experimentation and why does it matter?",
       options: [
@@ -2079,7 +2079,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-mls-kp38-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "You want to run 20 A/B tests simultaneously on a platform with 10M users to accelerate iteration velocity. What experimental design challenge must you address?",
       options: [
@@ -2108,7 +2108,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-mls-kp39-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is the purpose of data versioning in ML pipelines, and what does it enable?",
       options: [
@@ -2128,7 +2128,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-mls-kp39-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "A Spark job processing 10TB of daily log data for ML feature computation takes 4 hours. Profiling shows 70% of time is in a groupBy + count on a high-cardinality key with skewed distribution (10% of keys have 80% of records). What optimization addresses this?",
       options: [
@@ -2157,7 +2157,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-mls-kp40-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is a silent ML failure and why is it more dangerous than a system crash?",
       options: [
@@ -2177,7 +2177,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-mls-kp40-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "During a production incident, a recommendation model begins returning the same 10 items for all users. What is the most likely root cause and debugging approach?",
       options: [
@@ -2200,5 +2200,6 @@ const questions: Record<string, Question[]> = {
     },
   ],
 
+};
 registerQuestions(questions);
 export default questions;
