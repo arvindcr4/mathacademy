@@ -164,7 +164,12 @@ const questions: Record<string, Question[]> = {
         "Without a target network, training DQN is equivalent to supervised learning because the targets are fixed.",
       correctAnswer: "false",
       explanation:
-        "Without a target network, the targets y = R + \\gamma max_a Q(s',a;\\theta) change with every gradient update to \\theta, creating a moving target problem unlike standard supervised learning where labels are fixed.",
+        "First, let's recall that in standard supervised learning, the labels are fixed: they come from a dataset and never change during training.\n\n**Step 1.** In DQN without a target network, the TD target is $y = R + \\gamma \\max_{a'} Q(s',a';\\theta)$. Every time $\\theta$ is updated via gradient descent, the target $y$ changes because it depends on $\\theta$.\n\n**Step 2.** This creates a moving target problem: the network is being trained to hit a goal that keeps shifting at every step, unlike supervised learning where the goal (label) is fixed.\n\nTherefore, the answer is false: Without a target network, training DQN is NOT equivalent to supervised learning because the targets are not fixed - they change with every gradient update to $\\theta$.",
+      stepByStep: {
+        step1: "In supervised learning, labels are fixed from a dataset and never change during training.",
+        step2: "In DQN without a target network, the TD target $y = R + \\gamma \\max_{a'} Q(s',a';\\theta)$ changes with every gradient update to $\\theta$.",
+        step3: "This creates a moving target problem - the network is trained to hit a goal that keeps shifting at every step, unlike supervised learning with fixed labels.",
+      },
       hints: [
         "In supervised learning, are the labels fixed or changing?",
         "When you update \\theta, how does that affect max_a Q(s',a;\\theta) used in the target?",
@@ -184,7 +189,12 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Soft updates blend the online and target networks continuously with a small mixing factor \\tau (e.g., 0.005), causing the target to evolve slowly and smoothly - reducing the instability caused by sudden large jumps in hard updates.",
+        "First, let's recall that hard target updates copy the online weights to the target network every C steps: $\\theta^- \\leftarrow \\theta$, causing sudden large jumps in the target.\n\n**Step 1.** Soft updates blend the online and target networks continuously using: $\\theta^- \\leftarrow \\tau \\theta + (1-\\tau)\\theta^-$ with a small $\\tau$ (e.g., 0.005).\n\n**Step 2.** With small $\\tau$, the target network changes very gradually at each step - only 0.5% of the new online weights are incorporated per update.\n\n**Step 3.** This slow, smooth evolution of the target avoids the destabilizing jumps of hard updates, providing a more stable training signal for the critic and actor networks.\n\nTherefore, the answer is Provides smoother, more gradual target updates that reduce instability.",
+      stepByStep: {
+        step1: "Hard target updates copy online weights to the target every C steps, causing sudden large jumps in the target.",
+        step2: "Soft updates blend online and target continuously: $\\theta^- \\leftarrow \\tau \\theta + (1-\\tau)\\theta^-$ with small $\\tau$ (e.g., 0.005).",
+        step3: "With small $\\tau$, the target evolves slowly and smoothly, avoiding destabilizing jumps and providing a more stable training signal.",
+      },
       hints: [
         "A small \\tau means \\theta\\^{- changes very little per step - what does this do to target stability?",
         "Soft updates are used in DDPG and SAC - why might they prefer smooth updates?",
