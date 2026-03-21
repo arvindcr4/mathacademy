@@ -1546,6 +1546,88 @@ export const courses: Course[] = [
       },
     ]
   },
+  // CAUSAL INFERENCE & CAUSAL ML
+  {
+    id: 'causal-inference',
+    slug: 'causal-inference',
+    name: 'Causal Inference & Causal ML',
+    description: 'Causal reasoning, treatment effect estimation, and causal machine learning methods.',
+    topics: [
+      {
+        id: 'causal-foundations',
+        name: 'Causal Reasoning Foundations',
+        description: 'Correlation vs causation, potential outcomes, and structural causal models.',
+        knowledgePoints: [
+          { id: 'ci-kp-1', slug: 'correlation-vs-causation', name: 'Correlation vs Causation' },
+          { id: 'ci-kp-2', slug: 'potential-outcomes', name: 'Potential Outcomes Framework (Rubin Causal Model)' },
+          { id: 'ci-kp-3', slug: 'structural-causal-models', name: 'Structural Causal Models (SCMs)' },
+          { id: 'ci-kp-4', slug: 'causal-graphs-dags', name: 'Causal Graphs & DAGs' },
+          { id: 'ci-kp-5', slug: 'do-calculus', name: 'do-Calculus & Interventional Distributions' },
+        ]
+      },
+      {
+        id: 'treatment-effects',
+        name: 'Treatment Effect Estimation',
+        description: 'ATE, ATT, CATE, and methods for estimating causal effects from data.',
+        knowledgePoints: [
+          { id: 'ci-kp-6', slug: 'ate-att', name: 'ATE, ATT & Average Treatment Effects' },
+          { id: 'ci-kp-7', slug: 'randomized-experiments', name: 'Randomized Controlled Trials & A/B Tests' },
+          { id: 'ci-kp-8', slug: 'propensity-score', name: 'Propensity Score Matching & Weighting' },
+          { id: 'ci-kp-9', slug: 'instrumental-variables', name: 'Instrumental Variables (IV)' },
+          { id: 'ci-kp-10', slug: 'difference-in-differences', name: 'Difference-in-Differences (DiD)' },
+        ]
+      },
+      {
+        id: 'causal-discovery',
+        name: 'Causal Discovery',
+        description: 'Learning causal structure from observational data.',
+        knowledgePoints: [
+          { id: 'ci-kp-11', slug: 'pc-algorithm', name: 'PC Algorithm & Constraint-Based Methods' },
+          { id: 'ci-kp-12', slug: 'ges-algorithm', name: 'GES & Score-Based Causal Discovery' },
+          { id: 'ci-kp-13', slug: 'lingam', name: 'LiNGAM & Functional Causal Models' },
+          { id: 'ci-kp-14', slug: 'neural-causal-discovery', name: 'Neural Causal Discovery (NOTEARS, DAG-GNN)' },
+          { id: 'ci-kp-15', slug: 'time-series-causality', name: 'Granger Causality & Time Series Causal Discovery' },
+        ]
+      },
+      {
+        id: 'heterogeneous-effects',
+        name: 'Heterogeneous Treatment Effects',
+        description: 'CATE estimation, meta-learners, and causal forests.',
+        knowledgePoints: [
+          { id: 'ci-kp-16', slug: 'cate-estimation', name: 'CATE Estimation & Subgroup Analysis' },
+          { id: 'ci-kp-17', slug: 'meta-learners', name: 'Meta-Learners (S, T, X, R-Learner)' },
+          { id: 'ci-kp-18', slug: 'causal-forests', name: 'Causal Forests & Generalized Random Forests' },
+          { id: 'ci-kp-19', slug: 'double-ml', name: 'Double/Debiased Machine Learning (DML)' },
+          { id: 'ci-kp-20', slug: 'regression-discontinuity', name: 'Regression Discontinuity Design (RDD)' },
+        ]
+      },
+      {
+        id: 'causal-representation',
+        name: 'Causal Representation Learning',
+        description: 'Learning disentangled, causal representations and domain generalization.',
+        knowledgePoints: [
+          { id: 'ci-kp-21', slug: 'disentangled-representations', name: 'Disentangled Causal Representations' },
+          { id: 'ci-kp-22', slug: 'independent-causal-mechanisms', name: 'Independent Causal Mechanisms (ICM)' },
+          { id: 'ci-kp-23', slug: 'invariant-risk-minimization', name: 'Invariant Risk Minimization (IRM)' },
+          { id: 'ci-kp-24', slug: 'counterfactual-reasoning', name: 'Counterfactual Reasoning in ML' },
+          { id: 'ci-kp-25', slug: 'causal-ood', name: 'Causal OOD Generalization' },
+        ]
+      },
+      {
+        id: 'causal-applications',
+        name: 'Causal ML Applications',
+        description: 'Uplift modeling, policy learning, and causal fairness.',
+        knowledgePoints: [
+          { id: 'ci-kp-26', slug: 'uplift-modeling', name: 'Uplift Modeling & Personalized Interventions' },
+          { id: 'ci-kp-27', slug: 'policy-learning', name: 'Optimal Policy Learning & Decision Making' },
+          { id: 'ci-kp-28', slug: 'causal-fairness', name: 'Causal Fairness & Algorithmic Bias' },
+          { id: 'ci-kp-29', slug: 'mediation-analysis', name: 'Mediation Analysis & Path-Specific Effects' },
+          { id: 'ci-kp-30', slug: 'causal-llms', name: 'Causal Reasoning in LLMs' },
+        ]
+      },
+    ]
+  },
+
   // DIFFUSION MODELS & GENERATIVE AI
   {
     id: 'diffusion-models',
