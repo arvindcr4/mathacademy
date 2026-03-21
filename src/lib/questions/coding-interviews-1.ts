@@ -14,14 +14,14 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       hints: [
         "For each element, compute its complement as $\\text{target} - \\text{nums}[i]$, then check whether that complement already exists in the map.",
-        "Hash map lookup and insertion are both $\\mathrm{O}(1)$ on average.",
-        "How many passes through the array are required?"
+        "Hash map lookup and insertion are both $\\mathrm{O}(1)$ on average."
       ],
       explanation:
-        "The hash map solution makes a single pass through the array. At each index $i$, we compute the complement $c = \\text{target} - \\text{nums}[i]$ and check in $\\mathrm{O}(1)$ time whether $c$ is already in the map. If it is, we have found our pair; if not, we store $\\{\\text{nums}[i]: i\\}$ and continue.\n\n" +
+        "**Step 1:** Make a single pass through the array. At each index $i$, compute the complement $c = \\text{target} - \\text{nums}[i]$.\n\n" +
+        "**Step 2:** Check in $\\mathrm{O}(1)$ time whether $c$ is already in the map. If it is, we have found our pair; if not, store $\\{\\text{nums}[i]: i\\}$ and continue.\n\n" +
         "Since each of the $n$ elements is processed exactly once, and each map operation costs $\\mathrm{O}(1)$ on average:\n\n" +
         "\\[\n\\text{Time complexity} = \\mathrm{O}(n) \\quad \\text{and} \\quad \\text{Space complexity} = \\mathrm{O}(n).\n\\]\n\n" +
-        "This is optimal - any algorithm must examine every element at least once, giving a lower bound of $\\Omega(n)$."
+        "This is optimal — any algorithm must examine every element at least once, giving a lower bound of $\\Omega(n)$."
     },
     {
       id: "q-ts-2",
