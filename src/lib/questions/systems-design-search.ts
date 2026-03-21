@@ -15,7 +15,7 @@ const questions: Record<string, Question[]> = {
         "A sorted list of terms that co-occur with the given term"
       ],
       correctAnswer: 1,
-      explanation: "A posting list records, for each term in the vocabulary, the set of documents that contain that term — along with optional metadata such as term frequency (TF) and token positions (needed for phrase queries). This is the core data structure of an inverted index: given a query term, you look it up in the vocabulary and retrieve its posting list to find candidate documents in O(1) vocabulary lookup + O(|posting list|) time.",
+      explanation: "A posting list records, for each term in the vocabulary, the set of documents that contain that term — along with optional metadata such as term frequency (TF) and token positions (needed for phrase queries). This is the core data structure of an inverted index.\n\n**Step 1**: Given a query term, look it up in the vocabulary (O(1) dictionary lookup).\n\n**Step 2**: Retrieve the posting list for that term — this gives all document IDs containing the term, along with optional positions and frequencies.\n\n**Step 3**: Use these posting lists to find and score candidate documents. The time complexity is O(1) vocabulary lookup plus O(|posting list|) for traversing the list.",
       hints: ["Think about what data structure enables fast lookup of 'which documents contain word X?'", "The name 'posting' comes from the act of posting a document ID to a term's list during index construction."],
     },
     {
@@ -30,7 +30,7 @@ const questions: Record<string, Question[]> = {
         "Lowercase \to stemming \to split on whitespace \to remove punctuation \to stop-word removal"
       ],
       correctAnswer: 0,
-      explanation: "The standard NLP analysis pipeline for search is: (1) lowercase everything so 'SUCCESS' and 'success' match; (2) remove punctuation/special chars; (3) tokenize by splitting on whitespace; (4) apply stemming (e.g., Porter stemmer) to reduce 'Running' \to 'run', 'quickly' \to 'quick'; (5) remove stop words ('towards') that carry little discriminating information. This yields high-recall, normalized tokens. Doing stemming before lowercasing risks incorrect stems for uppercase words, and punctuation removal after splitting may leave punctuation attached to tokens.",
+      explanation: "The standard NLP analysis pipeline for search follows these steps:\n\n**Step 1**: Lowercase everything so 'SUCCESS' and 'success' match, and remove punctuation/special characters.\n\n**Step 2**: Tokenize by splitting on whitespace, then apply stemming (e.g., Porter stemmer) to reduce words to their root forms: 'Running' $\to$ 'run', 'quickly' $\to$ 'quick'.\n\n**Step 3**: Remove stop words (e.g., 'towards') that carry little discriminating information. This yields high-recall, normalized tokens. Note that doing stemming before lowercasing risks incorrect stems for uppercase words, and punctuation removal after splitting may leave punctuation attached to tokens.",
       hints: ["Stemming requires lowercase input to work correctly across most stemmers.", "Stop words are best removed after stemming so you catch all inflections of common words."],
     },
     {
@@ -39,7 +39,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Lemmatization and stemming always produce identical output for the same input word.",
       correctAnswer: "False",
-      explanation: "False. Stemming applies rule-based heuristics to chop word endings (e.g., Porter stemmer: 'studies' \to 'studi'), often producing non-dictionary stems. Lemmatization uses vocabulary and morphological analysis to return the base dictionary form ('studies' \to 'study'). They diverge on irregular forms: stemming 'better' \to 'better', lemmatization 'better' \to 'good'. Lemmatization is more linguistically accurate but computationally heavier; stemming is faster but noisier.",
+      explanation: "False. These two approaches differ fundamentally:\n\n**Step 1**: Stemming applies rule-based heuristics to chop word endings. For example, the Porter stemmer reduces 'studies' $\to$ 'studi', which is not a real word.\n\n**Step 2**: Lemmatization uses vocabulary and morphological analysis to return the correct base dictionary form. It reduces 'studies' $\to$ 'study' and handles irregular forms like 'better' $\to$ 'good'.\n\n**Step 3**: On regular words like 'running', both may produce 'run', but on irregular forms they diverge. Lemmatization is more accurate but computationally heavier; stemming is faster but noisier.",
       hints: ["Consider the word 'ran' — what would each approach return?", "One approach needs a dictionary; the other just needs a set of suffix-stripping rules."],
     },
   ],
@@ -57,7 +57,7 @@ const questions: Record<string, Question[]> = {
         "BM25 uses inverted document frequency only; TF-IDF also includes term frequency"
       ],
       correctAnswer: 1,
-      explanation: "BM25 (Best Match 25) improves on TF-IDF in two critical ways: (1) Term-frequency saturation — in TF-IDF, a term appearing 100 times scores 10x more than one appearing 10 times. BM25 uses a saturating function (tf / (tf + k1)) so after a few occurrences, more occurrences add diminishing value. (2) Document-length normalization — long documents naturally contain more term occurrences; BM25 penalizes longer documents relative to the average document length via parameter b (0=no normalization, 1=full normalization). These give more robust relevance scores without neural components.",
+      explanation: "BM25 (Best Match 25) improves on TF-IDF in two critical ways:\n\n**Step 1**: Term-frequency saturation — in TF-IDF, a term appearing 100 times scores 10x more than one appearing 10 times. BM25 uses a saturating function $\frac{\text{tf}}{\text{tf} + k_1}$ so after a few occurrences, additional occurrences add diminishing value.\n\n**Step 2**: Document-length normalization — long documents naturally contain more term occurrences. BM25 penalizes longer documents relative to the average document length via parameter $b$ where $b=0$ means no normalization and $b=1$ means full normalization.\n\n**Step 3**: These two improvements give more robust relevance scores without requiring neural components. The combined effect prevents both term frequency dominance and document length bias.",
       hints: ["What happens to TF-IDF score if a term appears in a very long document 1,000 times vs. a short document 10 times?", "The 'k1' and 'b' parameters in BM25 control term-saturation and length normalization respectively."],
     },
     {
@@ -72,7 +72,7 @@ const questions: Record<string, Question[]> = {
         "Language model with Dirichlet smoothing"
       ],
       correctAnswer: 0,
-      explanation: "When k1=0, the TF saturation term (tf / (tf + k1)) becomes (tf / tf) = 1 regardless of actual tf, so term frequency is completely ignored. When b=0, document length normalization is fully disabled. The BM25 score then reduces to the sum of IDF weights of query terms that appear in the document — a pure IDF model. This is a degenerate but theoretically illuminating case showing BM25 degrades gracefully to simpler models at parameter extremes.",
+      explanation: "When $k_1=0$, the TF saturation term $\frac{\text{tf}}{\text{tf} + k_1}$ becomes $\frac{\text{tf}}{\text{tf}} = 1$ regardless of actual tf, so term frequency is completely ignored. When $b=0$, document length normalization is fully disabled.\n\n**Step 1**: Set $k_1=0$ in the BM25 TF saturation formula $\frac{\text{tf}}{\text{tf} + k_1 \cdot (1 - b + b \cdot \frac{\text{dl}}{\text{avgdl}})}$. The term becomes 1.\n\n**Step 2**: Set $b=0$ to disable document length normalization — the length term becomes 1.\n\n**Step 3**: The BM25 score reduces to the sum of IDF weights of query terms that appear in the document — a pure IDF model. This degenerate case shows BM25 degrades gracefully to simpler models at parameter extremes.",
       hints: ["Substitute k1=0 into the BM25 TF saturation formula tf/(tf+k1*(1-b+b*dl/avgdl)) and simplify.", "What remains in the scoring formula when TF and length normalization are both removed?"],
     },
   ],
@@ -90,7 +90,7 @@ const questions: Record<string, Question[]> = {
         "Prioritizing sitemaps over individual URL crawling to reduce server scanning"
       ],
       correctAnswer: 0,
-      explanation: "Crawler politeness requires three complementary mechanisms: (1) Respect robots.txt — parse /robots.txt before crawling any URL on a domain and honor Crawl-delay, Disallow, and Allow directives; (2) Per-domain rate limiting — maintain a separate delay queue per domain (e.g., one request per 2 seconds per domain) rather than a global rate, since 100 req/s to one server is impolite even if spread across 1000 domains; (3) Randomized delays — avoid predictable burst patterns that look like DoS attacks. These three together prevent overloading any single origin server.",
+      explanation: "Crawler politeness requires three complementary mechanisms:\n\n**Step 1**: Respect robots.txt — parse /robots.txt before crawling any URL on a domain and honor Crawl-delay, Disallow, and Allow directives.\n\n**Step 2**: Per-domain rate limiting — maintain a separate delay queue per domain (e.g., one request per 2 seconds per domain) rather than a global rate, since 100 req/s to one server is impolite even if spread across 1000 domains.\n\n**Step 3**: Randomized delays — avoid predictable burst patterns that look like DoS attacks. Together, these three mechanisms prevent overloading any single origin server.",
       hints: ["Even with robots.txt compliance, crawling a single domain at 100 req/s can DoS a small server.", "robots.txt is fetched first and cached; Crawl-delay specifies minimum seconds between requests to that domain."],
     },
     {
@@ -105,7 +105,7 @@ const questions: Record<string, Question[]> = {
         "An in-memory min-heap on each crawler node, periodically checkpointed to disk"
       ],
       correctAnswer: 1,
-      explanation: "Google's crawler architecture (described in the original PageRank paper and subsequent publications) uses a two-tier frontier: (1) per-domain back-queues that maintain FIFO ordering within a domain (ensuring politeness — no two requests to the same domain are dequeued simultaneously); (2) a front-end prioritizer that assigns scores to domain queues based on freshness signals and PageRank, selecting which domain queue feeds the next crawl slot. A single Redis sorted set becomes a bottleneck at billions of URLs and doesn't enforce per-domain politeness. A DB polling approach creates write hotspots. Per-node heaps lose work on crashes.",
+      explanation: "Google's crawler architecture uses a two-tier frontier design:\n\n**Step 1**: Per-domain back-queues maintain FIFO ordering within a domain. This ensures politeness — no two requests to the same domain are dequeued simultaneously.\n\n**Step 2**: A front-end prioritizer assigns scores to domain queues based on freshness signals and PageRank, selecting which domain queue feeds the next crawl slot.\n\n**Step 3**: Each crawler worker pulls from its assigned domain queue. A single Redis sorted set becomes a bottleneck at billions of URLs and doesn't enforce per-domain politeness. A DB polling approach creates write hotspots. Per-node heaps lose work on crashes.",
       hints: ["How do you enforce per-domain rate limiting if all URLs are in a single shared queue?", "The crawler needs to maximize throughput globally while never hammering any single domain."],
     },
   ],
@@ -123,7 +123,7 @@ const questions: Record<string, Question[]> = {
         "It penalizes pages with too many outgoing links to prevent link farming"
       ],
       correctAnswer: 1,
-      explanation: "The damping factor d (0.85 in the original PageRank paper) models the 'random surfer' behavior: with probability d the surfer follows an actual hyperlink on the current page; with probability (1-d) they get 'bored' and teleport to a random page in the graph. Without this teleportation term, 'dangling nodes' (pages with no outgoing links) and 'rank sinks' (groups of pages linking only to each other) would absorb all PageRank without redistributing it. The formula PR(A) = (1-d)/N + d * Σ(PR(T_i)/C(T_i)) ensures every page has a minimum baseline rank via the (1-d)/N term.",
+      explanation: "The damping factor $d$ (0.85 in the original PageRank paper) models the 'random surfer' behavior:\n\n**Step 1**: With probability $d$, the surfer follows an actual hyperlink on the current page; with probability $(1-d)$ they get 'bored' and teleport to a random page in the graph.\n\n**Step 2**: Without this teleportation term, 'dangling nodes' (pages with no outgoing links) and 'rank sinks' (groups of pages linking only to each other) would absorb all PageRank without redistributing it.\n\n**Step 3**: The formula\n\n\[\text{PR}(A) = \frac{1-d}{N} + d \sum_{i} \frac{\text{PR}(T_i)}{C(T_i)}\]\n\nensures every page has a minimum baseline rank via the $\frac{1-d}{N}$ term, where $C(T_i)$ is the number of outgoing links from page $T_i$.",
       hints: ["What happens to a page with no outgoing links — where does its PageRank go without the damping factor?", "Think of d as the probability of 'following a link' in the random surfer model."],
     },
     {
@@ -132,7 +132,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "PageRank scores are computed once at index build time and never updated until the next full crawl.",
       correctAnswer: "False",
-      explanation: "False. Modern search engines including Google continuously update PageRank-like scores using incremental and approximate update algorithms. Techniques include: topic-sensitive PageRank computed per-category, TrustRank variants, and real-time signals (click-through rates, freshness). Google's original paper acknowledged that re-crawling and re-computing PageRank must happen regularly as the web evolves. Additionally, the static link-graph PageRank is just one signal among hundreds; the 'living' ranking system blends it with real-time behavioral signals continuously.",
+      explanation: "False. Modern search engines continuously update PageRank-like scores:\n\n**Step 1**: The web changes constantly — new pages are added and links change daily, requiring regular re-computation of link-based authority signals.\n\n**Step 2**: Techniques for continuous updates include: topic-sensitive PageRank computed per-category, TrustRank variants, and real-time signals (click-through rates, freshness).\n\n**Step 3**: The static link-graph PageRank is just one signal among hundreds; the 'living' ranking system blends it with real-time behavioral signals continuously. Google's original paper acknowledged that re-crawling and re-computing PageRank must happen regularly as the web evolves.",
       hints: ["The web changes constantly — new pages are added and links change daily.", "If PageRank were static, newly published pages would never rank well until the next full re-computation."],
     },
   ],
@@ -150,7 +150,7 @@ const questions: Record<string, Question[]> = {
         "Query the master shard which maintains a global vocabulary and delegates to leaf shards"
       ],
       correctAnswer: 1,
-      explanation: "In document partitioning (each shard holds a complete inverted index over a subset of documents), a query must be broadcast (scattered) to ALL shards because any shard might contain highly-relevant documents for the query. Each shard independently computes its local top-K results, returning them to the coordinator, which merges and re-ranks globally (gather phase). This is the 'scatter-gather' pattern. It's expensive (fan-out = number of shards) but unavoidable because relevance is computed per-shard and cannot be pre-determined by routing. Term partitioning (each shard owns a subset of the vocabulary) avoids fan-out but requires a shard per query term, causing multi-round trips for multi-term queries.",
+      explanation: "In document partitioning (each shard holds a complete inverted index over a subset of documents):\n\n**Step 1**: A query must be broadcast (scattered) to ALL shards because any shard might contain highly-relevant documents for the query.\n\n**Step 2**: Each shard independently computes its local top-K results and returns them to the coordinator.\n\n**Step 3**: The coordinator merges and re-ranks globally (gather phase). This is the 'scatter-gather' pattern — expensive (fan-out = number of shards) but unavoidable because relevance is computed per-shard and cannot be pre-determined by routing. Term partitioning avoids fan-out but requires multi-round trips for multi-term queries.",
       hints: ["In document partitioning, every shard has its own inverted index — how would you know which shard has the best document for your query?", "Compare document partitioning to term partitioning: which avoids scatter-gather?"],
     },
     {
@@ -165,7 +165,7 @@ const questions: Record<string, Question[]> = {
         "Geo partitioning, because queries are typically location-specific"
       ],
       correctAnswer: 1,
-      explanation: "Document partitioning is generally preferred for multi-term queries because: (1) Each shard independently processes the full query using its local inverted index — no inter-shard coordination required during query execution; (2) Scatter-gather is parallelized, so latency is bounded by the slowest shard (P99), not proportional to the number of query terms; (3) Term partitioning for multi-term queries requires iterating across multiple shards and merging intermediate posting lists before scoring, creating complex coordination. Document partitioning is what Elasticsearch, Solr, and Google use at scale.",
+      explanation: "Document partitioning is generally preferred for multi-term queries:\n\n**Step 1**: Each shard independently processes the full query using its local inverted index — no inter-shard coordination required during query execution.\n\n**Step 2**: Scatter-gather is parallelized, so latency is bounded by the slowest shard (P99), not proportional to the number of query terms.\n\n**Step 3**: Term partitioning for multi-term queries requires iterating across multiple shards and merging intermediate posting lists before scoring, creating complex coordination. Document partitioning is what Elasticsearch, Solr, and Google use at scale.",
       hints: ["For a 5-term query, how many shard lookups does term partitioning require vs document partitioning?", "Document partitioning trades higher fan-out for simpler per-shard computation."],
     },
   ],
@@ -183,7 +183,7 @@ const questions: Record<string, Question[]> = {
         "Ranking \to Recall \to Re-ranking \to Personalization"
       ],
       correctAnswer: 1,
-      explanation: "The standard multi-stage search ranking funnel is: (1) Recall — retrieve thousands of candidate documents using inverted index (BM25) or ANN vector search; goal is high recall, not precision. (2) Ranking — apply a fast ML model (e.g., LightGBM with 100s of features) to score ~1000 candidates; must be fast (<10ms). (3) Re-ranking — apply an expensive model (e.g., cross-encoder, BERT-based) to top ~100 candidates for precision; can afford more compute. (4) Business rules — apply boost/bury logic, deduplication, diversity, sponsored results injection. Each stage narrows the candidate set while increasing scoring quality.",
+      explanation: "The standard multi-stage search ranking funnel works as follows:\n\n**Step 1**: Recall — retrieve thousands of candidate documents using inverted index (BM25) or ANN vector search; goal is high recall, not precision.\n\n**Step 2**: Ranking — apply a fast ML model (e.g., LightGBM with 100s of features) to score $\sim$1000 candidates; must be fast ($<10$ms).\n\n**Step 3**: Re-ranking — apply an expensive model (e.g., cross-encoder, BERT-based) to top $\sim$100 candidates for precision; can afford more compute.\n\n**Step 4**: Business rules — apply boost/bury logic, deduplication, diversity, sponsored results injection. Each stage narrows the candidate set while increasing scoring quality.",
       hints: ["Think of the funnel shape: wide at top (recall), narrow at bottom (final ranking).", "Why can't you apply the most expensive model to all indexed documents?"],
     },
   ],
@@ -201,7 +201,7 @@ const questions: Record<string, Question[]> = {
         "A weighted finite automaton (WFA) stored on disk, loaded per request"
       ],
       correctAnswer: 1,
-      explanation: "A prefix trie (also called a completion trie or autocomplete trie) with cached top-K results at every node is the fastest autocomplete structure. Each node stores not just child pointers but also the pre-computed top-K (e.g., top-5) completions for that prefix — updated offline from query logs. Lookup is O(prefix length) with no ranking computation at serve time. At 10M unique queries with a bounded alphabet, this fits in memory (a few GB). Elasticsearch prefix queries are accurate but add network RTT and internal query parsing. SQL LIKE queries with B-tree indexes are fast for small datasets but degrade at scale. WFAs require disk I/O per request.",
+      explanation: "A prefix trie (also called a completion trie or autocomplete trie) with cached top-K results at every node is the fastest autocomplete structure:\n\n**Step 1**: Each node stores not just child pointers but also the pre-computed top-K (e.g., top-5) completions for that prefix — updated offline from query logs.\n\n**Step 2**: Lookup is $O(\text{prefix length})$ with no ranking computation at serve time — pure tree traversal.\n\n**Step 3**: At 10M unique queries with a bounded alphabet, this fits in memory (a few GB). Elasticsearch prefix queries add network RTT. SQL LIKE queries degrade at scale. WFAs require disk I/O per request.",
       hints: ["What data structure allows O(L) prefix lookup where L is the length of the typed prefix?", "The key insight is pre-computing top-K completions offline so serve time is pure traversal."],
     },
     {
@@ -216,7 +216,7 @@ const questions: Record<string, Question[]> = {
         "KEYS 'autocomplete:py*' to find all keys matching the prefix pattern"
       ],
       correctAnswer: 1,
-      explanation: "The Redis lexicographic autocomplete pattern stores all query strings in a sorted set with score=0 (so Redis orders them lexicographically). ZRANGEBYLEX key '[py' '[py\\xff' retrieves all members between 'py' and 'py' followed by the highest byte value (0xFF), which captures all strings starting with 'py'. This is O(log N + M) where M is the number of matches — extremely fast. The score can encode actual frequency in a separate sorted set or via a suffix trick (appending a delimiter + encoded rank). ZSCAN with MATCH is O(N) full scan. KEYS is O(N) and should never be used in production. A separate set per prefix requires maintaining N*L keys.",
+      explanation: "The Redis lexicographic autocomplete pattern works as follows:\n\n**Step 1**: Store all query strings in a sorted set with score=0 (so Redis orders them lexicographically).\n\n**Step 2**: Use ZRANGEBYLEX key '[py' '[py\\xff' to retrieve all members between 'py' and 'py' followed by the highest byte value (0xFF), capturing all strings starting with 'py'. This is $O(\log N + M)$ where $M$ is the number of matches — extremely fast.\n\n**Step 3**: The score can encode actual frequency in a separate sorted set or via a suffix trick. ZSCAN with MATCH is $O(N)$ full scan. KEYS is $O(N)$ and should never be used in production. A separate set per prefix requires maintaining $N \cdot L$ keys.",
       hints: ["ZRANGEBYLEX requires all members to have the same score (0) so Redis sorts by member string lexicographically.", "What byte value acts as the 'greatest possible suffix' to cap the range at strings starting with 'py'?"],
     },
   ],
@@ -234,7 +234,7 @@ const questions: Record<string, Question[]> = {
         "argmax_w TF-IDF(w) * P(q | w)"
       ],
       correctAnswer: 0,
-      explanation: "The Noisy Channel Model treats the query q as a 'noisy' version of the intended word w, transmitted through a noisy channel (the user's keyboard/mind). We want: argmax_w P(w | q) which by Bayes' theorem = argmax_w P(q | w) * P(w) / P(q). Since P(q) is constant for all candidates w, we maximize P(q | w) * P(w) where: P(w) is the language model (prior probability of intended word w, estimated from query frequency logs); P(q | w) is the error model (probability that w was mistyped as q, estimated from edit distance and keyboard layout). Combined, this naturally favors common words (high P(w)) that are close to the typed query (high P(q|w)).",
+      explanation: "The Noisy Channel Model applies Bayes' theorem to spelling correction:\n\n**Step 1**: We want to find the intended word $w$ given the observed (possibly mistyped) query $q$: $\arg\max_w P(w \mid q)$.\n\n**Step 2**: By Bayes' theorem: $P(w \mid q) = \frac{P(q \mid w) \cdot P(w)}{P(q)}$. Since $P(q)$ is constant for all candidates, we maximize $P(q \mid w) \cdot P(w)$.\n\n**Step 3**: Here $P(w)$ is the language model (prior probability of $w$, from query frequency logs), and $P(q \mid w)$ is the error model (probability $w$ was mistyped as $q$, from edit distance and keyboard layout). This naturally favors common words close to the typed query.",
       hints: ["The Noisy Channel Model applies Bayes' theorem: P(intended | observed) ∝ P(observed | intended) * P(intended).", "P(w) is the language model — what prior probability should 'python' have vs 'pyhton'?"],
     },
   ],
@@ -252,7 +252,7 @@ const questions: Record<string, Question[]> = {
         "Bi-encoders use cosine similarity which is less accurate than dot product for retrieval"
       ],
       correctAnswer: 1,
-      explanation: "Bi-encoders encode query and document independently into fixed-size vectors (e.g., 768-dimensional), then compute similarity via dot product or cosine. The key limitations are: (1) Context length — documents longer than the model's max tokens (e.g., 512 for BERT) must be chunked or truncated, losing long-range context; (2) No cross-attention at encode time — the encoder cannot model query-document interactions (e.g., knowing 'bank' means 'river bank' in the context of the query 'fishing'). Cross-encoders concatenate query+document and run full cross-attention, yielding higher precision but no pre-indexable document representations. This is why bi-encoders are used for recall (fast ANN) and cross-encoders for re-ranking (slow but precise).",
+      explanation: "Bi-encoders encode query and document independently into fixed-size vectors (e.g., 768-dimensional), then compute similarity via dot product or cosine:\n\n**Step 1**: Context length limitation — documents longer than the model's max tokens (e.g., 512 for BERT) must be chunked or truncated, losing long-range context.\n\n**Step 2**: No cross-attention at encode time — the encoder cannot model query-document interactions (e.g., knowing 'bank' means 'river bank' in the context of 'fishing').\n\n**Step 3**: Cross-encoders concatenate query+document and run full cross-attention, yielding higher precision but no pre-indexable document representations. This is why bi-encoders are used for recall (fast ANN) and cross-encoders for re-ranking (slow but precise).",
       hints: ["Can a bi-encoder document embedding change based on the query? What about a cross-encoder?", "Why can bi-encoder document embeddings be pre-computed and indexed, but cross-encoder scores cannot?"],
     },
     {
@@ -267,7 +267,7 @@ const questions: Record<string, Question[]> = {
         "It controls the beam width during query-time search, trading accuracy for speed"
       ],
       correctAnswer: 1,
-      explanation: "In HNSW, ef_construction controls the size of the dynamic candidate list maintained during the greedy graph-building phase. When inserting a new node, the algorithm traverses the graph greedily to find the nearest neighbors for that node's new edges. ef_construction determines how many candidates are kept in the priority queue during this traversal. Larger ef_construction \to more thorough neighbor search \to higher-quality graph edges \to better recall at query time, but slower index construction and more memory during build. ef_search (a separate parameter) controls the same list size at query time. The number of layers is controlled by 'M' (max neighbors per node), which implicitly determines the number of layers via a probability distribution.",
+      explanation: "In HNSW, ef_construction controls the size of the dynamic candidate list during graph construction:\n\n**Step 1**: When inserting a new node, the algorithm traverses the graph greedily to find the nearest neighbors for that node's new edges.\n\n**Step 2**: ef_construction determines how many candidates are kept in the priority queue during this traversal. Larger ef_construction $\to$ more thorough neighbor search $\to$ higher-quality graph edges $\to$ better recall at query time, but slower index construction and more memory during build.\n\n**Step 3**: ef_search (a separate parameter) controls the same list size at query time. The number of layers is controlled by 'M' (max neighbors per node), which implicitly determines the number of layers via a probability distribution.",
       hints: ["ef_construction affects the build phase only; ef_search affects query time only.", "Think of ef_construction as the 'search budget' spent when wiring up a new node's edges in the graph."],
     },
   ],
@@ -285,7 +285,7 @@ const questions: Record<string, Question[]> = {
         "min(2, 5) = 2 (best rank wins)"
       ],
       correctAnswer: 0,
-      explanation: "RRF score = $\\sum 1/(k + \\text{rank}_i)$ across all rankers i, where k=60 is a constant that dampens the impact of top-ranked documents from any single system (preventing one ranker from dominating). For document D: RRF = 1/(60+2) + 1/(60+5) = 1/62 + 1/65 \\approx 0.01613 + 0.01538 \\approx 0.03151. The k=60 default was chosen empirically in the original Cormack et al. 2009 paper. RRF is robust, requires no score normalization (unlike linear combination of BM25 and cosine scores which have incompatible scales), and outperforms many learned fusion approaches despite its simplicity.",
+      explanation: "Reciprocal Rank Fusion (RRF) combines rankings using the formula:\n\n**Step 1**: RRF score $= \sum_{i} \frac{1}{k + \\text{rank}_i}$ across all rankers $i$, where $k=60$ dampens the impact of top-ranked documents from any single system.\n\n**Step 2**: For document D ranked 2nd by BM25 and 5th by vector search: RRF $= \frac{1}{60+2} + \frac{1}{60+5} = \frac{1}{62} + \frac{1}{65} \approx 0.01613 + 0.01538 \approx 0.03151$.\n\n**Step 3**: The $k=60$ default was chosen empirically in the original Cormack et al. 2009 paper. RRF is robust, requires no score normalization (unlike linear combination of BM25 and cosine scores which have incompatible scales), and outperforms many learned fusion approaches despite its simplicity.",
       hints: ["RRF uses reciprocal of (k + rank), not the raw score from each system.", "k=60 prevents documents ranked 1st from scoring too far above documents ranked 2nd or 3rd."],
     },
     {
@@ -294,7 +294,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Hybrid search combining BM25 and vector search always outperforms either method alone on all benchmark datasets.",
       correctAnswer: "False",
-      explanation: "False. While hybrid search often outperforms either method individually on most benchmarks, this is not universal. On datasets with highly specialized vocabulary (e.g., medical codes, legal citations), BM25 alone can match or exceed hybrid performance because exact term matching is critical and semantic generalization hurts precision. On purely conversational or semantic datasets, vector search alone can outperform hybrid. The BEIR benchmark shows significant variation across domains. Hybrid search adds complexity (two indexes, score fusion logic) and latency; it should be validated empirically per use case rather than assumed universally superior.",
+      explanation: "False. Hybrid search is not universally superior:\n\n**Step 1**: On datasets with highly specialized vocabulary (e.g., medical codes, legal citations), BM25 alone can match or exceed hybrid performance because exact term matching is critical and semantic generalization hurts precision.\n\n**Step 2**: On purely conversational or semantic datasets, vector search alone can outperform hybrid. The BEIR benchmark shows significant variation across domains.\n\n**Step 3**: Hybrid search adds complexity (two indexes, score fusion logic) and latency; it should be validated empirically per use case rather than assumed universally superior.",
       hints: ["Consider a legal document retrieval task where the exact case citation number must match — does semantic search help here?", "The BEIR benchmark evaluates retrieval across 18+ diverse datasets — does one method win on all of them?"],
     },
   ],
@@ -312,7 +312,7 @@ const questions: Record<string, Question[]> = {
         "Primary and replica shards are identical; the difference is only in which node they are assigned to by the master node."
       ],
       correctAnswer: 1,
-      explanation: "In Elasticsearch: Primary shards are the authoritative copies of index data; all indexing operations (writes) go to the primary first, which then replicates to replicas synchronously before acknowledging the write. Replica shards serve two purposes: read scalability (searches can be routed to either primary or replica) and high availability. When a primary shard fails, the cluster master node detects the failure and promotes one of the in-sync replicas to primary. Because writes were synchronously replicated before acknowledgment, no data is lost. The cluster status transitions from 'green' \to 'yellow' (all primaries assigned, some replicas unassigned) \to back to 'green' once Elasticsearch reassigns a new replica to a healthy node.",
+      explanation: "In Elasticsearch, primary and replica shards have distinct roles:\n\n**Step 1**: Primary shards are the authoritative copies of index data; all indexing operations go to the primary first, which then replicates to replicas synchronously before acknowledging the write.\n\n**Step 2**: Replica shards serve read scalability and high availability. When a primary shard fails, the cluster master promotes one of the in-sync replicas to primary.\n\n**Step 3**: Because writes were synchronously replicated before acknowledgment, no data is lost. The cluster status transitions from 'green' $\to$ 'yellow' (all primaries assigned, some replicas unassigned) $\to$ back to 'green' once Elasticsearch reassigns a new replica.",
       hints: ["Does Elasticsearch wait for replica acknowledgment before confirming a write to the client?", "What is the cluster health status when all primaries are assigned but some replicas are not?"],
     },
     {
@@ -327,7 +327,7 @@ const questions: Record<string, Question[]> = {
         "Refresh controls shard rebalancing; flush controls segment merging."
       ],
       correctAnswer: 0,
-      explanation: "Elasticsearch has a two-phase persistence model: (1) Refresh (default: every 1 second) — writes documents from the in-memory indexing buffer to a new Lucene segment in memory (via lucene.IndexWriter.commit), making them searchable. This is the NRT mechanism — documents become searchable within ~1 second. The segment is not yet durably persisted to disk. (2) Flush — calls Lucene's fsync to write all segments to disk and advance the translog checkpoint. This ensures durability across restarts. The translog (write-ahead log) captures all operations between flushes for crash recovery. Refresh is what makes ES 'near-real-time' rather than real-time.",
+      explanation: "Elasticsearch has a two-phase persistence model:\n\n**Step 1**: Refresh (default: every 1 second) — writes documents from the in-memory indexing buffer to a new Lucene segment in memory, making them searchable. This is the NRT mechanism — documents become searchable within $\sim$1 second. The segment is not yet durably persisted to disk.\n\n**Step 2**: Flush — calls Lucene's fsync to write all segments to disk and advance the translog checkpoint. This ensures durability across restarts.\n\n**Step 3**: The translog (write-ahead log) captures all operations between flushes for crash recovery. Refresh is what makes ES 'near-real-time' rather than real-time.",
       hints: ["After a refresh, are documents searchable? After a flush, are documents durable?", "If a node crashes between a refresh and a flush, are the refreshed-but-not-flushed documents lost? How are they recovered?"],
     },
   ],
