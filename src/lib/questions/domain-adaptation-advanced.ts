@@ -125,7 +125,7 @@ const questions: Record<string, Question[]> = {
       question:
         "The squared Maximum Mean Discrepancy MMD\\^2(P, Q) between distributions P and Q using kernel k is defined as:",
       options: [
-        "$$\\text{MMD}^2(P,Q) = \\|\\mathbb{E}_{x\\sim P}[\\phi(x)] - \\mathbb{E}_{y\\sim Q}[\\phi(y)]\\|^2_{\\mathcal{H}} = \\mathbb{E}_{x,x'\\sim P}[k(x,x')] - 2\\mathbb{E}_{x\\sim P,y\\sim Q}[k(x,y)] + \\mathbb{E}_{y,y'\\sim Q}[k(y,y')]$$",
+        "\\[\\text{MMD}^2(P,Q) = \\|\\mathbb{E}_{x\\sim P}[\\phi(x)] - \\mathbb{E}_{y\\sim Q}[\\phi(y)]\\|^2_{\\mathcal{H}} = \\mathbb{E}_{x,x'\\sim P}[k(x,x')] - 2\\mathbb{E}_{x\\sim P,y\\sim Q}[k(x,y)] + \\mathbb{E}_{y,y'\\sim Q}[k(y,y')].\\]",
         "MMD\\^2(P,Q) = KL(P||Q) estimated via kernel density estimation",
         "MMD\\^2(P,Q) = max_{f: ||f||\\leq1} |E_P[f(x)] − E_Q[f(x)]| (Wasserstein-1 dual)",
         "MMD\\^2(P,Q) = ||Cov_P(\\phi(x)) − Cov_Q(\\phi(x))||\\^2_F where \\phi is a fixed feature map",
@@ -2504,7 +2504,7 @@ const moreAdaptQ3: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "CORAL computes the target covariance matrix from unlabeled target features - no target labels are needed. The source covariance is computed from labeled source features, and the CORAL loss penalizes the Frobenius distance between the two covariance matrices. This makes CORAL applicable in the standard UDA (unsupervised domain adaptation) setting where target data is unlabeled. The task loss (cross-entropy) uses only labeled source data, while the CORAL loss uses features from both domains.",
       hints: [
-        "Covariance computation: C_T = (1/n_T) * X_T^T X_T - mu_T mu_T^T where X_T are target features and mu_T is the target mean. Labels not needed.",
+        "Covariance computation: C_T = (1/n_T) \\times X_T^T X_T - \\mu_T \\mu_T^T where X_T are target features and \\mu_T is the target mean. Labels not needed.",
         "CORAL is an unsupervised alignment method - all target supervision signals come from the covariance structure, not labels.",
       ],
     },
@@ -2631,7 +2631,7 @@ const moreAdaptQ3: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "As rho increases, the uncertainty set grows to include distributions further from the empirical distribution. The DRO objective becomes more pessimistic, upweighting the tails of the loss distribution. At small rho, DRO approximates ERM. At large rho, DRO upweights rare high-loss examples strongly, potentially harming average accuracy. Chi-squared DRO (a special case of f-DRO) has an elegant dual form: it minimizes the mean + sqrt(rho) * standard deviation of the loss, explicitly trading average performance for loss variance.",
       hints: [
-        "Chi-squared DRO dual: min_theta E[L] + sqrt(rho) * std(L). The sqrt(rho) term controls how much variance we penalize.",
+        "Chi-squared DRO dual: min_theta E[L] + \\sqrt{\\rho} \\times \\operatorname{std}(L). The \\sqrt{\\rho} term controls how much variance we penalize.",
         "rho calibration: estimate the f-divergence between source and expected target distribution from held-out validation data, then set rho to this estimate.",
       ],
     },
@@ -2754,7 +2754,7 @@ const moreAdaptQ3: Record<string, Question[]> = {
       explanation: "EATA (Efficient Anti-forgetting Test-Time Adaptation) identifies TENT's two failure modes: (1) Entropy collapse: TENT minimizes entropy of all samples, including those where the model is confidently wrong, reinforcing errors. EATA filters samples to only adapt on those with entropy in a reliable middle range (not too high, not too low). (2) Catastrophic forgetting: adapting on target data degrades source-domain performance. EATA uses an elastic weight consolidation (EWC)-style Fisher information regularizer: weights important for source performance (high Fisher info) are penalized from changing. Together these make TTA both reliable and stable across sequential domain shifts.",
       hints: [
         "Sample selection in EATA: discard samples where entropy > H_0 (too uncertain, likely wrong) and entropy < H_1 (already confident, no adaptation needed). Only adapt on moderate-entropy samples.",
-        "Fisher regularizer: L_EWC = sum_i F_i * (theta_i - theta_0_i)^2 where F_i is Fisher information of parameter i and theta_0 are source model weights.",
+        "Fisher regularizer: L_EWC = \\sum_i F_i \\cdot (\\theta_i - \\theta_0_i)^2 where F_i is Fisher information of parameter i and \\theta_0 are source model weights.",
       ],
     },
     {
