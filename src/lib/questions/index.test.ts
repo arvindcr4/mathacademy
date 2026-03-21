@@ -316,4 +316,50 @@ describe('Question Files Validation', () => {
       }
     }
   })
+
+  it('should have valid test case structure for coding questions', () => {
+    for (const [bankName, questions] of Object.entries(questionBanks)) {
+      for (const q of questions as Question[]) {
+        if (q.type === 'coding' && q.testCases) {
+          for (const tc of q.testCases) {
+            expect(
+              tc.input,
+              `${bankName}: ${q.id} test case should have input`
+            ).toBeDefined()
+            expect(
+              tc.output,
+              `${bankName}: ${q.id} test case should have output`
+            ).toBeDefined()
+          }
+        }
+      }
+    }
+  })
+
+  it('should not have trailing whitespace in question text', () => {
+    for (const [bankName, questions] of Object.entries(questionBanks)) {
+      for (const q of questions as Question[]) {
+        expect(
+          q.question.endsWith('  '),
+          `${bankName}: ${q.id} should not have trailing double spaces`
+        ).toBe(false)
+      }
+    }
+  })
+
+  it('should have balanced brackets in questions', () => {
+    for (const [bankName, questions] of Object.entries(questionBanks)) {
+      for (const q of questions as Question[]) {
+        // Count basic brackets (not LaTeX)
+        const openBrackets = (q.question.match(/\(/g) || []).length
+        const closeBrackets = (q.question.match(/\)/g) || []).length
+        // Allow some flexibility for LaTeX and code
+        const diff = Math.abs(openBrackets - closeBrackets)
+        expect(
+          diff,
+          `${bankName}: ${q.id} has unbalanced parentheses (${openBrackets} vs ${closeBrackets})`
+        ).toBeLessThanOrEqual(2)
+      }
+    }
+  })
 })
