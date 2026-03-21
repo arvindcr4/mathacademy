@@ -896,6 +896,99 @@ export const courses: Course[] = [
     ]
   },
 
+  // RLHF & ALIGNMENT
+  {
+    id: 'rlhf-alignment',
+    slug: 'rlhf-alignment',
+    name: 'RLHF & LLM Alignment',
+    description: 'Master reinforcement learning from human feedback: preference learning, reward modeling, and modern alignment techniques.',
+    category: 'reinforcement-learning',
+    icon: '🎯',
+    color: '#F97316',
+    topicCount: 6,
+    estimatedHours: 25,
+    topics: [
+      {
+        id: 'alignment-basics',
+        slug: 'alignment-basics',
+        name: 'Alignment Problem Basics',
+        description: 'Why LLM alignment matters and what the alignment tax means.',
+        knowledgePoints: [
+          { id: 'al-kp-1', slug: 'alignment-problem', name: 'The Alignment Problem' },
+          { id: 'al-kp-2', slug: 'helpful-harmless-honest', name: 'Helpful, Harmless & Honest (HHH)' },
+          { id: 'al-kp-3', slug: 'sycophancy', name: 'Sycophancy & Reward Hacking' },
+          { id: 'al-kp-4', slug: 'alignment-tax', name: 'Alignment Tax' },
+          { id: 'al-kp-5', slug: 'goodhart-law', name: 'Goodhart\'s Law in ML' },
+        ]
+      },
+      {
+        id: 'preference-data',
+        slug: 'preference-data',
+        name: 'Preference Data Collection',
+        description: 'Collect, annotate, and quality-control human preference data.',
+        knowledgePoints: [
+          { id: 'al-kp-6', slug: 'preference-pairs', name: 'Preference Pairs & Comparison Format' },
+          { id: 'al-kp-7', slug: 'annotator-agreement', name: 'Inter-Annotator Agreement (Cohen\'s Kappa)' },
+          { id: 'al-kp-8', slug: 'ranking-vs-rating', name: 'Ranking vs Rating Annotation' },
+          { id: 'al-kp-9', slug: 'synthetic-preferences', name: 'Synthetic Preference Generation (GPT-4 Judge)' },
+          { id: 'al-kp-10', slug: 'preference-datasets', name: 'Open Preference Datasets (HH, UltraFeedback)' },
+        ]
+      },
+      {
+        id: 'reward-model-training',
+        slug: 'reward-model-training',
+        name: 'Reward Model Training',
+        description: 'Train reward models that capture human preferences.',
+        knowledgePoints: [
+          { id: 'al-kp-11', slug: 'rm-architecture', name: 'Reward Model Architecture' },
+          { id: 'al-kp-12', slug: 'bradley-terry', name: 'Bradley-Terry Preference Model' },
+          { id: 'al-kp-13', slug: 'rm-overfitting', name: 'Reward Model Overfitting' },
+          { id: 'al-kp-14', slug: 'ensemble-rm', name: 'Ensemble Reward Models' },
+          { id: 'al-kp-15', slug: 'process-vs-outcome', name: 'Process vs Outcome Reward Models' },
+        ]
+      },
+      {
+        id: 'ppo-rlhf',
+        slug: 'ppo-rlhf',
+        name: 'PPO for RLHF',
+        description: 'Apply PPO to optimize LLMs against reward models.',
+        knowledgePoints: [
+          { id: 'al-kp-16', slug: 'rlhf-pipeline', name: 'Full RLHF Pipeline (SFT → RM → PPO)' },
+          { id: 'al-kp-17', slug: 'ppo-clip', name: 'PPO Clip Objective for LLMs' },
+          { id: 'al-kp-18', slug: 'value-head', name: 'Value Head in RLHF Models' },
+          { id: 'al-kp-19', slug: 'kl-controller', name: 'Adaptive KL Controller' },
+          { id: 'al-kp-20', slug: 'rlhf-instability', name: 'RLHF Training Instabilities' },
+        ]
+      },
+      {
+        id: 'direct-alignment',
+        slug: 'direct-alignment',
+        name: 'Direct Alignment Methods',
+        description: 'DPO, IPO, and other RM-free alignment approaches.',
+        knowledgePoints: [
+          { id: 'al-kp-21', slug: 'dpo-derivation', name: 'DPO: Mathematical Derivation' },
+          { id: 'al-kp-22', slug: 'ipo', name: 'IPO: Identity Preference Optimization' },
+          { id: 'al-kp-23', slug: 'kto', name: 'KTO: Kahneman-Tversky Optimization' },
+          { id: 'al-kp-24', slug: 'rpo', name: 'RPO: Robust Preference Optimization' },
+          { id: 'al-kp-25', slug: 'dpo-vs-ppo', name: 'DPO vs PPO: When to Use Which' },
+        ]
+      },
+      {
+        id: 'advanced-alignment',
+        slug: 'advanced-alignment',
+        name: 'Advanced Alignment Techniques',
+        description: 'Scalable oversight, debate, and amplification approaches.',
+        knowledgePoints: [
+          { id: 'al-kp-26', slug: 'scalable-oversight', name: 'Scalable Oversight & Weak-to-Strong' },
+          { id: 'al-kp-27', slug: 'ai-debate', name: 'AI Debate for Alignment' },
+          { id: 'al-kp-28', slug: 'iterated-amplification', name: 'Iterated Amplification' },
+          { id: 'al-kp-29', slug: 'superalignment', name: 'Superalignment Research Directions' },
+          { id: 'al-kp-30', slug: 'red-teaming', name: 'Red-Teaming & Adversarial Testing' },
+        ]
+      },
+    ]
+  },
+
   // NATURAL LANGUAGE PROCESSING
   {
     id: 'nlp-fundamentals',
