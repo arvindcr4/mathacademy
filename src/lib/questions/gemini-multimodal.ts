@@ -447,8 +447,7 @@ registerQuestions({
         "Restart the API request.",
         "Generate an API key for the function.",
       ],
-      correctAnswer:
-        "Execute the function locally using the arguments provided by Gemini, and then send the result back to Gemini in a new prompt.",
+      correctAnswer: 1,
       explanation:
         "Gemini does not execute custom functions. It only generates the function name and arguments. The developer must intercept this, run the code locally, and return the `functionResponse` back to the model.",
       hints: [

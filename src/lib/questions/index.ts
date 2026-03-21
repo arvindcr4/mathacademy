@@ -45,6 +45,7 @@ import "./systems-design-interview";
 import "./systems-design-databases";
 import "./systems-design-networking";
 import "./systems-design-distributed";
+import "./systems-design-scalability";
 
 // Export questionBanks for test access
 import { getAllQuestions } from "./registry";

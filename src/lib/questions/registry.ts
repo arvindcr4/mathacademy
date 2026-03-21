@@ -2120,6 +2120,133 @@ const questionOverrides: Record<string, QuestionOverride> = {
     ],
     correctAnswer: 0,
   },
+  "q-eval-kp10-1": {
+    type: "multiple-choice",
+    question: "If DCG@5 = 8.89 and IDCG@5 = 9.39, what is NDCG@5?",
+    options: ["0.95", "0.78", "1.34", "8.89"],
+    correctAnswer: 0,
+  },
+  "q-eval-kp14-3": {
+    type: "multiple-choice",
+    question: "Equal opportunity requires equality of which quantity across groups?",
+    options: [
+      "True positive rate among actually positive cases",
+      "Overall positive prediction rate",
+      "Positive predictive value among predicted positives",
+      "Calibration error",
+    ],
+    correctAnswer: 0,
+  },
+  "q-eval-kp25-2": {
+    type: "multiple-choice",
+    question:
+      "Two models are evaluated by AUC on the same test set. Which comparison method is appropriate?",
+    options: [
+      "DeLong test or a paired bootstrap of the AUC difference",
+      "McNemar test after thresholding both models at 0.5",
+      "An unpaired two-sample t-test on the two AUC values",
+      "No statistical test is needed because AUC is threshold-free",
+    ],
+    correctAnswer: 0,
+  },
+  "q-eval-kp34-1": {
+    type: "multiple-choice",
+    question:
+      "Which statement correctly distinguishes adversarial robustness from distribution-shift robustness?",
+    options: [
+      "Adversarial robustness tests worst-case perturbations chosen to fool the model; distribution-shift robustness tests natural changes in the test distribution.",
+      "Adversarial robustness is only for vision models; distribution-shift robustness is only for language models.",
+      "Adversarial robustness measures calibration; distribution-shift robustness measures fairness.",
+      "Adversarial robustness and distribution-shift robustness are interchangeable terms.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-gem-kp-19": {
+    question: "Why upload a large PDF with the Gemini File API?",
+    options: [
+      "To reference the uploaded file in prompts without resending the full PDF each time.",
+      "To convert the PDF into a fine-tuned Gemini model.",
+      "To publish the PDF as a permanent public asset.",
+      "To force Gemini to answer only from that PDF and ignore the prompt.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-gem-kp-25": {
+    question: "Gemini's Code Execution tool lets the model:",
+    options: [
+      "Write and run Python in a Google-managed sandbox, then use the result in its answer.",
+      "Run shell commands on your production server.",
+      "Execute JavaScript in the user's browser.",
+      "Install arbitrary packages into your local environment.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-gem-kp-87": {
+    type: "multiple-choice",
+    question: "Which statement about Gemini API HTTP 429 is correct?",
+    options: [
+      "It can result from either per-minute limits or daily quota limits.",
+      "It only indicates a malformed request body.",
+      "It only appears when a safety filter blocks the output.",
+      "It only applies to file uploads, not `generateContent` calls.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-gem-kp-108": {
+    type: "multiple-choice",
+    question: "How does a safety-blocked candidate usually appear in the response?",
+    options: [
+      "Its `finish_reason` is `SAFETY`.",
+      "Its `finish_reason` is `STOP` and the model text explains the block.",
+      "The API always returns HTTP 403 instead of a candidate.",
+      "Its `response_mime_type` changes to `application/safety`.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-prod-kp35-2": {
+    question:
+      "A credit model has equal accuracy across groups but different false negative rates. Which fairness criterion is violated?",
+    options: [
+      "Demographic parity",
+      "Equalized odds",
+      "Calibration within groups",
+      "Predictive parity",
+    ],
+    correctAnswer: 1,
+  },
+  "q-prod-kp37-2": {
+    question:
+      "At 10,000 predictions/sec, which logging policy best balances cost and debuggability?",
+    options: [
+      "Log only failed HTTP requests.",
+      "Log a small random baseline sample, plus 100% of errors, alerts, and canary traffic.",
+      "Log the first 1,000 requests of each hour.",
+      "Turn off request logs and rely on aggregate metrics only.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-prod-ex7-2": {
+    question:
+      "Fraud scores drift down after 6 weeks, but business outcomes stay flat. Which check best distinguishes concept drift from benign population shift?",
+    options: [
+      "Check whether the feature store freshness SLA was breached.",
+      "Compare score distributions separately for known-fraud and known-non-fraud transactions.",
+      "Retrain on the latest week and compare offline AUC.",
+      "Roll back the model and see whether the mean score returns to 0.12.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-prod-ex8-1": {
+    question:
+      "A required online feature is null at serving time. What is the safest default?",
+    options: [
+      "Reject every request with any missing feature.",
+      "Use the last known fresh value; if it is too stale, route to a fallback model.",
+      "Impute zero and continue scoring.",
+      "Synchronously query the offline warehouse before scoring.",
+    ],
+    correctAnswer: 1,
+  },
 };
 
 // ── Hint generation helpers ─────────────────────────────────────────────────
