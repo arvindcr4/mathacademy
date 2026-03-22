@@ -652,6 +652,11 @@ const questions: Record<string, Question[]> = {
         'Actor-critic methods use both a policy AND a value function - does this match "no value function needed"?',
         "Think about what actor-critic adds vs. removes compared to REINFORCE and Q-learning.",
       ],
+      stepByStep: {
+        step1: "Actor-critic explicitly uses BOTH a policy (actor) AND a value function (critic) -- neither is eliminated.",
+        step2: "The benefit is low variance from the critic (vs. pure REINFORCE) and continuous action support (vs. pure Q-learning).",
+        step3: "The statement is false because it claims both components are eliminated, when neither is.",
+      },
     },
     {
       id: "q-rla-kp11-3",
@@ -667,11 +672,16 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The advantage function is $A^\\pi(s,a) = Q^\\pi(s,a) - V^\\pi(s)$. We would ideally compute this using Monte Carlo returns, but that has high variance. The one-step TD error provides an alternative.\n\n**Step 1.** The one-step TD error is:\n\\[\\delta = r + \\gamma V(s') - V(s).\\]\nThis uses bootstrapping: instead of the full return $G_t$, it uses $r + \\gamma V(s')$ as a one-step estimate.\n\n**Step 2.** Relating $\\delta$ to the advantage: if $V(s')$ were exact, then $r + \\gamma V(s') \\approx Q^\\pi(s,a)$, so $\\delta \\approx Q^\\pi(s,a) - V(s) = A^\\pi(s,a)$. In that case, $\\delta$ would be an unbiased estimate of the advantage.\n\n**Step 3.** In practice, $V(s')$ is an approximation (learned by function approximation), so $\\delta$ is biased: the bias comes from the error in $V(s')$. However, bootstrapping dramatically reduces variance compared to Monte Carlo, at the cost of some bias. This bias-variance tradeoff is fundamental to TD methods.",
+        "First, let's recall the advantage function: $A^\\pi(s,a) = Q^\\pi(s,a) - V^\\pi(s)$. Ideally we compute this using Monte Carlo returns, but that has high variance. The one-step TD error provides an alternative.\n\n**Step 1.** The one-step TD error is:\n\\[\\delta = r + \\gamma V(s') - V(s).\\]\nThis uses bootstrapping: instead of the full return $G_t$, it uses $r + \\gamma V(s')$ as a one-step estimate.\n\n**Step 2.** Relating $\\delta$ to the advantage: if $V(s')$ were exact, then $r + \\gamma V(s') \\approx Q^\\pi(s,a)$, so $\\delta \\approx Q^\\pi(s,a) - V(s) = A^\\pi(s,a)$. In that case, $\\delta$ would be an unbiased estimate of the advantage.\n\n**Step 3.** In practice, $V(s')$ is an approximation (learned by function approximation), so $\\delta$ is biased: the bias comes from the error in $V(s')$. However, bootstrapping dramatically reduces variance compared to Monte Carlo, at the cost of some bias. This bias-variance tradeoff is fundamental to TD methods.\n\nTherefore, the answer is V(s') is an approximation, so \\delta = r + \\gammaV(s') - V(s) is a biased estimate of A^\\pi(s,a).",
       hints: [
         "If V(s') were exact, would \\delta be an unbiased estimate of Q(s,a) - V(s)?",
         "Bootstrapping trades bias for variance reduction - what is the source of the bias?",
       ],
+      stepByStep: {
+        step1: "The one-step TD error \\delta = r + \\gamma V(s') - V(s) uses V(s') as a bootstrap estimate instead of the full Monte Carlo return G_t.",
+        step2: "If V(s') were exactly correct, then \\delta would equal A^\\pi(s,a) -- an unbiased estimate. But V(s') is learned and imperfect.",
+        step3: "The bias in \\delta comes from the error in V(s'). This is the fundamental bias-variance tradeoff: bootstrapping reduces variance but introduces bias.",
+      },
     },
   ],
 
