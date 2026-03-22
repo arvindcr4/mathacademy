@@ -3,6 +3,14 @@
 import Link from "next/link";
 import { Course } from "@/lib/curriculum";
 
+const iconMap: Record<string, string> = {
+  cube: "📦", cpu: "🖥️", leaf: "🌿", atom: "⚛️", microphone: "🎙️",
+};
+
+function resolveIcon(icon: string): string {
+  return iconMap[icon] ?? icon;
+}
+
 interface CourseCardProps {
   course: Course;
 }
@@ -17,7 +25,7 @@ export default function CourseCard({ course }: CourseCardProps) {
             background: `linear-gradient(135deg, ${course.color}33 0%, ${course.color}11 100%)`,
           }}
         >
-          {course.icon}
+          {resolveIcon(course.icon)}
         </div>
         <div className="p-6">
           <div className="flex items-center gap-2 mb-2">
