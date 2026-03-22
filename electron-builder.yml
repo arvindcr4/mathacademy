@@ -1,0 +1,32 @@
+appId: com.mathacademy.app
+productName: MathAcademy
+copyright: Copyright © 2026 MathAcademy
+
+directories:
+  output: dist-electron
+
+files:
+  - electron/**/*
+  - out/**/*
+  - package.json
+
+mac:
+  category: public.app-category.education
+  target:
+    - dmg
+    - zip
+
+win:
+  target:
+    - nsis
+    - portable
+
+linux:
+  category: Education
+  target:
+    - AppImage
+    - deb
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
