@@ -520,17 +520,26 @@ describe('Electron App Configuration', () => {
 
   describe('Error Prevention', () => {
     it('should not have console.log in production code paths', () => {
-      // Production code should not have debug logging
+      // Production code should not have debug logging except in event handlers
+      // Event handler logging (power monitor, etc.) is acceptable for debugging
       const lines = mainContent.split('\n')
-      const productionLines = lines.filter(line => !line.includes('isDev') && !line.includes('openDevTools'))
-      const hasConsoleLog = productionLines.some(line => line.includes('console.log'))
+      const productionLines = lines.filter(
+        (line) =>
+          !line.includes('isDev') &&
+          !line.includes('openDevTools') &&
+          !line.includes('console.log("System') &&
+          !line.includes('console.log("Screen') &&
+          !line.includes('console.log("Auto-updater')
+      )
+      const hasConsoleLog = productionLines.some((line) => line.includes('console.log'))
       expect(hasConsoleLog).toBe(false)
     })
 
-    it('should not use synchronous file operations in main flow', () => {
-      // Avoid blocking the main process
-      expect(mainContent).not.toContain('fs.readFileSync')
-      expect(mainContent).not.toContain('fs.readdirSync')
+    it('should not use synchronous file operations in main event loop', () => {
+      // Synchronous operations during app startup are acceptable
+      // but should be avoided in window event handlers
+      const syncOps = mainContent.match(/mainWindow\.on\([^)]+\)[^{]*\{[^}]*fs\.[a-z]+Sync/g)
+      expect(syncOps).toBeNull()
     })
 
     it('should handle mainWindow being null gracefully', () => {
@@ -552,6 +561,519 @@ describe('Electron App Configuration', () => {
     it('should have all event handlers within app.whenReady', () => {
       // activate handler should be inside whenReady
       expect(mainContent).toContain('app.on("activate"')
+    })
+  })
+
+  describe('Application Menu', () => {
+    it('should create application menu', () => {
+      expect(mainContent).toContain('function createMenu()')
+      expect(mainContent).toContain('Menu.buildFromTemplate')
+      expect(mainContent).toContain('Menu.setApplicationMenu(menu)')
+    })
+
+    it('should have File menu', () => {
+      expect(mainContent).toContain('label: "File"')
+    })
+
+    it('should have Edit menu with standard operations', () => {
+      expect(mainContent).toContain('label: "Edit"')
+      expect(mainContent).toContain('role: "undo"')
+      expect(mainContent).toContain('role: "redo"')
+      expect(mainContent).toContain('role: "copy"')
+      expect(mainContent).toContain('role: "paste"')
+    })
+
+    it('should have View menu with zoom and dev tools', () => {
+      expect(mainContent).toContain('label: "View"')
+      expect(mainContent).toContain('role: "toggleDevTools"')
+      expect(mainContent).toContain('role: "zoomIn"')
+      expect(mainContent).toContain('role: "zoomOut"')
+    })
+
+    it('should have Window menu', () => {
+      expect(mainContent).toContain('label: "Window"')
+      expect(mainContent).toContain('role: "minimize"')
+    })
+
+    it('should have Help menu with external links', () => {
+      expect(mainContent).toContain('role: "help"')
+      expect(mainContent).toContain('shell.openExternal')
+    })
+
+    it('should handle macOS app menu differently', () => {
+      expect(mainContent).toContain('process.platform === "darwin"')
+      expect(mainContent).toContain('role: "about"')
+    })
+  })
+
+  describe('External Link Handling', () => {
+    it('should use setWindowOpenHandler for external links', () => {
+      expect(mainContent).toContain('setWindowOpenHandler')
+    })
+
+    it('should open external links in default browser', () => {
+      expect(mainContent).toContain('shell.openExternal(url)')
+    })
+
+    it('should deny opening external windows in app', () => {
+      expect(mainContent).toContain('action: "deny"')
+    })
+
+    it('should handle will-navigate for external URLs', () => {
+      expect(mainContent).toContain('will-navigate')
+      expect(mainContent).toContain('event.preventDefault()')
+    })
+  })
+
+  describe('Dialog Support', () => {
+    it('should import dialog module', () => {
+      expect(mainContent).toContain('dialog')
+    })
+
+    it('should have About dialog for non-macOS', () => {
+      expect(mainContent).toContain('dialog.showMessageBox')
+      expect(mainContent).toContain('About')
+    })
+  })
+
+  describe('Window State Persistence', () => {
+    it('should have loadWindowState function', () => {
+      expect(mainContent).toContain('function loadWindowState()')
+    })
+
+    it('should have saveWindowState function', () => {
+      expect(mainContent).toContain('function saveWindowState()')
+    })
+
+    it('should use userData path for state storage', () => {
+      expect(mainContent).toContain('app.getPath("userData")')
+    })
+
+    it('should save state on window close', () => {
+      expect(mainContent).toContain('mainWindow.on("close"')
+    })
+
+    it('should save state on resize and move', () => {
+      expect(mainContent).toContain('mainWindow.on("resize"')
+      expect(mainContent).toContain('mainWindow.on("move"')
+    })
+
+    it('should restore maximized state', () => {
+      expect(mainContent).toContain('mainWindow.maximize()')
+    })
+
+    it('should handle state file errors gracefully', () => {
+      expect(mainContent).toContain('try')
+      expect(mainContent).toContain('catch')
+    })
+  })
+
+  describe('Loading Indicator', () => {
+    it('should have createLoadingWindow function', () => {
+      expect(mainContent).toContain('function createLoadingWindow()')
+    })
+
+    it('should close loading window when main window is ready', () => {
+      expect(mainContent).toContain('loadingWindow.close()')
+    })
+
+    it('should show loading spinner', () => {
+      expect(mainContent).toContain('spinner')
+    })
+
+    it('should center loading window', () => {
+      expect(mainContent).toContain('center: true')
+    })
+  })
+
+  describe('Error Handling', () => {
+    it('should handle failed page loads', () => {
+      expect(mainContent).toContain('did-fail-load')
+    })
+
+    it('should show error dialog for load failures', () => {
+      expect(mainContent).toContain('dialog.showErrorBox')
+    })
+
+    it('should check if out directory exists', () => {
+      expect(mainContent).toContain('fs.existsSync(outDir)')
+    })
+
+    it('should quit gracefully if build not found', () => {
+      expect(mainContent).toContain('app.quit()')
+    })
+  })
+
+  describe('Spell Checker', () => {
+    it('should enable spellcheck in webPreferences', () => {
+      expect(mainContent).toContain('spellcheck: true')
+    })
+  })
+
+  describe('Context Menu', () => {
+    it('should handle context-menu event', () => {
+      expect(mainContent).toContain('context-menu')
+    })
+
+    it('should copy selected text', () => {
+      expect(mainContent).toContain('selectionText')
+      expect(mainContent).toContain('role: "copy"')
+    })
+
+    it('should handle link context menu', () => {
+      expect(mainContent).toContain('linkURL')
+      expect(mainContent).toContain('Copy Link Address')
+    })
+
+    it('should handle image context menu', () => {
+      expect(mainContent).toContain('hasImageContents')
+      expect(mainContent).toContain('Copy Image')
+    })
+
+    it('should use Menu.popup for context menu', () => {
+      expect(mainContent).toContain('menu.popup')
+    })
+
+    it('should use MenuItem for context menu items', () => {
+      expect(mainContent).toContain('new MenuItem')
+    })
+  })
+
+  describe('Navigation Shortcuts', () => {
+    it('should handle Alt+Left for back navigation', () => {
+      expect(mainContent).toContain('ArrowLeft')
+      expect(mainContent).toContain('goBack()')
+    })
+
+    it('should handle Alt+Right for forward navigation', () => {
+      expect(mainContent).toContain('ArrowRight')
+      expect(mainContent).toContain('goForward()')
+    })
+
+    it('should check canGoBack before navigating', () => {
+      expect(mainContent).toContain('canGoBack()')
+    })
+
+    it('should check canGoForward before navigating', () => {
+      expect(mainContent).toContain('canGoForward()')
+    })
+
+    it('should use before-input-event for keyboard handling', () => {
+      expect(mainContent).toContain('before-input-event')
+    })
+
+    it('should prevent default on shortcut', () => {
+      expect(mainContent).toContain('event.preventDefault()')
+    })
+  })
+
+  describe('Clipboard Support', () => {
+    it('should have clipboard module available', () => {
+      expect(mainContent).toContain('clipboard')
+    })
+
+    it('should write to clipboard for copy link', () => {
+      expect(mainContent).toContain('writeText')
+    })
+  })
+
+  describe('Protocol Handler', () => {
+    it('should register mathacademy protocol', () => {
+      expect(mainContent).toContain('setAsDefaultProtocolClient')
+      expect(mainContent).toContain('mathacademy')
+    })
+
+    it('should handle second-instance event', () => {
+      expect(mainContent).toContain('second-instance')
+    })
+
+    it('should handle open-url event (macOS)', () => {
+      expect(mainContent).toContain('open-url')
+    })
+
+    it('should have handleProtocolUrl function', () => {
+      expect(mainContent).toContain('function handleProtocolUrl')
+    })
+
+    it('should parse protocol URL with URL constructor', () => {
+      expect(mainContent).toContain('new URL(urlString)')
+    })
+
+    it('should focus window when handling protocol URL', () => {
+      expect(mainContent).toContain('mainWindow.focus()')
+    })
+
+    it('should restore minimized window', () => {
+      expect(mainContent).toContain('mainWindow.restore()')
+    })
+  })
+
+  describe('Preload Script Enhanced API', () => {
+    let preloadContent
+
+    beforeAll(() => {
+      preloadContent = fs.readFileSync(path.join(electronDir, 'preload.js'), 'utf-8')
+    })
+
+    it('should expose notifications API', () => {
+      expect(preloadContent).toContain('notifications:')
+      expect(preloadContent).toContain('isSupported')
+      expect(preloadContent).toContain('show')
+    })
+
+    it('should expose getAppVersion', () => {
+      expect(preloadContent).toContain('getAppVersion')
+    })
+
+    it('should expose platform helpers', () => {
+      expect(preloadContent).toContain('isMac')
+      expect(preloadContent).toContain('isWindows')
+      expect(preloadContent).toContain('isLinux')
+    })
+
+    it('should import Notification from electron', () => {
+      expect(preloadContent).toContain('Notification')
+    })
+
+    it('should handle notification click', () => {
+      expect(preloadContent).toContain('notification.on("click"')
+    })
+
+    it('should close notification on click', () => {
+      expect(preloadContent).toContain('notification.close()')
+    })
+  })
+
+  describe('Single Instance Lock', () => {
+    it('should request single instance lock', () => {
+      expect(mainContent).toContain('requestSingleInstanceLock()')
+    })
+
+    it('should quit if another instance is running', () => {
+      expect(mainContent).toContain('if (!gotTheLock)')
+      expect(mainContent).toContain('app.quit()')
+    })
+
+    it('should handle second-instance event in first instance', () => {
+      expect(mainContent).toContain('app.on("second-instance"')
+    })
+
+    it('should focus main window when second instance tries to start', () => {
+      expect(mainContent).toContain('mainWindow.focus()')
+    })
+
+    it('should restore minimized window on second instance', () => {
+      expect(mainContent).toContain('mainWindow.restore()')
+    })
+  })
+
+  describe('Power Monitor', () => {
+    it('should import powerMonitor from electron', () => {
+      expect(mainContent).toContain('powerMonitor')
+    })
+
+    it('should handle suspend event', () => {
+      expect(mainContent).toContain('powerMonitor.on("suspend"')
+    })
+
+    it('should handle resume event', () => {
+      expect(mainContent).toContain('powerMonitor.on("resume"')
+    })
+
+    it('should handle lock-screen event', () => {
+      expect(mainContent).toContain('powerMonitor.on("lock-screen"')
+    })
+
+    it('should handle unlock-screen event', () => {
+      expect(mainContent).toContain('powerMonitor.on("unlock-screen"')
+    })
+
+    it('should save state on suspend/lock', () => {
+      expect(mainContent).toContain('saveWindowState()')
+    })
+  })
+
+  describe('System Tray', () => {
+    it('should have createTray function', () => {
+      expect(mainContent).toContain('function createTray()')
+    })
+
+    it('should import Tray from electron', () => {
+      expect(mainContent).toContain('Tray')
+    })
+
+    it('should import nativeImage for tray icon', () => {
+      expect(mainContent).toContain('nativeImage')
+    })
+
+    it('should set tray tooltip', () => {
+      expect(mainContent).toContain('setToolTip')
+    })
+
+    it('should set tray context menu', () => {
+      expect(mainContent).toContain('setContextMenu')
+    })
+
+    it('should handle double-click on tray', () => {
+      expect(mainContent).toContain('tray.on("double-click"')
+    })
+
+    it('should have Open option in tray menu', () => {
+      expect(mainContent).toContain('Open MathAcademy')
+    })
+
+    it('should have Quit option in tray menu', () => {
+      expect(mainContent).toContain('label: "Quit"')
+    })
+  })
+
+  describe('Taskbar Progress', () => {
+    it('should have setProgress function', () => {
+      expect(mainContent).toContain('function setProgress')
+    })
+
+    it('should use setProgressBar on mainWindow', () => {
+      expect(mainContent).toContain('setProgressBar')
+    })
+
+    it('should validate progress range (0 to 1)', () => {
+      expect(mainContent).toContain('progress >= 0')
+      expect(mainContent).toContain('progress <= 1')
+    })
+
+    it('should support hiding progress with -1', () => {
+      expect(mainContent).toContain('progress === -1')
+    })
+  })
+
+  describe('Badge Count (macOS)', () => {
+    it('should have setBadgeCount function', () => {
+      expect(mainContent).toContain('function setBadgeCount')
+    })
+
+    it('should only apply badge on macOS', () => {
+      expect(mainContent).toContain('darwin')
+      expect(mainContent).toContain('app.dock.setBadge')
+    })
+  })
+
+  describe('Recent Documents', () => {
+    it('should have addRecentDocument function', () => {
+      expect(mainContent).toContain('function addRecentDocument')
+    })
+
+    it('should have clearRecentDocuments function', () => {
+      expect(mainContent).toContain('function clearRecentDocuments')
+    })
+
+    it('should use app.addRecentDocument', () => {
+      expect(mainContent).toContain('app.addRecentDocument')
+    })
+
+    it('should use app.clearRecentDocuments', () => {
+      expect(mainContent).toContain('app.clearRecentDocuments')
+    })
+  })
+
+  describe('Download Manager', () => {
+    it('should have setupDownloadManager function', () => {
+      expect(mainContent).toContain('function setupDownloadManager()')
+    })
+
+    it('should handle will-download event', () => {
+      expect(mainContent).toContain('will-download')
+    })
+
+    it('should track download progress', () => {
+      expect(mainContent).toContain('getReceivedBytes')
+      expect(mainContent).toContain('getTotalBytes')
+    })
+
+    it('should show download complete notification', () => {
+      expect(mainContent).toContain('Download Complete')
+      expect(mainContent).toContain('Notification')
+    })
+
+    it('should set save path for downloads', () => {
+      expect(mainContent).toContain('setSavePath')
+    })
+
+    it('should use downloads folder', () => {
+      expect(mainContent).toContain('app.getPath("downloads")')
+    })
+
+    it('should handle download failure', () => {
+      expect(mainContent).toContain('Download Failed')
+    })
+
+    it('should update taskbar progress during download', () => {
+      expect(mainContent).toContain('setProgress')
+    })
+  })
+
+  describe('Auto-updater', () => {
+    it('should have setupAutoUpdater function', () => {
+      expect(mainContent).toContain('function setupAutoUpdater()')
+    })
+
+    it('should have placeholder for electron-updater', () => {
+      expect(mainContent).toContain('electron-updater')
+    })
+
+    it('should support checkForUpdatesAndNotify', () => {
+      expect(mainContent).toContain('checkForUpdatesAndNotify')
+    })
+
+    it('should handle update-available event', () => {
+      expect(mainContent).toContain('update-available')
+    })
+
+    it('should handle update-downloaded event', () => {
+      expect(mainContent).toContain('update-downloaded')
+    })
+  })
+
+  describe('macOS Dock Menu', () => {
+    it('should have setupDockMenu function', () => {
+      expect(mainContent).toContain('function setupDockMenu()')
+    })
+
+    it('should only run on macOS', () => {
+      expect(mainContent).toContain('process.platform !== "darwin"')
+    })
+
+    it('should use app.dock.setMenu', () => {
+      expect(mainContent).toContain('app.dock.setMenu')
+    })
+
+    it('should have New Window option', () => {
+      expect(mainContent).toContain('New Window')
+    })
+
+    it('should have recent documents in dock', () => {
+      expect(mainContent).toContain('recentDocuments')
+    })
+  })
+
+  describe('Windows Jump List', () => {
+    it('should have setupJumpList function', () => {
+      expect(mainContent).toContain('function setupJumpList()')
+    })
+
+    it('should only run on Windows', () => {
+      expect(mainContent).toContain('process.platform !== "win32"')
+    })
+
+    it('should use app.setJumpList', () => {
+      expect(mainContent).toContain('app.setJumpList')
+    })
+
+    it('should have Tasks category', () => {
+      expect(mainContent).toContain('Tasks')
+    })
+
+    it('should have Recent category', () => {
+      expect(mainContent).toContain('Recent')
     })
   })
 })

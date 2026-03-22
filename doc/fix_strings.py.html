@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>fix_strings.py</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="doc-style.css" />
+  <script src="doc-filelist.js"></script>
+  <script>
+    var relativeDir = "";
+    var thisFile = "fix_strings.py";
+    var defaultSidebar = true;
+  </script>
+  <script src="doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>fix_strings.py</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-comment">#!/usr/bin/env python3</span>
+<span class="hljs-string">"""Fix string literals in TypeScript question files."""</span>
+
+<span class="hljs-keyword">import</span> re
+<span class="hljs-keyword">import</span> sys
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">fix_file</span><span class="hljs-params">(filepath)</span>:</span>
+    <span class="hljs-keyword">with</span> open(filepath, <span class="hljs-string">'r'</span>) <span class="hljs-keyword">as</span> f:
+        content = f.read()
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>Fix patterns:</p>
+<ol>
+<li>Replace &quot; inside single-quoted strings with &quot;</li>
+<li>Replace ' inside double-quoted strings with '</li>
+</ol>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">
+    lines = content.split(<span class="hljs-string">'\n'</span>)
+    new_lines = []
+
+    i = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">while</span> i &lt; len(lines):
+        line = lines[i]
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3"></a>
+</div>
+<p>Check if this line starts a multi-line string concatenation
+Pattern: explanation: or question: followed by string that ends with +</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">        <span class="hljs-keyword">if</span> (<span class="hljs-string">'explanation:'</span> <span class="hljs-keyword">in</span> line <span class="hljs-keyword">or</span> <span class="hljs-string">'question:'</span> <span class="hljs-keyword">in</span> line) <span class="hljs-keyword">and</span> (<span class="hljs-string">' +'</span> <span class="hljs-keyword">in</span> line <span class="hljs-keyword">or</span> line.rstrip().endswith(<span class="hljs-string">'" +'</span>) <span class="hljs-keyword">or</span> line.rstrip().endswith(<span class="hljs-string">"' +"</span>)):
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4"></a>
+</div>
+<p>Collect the full multi-line string</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">            full_text = line
+            i += <span class="hljs-number">1</span>
+            <span class="hljs-keyword">while</span> i &lt; len(lines):
+                next_line = lines[i]
+                full_text += <span class="hljs-string">'\n'</span> + next_line
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5"></a>
+</div>
+<p>Check if this is the end of the string (no + at end)</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">                <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> (next_line.rstrip().endswith(<span class="hljs-string">' +'</span>) <span class="hljs-keyword">or</span> next_line.rstrip().endswith(<span class="hljs-string">'" +'</span>) <span class="hljs-keyword">or</span> next_line.rstrip().endswith(<span class="hljs-string">"' +"</span>)):
+                    i += <span class="hljs-number">1</span>
+                    <span class="hljs-keyword">break</span>
+                i += <span class="hljs-number">1</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6"></a>
+</div>
+<p>Now fix the multi-line string
+Replace unescaped &quot; inside the string parts</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">            fixed = full_text
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7"></a>
+</div>
+<p>Fix double quotes inside single-quoted strings</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">            fixed = re.sub(<span class="hljs-string">r"'([^']*)\"([^\"]*)\"([^']*)' \+"</span>, <span class="hljs-string">r"'\1\\\"\2\\\"\3' +"</span>, fixed)
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8"></a>
+</div>
+<p>Fix double quotes inside double-quoted strings (that aren't already escaped)
+This is tricky - we need to find &quot; that aren't preceded by \</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">            fixed_lines = []
+            <span class="hljs-keyword">for</span> l <span class="hljs-keyword">in</span> fixed.split(<span class="hljs-string">'\n'</span>):
+                <span class="hljs-keyword">if</span> <span class="hljs-string">' +'</span> <span class="hljs-keyword">in</span> l <span class="hljs-keyword">or</span> l.rstrip().endswith(<span class="hljs-string">'",'</span>) <span class="hljs-keyword">or</span> l.rstrip().endswith(<span class="hljs-string">"',"</span>):
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9"></a>
+</div>
+<p>This is part of a string concatenation
+Find unescaped quotes and escape them</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">                    <span class="hljs-keyword">if</span> l.strip().startswith(<span class="hljs-string">'"'</span>) <span class="hljs-keyword">and</span> <span class="hljs-keyword">not</span> l.strip().startswith(<span class="hljs-string">'\\"'</span>):
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10"></a>
+</div>
+<p>Double-quoted string - escape internal double quotes
+Find the content between the opening and closing quotes</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">                        match = re.match(<span class="hljs-string">r'^(\s*)"(.*)"[,\s]*\+?\s*$'</span>, l)
+                        <span class="hljs-keyword">if</span> match:
+                            indent = match.group(<span class="hljs-number">1</span>)
+                            content = match.group(<span class="hljs-number">2</span>)
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-11" id="section-11"></a>
+</div>
+<p>Escape any unescaped &quot; in content</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">                            content = re.sub(<span class="hljs-string">r'(?&lt;!\\)"'</span>, <span class="hljs-string">r'\\"'</span>, content)
+                            <span class="hljs-keyword">if</span> l.rstrip().endswith(<span class="hljs-string">' +'</span>):
+                                l = <span class="hljs-string">f'<span class="hljs-subst">{indent}</span>"<span class="hljs-subst">{content}</span>" +'</span>
+                            <span class="hljs-keyword">else</span>:
+                                l = <span class="hljs-string">f'<span class="hljs-subst">{indent}</span>"<span class="hljs-subst">{content}</span>",'</span>
+                    <span class="hljs-keyword">elif</span> l.strip().startswith(<span class="hljs-string">"'"</span>) <span class="hljs-keyword">and</span> <span class="hljs-keyword">not</span> l.strip().startswith(<span class="hljs-string">"\\'"</span>):
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-12" id="section-12"></a>
+</div>
+<p>Single-quoted string - escape internal single quotes</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">                        match = re.match(<span class="hljs-string">r"^(\s*)'(.*)'[,\s]*\+?\s*$"</span>, l)
+                        <span class="hljs-keyword">if</span> match:
+                            indent = match.group(<span class="hljs-number">1</span>)
+                            content = match.group(<span class="hljs-number">2</span>)
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-13" id="section-13"></a>
+</div>
+<p>Escape any unescaped ' in content</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">                            content = re.sub(<span class="hljs-string">r"(?&lt;!\\)'"</span>, <span class="hljs-string">r"\\'"</span>, content)
+                            <span class="hljs-keyword">if</span> l.rstrip().endswith(<span class="hljs-string">' +'</span>):
+                                l = <span class="hljs-string">f"<span class="hljs-subst">{indent}</span>'<span class="hljs-subst">{content}</span>' +"</span>
+                            <span class="hljs-keyword">else</span>:
+                                l = <span class="hljs-string">f"<span class="hljs-subst">{indent}</span>'<span class="hljs-subst">{content}</span>',"</span>
+                fixed_lines.append(l)
+            new_lines.append(<span class="hljs-string">'\n'</span>.join(fixed_lines))
+        <span class="hljs-keyword">else</span>:
+            new_lines.append(line)
+            i += <span class="hljs-number">1</span>
+
+    <span class="hljs-keyword">with</span> open(filepath, <span class="hljs-string">'w'</span>) <span class="hljs-keyword">as</span> f:
+        f.write(<span class="hljs-string">'\n'</span>.join(new_lines))
+
+    print(<span class="hljs-string">f"Fixed <span class="hljs-subst">{filepath}</span>"</span>)
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
+    <span class="hljs-keyword">for</span> filepath <span class="hljs-keyword">in</span> sys.argv[<span class="hljs-number">1</span>:]:
+        fix_file(filepath)
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

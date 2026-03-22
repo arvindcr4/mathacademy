@@ -15,9 +15,22 @@
     "db:studio": "prisma studio",
     "electron:dev": "concurrently --kill-others \"next dev\" \"wait-on http://localhost:3000/mathacademy && ELECTRON_DEV=true electron .\"",
     "electron:build": "ELECTRON_BUILD=true next build && electron-builder --config electron-builder.yml",
-    "electron:start": "electron ."
+    "electron:start": "electron .",
+    "cap:build": "CAPACITOR_BUILD=true next build && npx cap sync",
+    "cap:sync": "npx cap sync",
+    "android:open": "npx cap open android",
+    "android:build": "cd android && ./gradlew assembleDebug",
+    "android:build:release": "cd android && ./gradlew assembleRelease",
+    "ios:open": "npx cap open ios"
   },
   "dependencies": {
+    "@capacitor/android": "^8.2.0",
+    "@capacitor/cli": "^8.2.0",
+    "@capacitor/core": "^8.2.0",
+    "@capacitor/ios": "^8.2.0",
+    "@capacitor/keyboard": "^8.0.1",
+    "@capacitor/splash-screen": "^8.0.1",
+    "@capacitor/status-bar": "^8.0.1",
     "@next/swc-linux-x64-gnu": "^14.2.33",
     "@prisma/client": "^5.10.0",
     "bcryptjs": "^2.4.3",

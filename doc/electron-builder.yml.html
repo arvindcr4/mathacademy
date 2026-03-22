@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>electron-builder.yml</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="doc-style.css" />
+  <script src="doc-filelist.js"></script>
+  <script>
+    var relativeDir = "";
+    var thisFile = "electron-builder.yml";
+    var defaultSidebar = true;
+  </script>
+  <script src="doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>electron-builder.yml</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="yaml"><span class="hljs-attr">appId:</span> <span class="hljs-string">com.mathacademy.app</span>
+<span class="hljs-attr">productName:</span> <span class="hljs-string">MathAcademy</span>
+<span class="hljs-attr">copyright:</span> <span class="hljs-string">Copyright</span> <span class="hljs-string">©</span> <span class="hljs-number">2026</span> <span class="hljs-string">MathAcademy</span>
+
+<span class="hljs-attr">directories:</span>
+  <span class="hljs-attr">output:</span> <span class="hljs-string">dist-electron</span>
+
+<span class="hljs-attr">files:</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-string">electron/**/*</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-string">out/**/*</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-string">package.json</span>
+
+<span class="hljs-attr">mac:</span>
+  <span class="hljs-attr">category:</span> <span class="hljs-string">public.app-category.education</span>
+  <span class="hljs-attr">target:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">dmg</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">zip</span>
+
+<span class="hljs-attr">win:</span>
+  <span class="hljs-attr">target:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">nsis</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">portable</span>
+
+<span class="hljs-attr">linux:</span>
+  <span class="hljs-attr">category:</span> <span class="hljs-string">Education</span>
+  <span class="hljs-attr">target:</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">AppImage</span>
+    <span class="hljs-bullet">-</span> <span class="hljs-string">deb</span>
+
+<span class="hljs-attr">nsis:</span>
+  <span class="hljs-attr">oneClick:</span> <span class="hljs-literal">false</span>
+  <span class="hljs-attr">allowToChangeInstallationDirectory:</span> <span class="hljs-literal">true</span>
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

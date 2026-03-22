@@ -46,11 +46,41 @@
 
         </td>
         <td class="code highlight">
-          <pre class="javascript"><span class="hljs-comment">/** <span class="hljs-doctag">@type <span class="hljs-type">{import('next').NextConfig}</span> </span>*/</span>
+          <pre class="javascript"><span class="hljs-keyword">const</span> isElectron = process.env.ELECTRON_BUILD === <span class="hljs-string">'true'</span>;
+<span class="hljs-keyword">const</span> isCapacitor = process.env.CAPACITOR_BUILD === <span class="hljs-string">'true'</span>;
+
+<span class="hljs-comment">/** @type {import('next').NextConfig} */</span>
 <span class="hljs-keyword">const</span> nextConfig = {
   <span class="hljs-attr">output</span>: <span class="hljs-string">'export'</span>,
-  <span class="hljs-attr">basePath</span>: <span class="hljs-string">'/mathacademy'</span>,
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>No basePath for Electron or Capacitor (uses file:// or mobile webview)</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">  ...(isElectron || isCapacitor ? {} : { <span class="hljs-attr">basePath</span>: <span class="hljs-string">'/mathacademy'</span> }),
   <span class="hljs-attr">images</span>: { <span class="hljs-attr">unoptimized</span>: <span class="hljs-literal">true</span> },
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3"></a>
+</div>
+<p>Use relative asset prefix for Electron/Capacitor so file:// URLs resolve correctly</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">  ...(isElectron || isCapacitor ? { <span class="hljs-attr">assetPrefix</span>: <span class="hljs-string">'./'</span> } : {}),
   <span class="hljs-attr">experimental</span>: {
     <span class="hljs-attr">serverComponentsExternalPackages</span>: [<span class="hljs-string">'@prisma/client'</span>, <span class="hljs-string">'bcryptjs'</span>],
   },

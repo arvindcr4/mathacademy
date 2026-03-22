@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>install.sh</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="doc-style.css" />
+  <script src="doc-filelist.js"></script>
+  <script>
+    var relativeDir = "";
+    var thisFile = "install.sh";
+    var defaultSidebar = true;
+  </script>
+  <script src="doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>install.sh</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh"><span class="hljs-meta">#!/bin/bash
+
+
+</span></pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>Loader function to show a spinner animation</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh"><span class="hljs-function"><span class="hljs-title">show_loader</span></span>() {
+    <span class="hljs-built_in">local</span> pid=<span class="hljs-variable">$1</span>
+    <span class="hljs-built_in">local</span> message=<span class="hljs-variable">$2</span>
+    <span class="hljs-built_in">local</span> completion_message=<span class="hljs-string">"<span class="hljs-variable">${3:-$message}</span>"</span>
+    <span class="hljs-built_in">local</span> spin=<span class="hljs-string">'⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'</span>
+    <span class="hljs-built_in">local</span> i=0
+    
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3"></a>
+</div>
+<p>Hide cursor</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">    tput civis 2&gt;/dev/null || <span class="hljs-literal">true</span>
+    
+    <span class="hljs-keyword">while</span> <span class="hljs-built_in">kill</span> -0 <span class="hljs-variable">$pid</span> 2&gt;/dev/null; <span class="hljs-keyword">do</span>
+        i=$(( (i+1) %10 ))
+        <span class="hljs-built_in">printf</span> <span class="hljs-string">"\r<span class="hljs-variable">${spin:$i:1}</span> <span class="hljs-variable">$message</span>"</span>
+        sleep .1
+    <span class="hljs-keyword">done</span>
+    
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4"></a>
+</div>
+<p>Show cursor</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">    tput cnorm 2&gt;/dev/null || <span class="hljs-literal">true</span>
+    <span class="hljs-built_in">printf</span> <span class="hljs-string">"\r\033[K✓ <span class="hljs-variable">$completion_message</span>\n"</span>
+}
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5"></a>
+</div>
+<p>Function to run command with loader</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh"><span class="hljs-function"><span class="hljs-title">run_with_loader</span></span>() {
+    <span class="hljs-built_in">local</span> message=<span class="hljs-variable">$1</span>
+    <span class="hljs-built_in">local</span> completion_message=<span class="hljs-variable">$2</span>
+    <span class="hljs-built_in">shift</span> 2
+    <span class="hljs-built_in">local</span> cmd=<span class="hljs-string">"<span class="hljs-variable">$@</span>"</span>
+    
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6"></a>
+</div>
+<p>Disable job control</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">    <span class="hljs-built_in">set</span> +m 2&gt;/dev/null || <span class="hljs-literal">true</span>
+    
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7"></a>
+</div>
+<p>Execute command in background, redirect stdout only to suppress job messages</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">    <span class="hljs-built_in">eval</span> <span class="hljs-string">"<span class="hljs-variable">$cmd</span>"</span> &gt;/dev/null 2&gt;&amp;1 &amp;
+    <span class="hljs-built_in">local</span> cmd_pid=$!
+    
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8"></a>
+</div>
+<p>Show loader while command runs</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">    show_loader <span class="hljs-variable">$cmd_pid</span> <span class="hljs-string">"<span class="hljs-variable">$message</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$completion_message</span>"</span>
+    
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9"></a>
+</div>
+<p>Wait for command to complete and get exit status</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">    <span class="hljs-built_in">wait</span> <span class="hljs-variable">$cmd_pid</span> 2&gt;/dev/null
+    <span class="hljs-built_in">local</span> exit_code=$?
+    
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10"></a>
+</div>
+<p>Restore job control</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">    <span class="hljs-built_in">set</span> -m 2&gt;/dev/null || <span class="hljs-literal">true</span>
+    
+    <span class="hljs-built_in">return</span> <span class="hljs-variable">$exit_code</span>
+}
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-11" id="section-11"></a>
+</div>
+<p>Function to download with a colored, clean progress bar</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh"><span class="hljs-function"><span class="hljs-title">download_with_progress</span></span>() {
+    <span class="hljs-built_in">local</span> url=<span class="hljs-variable">$1</span>
+    <span class="hljs-built_in">local</span> output=<span class="hljs-variable">$2</span>
+    <span class="hljs-built_in">local</span> message=<span class="hljs-variable">$3</span>
+    <span class="hljs-built_in">local</span> completion_message=<span class="hljs-variable">$4</span>
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-12" id="section-12"></a>
+</div>
+<p>Hide cursor</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">    tput civis 2&gt;/dev/null || <span class="hljs-literal">true</span>
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-13" id="section-13"></a>
+</div>
+<p>Try to get content length (in bytes)</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">    <span class="hljs-built_in">local</span> total_bytes=0
+    total_bytes=$(curl -sI <span class="hljs-string">"<span class="hljs-variable">$url</span>"</span> | awk <span class="hljs-string">'/[Cc]ontent-[Ll]ength:/ {print $2}'</span> | tr -d <span class="hljs-string">'\r'</span>)
+    <span class="hljs-keyword">if</span> [[ ! <span class="hljs-string">"<span class="hljs-variable">$total_bytes</span>"</span> =~ ^[0-9]+$ ]]; <span class="hljs-keyword">then</span>
+        total_bytes=0
+    <span class="hljs-keyword">fi</span>
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-14" id="section-14"></a>
+</div>
+<p>Prepare colors (green bar, reset)</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">    <span class="hljs-built_in">local</span> color_bar
+    <span class="hljs-built_in">local</span> color_reset
+    color_bar=$(tput setaf 2 2&gt;/dev/null || <span class="hljs-built_in">echo</span> <span class="hljs-string">''</span>)
+    color_reset=$(tput sgr0 2&gt;/dev/null || <span class="hljs-built_in">echo</span> <span class="hljs-string">''</span>)
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-15" id="section-15"></a>
+</div>
+<p>Determine terminal width for progress bar</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">    <span class="hljs-built_in">local</span> term_cols=80
+    <span class="hljs-keyword">if</span> <span class="hljs-built_in">command</span> -v tput &gt;/dev/null 2&gt;&amp;1; <span class="hljs-keyword">then</span>
+        term_cols=$(tput cols 2&gt;/dev/null || <span class="hljs-built_in">echo</span> 80)
+    <span class="hljs-keyword">fi</span>
+    <span class="hljs-built_in">local</span> bar_width=$(( term_cols - 30 ))
+    <span class="hljs-keyword">if</span> [ <span class="hljs-variable">$bar_width</span> -lt 10 ]; <span class="hljs-keyword">then</span>
+        bar_width=10
+    <span class="hljs-keyword">fi</span>
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-16" id="section-16"></a>
+</div>
+<p>Disable job control notifications</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">    <span class="hljs-built_in">set</span> +m 2&gt;/dev/null || <span class="hljs-literal">true</span>
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-17" id="section-17"></a>
+</div>
+<p>Start download in background - curl is already silent, just background it</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">    curl -L --fail --silent --show-error <span class="hljs-string">"<span class="hljs-variable">$url</span>"</span> -o <span class="hljs-string">"<span class="hljs-variable">$output</span>"</span> &amp;
+    <span class="hljs-built_in">local</span> curl_pid=$!
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-18" id="section-18"></a>
+</div>
+<p>Monitor progress by polling file size</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">    <span class="hljs-keyword">while</span> <span class="hljs-built_in">kill</span> -0 <span class="hljs-string">"<span class="hljs-variable">$curl_pid</span>"</span> 2&gt;/dev/null; <span class="hljs-keyword">do</span>
+        <span class="hljs-built_in">local</span> current_size=0
+        <span class="hljs-keyword">if</span> [ -f <span class="hljs-string">"<span class="hljs-variable">$output</span>"</span> ]; <span class="hljs-keyword">then</span>
+            current_size=$(<span class="hljs-built_in">stat</span> -c%s <span class="hljs-string">"<span class="hljs-variable">$output</span>"</span> 2&gt;/dev/null || <span class="hljs-built_in">stat</span> -f%z <span class="hljs-string">"<span class="hljs-variable">$output</span>"</span> 2&gt;/dev/null || <span class="hljs-built_in">echo</span> 0)
+        <span class="hljs-keyword">fi</span>
+
+
+        <span class="hljs-keyword">if</span> [ <span class="hljs-string">"<span class="hljs-variable">$total_bytes</span>"</span> -gt 0 ]; <span class="hljs-keyword">then</span>
+            <span class="hljs-built_in">local</span> percent=$(( (current_size * 100) / total_bytes ))
+            <span class="hljs-keyword">if</span> [ <span class="hljs-variable">$percent</span> -gt 100 ]; <span class="hljs-keyword">then</span> percent=100; <span class="hljs-keyword">fi</span>
+
+
+            <span class="hljs-built_in">local</span> filled=$(( (percent * bar_width) / 100 ))
+            <span class="hljs-built_in">local</span> empty=$((bar_width - filled))
+            <span class="hljs-built_in">local</span> bar_filled
+            <span class="hljs-built_in">local</span> bar_empty
+            bar_filled=$(<span class="hljs-built_in">printf</span> <span class="hljs-string">'%*s'</span> <span class="hljs-string">"<span class="hljs-variable">$filled</span>"</span> <span class="hljs-string">''</span> | tr <span class="hljs-string">' '</span> <span class="hljs-string">'█'</span>)
+            bar_empty=$(<span class="hljs-built_in">printf</span> <span class="hljs-string">'%*s'</span> <span class="hljs-string">"<span class="hljs-variable">$empty</span>"</span> <span class="hljs-string">''</span> | tr <span class="hljs-string">' '</span> <span class="hljs-string">'─'</span>)
+
+
+            <span class="hljs-built_in">printf</span> <span class="hljs-string">"\r%s %s[%s%s%s] %3d%%"</span> <span class="hljs-string">"<span class="hljs-variable">$message</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$color_bar</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$bar_filled</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$color_reset</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$bar_empty</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$percent</span>"</span>
+        <span class="hljs-keyword">else</span>
+            <span class="hljs-built_in">local</span> size_mb=$((current_size / 1048576))
+            <span class="hljs-built_in">printf</span> <span class="hljs-string">"\r%s %s[%dMB downloaded]%s"</span> <span class="hljs-string">"<span class="hljs-variable">$message</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$color_bar</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$size_mb</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$color_reset</span>"</span>
+        <span class="hljs-keyword">fi</span>
+        sleep 0.12
+    <span class="hljs-keyword">done</span>
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-19" id="section-19"></a>
+</div>
+<p>Wait for curl to finish and capture exit code</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">    <span class="hljs-built_in">wait</span> <span class="hljs-string">"<span class="hljs-variable">$curl_pid</span>"</span> 2&gt;/dev/null
+    <span class="hljs-built_in">local</span> exit_code=$?
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-20" id="section-20"></a>
+</div>
+<p>Clear the progress line completely using ANSI escape code</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">    <span class="hljs-built_in">printf</span> <span class="hljs-string">"\r\033[K"</span>
+
+
+    <span class="hljs-keyword">if</span> [ <span class="hljs-variable">$exit_code</span> -eq 0 ]; <span class="hljs-keyword">then</span>
+        <span class="hljs-built_in">printf</span> <span class="hljs-string">"%s✓ %s%s\n"</span> <span class="hljs-string">"<span class="hljs-variable">$color_bar</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$completion_message</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$color_reset</span>"</span>
+    <span class="hljs-keyword">else</span>
+        <span class="hljs-built_in">printf</span> <span class="hljs-string">"%s✗ %s (exit %d)%s\n"</span> <span class="hljs-string">"<span class="hljs-variable">$color_bar</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$completion_message</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$exit_code</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$color_reset</span>"</span>
+    <span class="hljs-keyword">fi</span>
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-21" id="section-21"></a>
+</div>
+<p>Restore job control</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">    <span class="hljs-built_in">set</span> -m 2&gt;/dev/null || <span class="hljs-literal">true</span>
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-22" id="section-22"></a>
+</div>
+<p>Show cursor</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">    tput cnorm 2&gt;/dev/null || <span class="hljs-literal">true</span>
+
+
+    <span class="hljs-built_in">return</span> <span class="hljs-variable">$exit_code</span>
+}
+
+
+<span class="hljs-function"><span class="hljs-title">installKeploy</span></span> (){
+    version=<span class="hljs-string">"latest"</span>
+    IS_CI=<span class="hljs-literal">false</span>
+    NO_ROOT=<span class="hljs-literal">false</span>
+    PLATFORM=<span class="hljs-string">"<span class="hljs-variable">$(basename "$SHELL")</span>"</span>
+    <span class="hljs-keyword">for</span> arg <span class="hljs-keyword">in</span> <span class="hljs-string">"<span class="hljs-variable">$@</span>"</span>
+    <span class="hljs-keyword">do</span>
+        <span class="hljs-keyword">case</span> <span class="hljs-variable">$arg</span> <span class="hljs-keyword">in</span>
+            -isCI)
+                IS_CI=<span class="hljs-literal">true</span>
+                <span class="hljs-built_in">shift</span>
+            ;;
+            -v)
+                <span class="hljs-keyword">if</span> [[ <span class="hljs-string">"<span class="hljs-variable">$2</span>"</span> =~ ^v[0-9]+.* ]]; <span class="hljs-keyword">then</span>
+                    version=<span class="hljs-string">"<span class="hljs-variable">$2</span>"</span>
+                    <span class="hljs-built_in">shift</span> 2 
+                <span class="hljs-keyword">else</span>
+                    <span class="hljs-built_in">echo</span> <span class="hljs-string">"Invalid version format. Please use '-v v&lt;semver&gt;'."</span>
+                    <span class="hljs-built_in">return</span> 1 
+                <span class="hljs-keyword">fi</span>
+            ;;
+            -noRoot)
+                NO_ROOT=<span class="hljs-literal">true</span>
+                <span class="hljs-built_in">shift</span> 1
+            ;;
+            -platform)
+                PLATFORM=<span class="hljs-string">"<span class="hljs-variable">$2</span>"</span>
+                <span class="hljs-built_in">shift</span> 2
+            ;;
+            *)
+            ;;
+        <span class="hljs-keyword">esac</span>
+    <span class="hljs-keyword">done</span>
+    <span class="hljs-keyword">if</span> [ <span class="hljs-string">"<span class="hljs-variable">$version</span>"</span> != <span class="hljs-string">"latest"</span> ]; <span class="hljs-keyword">then</span>
+        <span class="hljs-built_in">echo</span> <span class="hljs-string">"Installing Keploy version: <span class="hljs-variable">$version</span>......"</span>
+    <span class="hljs-keyword">fi</span>
+
+
+    <span class="hljs-function"><span class="hljs-title">move_keploy_binary</span></span>() {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-23" id="section-23"></a>
+</div>
+<p>Check if NO_ROOT is set to true</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">        <span class="hljs-keyword">if</span> [ <span class="hljs-string">"<span class="hljs-variable">$NO_ROOT</span>"</span> = <span class="hljs-string">"true"</span> ]; <span class="hljs-keyword">then</span>
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-24" id="section-24"></a>
+</div>
+<p>Move without sudo</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">            target_dir=<span class="hljs-string">"<span class="hljs-variable">$HOME</span>/.keploy/bin"</span>
+            source_dir=<span class="hljs-string">"/tmp/keploy"</span>  <span class="hljs-comment"># Default source directory</span>
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-25" id="section-25"></a>
+</div>
+<p>Create the target directory in the user's home directory</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">            mkdir -p <span class="hljs-string">"<span class="hljs-variable">$target_dir</span>"</span>
+            <span class="hljs-keyword">if</span> [ $? -ne 0 ]; <span class="hljs-keyword">then</span>
+                <span class="hljs-built_in">echo</span> <span class="hljs-string">"Error: Failed to create directory <span class="hljs-variable">$target_dir</span>"</span>
+                <span class="hljs-built_in">exit</span> 1
+            <span class="hljs-keyword">fi</span>
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-26" id="section-26"></a>
+</div>
+<p>Check if the OS is macOS (Darwin) to set the correct source path</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">            OS_NAME=$(uname)  <span class="hljs-comment"># Get the operating system name</span>
+            <span class="hljs-keyword">if</span> [ <span class="hljs-string">"<span class="hljs-variable">$OS_NAME</span>"</span> = <span class="hljs-string">"Darwin"</span> ]; <span class="hljs-keyword">then</span>
+                source_dir=<span class="hljs-string">"/tmp/keploy/keploy"</span>  <span class="hljs-comment"># Set source directory to the binary inside the extracted folder</span>
+            <span class="hljs-keyword">fi</span>
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-27" id="section-27"></a>
+</div>
+<p>Move the keploy binary to the user's home directory bin</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">            <span class="hljs-keyword">if</span> [ -f <span class="hljs-string">"<span class="hljs-variable">$source_dir</span>"</span> ]; <span class="hljs-keyword">then</span>
+                mv <span class="hljs-string">"<span class="hljs-variable">$source_dir</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$target_dir</span>/keploy"</span>
+                <span class="hljs-keyword">if</span> [ $? -ne 0 ]; <span class="hljs-keyword">then</span>
+                    <span class="hljs-built_in">echo</span> <span class="hljs-string">"Error: Failed to move the keploy binary from <span class="hljs-variable">$source_dir</span> to <span class="hljs-variable">$target_dir</span>"</span>
+                    <span class="hljs-built_in">exit</span> 1
+                <span class="hljs-keyword">fi</span>
+            <span class="hljs-keyword">else</span>
+                <span class="hljs-built_in">echo</span> <span class="hljs-string">"Error: <span class="hljs-variable">$source_dir</span> does not exist."</span>
+                <span class="hljs-built_in">exit</span> 1
+            <span class="hljs-keyword">fi</span>
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-28" id="section-28"></a>
+</div>
+<p>Make sure the binary is executable</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">            chmod +x <span class="hljs-string">"<span class="hljs-variable">$target_dir</span>/keploy"</span>
+            <span class="hljs-keyword">if</span> [ $? -ne 0 ]; <span class="hljs-keyword">then</span>
+                <span class="hljs-built_in">echo</span> <span class="hljs-string">"Error: Failed to make the keploy binary executable"</span>
+                <span class="hljs-built_in">exit</span> 1
+            <span class="hljs-keyword">fi</span>
+        <span class="hljs-keyword">else</span>
+            source_dir=<span class="hljs-string">"/tmp/keploy"</span>
+            OS_NAME=$(uname)  <span class="hljs-comment"># Get the operating system name</span>
+            <span class="hljs-keyword">if</span> [ <span class="hljs-string">"<span class="hljs-variable">$OS_NAME</span>"</span> = <span class="hljs-string">"Darwin"</span> ]; <span class="hljs-keyword">then</span>
+                source_dir=<span class="hljs-string">"/tmp/keploy/keploy"</span>  <span class="hljs-comment"># Set source directory to the binary inside the extracted folder</span>
+            <span class="hljs-keyword">fi</span>
+            sudo mkdir -p /usr/<span class="hljs-built_in">local</span>/bin &amp;&amp; sudo mv <span class="hljs-string">"<span class="hljs-variable">$source_dir</span>"</span> /usr/<span class="hljs-built_in">local</span>/bin/keploy
+        <span class="hljs-keyword">fi</span>
+        set_alias
+    }
+
+
+    <span class="hljs-function"><span class="hljs-title">install_keploy_darwin_all</span></span>() {
+        <span class="hljs-keyword">if</span> [ <span class="hljs-string">"<span class="hljs-variable">$version</span>"</span> != <span class="hljs-string">"latest"</span> ]; <span class="hljs-keyword">then</span>
+            download_url=<span class="hljs-string">"https://github.com/keploy/keploy/releases/download/<span class="hljs-variable">$version</span>/keploy_darwin_all.tar.gz"</span>
+        <span class="hljs-keyword">else</span>
+            download_url=<span class="hljs-string">"https://github.com/keploy/keploy/releases/latest/download/keploy_darwin_all.tar.gz"</span>
+        <span class="hljs-keyword">fi</span>
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-29" id="section-29"></a>
+</div>
+<p>macOS tar does not support --overwrite option so we need to remove the directory first
+to avoid the &quot;File exists&quot; error</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">        rm -rf /tmp/keploy
+        mkdir -p /tmp/keploy
+        
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-30" id="section-30"></a>
+</div>
+<p>Download with progress</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">        download_with_progress <span class="hljs-string">"<span class="hljs-variable">$download_url</span>"</span> <span class="hljs-string">"/tmp/keploy.tar.gz"</span> <span class="hljs-string">"Downloading Keploy binary..."</span> <span class="hljs-string">"Downloaded binary"</span>
+        
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-31" id="section-31"></a>
+</div>
+<p>Extract with loader</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">        run_with_loader <span class="hljs-string">"Extracting binary..."</span> <span class="hljs-string">"Extracted binary"</span> <span class="hljs-string">"tar xzf /tmp/keploy.tar.gz -C /tmp/keploy/ &amp;&amp; rm -f /tmp/keploy.tar.gz"</span>
+        
+        move_keploy_binary
+        delete_keploy_alias
+    }
+
+
+    <span class="hljs-function"><span class="hljs-title">install_keploy_arm</span></span>() {
+        <span class="hljs-keyword">if</span> [ <span class="hljs-string">"<span class="hljs-variable">$version</span>"</span> != <span class="hljs-string">"latest"</span> ]; <span class="hljs-keyword">then</span>
+            download_url=<span class="hljs-string">"https://github.com/keploy/keploy/releases/download/<span class="hljs-variable">$version</span>/keploy_linux_arm64.tar.gz"</span>
+        <span class="hljs-keyword">else</span>
+            download_url=<span class="hljs-string">"https://github.com/keploy/keploy/releases/latest/download/keploy_linux_arm64.tar.gz"</span>
+        <span class="hljs-keyword">fi</span>
+        
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-32" id="section-32"></a>
+</div>
+<p>Download with progress</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">        download_with_progress <span class="hljs-string">"<span class="hljs-variable">$download_url</span>"</span> <span class="hljs-string">"/tmp/keploy.tar.gz"</span> <span class="hljs-string">"Downloading Keploy binary..."</span> <span class="hljs-string">"Downloaded binary"</span>
+        
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-33" id="section-33"></a>
+</div>
+<p>Extract with loader</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">        run_with_loader <span class="hljs-string">"Extracting binary..."</span> <span class="hljs-string">"Extracted binary"</span> <span class="hljs-string">"tar xzf /tmp/keploy.tar.gz --overwrite -C /tmp &amp;&amp; rm -f /tmp/keploy.tar.gz"</span>
+        
+        move_keploy_binary
+    }
+
+
+
+    <span class="hljs-function"><span class="hljs-title">install_keploy_amd</span></span>() {        
+        <span class="hljs-keyword">if</span> [ <span class="hljs-string">"<span class="hljs-variable">$version</span>"</span> != <span class="hljs-string">"latest"</span> ]; <span class="hljs-keyword">then</span>
+            download_url=<span class="hljs-string">"https://github.com/keploy/keploy/releases/download/<span class="hljs-variable">$version</span>/keploy_linux_amd64.tar.gz"</span>
+        <span class="hljs-keyword">else</span>
+            download_url=<span class="hljs-string">"https://github.com/keploy/keploy/releases/latest/download/keploy_linux_amd64.tar.gz"</span>
+        <span class="hljs-keyword">fi</span>
+        
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-34" id="section-34"></a>
+</div>
+<p>Download with progress</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">        download_with_progress <span class="hljs-string">"<span class="hljs-variable">$download_url</span>"</span> <span class="hljs-string">"/tmp/keploy.tar.gz"</span> <span class="hljs-string">"Downloading Keploy binary..."</span> <span class="hljs-string">"Downloaded binary"</span>
+        
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-35" id="section-35"></a>
+</div>
+<p>Extract with loader</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">        run_with_loader <span class="hljs-string">"Extracting binary..."</span> <span class="hljs-string">"Extracted binary"</span> <span class="hljs-string">"tar xzf /tmp/keploy.tar.gz --overwrite -C /tmp &amp;&amp; rm -f /tmp/keploy.tar.gz"</span>
+        
+        move_keploy_binary
+    }
+
+
+    <span class="hljs-function"><span class="hljs-title">append_to_rc</span></span>() {
+        last_byte=$(tail -c 1 <span class="hljs-variable">$2</span>)
+        <span class="hljs-keyword">if</span> [[ <span class="hljs-string">"<span class="hljs-variable">$last_byte</span>"</span> != <span class="hljs-string">""</span> ]]; <span class="hljs-keyword">then</span>
+            <span class="hljs-built_in">echo</span> -e <span class="hljs-string">"\n<span class="hljs-variable">$1</span>"</span> &gt;&gt; <span class="hljs-variable">$2</span>
+        <span class="hljs-keyword">else</span>
+            <span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">$1</span>"</span> &gt;&gt; <span class="hljs-variable">$2</span>
+        <span class="hljs-keyword">fi</span>
+        <span class="hljs-built_in">source</span> <span class="hljs-variable">$2</span>
+    }
+
+
+    <span class="hljs-function"><span class="hljs-title">update_path</span></span>() {
+        PATH_CMD=<span class="hljs-string">"export PATH=\"\$HOME/.keploy/bin:\$PATH\""</span>
+        rc_file=<span class="hljs-string">"<span class="hljs-variable">$1</span>"</span>
+        <span class="hljs-keyword">if</span> [ -f <span class="hljs-string">"<span class="hljs-variable">$rc_file</span>"</span> ]; <span class="hljs-keyword">then</span>
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-36" id="section-36"></a>
+</div>
+<p>Use regex to match only uncommented export lines containing .keploy/bin</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">            <span class="hljs-keyword">if</span> ! grep -qE <span class="hljs-string">"^export PATH=.*\.keploy/bin"</span> <span class="hljs-string">"<span class="hljs-variable">$rc_file</span>"</span>; <span class="hljs-keyword">then</span>
+                append_to_rc <span class="hljs-string">"<span class="hljs-variable">$PATH_CMD</span>"</span> <span class="hljs-string">"<span class="hljs-variable">$rc_file</span>"</span>
+            <span class="hljs-keyword">fi</span>
+        <span class="hljs-keyword">fi</span>
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-37" id="section-37"></a>
+</div>
+<p>Always export PATH for the current session</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">        <span class="hljs-built_in">export</span> PATH=<span class="hljs-string">"<span class="hljs-variable">$HOME</span>/.keploy/bin:<span class="hljs-variable">$PATH</span>"</span>
+    }
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-38" id="section-38"></a>
+</div>
+<p>Get the alias to set and set it</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">    <span class="hljs-function"><span class="hljs-title">set_alias</span></span>() {
+        current_shell=<span class="hljs-string">"<span class="hljs-variable">$PLATFORM</span>"</span>
+        <span class="hljs-keyword">if</span> [ <span class="hljs-string">"<span class="hljs-variable">$NO_ROOT</span>"</span> = <span class="hljs-string">"true"</span> ]; <span class="hljs-keyword">then</span>
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-39" id="section-39"></a>
+</div>
+<p>Just update the PATH in .zshrc or .bashrc, no alias needed</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">            <span class="hljs-keyword">if</span> [[ <span class="hljs-string">"<span class="hljs-variable">$current_shell</span>"</span> = <span class="hljs-string">"zsh"</span> || <span class="hljs-string">"<span class="hljs-variable">$current_shell</span>"</span> = <span class="hljs-string">"-zsh"</span> ]]; <span class="hljs-keyword">then</span>
+                update_path <span class="hljs-string">"<span class="hljs-variable">$HOME</span>/.zshrc"</span>
+            <span class="hljs-keyword">elif</span> [[ <span class="hljs-string">"<span class="hljs-variable">$current_shell</span>"</span> = <span class="hljs-string">"bash"</span> || <span class="hljs-string">"<span class="hljs-variable">$current_shell</span>"</span> = <span class="hljs-string">"-bash"</span> ]]; <span class="hljs-keyword">then</span>
+                update_path <span class="hljs-string">"<span class="hljs-variable">$HOME</span>/.bashrc"</span>
+            <span class="hljs-keyword">else</span>
+                update_path <span class="hljs-string">"<span class="hljs-variable">$HOME</span>/.profile"</span>
+            <span class="hljs-keyword">fi</span>
+        <span class="hljs-keyword">else</span>
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-40" id="section-40"></a>
+</div>
+<p>Only set alias for v2.x.x versions (including pre-release like -alpha, -beta, -rc, etc.)</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">            <span class="hljs-keyword">if</span> [[ <span class="hljs-string">"<span class="hljs-variable">$version</span>"</span> =~ ^v2\.[0-9]+\.[0-9]+ ]]; <span class="hljs-keyword">then</span>
+                ALIAS_CMD=<span class="hljs-string">"alias keploy='sudo -E env PATH=\"\$PATH\" keploy'"</span>
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-41" id="section-41"></a>
+</div>
+<p>Handle zsh or bash for non-macOS systems</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">                <span class="hljs-keyword">if</span> [[ <span class="hljs-string">"<span class="hljs-variable">$current_shell</span>"</span> = <span class="hljs-string">"zsh"</span> || <span class="hljs-string">"<span class="hljs-variable">$current_shell</span>"</span> = <span class="hljs-string">"-zsh"</span> ]]; <span class="hljs-keyword">then</span>
+                    <span class="hljs-keyword">if</span> [ -f <span class="hljs-string">"<span class="hljs-variable">$HOME</span>/.zshrc"</span> ]; <span class="hljs-keyword">then</span>
+                        <span class="hljs-keyword">if</span> grep -q <span class="hljs-string">"alias keploy="</span> <span class="hljs-string">"<span class="hljs-variable">$HOME</span>/.zshrc"</span>; <span class="hljs-keyword">then</span>
+                            sed -i <span class="hljs-string">'/alias keploy/d'</span> <span class="hljs-string">"<span class="hljs-variable">$HOME</span>/.zshrc"</span>
+                        <span class="hljs-keyword">fi</span>
+                        append_to_rc <span class="hljs-string">"<span class="hljs-variable">$ALIAS_CMD</span>"</span> ~/.zshrc
+                    <span class="hljs-keyword">else</span>
+                        <span class="hljs-built_in">alias</span> keploy=<span class="hljs-string">"<span class="hljs-variable">$ALIAS_CMD</span>"</span>
+                    <span class="hljs-keyword">fi</span>
+                <span class="hljs-keyword">elif</span> [[ <span class="hljs-string">"<span class="hljs-variable">$current_shell</span>"</span> = <span class="hljs-string">"bash"</span> || <span class="hljs-string">"<span class="hljs-variable">$current_shell</span>"</span> = <span class="hljs-string">"-bash"</span> ]]; <span class="hljs-keyword">then</span>
+                    <span class="hljs-keyword">if</span> [ -f <span class="hljs-string">"<span class="hljs-variable">$HOME</span>/.bashrc"</span> ]; <span class="hljs-keyword">then</span>
+                        <span class="hljs-keyword">if</span> grep -q <span class="hljs-string">"alias keploy="</span> <span class="hljs-string">"<span class="hljs-variable">$HOME</span>/.bashrc"</span>; <span class="hljs-keyword">then</span>
+                            sed -i <span class="hljs-string">'/alias keploy/d'</span> <span class="hljs-string">"<span class="hljs-variable">$HOME</span>/.bashrc"</span>
+                        <span class="hljs-keyword">fi</span>
+                        append_to_rc <span class="hljs-string">"<span class="hljs-variable">$ALIAS_CMD</span>"</span> ~/.bashrc
+                    <span class="hljs-keyword">else</span>
+                        <span class="hljs-built_in">alias</span> keploy=<span class="hljs-string">"<span class="hljs-variable">$ALIAS_CMD</span>"</span>
+                    <span class="hljs-keyword">fi</span>
+                <span class="hljs-keyword">else</span>
+                    <span class="hljs-keyword">if</span> [ -f <span class="hljs-string">"<span class="hljs-variable">$HOME</span>/.profile"</span> ]; <span class="hljs-keyword">then</span>
+                        <span class="hljs-keyword">if</span> grep -q <span class="hljs-string">"alias keploy="</span> <span class="hljs-string">"<span class="hljs-variable">$HOME</span>/.profile"</span>; <span class="hljs-keyword">then</span>
+                            sed -i <span class="hljs-string">'/alias keploy/d'</span> <span class="hljs-string">"<span class="hljs-variable">$HOME</span>/.profile"</span>
+                        <span class="hljs-keyword">fi</span>
+                        append_to_rc <span class="hljs-string">"<span class="hljs-variable">$ALIAS_CMD</span>"</span> ~/.profile
+                    <span class="hljs-keyword">else</span>
+                        <span class="hljs-built_in">alias</span> keploy=<span class="hljs-string">"<span class="hljs-variable">$ALIAS_CMD</span>"</span>
+                    <span class="hljs-keyword">fi</span>
+                <span class="hljs-keyword">fi</span>
+            <span class="hljs-keyword">fi</span>
+        <span class="hljs-keyword">fi</span>
+    }
+
+
+    <span class="hljs-function"><span class="hljs-title">delete_keploy_alias</span></span>() {
+        current_shell=<span class="hljs-string">"<span class="hljs-variable">$PLATFORM</span>"</span>
+        shell_rc_file=<span class="hljs-string">""</span>
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-42" id="section-42"></a>
+</div>
+<p>Determine the shell configuration file based on the current shell</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">        <span class="hljs-keyword">if</span> [[ <span class="hljs-string">"<span class="hljs-variable">$current_shell</span>"</span> = <span class="hljs-string">"zsh"</span> || <span class="hljs-string">"<span class="hljs-variable">$current_shell</span>"</span> = <span class="hljs-string">"-zsh"</span> ]]; <span class="hljs-keyword">then</span>
+            shell_rc_file=<span class="hljs-string">"<span class="hljs-variable">$HOME</span>/.zshrc"</span>
+        <span class="hljs-keyword">elif</span> [[ <span class="hljs-string">"<span class="hljs-variable">$current_shell</span>"</span> = <span class="hljs-string">"bash"</span> || <span class="hljs-string">"<span class="hljs-variable">$current_shell</span>"</span> = <span class="hljs-string">"-bash"</span> ]]; <span class="hljs-keyword">then</span>
+            shell_rc_file=<span class="hljs-string">"<span class="hljs-variable">$HOME</span>/.bashrc"</span>
+        <span class="hljs-keyword">else</span>
+            <span class="hljs-built_in">echo</span> <span class="hljs-string">"Unsupported shell: <span class="hljs-variable">$current_shell</span>"</span>
+            <span class="hljs-built_in">return</span>
+        <span class="hljs-keyword">fi</span>
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-43" id="section-43"></a>
+</div>
+<p>Delete alias from the shell configuration file if it exists</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">        <span class="hljs-keyword">if</span> [ -f <span class="hljs-string">"<span class="hljs-variable">$shell_rc_file</span>"</span> ]; <span class="hljs-keyword">then</span>
+            <span class="hljs-keyword">if</span> grep -q <span class="hljs-string">"alias keploy="</span> <span class="hljs-string">"<span class="hljs-variable">$shell_rc_file</span>"</span>; <span class="hljs-keyword">then</span>
+                <span class="hljs-keyword">if</span> [[ <span class="hljs-string">"<span class="hljs-variable">$(uname)</span>"</span> = <span class="hljs-string">"Darwin"</span> ]]; <span class="hljs-keyword">then</span>
+                    sed -i <span class="hljs-string">''</span> <span class="hljs-string">'/alias keploy/d'</span> <span class="hljs-string">"<span class="hljs-variable">$shell_rc_file</span>"</span>
+                <span class="hljs-keyword">else</span>
+                    sed -i <span class="hljs-string">'/alias keploy/d'</span> <span class="hljs-string">"<span class="hljs-variable">$shell_rc_file</span>"</span>
+                <span class="hljs-keyword">fi</span>
+            <span class="hljs-keyword">fi</span>
+        <span class="hljs-keyword">fi</span>
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-44" id="section-44"></a>
+</div>
+<p>Unset the alias in the current shell session if it exists</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">        <span class="hljs-keyword">if</span> <span class="hljs-built_in">alias</span> keploy &amp;&gt;/dev/null; <span class="hljs-keyword">then</span>
+            <span class="hljs-built_in">unalias</span> keploy
+        <span class="hljs-keyword">fi</span>
+    }
+
+
+    <span class="hljs-function"><span class="hljs-title">cleanup_tmp</span></span>() {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-45" id="section-45"></a>
+</div>
+<p>Remove extracted files /tmp directory</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">        tmp_files=(<span class="hljs-string">"LICENSE"</span> <span class="hljs-string">"README.md"</span> <span class="hljs-string">"READMEes-Es.md"</span> <span class="hljs-string">"README-UnitGen.md"</span>)
+        <span class="hljs-keyword">for</span> file <span class="hljs-keyword">in</span> <span class="hljs-string">"<span class="hljs-variable">${tmp_files[@]}</span>"</span>; <span class="hljs-keyword">do</span>
+            <span class="hljs-keyword">if</span> [ -f <span class="hljs-string">"/tmp/<span class="hljs-variable">$file</span>"</span> ]; <span class="hljs-keyword">then</span>
+                <span class="hljs-keyword">if</span> [ <span class="hljs-string">"<span class="hljs-variable">$NO_ROOT</span>"</span> = <span class="hljs-string">"true"</span> ]; <span class="hljs-keyword">then</span>
+                    rm -rf <span class="hljs-string">"/tmp/<span class="hljs-variable">$file</span>"</span>
+                <span class="hljs-keyword">else</span>
+                    sudo rm -rf <span class="hljs-string">"/tmp/<span class="hljs-variable">$file</span>"</span>
+                <span class="hljs-keyword">fi</span>
+                
+            <span class="hljs-keyword">fi</span>
+        <span class="hljs-keyword">done</span>
+    }
+
+
+    ARCH=$(uname -m)
+    
+    OS_NAME=<span class="hljs-string">"<span class="hljs-variable">$(uname -s)</span>"</span>
+    <span class="hljs-keyword">if</span> [ <span class="hljs-string">"<span class="hljs-variable">$OS_NAME</span>"</span> = <span class="hljs-string">"Darwin"</span> ]; <span class="hljs-keyword">then</span>
+        NO_ROOT=<span class="hljs-literal">true</span>
+    <span class="hljs-keyword">fi</span>
+
+
+    <span class="hljs-keyword">if</span> [ <span class="hljs-string">"<span class="hljs-variable">$IS_CI</span>"</span> = <span class="hljs-literal">false</span> ]; <span class="hljs-keyword">then</span>
+        OS_NAME=<span class="hljs-string">"<span class="hljs-variable">$(uname -s)</span>"</span>
+        <span class="hljs-keyword">if</span> [ <span class="hljs-string">"<span class="hljs-variable">$OS_NAME</span>"</span> = <span class="hljs-string">"Darwin"</span> ]; <span class="hljs-keyword">then</span>
+            cleanup_tmp
+            install_keploy_darwin_all
+            <span class="hljs-built_in">return</span>
+        <span class="hljs-keyword">elif</span> [ <span class="hljs-string">"<span class="hljs-variable">$OS_NAME</span>"</span> = <span class="hljs-string">"Linux"</span> ]; <span class="hljs-keyword">then</span>
+             <span class="hljs-keyword">if</span> [ <span class="hljs-string">"<span class="hljs-variable">$NO_ROOT</span>"</span> = <span class="hljs-literal">false</span> ]; <span class="hljs-keyword">then</span>
+                <span class="hljs-keyword">if</span> ! mountpoint -q /sys/kernel/debug; <span class="hljs-keyword">then</span>
+                    sudo mount -t debugfs debugfs /sys/kernel/debug
+                <span class="hljs-keyword">fi</span>
+            <span class="hljs-keyword">fi</span>
+            <span class="hljs-keyword">if</span> [ <span class="hljs-string">"<span class="hljs-variable">$ARCH</span>"</span> = <span class="hljs-string">"x86_64"</span> ]; <span class="hljs-keyword">then</span>
+                cleanup_tmp
+                install_keploy_amd
+            <span class="hljs-keyword">elif</span> [ <span class="hljs-string">"<span class="hljs-variable">$ARCH</span>"</span> = <span class="hljs-string">"aarch64"</span> ]; <span class="hljs-keyword">then</span>
+                cleanup_tmp
+                install_keploy_arm
+            <span class="hljs-keyword">else</span>
+                <span class="hljs-built_in">echo</span> <span class="hljs-string">"Unsupported architecture: <span class="hljs-variable">$ARCH</span>"</span>
+                <span class="hljs-built_in">return</span>
+            <span class="hljs-keyword">fi</span>
+        <span class="hljs-keyword">elif</span> [[ <span class="hljs-string">"<span class="hljs-variable">$OS_NAME</span>"</span> == MINGW32_NT* ]]; <span class="hljs-keyword">then</span>
+            <span class="hljs-built_in">echo</span> <span class="hljs-string">"\e]8;; https://pureinfotech.com/install-windows-subsystem-linux-2-windows-10\aWindows not supported please run on WSL2\e]8;;\a"</span>
+        <span class="hljs-keyword">elif</span> [[ <span class="hljs-string">"<span class="hljs-variable">$OS_NAME</span>"</span> == MINGW64_NT* ]]; <span class="hljs-keyword">then</span>
+            <span class="hljs-built_in">echo</span> <span class="hljs-string">"\e]8;; https://pureinfotech.com/install-windows-subsystem-linux-2-windows-10\aWindows not supported please run on WSL2\e]8;;\a"</span>
+        <span class="hljs-keyword">else</span>
+            <span class="hljs-built_in">echo</span> <span class="hljs-string">"Unknown OS, install Linux to run Keploy"</span>
+        <span class="hljs-keyword">fi</span>
+    <span class="hljs-keyword">else</span>
+        <span class="hljs-keyword">if</span> [ <span class="hljs-string">"<span class="hljs-variable">$ARCH</span>"</span> = <span class="hljs-string">"x86_64"</span> ]; <span class="hljs-keyword">then</span>
+            cleanup_tmp
+            install_keploy_amd
+        <span class="hljs-keyword">elif</span> [ <span class="hljs-string">"<span class="hljs-variable">$ARCH</span>"</span> = <span class="hljs-string">"aarch64"</span> ]; <span class="hljs-keyword">then</span>
+            cleanup_tmp
+            install_keploy_arm
+        <span class="hljs-keyword">else</span>
+            <span class="hljs-built_in">echo</span> <span class="hljs-string">"Unsupported architecture: <span class="hljs-variable">$ARCH</span>"</span>
+            <span class="hljs-built_in">return</span>
+        <span class="hljs-keyword">fi</span>
+    <span class="hljs-keyword">fi</span>
+}
+
+
+installKeploy <span class="hljs-string">"<span class="hljs-variable">$@</span>"</span>
+
+
+<span class="hljs-keyword">if</span> <span class="hljs-built_in">command</span> -v keploy &amp;&gt; /dev/null; <span class="hljs-keyword">then</span>
+    keploy example
+    cleanup_tmp
+    rm -rf keploy.sh
+    rm -rf install.sh
+<span class="hljs-keyword">fi</span>
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

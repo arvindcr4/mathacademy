@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>transform_speech.py</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="doc-style.css" />
+  <script src="doc-filelist.js"></script>
+  <script>
+    var relativeDir = "";
+    var thisFile = "transform_speech.py";
+    var defaultSidebar = true;
+  </script>
+  <script src="doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>transform_speech.py</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-keyword">import</span> re
+
+filepath = <span class="hljs-string">"/home/arvind/mathacademy/src/lib/questions/speech-audio.ts"</span>
+
+<span class="hljs-keyword">with</span> open(filepath, <span class="hljs-string">"r"</span>) <span class="hljs-keyword">as</span> f:
+    content = f.read()
+
+print(<span class="hljs-string">"Original file length:"</span>, len(content))
+
+first_pattern = <span class="hljs-string">"First, let's recall"</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>Transform 1: Add First, lets recall before **Step</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">content = re.sub(
+    <span class="hljs-string">r'(explanation:\s*")(\*\*Step)'</span>,
+    <span class="hljs-string">r"\g&lt;1&gt;First, let's recall \g&lt;2&gt;"</span>,
+    content
+)
+
+first_count = content.count(first_pattern)
+print(<span class="hljs-string">"After transform 1:"</span>, first_count, <span class="hljs-string">"First recalls"</span>)
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3"></a>
+</div>
+<p>Transform 2: Process line by line</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">lines = content.split(<span class="hljs-string">'\n'</span>)
+result = []
+i = <span class="hljs-number">0</span>
+n = len(lines)
+
+<span class="hljs-keyword">while</span> i &lt; n:
+    line = lines[i]
+    result.append(line)
+
+    <span class="hljs-keyword">if</span> <span class="hljs-string">'explanation:'</span> <span class="hljs-keyword">in</span> line <span class="hljs-keyword">and</span> i + <span class="hljs-number">1</span> &lt; n:
+        next_line = lines[i+<span class="hljs-number">1</span>]
+        <span class="hljs-keyword">if</span> <span class="hljs-string">'**Step'</span> <span class="hljs-keyword">in</span> next_line:
+            <span class="hljs-keyword">if</span> next_line.strip().endswith(<span class="hljs-string">'",'</span>) <span class="hljs-keyword">or</span> next_line.strip().endswith(<span class="hljs-string">'"'</span>):
+                expl_text = line + <span class="hljs-string">'\n'</span> + next_line
+
+                <span class="hljs-keyword">if</span> <span class="hljs-string">'Therefore'</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> expl_text:
+                    idx = expl_text.rfind(<span class="hljs-string">'."'</span>)
+                    <span class="hljs-keyword">if</span> idx != <span class="hljs-number">-1</span>:
+                        expl_text = expl_text[:idx+<span class="hljs-number">1</span>] + <span class="hljs-string">'\n\nTherefore, the answer is"'</span> + expl_text[idx+<span class="hljs-number">2</span>:]
+
+                result.pop()
+                result.append(expl_text)
+                i += <span class="hljs-number">2</span>
+                <span class="hljs-keyword">continue</span>
+
+            j = i + <span class="hljs-number">2</span>
+            <span class="hljs-keyword">while</span> j &lt; n:
+                <span class="hljs-keyword">if</span> lines[j].strip().startswith(<span class="hljs-string">'hints:'</span>):
+                    <span class="hljs-keyword">break</span>
+                <span class="hljs-keyword">if</span> lines[j].strip().endswith(<span class="hljs-string">'",'</span>) <span class="hljs-keyword">or</span> lines[j].strip().endswith(<span class="hljs-string">'"'</span>):
+                    <span class="hljs-keyword">break</span>
+                j += <span class="hljs-number">1</span>
+
+            expl_lines = [line, next_line]
+            <span class="hljs-keyword">for</span> k <span class="hljs-keyword">in</span> range(i+<span class="hljs-number">2</span>, j+<span class="hljs-number">1</span>):
+                expl_lines.append(lines[k])
+
+            expl_text = <span class="hljs-string">'\n'</span>.join(expl_lines)
+
+            <span class="hljs-keyword">if</span> <span class="hljs-string">'Therefore'</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> expl_text:
+                idx = expl_text.rfind(<span class="hljs-string">'."'</span>)
+                <span class="hljs-keyword">if</span> idx != <span class="hljs-number">-1</span>:
+                    expl_text = expl_text[:idx+<span class="hljs-number">1</span>] + <span class="hljs-string">'\n\nTherefore, the answer is"'</span> + expl_text[idx+<span class="hljs-number">2</span>:]
+
+            result = result[:-len(expl_lines)]
+            result.append(expl_text)
+            i = j + <span class="hljs-number">1</span>
+            <span class="hljs-keyword">continue</span>
+
+    i += <span class="hljs-number">1</span>
+
+content = <span class="hljs-string">'\n'</span>.join(result)
+
+therefore_count = content.count(<span class="hljs-string">"Therefore"</span>)
+print(<span class="hljs-string">"After transform 2:"</span>, therefore_count, <span class="hljs-string">"Therefores"</span>)
+
+<span class="hljs-keyword">with</span> open(filepath, <span class="hljs-string">"w"</span>) <span class="hljs-keyword">as</span> f:
+    f.write(content)
+
+print(<span class="hljs-string">"Final file length:"</span>, len(content))
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

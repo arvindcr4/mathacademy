@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>main.test.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../doc-style.css" />
+  <script src="../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../";
+    var thisFile = "electron/main.test.js";
+    var defaultSidebar = true;
+  </script>
+  <script src="../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>main.test.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+<p>Unit tests for Electron main process configuration</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript"><span class="hljs-keyword">import</span> { describe, it, expect, beforeAll } <span class="hljs-keyword">from</span> <span class="hljs-string">'vitest'</span>
+<span class="hljs-keyword">import</span> path <span class="hljs-keyword">from</span> <span class="hljs-string">'path'</span>
+<span class="hljs-keyword">import</span> fs <span class="hljs-keyword">from</span> <span class="hljs-string">'fs'</span>
+<span class="hljs-keyword">import</span> yaml <span class="hljs-keyword">from</span> <span class="hljs-string">'js-yaml'</span>
+
+describe(<span class="hljs-string">'Electron App Configuration'</span>, () =&gt; {
+  <span class="hljs-keyword">const</span> electronDir = path.join(__dirname)
+  <span class="hljs-keyword">let</span> mainContent
+
+  beforeAll(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    mainContent = fs.readFileSync(path.join(electronDir, <span class="hljs-string">'main.js'</span>), <span class="hljs-string">'utf-8'</span>)
+  })
+
+  describe(<span class="hljs-string">'Window Configuration'</span>, () =&gt; {
+    it(<span class="hljs-string">'should have correct window dimensions'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'width: 1280'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'height: 900'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'minWidth: 800'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'minHeight: 600'</span>)
+    })
+
+    it(<span class="hljs-string">'should have correct background color'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'backgroundColor: "#0f172a"'</span>)
+    })
+
+    it(<span class="hljs-string">'should have correct web preferences'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'contextIsolation: true'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'nodeIntegration: false'</span>)
+    })
+
+    it(<span class="hljs-string">'should have correct window title'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'title: "MathAcademy"'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'File Structure'</span>, () =&gt; {
+    it(<span class="hljs-string">'should have main.js file'</span>, () =&gt; {
+      expect(fs.existsSync(path.join(electronDir, <span class="hljs-string">'main.js'</span>))).toBe(<span class="hljs-literal">true</span>)
+    })
+
+    it(<span class="hljs-string">'should have preload.js file'</span>, () =&gt; {
+      expect(fs.existsSync(path.join(electronDir, <span class="hljs-string">'preload.js'</span>))).toBe(<span class="hljs-literal">true</span>)
+    })
+
+    it(<span class="hljs-string">'should have valid preload script exports'</span>, () =&gt; {
+      <span class="hljs-keyword">const</span> preloadContent = fs.readFileSync(path.join(electronDir, <span class="hljs-string">'preload.js'</span>), <span class="hljs-string">'utf-8'</span>)
+      expect(preloadContent).toContain(<span class="hljs-string">'contextBridge.exposeInMainWorld'</span>)
+      expect(preloadContent).toContain(<span class="hljs-string">'electronAPI'</span>)
+      expect(preloadContent).toContain(<span class="hljs-string">'platform'</span>)
+      expect(preloadContent).toContain(<span class="hljs-string">'isElectron'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Preload Script API'</span>, () =&gt; {
+    it(<span class="hljs-string">'should expose platform property'</span>, () =&gt; {
+      <span class="hljs-keyword">const</span> validPlatforms = [<span class="hljs-string">'darwin'</span>, <span class="hljs-string">'win32'</span>, <span class="hljs-string">'linux'</span>]
+      expect(validPlatforms).toContain(process.platform)
+    })
+
+    it(<span class="hljs-string">'should have correct API structure'</span>, () =&gt; {
+      <span class="hljs-keyword">const</span> preloadContent = fs.readFileSync(path.join(electronDir, <span class="hljs-string">'preload.js'</span>), <span class="hljs-string">'utf-8'</span>)
+      expect(preloadContent).toMatch(<span class="hljs-regexp">/platform:\s*process\.platform/</span>)
+      expect(preloadContent).toMatch(<span class="hljs-regexp">/isElectron:\s*true/</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Security Configuration'</span>, () =&gt; {
+    it(<span class="hljs-string">'should enable context isolation'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'contextIsolation: true'</span>)
+    })
+
+    it(<span class="hljs-string">'should disable node integration'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'nodeIntegration: false'</span>)
+    })
+
+    it(<span class="hljs-string">'should use preload script path'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'preload: path.join(__dirname, "preload.js")'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'App Lifecycle'</span>, () =&gt; {
+    it(<span class="hljs-string">'should handle window-all-closed event'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'app.on("window-all-closed"'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'app.quit()'</span>)
+    })
+
+    it(<span class="hljs-string">'should handle activate event for macOS'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'app.on("activate"'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'BrowserWindow.getAllWindows()'</span>)
+    })
+
+    it(<span class="hljs-string">'should handle ready event'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'app.whenReady()'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'createWindow()'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Dev vs Production Mode'</span>, () =&gt; {
+    it(<span class="hljs-string">'should detect dev mode from ELECTRON_DEV env var'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'ELECTRON_DEV === "true"'</span>)
+    })
+
+    it(<span class="hljs-string">'should load from localhost in dev mode'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'http://localhost:3000/mathacademy'</span>)
+    })
+
+    it(<span class="hljs-string">'should open DevTools in dev mode'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'openDevTools()'</span>)
+    })
+
+    it(<span class="hljs-string">'should load from out directory in production mode'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'path.join(__dirname, "../out")'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'loadFile(indexPath)'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Icon Configuration'</span>, () =&gt; {
+    it(<span class="hljs-string">'should reference favicon.svg'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'favicon.svg'</span>)
+    })
+
+    it(<span class="hljs-string">'should use correct icon path relative to main.js'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'path.join(__dirname, "../public/favicon.svg")'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Window Show Behavior'</span>, () =&gt; {
+    it(<span class="hljs-string">'should delay window show until ready'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'show: false'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'ready-to-show'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'mainWindow.show()'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Window Cleanup'</span>, () =&gt; {
+    it(<span class="hljs-string">'should clean up mainWindow reference on close'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'mainWindow.on("closed"'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'mainWindow = null'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Module Imports'</span>, () =&gt; {
+    it(<span class="hljs-string">'should import required Electron modules'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'require("electron")'</span>)
+    })
+
+    it(<span class="hljs-string">'should import Node.js path module'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'require("path")'</span>)
+    })
+
+    it(<span class="hljs-string">'should import fs module'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'require("fs")'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Error Resilience'</span>, () =&gt; {
+    it(<span class="hljs-string">'should handle missing out directory gracefully in production'</span>, () =&gt; {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>Check that the code constructs the path properly</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">      expect(mainContent).toContain(<span class="hljs-string">'const indexPath = path.join(outDir, "index.html")'</span>)
+    })
+
+    it(<span class="hljs-string">'should use mainWindow variable for window tracking'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'let mainWindow'</span>)
+    })
+
+    it(<span class="hljs-string">'should not have hardcoded absolute paths'</span>, () =&gt; {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3"></a>
+</div>
+<p>Should use __dirname for relative paths</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">      expect(mainContent).toContain(<span class="hljs-string">'__dirname'</span>)
+      expect(mainContent).not.toContain(<span class="hljs-string">'/home/'</span>)
+      expect(mainContent).not.toContain(<span class="hljs-string">'/Users/'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Code Quality'</span>, () =&gt; {
+    it(<span class="hljs-string">'should not use deprecated synchronous APIs in window creation'</span>, () =&gt; {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4"></a>
+</div>
+<p>loadFile is async, loadURL is async - good</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">      expect(mainContent).toContain(<span class="hljs-string">'loadURL'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'loadFile'</span>)
+    })
+
+    it(<span class="hljs-string">'should use const for require statements in main.js'</span>, () =&gt; {
+      expect(mainContent).toMatch(<span class="hljs-regexp">/const\s*\{\s*app/</span>)
+    })
+
+    it(<span class="hljs-string">'should use const in preload.js'</span>, () =&gt; {
+      <span class="hljs-keyword">const</span> preloadContent = fs.readFileSync(path.join(electronDir, <span class="hljs-string">'preload.js'</span>), <span class="hljs-string">'utf-8'</span>)
+      expect(preloadContent).toMatch(<span class="hljs-regexp">/const\s*\{\s*contextBridge/</span>)
+    })
+
+    it(<span class="hljs-string">'should have proper event listener pattern'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'.on("'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'.once("'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Preload Script Validation'</span>, () =&gt; {
+    <span class="hljs-keyword">let</span> preloadContent
+
+    beforeAll(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+      preloadContent = fs.readFileSync(path.join(electronDir, <span class="hljs-string">'preload.js'</span>), <span class="hljs-string">'utf-8'</span>)
+    })
+
+    it(<span class="hljs-string">'should use contextBridge for security'</span>, () =&gt; {
+      expect(preloadContent).toContain(<span class="hljs-string">'contextBridge.exposeInMainWorld'</span>)
+    })
+
+    it(<span class="hljs-string">'should expose electronAPI namespace'</span>, () =&gt; {
+      expect(preloadContent).toContain(<span class="hljs-string">'"electronAPI"'</span>)
+    })
+
+    it(<span class="hljs-string">'should expose platform as a string value'</span>, () =&gt; {
+      expect(preloadContent).toContain(<span class="hljs-string">'platform: process.platform'</span>)
+    })
+
+    it(<span class="hljs-string">'should expose isElectron as true'</span>, () =&gt; {
+      expect(preloadContent).toContain(<span class="hljs-string">'isElectron: true'</span>)
+    })
+
+    it(<span class="hljs-string">'should not expose require to renderer'</span>, () =&gt; {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5"></a>
+</div>
+<p>The exposed API should not include require</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">      <span class="hljs-keyword">const</span> apiMatch = preloadContent.match(<span class="hljs-regexp">/electronAPI["\s,]+(\{[\s\S]*?\})/</span>)
+      <span class="hljs-keyword">if</span> (apiMatch) {
+        expect(apiMatch[<span class="hljs-number">1</span>]).not.toContain(<span class="hljs-string">'require'</span>)
+      }
+    })
+
+    it(<span class="hljs-string">'should not expose dangerous functions to renderer'</span>, () =&gt; {
+      <span class="hljs-keyword">const</span> apiMatch = preloadContent.match(<span class="hljs-regexp">/electronAPI["\s,]+(\{[\s\S]*?\})/</span>)
+      <span class="hljs-keyword">if</span> (apiMatch) {
+        expect(apiMatch[<span class="hljs-number">1</span>]).not.toContain(<span class="hljs-string">'eval'</span>)
+        expect(apiMatch[<span class="hljs-number">1</span>]).not.toContain(<span class="hljs-string">'Function'</span>)
+      }
+    })
+  })
+
+  describe(<span class="hljs-string">'Electron Builder Configuration'</span>, () =&gt; {
+    <span class="hljs-keyword">let</span> builderConfig
+
+    beforeAll(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+      <span class="hljs-keyword">const</span> configPath = path.join(electronDir, <span class="hljs-string">'..'</span>, <span class="hljs-string">'electron-builder.yml'</span>)
+      <span class="hljs-keyword">const</span> configContent = fs.readFileSync(configPath, <span class="hljs-string">'utf-8'</span>)
+      builderConfig = yaml.load(configContent)
+    })
+
+    it(<span class="hljs-string">'should have valid app ID'</span>, () =&gt; {
+      expect(builderConfig.appId).toBe(<span class="hljs-string">'com.mathacademy.app'</span>)
+    })
+
+    it(<span class="hljs-string">'should have correct product name'</span>, () =&gt; {
+      expect(builderConfig.productName).toBe(<span class="hljs-string">'MathAcademy'</span>)
+    })
+
+    it(<span class="hljs-string">'should include electron files in build'</span>, () =&gt; {
+      expect(builderConfig.files).toContain(<span class="hljs-string">'electron/**/*'</span>)
+    })
+
+    it(<span class="hljs-string">'should include out directory in build'</span>, () =&gt; {
+      expect(builderConfig.files).toContain(<span class="hljs-string">'out/**/*'</span>)
+    })
+
+    it(<span class="hljs-string">'should have macOS category set to education'</span>, () =&gt; {
+      expect(builderConfig.mac.category).toBe(<span class="hljs-string">'public.app-category.education'</span>)
+    })
+
+    it(<span class="hljs-string">'should build dmg and zip for macOS'</span>, () =&gt; {
+      expect(builderConfig.mac.target).toContain(<span class="hljs-string">'dmg'</span>)
+      expect(builderConfig.mac.target).toContain(<span class="hljs-string">'zip'</span>)
+    })
+
+    it(<span class="hljs-string">'should build nsis and portable for Windows'</span>, () =&gt; {
+      expect(builderConfig.win.target).toContain(<span class="hljs-string">'nsis'</span>)
+      expect(builderConfig.win.target).toContain(<span class="hljs-string">'portable'</span>)
+    })
+
+    it(<span class="hljs-string">'should build AppImage and deb for Linux'</span>, () =&gt; {
+      expect(builderConfig.linux.target).toContain(<span class="hljs-string">'AppImage'</span>)
+      expect(builderConfig.linux.target).toContain(<span class="hljs-string">'deb'</span>)
+    })
+
+    it(<span class="hljs-string">'should output to dist-electron directory'</span>, () =&gt; {
+      expect(builderConfig.directories.output).toBe(<span class="hljs-string">'dist-electron'</span>)
+    })
+
+    it(<span class="hljs-string">'should have NSIS installer configured'</span>, () =&gt; {
+      expect(builderConfig.nsis).toBeDefined()
+      expect(builderConfig.nsis.oneClick).toBe(<span class="hljs-literal">false</span>)
+      expect(builderConfig.nsis.allowToChangeInstallationDirectory).toBe(<span class="hljs-literal">true</span>)
+    })
+
+    it(<span class="hljs-string">'should have Linux education category'</span>, () =&gt; {
+      expect(builderConfig.linux.category).toBe(<span class="hljs-string">'Education'</span>)
+    })
+
+    it(<span class="hljs-string">'should include copyright notice'</span>, () =&gt; {
+      expect(builderConfig.copyright).toContain(<span class="hljs-string">'MathAcademy'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Integration Requirements'</span>, () =&gt; {
+    it(<span class="hljs-string">'should require Next.js output directory for production build'</span>, () =&gt; {
+      <span class="hljs-keyword">const</span> outDir = path.join(electronDir, <span class="hljs-string">'..'</span>, <span class="hljs-string">'out'</span>)
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6"></a>
+</div>
+<p>Check that main.js references the out directory</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">      expect(mainContent).toContain(<span class="hljs-string">'../out'</span>)
+    })
+
+    it(<span class="hljs-string">'should have correct preload script path relative to main.js'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'preload: path.join(__dirname, "preload.js")'</span>)
+    })
+
+    it(<span class="hljs-string">'should have icon path relative to project root'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'../public/favicon.svg'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Package.json Electron Scripts'</span>, () =&gt; {
+    <span class="hljs-keyword">let</span> packageJson
+
+    beforeAll(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+      <span class="hljs-keyword">const</span> packagePath = path.join(electronDir, <span class="hljs-string">'..'</span>, <span class="hljs-string">'package.json'</span>)
+      packageJson = <span class="hljs-built_in">JSON</span>.parse(fs.readFileSync(packagePath, <span class="hljs-string">'utf-8'</span>))
+    })
+
+    it(<span class="hljs-string">'should have electron:dev script'</span>, () =&gt; {
+      expect(packageJson.scripts[<span class="hljs-string">'electron:dev'</span>]).toBeDefined()
+      expect(packageJson.scripts[<span class="hljs-string">'electron:dev'</span>]).toContain(<span class="hljs-string">'electron'</span>)
+    })
+
+    it(<span class="hljs-string">'should have electron:build script'</span>, () =&gt; {
+      expect(packageJson.scripts[<span class="hljs-string">'electron:build'</span>]).toBeDefined()
+      expect(packageJson.scripts[<span class="hljs-string">'electron:build'</span>]).toContain(<span class="hljs-string">'electron-builder'</span>)
+    })
+
+    it(<span class="hljs-string">'should have electron:start script'</span>, () =&gt; {
+      expect(packageJson.scripts[<span class="hljs-string">'electron:start'</span>]).toBeDefined()
+      expect(packageJson.scripts[<span class="hljs-string">'electron:start'</span>]).toContain(<span class="hljs-string">'electron'</span>)
+    })
+
+    it(<span class="hljs-string">'should have correct main entry point for Electron'</span>, () =&gt; {
+      expect(packageJson.main).toBe(<span class="hljs-string">'electron/main.js'</span>)
+    })
+
+    it(<span class="hljs-string">'should use concurrently for electron:dev'</span>, () =&gt; {
+      expect(packageJson.scripts[<span class="hljs-string">'electron:dev'</span>]).toContain(<span class="hljs-string">'concurrently'</span>)
+      expect(packageJson.scripts[<span class="hljs-string">'electron:dev'</span>]).toContain(<span class="hljs-string">'next dev'</span>)
+    })
+
+    it(<span class="hljs-string">'should use wait-on for electron:dev'</span>, () =&gt; {
+      expect(packageJson.scripts[<span class="hljs-string">'electron:dev'</span>]).toContain(<span class="hljs-string">'wait-on'</span>)
+      expect(packageJson.scripts[<span class="hljs-string">'electron:dev'</span>]).toContain(<span class="hljs-string">'localhost:3000'</span>)
+    })
+
+    it(<span class="hljs-string">'should set ELECTRON_BUILD=true for electron:build'</span>, () =&gt; {
+      expect(packageJson.scripts[<span class="hljs-string">'electron:build'</span>]).toContain(<span class="hljs-string">'ELECTRON_BUILD=true'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'URL and Path Handling'</span>, () =&gt; {
+    it(<span class="hljs-string">'should construct correct dev URL with basePath'</span>, () =&gt; {
+      <span class="hljs-keyword">const</span> devUrl = <span class="hljs-string">'http://localhost:3000/mathacademy'</span>
+      <span class="hljs-keyword">const</span> url = <span class="hljs-keyword">new</span> URL(devUrl)
+      expect(url.pathname).toBe(<span class="hljs-string">'/mathacademy'</span>)
+      expect(url.hostname).toBe(<span class="hljs-string">'localhost'</span>)
+      expect(url.port).toBe(<span class="hljs-string">'3000'</span>)
+    })
+
+    it(<span class="hljs-string">'should have consistent basePath in dev and production'</span>, () =&gt; {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7"></a>
+</div>
+<p>Dev: http://localhost:3000/mathacademy
+Prod: out/index.html (built with basePath: '/mathacademy')</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">      <span class="hljs-keyword">const</span> devPath = <span class="hljs-string">'/mathacademy'</span>
+      <span class="hljs-keyword">const</span> prodBasePath = <span class="hljs-string">'/mathacademy'</span>
+      expect(devPath).toBe(prodBasePath)
+    })
+
+    it(<span class="hljs-string">'should use path.join for cross-platform compatibility'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'path.join(__dirname'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'path.join(outDir'</span>)
+    })
+
+    it(<span class="hljs-string">'should not use backslashes in path construction'</span>, () =&gt; {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8"></a>
+</div>
+<p>Should use path.join, not string concatenation with backslashes</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">      expect(mainContent).not.toMatch(<span class="hljs-regexp">/__dirname\s*\\\s*['"]/</span>)
+      expect(mainContent).not.toMatch(<span class="hljs-regexp">/['"]\s*\\\s*__dirname/</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'DevTools Behavior'</span>, () =&gt; {
+    it(<span class="hljs-string">'should open DevTools only in development mode'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'if (isDev)'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'openDevTools()'</span>)
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9"></a>
+</div>
+<p>openDevTools should be inside the isDev condition</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">      expect(mainContent).toMatch(<span class="hljs-regexp">/if\s*\(isDev\)[\s\S]*?openDevTools/</span>)
+    })
+
+    it(<span class="hljs-string">'should load from dev server in development'</span>, () =&gt; {
+      expect(mainContent).toMatch(<span class="hljs-regexp">/if\s*\(isDev\)[\s\S]*?loadURL/</span>)
+    })
+
+    it(<span class="hljs-string">'should load from static files in production'</span>, () =&gt; {
+      expect(mainContent).toMatch(<span class="hljs-regexp">/else[\s\S]*?loadFile/</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Environment Variable Handling'</span>, () =&gt; {
+    it(<span class="hljs-string">'should read ELECTRON_DEV environment variable'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'process.env.ELECTRON_DEV'</span>)
+    })
+
+    it(<span class="hljs-string">'should compare ELECTRON_DEV to string "true"'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'ELECTRON_DEV === "true"'</span>)
+    })
+
+    it(<span class="hljs-string">'should not use truthy check for ELECTRON_DEV'</span>, () =&gt; {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10"></a>
+</div>
+<p>Should use explicit === &quot;true&quot; check, not just if (process.env.ELECTRON_DEV)</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">      expect(mainContent).not.toMatch(<span class="hljs-regexp">/if\s*\(\s*process\.env\.ELECTRON_DEV\s*\)/</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Window State Management'</span>, () =&gt; {
+    it(<span class="hljs-string">'should declare mainWindow variable at module scope'</span>, () =&gt; {
+      expect(mainContent).toMatch(<span class="hljs-regexp">/let\s+mainWindow/</span>)
+    })
+
+    it(<span class="hljs-string">'should set mainWindow to null on close'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'mainWindow.on("closed"'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'mainWindow = null'</span>)
+    })
+
+    it(<span class="hljs-string">'should track window reference for cleanup'</span>, () =&gt; {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-11" id="section-11"></a>
+</div>
+<p>mainWindow should be accessible in createWindow and event handlers</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">      expect(mainContent).toContain(<span class="hljs-string">'mainWindow = new BrowserWindow'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'App Quit Behavior'</span>, () =&gt; {
+    it(<span class="hljs-string">'should quit on window-all-closed for non-darwin platforms'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'if (process.platform !== "darwin")'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'app.quit()'</span>)
+    })
+
+    it(<span class="hljs-string">'should not quit on window-all-closed for macOS'</span>, () =&gt; {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-12" id="section-12"></a>
+</div>
+<p>On macOS, apps stay active until Cmd+Q</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">      <span class="hljs-keyword">const</span> platformCheck = mainContent.match(<span class="hljs-regexp">/window-all-closed[\s\S]*?if\s*\(process\.platform\s*!==\s*['"]darwin['"]\)/</span>)
+      expect(platformCheck).not.toBeNull()
+    })
+
+    it(<span class="hljs-string">'should create new window on activate for macOS'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'app.on("activate"'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'BrowserWindow.getAllWindows().length === 0'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'BrowserWindow Options Validation'</span>, () =&gt; {
+    it(<span class="hljs-string">'should set show: false to prevent white flash'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'show: false'</span>)
+    })
+
+    it(<span class="hljs-string">'should use ready-to-show event'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'ready-to-show'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'mainWindow.show()'</span>)
+    })
+
+    it(<span class="hljs-string">'should have reasonable min dimensions for usability'</span>, () =&gt; {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-13" id="section-13"></a>
+</div>
+<p>800x600 is a good minimum for desktop apps</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">      expect(mainContent).toContain(<span class="hljs-string">'minWidth: 800'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'minHeight: 600'</span>)
+    })
+
+    it(<span class="hljs-string">'should have default dimensions that fit most screens'</span>, () =&gt; {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-14" id="section-14"></a>
+</div>
+<p>1280x900 fits most screens while leaving room for taskbars</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">      expect(mainContent).toContain(<span class="hljs-string">'width: 1280'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'height: 900'</span>)
+    })
+
+    it(<span class="hljs-string">'should use dark background matching app theme'</span>, () =&gt; {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-15" id="section-15"></a>
+</div>
+<p>#0f172a is slate-900 from Tailwind</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">      expect(mainContent).toContain(<span class="hljs-string">'backgroundColor: "#0f172a"'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Production Build Paths'</span>, () =&gt; {
+    it(<span class="hljs-string">'should reference correct out directory'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'path.join(__dirname, "../out")'</span>)
+    })
+
+    it(<span class="hljs-string">'should load index.html from out directory'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'path.join(outDir, "index.html")'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'mainWindow.loadFile(indexPath)'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Dependencies'</span>, () =&gt; {
+    <span class="hljs-keyword">let</span> packageJson
+
+    beforeAll(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+      <span class="hljs-keyword">const</span> packagePath = path.join(electronDir, <span class="hljs-string">'..'</span>, <span class="hljs-string">'package.json'</span>)
+      packageJson = <span class="hljs-built_in">JSON</span>.parse(fs.readFileSync(packagePath, <span class="hljs-string">'utf-8'</span>))
+    })
+
+    it(<span class="hljs-string">'should have electron as devDependency'</span>, () =&gt; {
+      expect(packageJson.devDependencies.electron).toBeDefined()
+    })
+
+    it(<span class="hljs-string">'should have electron-builder as devDependency'</span>, () =&gt; {
+      expect(packageJson.devDependencies[<span class="hljs-string">'electron-builder'</span>]).toBeDefined()
+    })
+
+    it(<span class="hljs-string">'should have concurrently for parallel dev tasks'</span>, () =&gt; {
+      expect(packageJson.devDependencies.concurrently).toBeDefined()
+    })
+
+    it(<span class="hljs-string">'should have wait-on for dev server readiness'</span>, () =&gt; {
+      expect(packageJson.devDependencies[<span class="hljs-string">'wait-on'</span>]).toBeDefined()
+    })
+
+    it(<span class="hljs-string">'should have js-yaml for config parsing'</span>, () =&gt; {
+      expect(packageJson.devDependencies[<span class="hljs-string">'js-yaml'</span>]).toBeDefined()
+    })
+  })
+
+  describe(<span class="hljs-string">'Error Prevention'</span>, () =&gt; {
+    it(<span class="hljs-string">'should not have console.log in production code paths'</span>, () =&gt; {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-16" id="section-16"></a>
+</div>
+<p>Production code should not have debug logging except in event handlers
+Event handler logging (power monitor, etc.) is acceptable for debugging</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">      <span class="hljs-keyword">const</span> lines = mainContent.split(<span class="hljs-string">'\n'</span>)
+      <span class="hljs-keyword">const</span> productionLines = lines.filter(
+        <span class="hljs-function">(<span class="hljs-params">line</span>) =&gt;</span>
+          !line.includes(<span class="hljs-string">'isDev'</span>) &amp;&amp;
+          !line.includes(<span class="hljs-string">'openDevTools'</span>) &amp;&amp;
+          !line.includes(<span class="hljs-string">'console.log("System'</span>) &amp;&amp;
+          !line.includes(<span class="hljs-string">'console.log("Screen'</span>) &amp;&amp;
+          !line.includes(<span class="hljs-string">'console.log("Auto-updater'</span>)
+      )
+      <span class="hljs-keyword">const</span> hasConsoleLog = productionLines.some(<span class="hljs-function">(<span class="hljs-params">line</span>) =&gt;</span> line.includes(<span class="hljs-string">'console.log'</span>))
+      expect(hasConsoleLog).toBe(<span class="hljs-literal">false</span>)
+    })
+
+    it(<span class="hljs-string">'should not use synchronous file operations in main event loop'</span>, () =&gt; {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-17" id="section-17"></a>
+</div>
+<p>Synchronous operations during app startup are acceptable
+but should be avoided in window event handlers</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">      <span class="hljs-keyword">const</span> syncOps = mainContent.match(<span class="hljs-regexp">/mainWindow\.on\([^)]+\)[^{]*\{[^}]*fs\.[a-z]+Sync/g</span>)
+      expect(syncOps).toBeNull()
+    })
+
+    it(<span class="hljs-string">'should handle mainWindow being null gracefully'</span>, () =&gt; {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-18" id="section-18"></a>
+</div>
+<p>The closed event sets mainWindow = null</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">      expect(mainContent).toContain(<span class="hljs-string">'mainWindow = null'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Code Structure'</span>, () =&gt; {
+    it(<span class="hljs-string">'should define createWindow as a function'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'function createWindow()'</span>)
+    })
+
+    it(<span class="hljs-string">'should call createWindow when app is ready'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'app.whenReady()'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'createWindow()'</span>)
+    })
+
+    it(<span class="hljs-string">'should have all event handlers within app.whenReady'</span>, () =&gt; {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-19" id="section-19"></a>
+</div>
+<p>activate handler should be inside whenReady</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">      expect(mainContent).toContain(<span class="hljs-string">'app.on("activate"'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Application Menu'</span>, () =&gt; {
+    it(<span class="hljs-string">'should create application menu'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'function createMenu()'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'Menu.buildFromTemplate'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'Menu.setApplicationMenu(menu)'</span>)
+    })
+
+    it(<span class="hljs-string">'should have File menu'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'label: "File"'</span>)
+    })
+
+    it(<span class="hljs-string">'should have Edit menu with standard operations'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'label: "Edit"'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'role: "undo"'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'role: "redo"'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'role: "copy"'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'role: "paste"'</span>)
+    })
+
+    it(<span class="hljs-string">'should have View menu with zoom and dev tools'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'label: "View"'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'role: "toggleDevTools"'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'role: "zoomIn"'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'role: "zoomOut"'</span>)
+    })
+
+    it(<span class="hljs-string">'should have Window menu'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'label: "Window"'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'role: "minimize"'</span>)
+    })
+
+    it(<span class="hljs-string">'should have Help menu with external links'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'role: "help"'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'shell.openExternal'</span>)
+    })
+
+    it(<span class="hljs-string">'should handle macOS app menu differently'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'process.platform === "darwin"'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'role: "about"'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'External Link Handling'</span>, () =&gt; {
+    it(<span class="hljs-string">'should use setWindowOpenHandler for external links'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'setWindowOpenHandler'</span>)
+    })
+
+    it(<span class="hljs-string">'should open external links in default browser'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'shell.openExternal(url)'</span>)
+    })
+
+    it(<span class="hljs-string">'should deny opening external windows in app'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'action: "deny"'</span>)
+    })
+
+    it(<span class="hljs-string">'should handle will-navigate for external URLs'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'will-navigate'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'event.preventDefault()'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Dialog Support'</span>, () =&gt; {
+    it(<span class="hljs-string">'should import dialog module'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'dialog'</span>)
+    })
+
+    it(<span class="hljs-string">'should have About dialog for non-macOS'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'dialog.showMessageBox'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'About'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Window State Persistence'</span>, () =&gt; {
+    it(<span class="hljs-string">'should have loadWindowState function'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'function loadWindowState()'</span>)
+    })
+
+    it(<span class="hljs-string">'should have saveWindowState function'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'function saveWindowState()'</span>)
+    })
+
+    it(<span class="hljs-string">'should use userData path for state storage'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'app.getPath("userData")'</span>)
+    })
+
+    it(<span class="hljs-string">'should save state on window close'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'mainWindow.on("close"'</span>)
+    })
+
+    it(<span class="hljs-string">'should save state on resize and move'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'mainWindow.on("resize"'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'mainWindow.on("move"'</span>)
+    })
+
+    it(<span class="hljs-string">'should restore maximized state'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'mainWindow.maximize()'</span>)
+    })
+
+    it(<span class="hljs-string">'should handle state file errors gracefully'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'try'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'catch'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Loading Indicator'</span>, () =&gt; {
+    it(<span class="hljs-string">'should have createLoadingWindow function'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'function createLoadingWindow()'</span>)
+    })
+
+    it(<span class="hljs-string">'should close loading window when main window is ready'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'loadingWindow.close()'</span>)
+    })
+
+    it(<span class="hljs-string">'should show loading spinner'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'spinner'</span>)
+    })
+
+    it(<span class="hljs-string">'should center loading window'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'center: true'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Error Handling'</span>, () =&gt; {
+    it(<span class="hljs-string">'should handle failed page loads'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'did-fail-load'</span>)
+    })
+
+    it(<span class="hljs-string">'should show error dialog for load failures'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'dialog.showErrorBox'</span>)
+    })
+
+    it(<span class="hljs-string">'should check if out directory exists'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'fs.existsSync(outDir)'</span>)
+    })
+
+    it(<span class="hljs-string">'should quit gracefully if build not found'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'app.quit()'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Spell Checker'</span>, () =&gt; {
+    it(<span class="hljs-string">'should enable spellcheck in webPreferences'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'spellcheck: true'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Context Menu'</span>, () =&gt; {
+    it(<span class="hljs-string">'should handle context-menu event'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'context-menu'</span>)
+    })
+
+    it(<span class="hljs-string">'should copy selected text'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'selectionText'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'role: "copy"'</span>)
+    })
+
+    it(<span class="hljs-string">'should handle link context menu'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'linkURL'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'Copy Link Address'</span>)
+    })
+
+    it(<span class="hljs-string">'should handle image context menu'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'hasImageContents'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'Copy Image'</span>)
+    })
+
+    it(<span class="hljs-string">'should use Menu.popup for context menu'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'menu.popup'</span>)
+    })
+
+    it(<span class="hljs-string">'should use MenuItem for context menu items'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'new MenuItem'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Navigation Shortcuts'</span>, () =&gt; {
+    it(<span class="hljs-string">'should handle Alt+Left for back navigation'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'ArrowLeft'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'goBack()'</span>)
+    })
+
+    it(<span class="hljs-string">'should handle Alt+Right for forward navigation'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'ArrowRight'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'goForward()'</span>)
+    })
+
+    it(<span class="hljs-string">'should check canGoBack before navigating'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'canGoBack()'</span>)
+    })
+
+    it(<span class="hljs-string">'should check canGoForward before navigating'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'canGoForward()'</span>)
+    })
+
+    it(<span class="hljs-string">'should use before-input-event for keyboard handling'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'before-input-event'</span>)
+    })
+
+    it(<span class="hljs-string">'should prevent default on shortcut'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'event.preventDefault()'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Clipboard Support'</span>, () =&gt; {
+    it(<span class="hljs-string">'should have clipboard module available'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'clipboard'</span>)
+    })
+
+    it(<span class="hljs-string">'should write to clipboard for copy link'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'writeText'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Protocol Handler'</span>, () =&gt; {
+    it(<span class="hljs-string">'should register mathacademy protocol'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'setAsDefaultProtocolClient'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'mathacademy'</span>)
+    })
+
+    it(<span class="hljs-string">'should handle second-instance event'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'second-instance'</span>)
+    })
+
+    it(<span class="hljs-string">'should handle open-url event (macOS)'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'open-url'</span>)
+    })
+
+    it(<span class="hljs-string">'should have handleProtocolUrl function'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'function handleProtocolUrl'</span>)
+    })
+
+    it(<span class="hljs-string">'should parse protocol URL with URL constructor'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'new URL(urlString)'</span>)
+    })
+
+    it(<span class="hljs-string">'should focus window when handling protocol URL'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'mainWindow.focus()'</span>)
+    })
+
+    it(<span class="hljs-string">'should restore minimized window'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'mainWindow.restore()'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Preload Script Enhanced API'</span>, () =&gt; {
+    <span class="hljs-keyword">let</span> preloadContent
+
+    beforeAll(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+      preloadContent = fs.readFileSync(path.join(electronDir, <span class="hljs-string">'preload.js'</span>), <span class="hljs-string">'utf-8'</span>)
+    })
+
+    it(<span class="hljs-string">'should expose notifications API'</span>, () =&gt; {
+      expect(preloadContent).toContain(<span class="hljs-string">'notifications:'</span>)
+      expect(preloadContent).toContain(<span class="hljs-string">'isSupported'</span>)
+      expect(preloadContent).toContain(<span class="hljs-string">'show'</span>)
+    })
+
+    it(<span class="hljs-string">'should expose getAppVersion'</span>, () =&gt; {
+      expect(preloadContent).toContain(<span class="hljs-string">'getAppVersion'</span>)
+    })
+
+    it(<span class="hljs-string">'should expose platform helpers'</span>, () =&gt; {
+      expect(preloadContent).toContain(<span class="hljs-string">'isMac'</span>)
+      expect(preloadContent).toContain(<span class="hljs-string">'isWindows'</span>)
+      expect(preloadContent).toContain(<span class="hljs-string">'isLinux'</span>)
+    })
+
+    it(<span class="hljs-string">'should import Notification from electron'</span>, () =&gt; {
+      expect(preloadContent).toContain(<span class="hljs-string">'Notification'</span>)
+    })
+
+    it(<span class="hljs-string">'should handle notification click'</span>, () =&gt; {
+      expect(preloadContent).toContain(<span class="hljs-string">'notification.on("click"'</span>)
+    })
+
+    it(<span class="hljs-string">'should close notification on click'</span>, () =&gt; {
+      expect(preloadContent).toContain(<span class="hljs-string">'notification.close()'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Single Instance Lock'</span>, () =&gt; {
+    it(<span class="hljs-string">'should request single instance lock'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'requestSingleInstanceLock()'</span>)
+    })
+
+    it(<span class="hljs-string">'should quit if another instance is running'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'if (!gotTheLock)'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'app.quit()'</span>)
+    })
+
+    it(<span class="hljs-string">'should handle second-instance event in first instance'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'app.on("second-instance"'</span>)
+    })
+
+    it(<span class="hljs-string">'should focus main window when second instance tries to start'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'mainWindow.focus()'</span>)
+    })
+
+    it(<span class="hljs-string">'should restore minimized window on second instance'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'mainWindow.restore()'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Power Monitor'</span>, () =&gt; {
+    it(<span class="hljs-string">'should import powerMonitor from electron'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'powerMonitor'</span>)
+    })
+
+    it(<span class="hljs-string">'should handle suspend event'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'powerMonitor.on("suspend"'</span>)
+    })
+
+    it(<span class="hljs-string">'should handle resume event'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'powerMonitor.on("resume"'</span>)
+    })
+
+    it(<span class="hljs-string">'should handle lock-screen event'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'powerMonitor.on("lock-screen"'</span>)
+    })
+
+    it(<span class="hljs-string">'should handle unlock-screen event'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'powerMonitor.on("unlock-screen"'</span>)
+    })
+
+    it(<span class="hljs-string">'should save state on suspend/lock'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'saveWindowState()'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'System Tray'</span>, () =&gt; {
+    it(<span class="hljs-string">'should have createTray function'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'function createTray()'</span>)
+    })
+
+    it(<span class="hljs-string">'should import Tray from electron'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'Tray'</span>)
+    })
+
+    it(<span class="hljs-string">'should import nativeImage for tray icon'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'nativeImage'</span>)
+    })
+
+    it(<span class="hljs-string">'should set tray tooltip'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'setToolTip'</span>)
+    })
+
+    it(<span class="hljs-string">'should set tray context menu'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'setContextMenu'</span>)
+    })
+
+    it(<span class="hljs-string">'should handle double-click on tray'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'tray.on("double-click"'</span>)
+    })
+
+    it(<span class="hljs-string">'should have Open option in tray menu'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'Open MathAcademy'</span>)
+    })
+
+    it(<span class="hljs-string">'should have Quit option in tray menu'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'label: "Quit"'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Taskbar Progress'</span>, () =&gt; {
+    it(<span class="hljs-string">'should have setProgress function'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'function setProgress'</span>)
+    })
+
+    it(<span class="hljs-string">'should use setProgressBar on mainWindow'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'setProgressBar'</span>)
+    })
+
+    it(<span class="hljs-string">'should validate progress range (0 to 1)'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'progress &gt;= 0'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'progress &lt;= 1'</span>)
+    })
+
+    it(<span class="hljs-string">'should support hiding progress with -1'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'progress === -1'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Badge Count (macOS)'</span>, () =&gt; {
+    it(<span class="hljs-string">'should have setBadgeCount function'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'function setBadgeCount'</span>)
+    })
+
+    it(<span class="hljs-string">'should only apply badge on macOS'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'darwin'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'app.dock.setBadge'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Recent Documents'</span>, () =&gt; {
+    it(<span class="hljs-string">'should have addRecentDocument function'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'function addRecentDocument'</span>)
+    })
+
+    it(<span class="hljs-string">'should have clearRecentDocuments function'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'function clearRecentDocuments'</span>)
+    })
+
+    it(<span class="hljs-string">'should use app.addRecentDocument'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'app.addRecentDocument'</span>)
+    })
+
+    it(<span class="hljs-string">'should use app.clearRecentDocuments'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'app.clearRecentDocuments'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Download Manager'</span>, () =&gt; {
+    it(<span class="hljs-string">'should have setupDownloadManager function'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'function setupDownloadManager()'</span>)
+    })
+
+    it(<span class="hljs-string">'should handle will-download event'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'will-download'</span>)
+    })
+
+    it(<span class="hljs-string">'should track download progress'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'getReceivedBytes'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'getTotalBytes'</span>)
+    })
+
+    it(<span class="hljs-string">'should show download complete notification'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'Download Complete'</span>)
+      expect(mainContent).toContain(<span class="hljs-string">'Notification'</span>)
+    })
+
+    it(<span class="hljs-string">'should set save path for downloads'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'setSavePath'</span>)
+    })
+
+    it(<span class="hljs-string">'should use downloads folder'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'app.getPath("downloads")'</span>)
+    })
+
+    it(<span class="hljs-string">'should handle download failure'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'Download Failed'</span>)
+    })
+
+    it(<span class="hljs-string">'should update taskbar progress during download'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'setProgress'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Auto-updater'</span>, () =&gt; {
+    it(<span class="hljs-string">'should have setupAutoUpdater function'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'function setupAutoUpdater()'</span>)
+    })
+
+    it(<span class="hljs-string">'should have placeholder for electron-updater'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'electron-updater'</span>)
+    })
+
+    it(<span class="hljs-string">'should support checkForUpdatesAndNotify'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'checkForUpdatesAndNotify'</span>)
+    })
+
+    it(<span class="hljs-string">'should handle update-available event'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'update-available'</span>)
+    })
+
+    it(<span class="hljs-string">'should handle update-downloaded event'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'update-downloaded'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'macOS Dock Menu'</span>, () =&gt; {
+    it(<span class="hljs-string">'should have setupDockMenu function'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'function setupDockMenu()'</span>)
+    })
+
+    it(<span class="hljs-string">'should only run on macOS'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'process.platform !== "darwin"'</span>)
+    })
+
+    it(<span class="hljs-string">'should use app.dock.setMenu'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'app.dock.setMenu'</span>)
+    })
+
+    it(<span class="hljs-string">'should have New Window option'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'New Window'</span>)
+    })
+
+    it(<span class="hljs-string">'should have recent documents in dock'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'recentDocuments'</span>)
+    })
+  })
+
+  describe(<span class="hljs-string">'Windows Jump List'</span>, () =&gt; {
+    it(<span class="hljs-string">'should have setupJumpList function'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'function setupJumpList()'</span>)
+    })
+
+    it(<span class="hljs-string">'should only run on Windows'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'process.platform !== "win32"'</span>)
+    })
+
+    it(<span class="hljs-string">'should use app.setJumpList'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'app.setJumpList'</span>)
+    })
+
+    it(<span class="hljs-string">'should have Tasks category'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'Tasks'</span>)
+    })
+
+    it(<span class="hljs-string">'should have Recent category'</span>, () =&gt; {
+      expect(mainContent).toContain(<span class="hljs-string">'Recent'</span>)
+    })
+  })
+})
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>preload.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../doc-style.css" />
+  <script src="../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../";
+    var thisFile = "electron/preload.js";
+    var defaultSidebar = true;
+  </script>
+  <script src="../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>preload.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript"><span class="hljs-keyword">const</span> { contextBridge, ipcRenderer, Notification } = <span class="hljs-built_in">require</span>(<span class="hljs-string">"electron"</span>);
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>Expose any APIs to the renderer process here</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">contextBridge.exposeInMainWorld(<span class="hljs-string">"electronAPI"</span>, {
+  <span class="hljs-attr">platform</span>: process.platform,
+  <span class="hljs-attr">isElectron</span>: <span class="hljs-literal">true</span>,
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3"></a>
+</div>
+<p>Notification API</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">  notifications: {
+    <span class="hljs-attr">isSupported</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> Notification.isSupported(),
+    <span class="hljs-attr">show</span>: <span class="hljs-function">(<span class="hljs-params">title, options = {}</span>) =&gt;</span> {
+      <span class="hljs-keyword">if</span> (!Notification.isSupported()) {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+      }
+
+      <span class="hljs-keyword">const</span> notification = <span class="hljs-keyword">new</span> Notification({
+        title,
+        <span class="hljs-attr">body</span>: options.body || <span class="hljs-string">""</span>,
+        <span class="hljs-attr">icon</span>: options.icon,
+        <span class="hljs-attr">silent</span>: options.silent || <span class="hljs-literal">false</span>,
+      });
+
+      notification.on(<span class="hljs-string">"click"</span>, () =&gt; {
+        notification.close();
+        <span class="hljs-keyword">if</span> (options.onClick) {
+          options.onClick();
+        }
+      });
+
+      notification.show();
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+    },
+  },
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4"></a>
+</div>
+<p>App info</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">  getAppVersion: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> process.env.npm_package_version || <span class="hljs-string">"1.0.0"</span>,
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5"></a>
+</div>
+<p>Platform helpers</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">  isMac: process.platform === <span class="hljs-string">"darwin"</span>,
+  <span class="hljs-attr">isWindows</span>: process.platform === <span class="hljs-string">"win32"</span>,
+  <span class="hljs-attr">isLinux</span>: process.platform === <span class="hljs-string">"linux"</span>,
+});
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

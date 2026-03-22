@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>fix_prod_ml.py</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="doc-style.css" />
+  <script src="doc-filelist.js"></script>
+  <script>
+    var relativeDir = "";
+    var thisFile = "fix_prod_ml.py";
+    var defaultSidebar = true;
+  </script>
+  <script src="doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>fix_prod_ml.py</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python"><span class="hljs-comment">#!/usr/bin/env python3</span>
+<span class="hljs-string">"""Fix production-ml-engineering.ts to MathAcademy standards."""</span>
+
+filepath = <span class="hljs-string">'/home/arvind/mathacademy/src/lib/questions/production-ml-engineering.ts'</span>
+
+<span class="hljs-keyword">with</span> open(filepath, <span class="hljs-string">'r'</span>) <span class="hljs-keyword">as</span> f:
+    content = f.read()
+
+lines = content.split(<span class="hljs-string">'\n'</span>)
+result = []
+i = <span class="hljs-number">0</span>
+
+<span class="hljs-keyword">while</span> i &lt; len(lines):
+    line = lines[i]
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>Only process explanation lines in THIS specific file</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">    <span class="hljs-keyword">if</span> <span class="hljs-string">'explanation:'</span> <span class="hljs-keyword">in</span> line:
+        result.append(line)  <span class="hljs-comment"># Keep the "explanation:" line</span>
+        i += <span class="hljs-number">1</span>
+
+        <span class="hljs-keyword">if</span> i &lt; len(lines):
+            expl_line = lines[i]
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3"></a>
+</div>
+<p>Determine quote character</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">            stripped = expl_line.lstrip()
+            <span class="hljs-keyword">if</span> stripped.startswith(<span class="hljs-string">'"'</span>):
+                quote_char = <span class="hljs-string">'"'</span>
+            <span class="hljs-keyword">elif</span> stripped.startswith(<span class="hljs-string">"'"</span>):
+                quote_char = <span class="hljs-string">"'"</span>
+            <span class="hljs-keyword">else</span>:
+                result.append(expl_line)
+                i += <span class="hljs-number">1</span>
+                <span class="hljs-keyword">continue</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4"></a>
+</div>
+<p>Find first and last quote of this type</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">            first_quote = expl_line.find(quote_char)
+            last_quote = expl_line.rfind(quote_char)
+
+            <span class="hljs-keyword">if</span> first_quote != <span class="hljs-number">-1</span> <span class="hljs-keyword">and</span> last_quote != <span class="hljs-number">-1</span> <span class="hljs-keyword">and</span> first_quote != last_quote:
+                inner = expl_line[first_quote+<span class="hljs-number">1</span>:last_quote]
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5"></a>
+</div>
+<p>Transform:</p>
+<ol>
+<li>Replace &quot;Step-by-step:&quot; with &quot;<strong>Step 1:</strong>&quot;</li>
+</ol>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">                inner = inner.replace(<span class="hljs-string">'Step-by-step:'</span>, <span class="hljs-string">'**Step 1:**'</span>)
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6"></a>
+</div>
+<ol start="2">
+<li>Add &quot;First, let's recall&quot; prefix if not present</li>
+</ol>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">                <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> inner.startswith(<span class="hljs-string">"First, let's recall"</span>):
+                    inner = <span class="hljs-string">"First, let's recall "</span> + inner
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7"></a>
+</div>
+<ol start="3">
+<li>Add &quot;Therefore, the answer is&quot; if not present</li>
+</ol>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">                <span class="hljs-keyword">if</span> <span class="hljs-string">'Therefore, the answer is'</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> inner:
+                    inner = inner.rstrip()
+                    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> inner.endswith(<span class="hljs-string">'.'</span>):
+                        inner += <span class="hljs-string">'.'</span>
+                    inner += <span class="hljs-string">' Therefore, the answer is this.'</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8"></a>
+</div>
+<p>Reconstruct line</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="python">                escaped = inner.replace(quote_char, <span class="hljs-string">'\\'</span> + quote_char)
+                indent = expl_line[:first_quote]
+                result.append(<span class="hljs-string">f'<span class="hljs-subst">{indent}</span><span class="hljs-subst">{quote_char}</span><span class="hljs-subst">{escaped}</span><span class="hljs-subst">{quote_char}</span>,'</span>)
+            <span class="hljs-keyword">else</span>:
+                result.append(expl_line)
+        i += <span class="hljs-number">1</span>
+    <span class="hljs-keyword">else</span>:
+        result.append(line)
+        i += <span class="hljs-number">1</span>
+
+output = <span class="hljs-string">'\n'</span>.join(result)
+
+<span class="hljs-keyword">with</span> open(filepath, <span class="hljs-string">'w'</span>) <span class="hljs-keyword">as</span> f:
+    f.write(output)
+
+print(<span class="hljs-string">"Done"</span>)
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

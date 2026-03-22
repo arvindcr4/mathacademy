@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">MathAcademy</string>
+    <string name="title_activity_main">MathAcademy</string>
+    <string name="package_name">com.mathacademy.app</string>
+    <string name="custom_url_scheme">com.mathacademy.app</string>
+</resources>
