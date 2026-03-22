@@ -6,6 +6,19 @@ import XPBar from "@/components/XPBar";
 import LeagueBadge from "@/components/LeagueBadge";
 import { courses } from "@/lib/curriculum";
 
+// Map string icon names to emoji equivalents
+const iconMap: Record<string, string> = {
+  cube: "📦",
+  cpu: "🖥️",
+  leaf: "🌿",
+  atom: "⚛️",
+  microphone: "🎙️",
+};
+
+function resolveIcon(icon: string): string {
+  return iconMap[icon] ?? icon;
+}
+
 // Simulated users for leaderboard
 const simulatedUsers = [
   {
@@ -109,9 +122,12 @@ export default function Dashboard() {
     "dashboard" | "leaderboard" | "courses"
   >("dashboard");
 
-  const sortedLeaderboard = [...simulatedUsers].sort((a, b) => b.xp - a.xp);
+  const sortedLeaderboard = [
+    ...simulatedUsers,
+    { id: "current", name: currentUser.name, xp: currentUser.xp, league: currentUser.league, avatar: currentUser.avatar, dailyStreak: 12 },
+  ].sort((a, b) => b.xp - a.xp);
   const userRank =
-    sortedLeaderboard.findIndex((u) => u.id === "current") + 1 || "-";
+    sortedLeaderboard.findIndex((u) => u.id === "current") + 1;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
@@ -230,7 +246,7 @@ export default function Dashboard() {
                           className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
                           style={{ backgroundColor: `${course.color}33` }}
                         >
-                          {course.icon}
+                          {resolveIcon(course.icon)}
                         </div>
                         <div>
                           <h3 className="font-semibold">{course.name}</h3>
@@ -274,7 +290,7 @@ export default function Dashboard() {
                         }}
                         title={course.name}
                       >
-                        {course.icon}
+                        {resolveIcon(course.icon)}
                       </div>
                       <div className="text-xs text-gray-400 mt-1 max-w-20 text-center truncate">
                         {course.name.split(" ")[0]}
@@ -350,35 +366,38 @@ export default function Dashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {sortedLeaderboard.slice(3).map((user, index) => (
-                    <tr
-                      key={user.id}
-                      className="border-t border-white/5 hover:bg-white/5"
-                    >
-                      <td className="py-3 px-4 text-gray-400">#{index + 4}</td>
-                      <td className="py-3 px-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-sm font-bold text-white">
-                            {user.avatar}
+                  {sortedLeaderboard.slice(3).map((user, index) => {
+                    if (user.id === "current") return null;
+                    return (
+                      <tr
+                        key={user.id}
+                        className="border-t border-white/5 hover:bg-white/5"
+                      >
+                        <td className="py-3 px-4 text-gray-400">#{index + 4}</td>
+                        <td className="py-3 px-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-sm font-bold text-white">
+                              {user.avatar}
+                            </div>
+                            <span>{user.name}</span>
                           </div>
-                          <span>{user.name}</span>
-                        </div>
-                      </td>
-                      <td className="py-3 px-4">
-                        <LeagueBadge league={user.league} size="sm" />
-                      </td>
-                      <td className="py-3 px-4 text-right font-medium">
-                        {user.xp.toLocaleString()}
-                      </td>
-                      <td className="py-3 px-4 text-right">
-                        <span className="text-orange-400">🔥</span>{" "}
-                        {user.dailyStreak}
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td className="py-3 px-4">
+                          <LeagueBadge league={user.league} size="sm" />
+                        </td>
+                        <td className="py-3 px-4 text-right font-medium">
+                          {user.xp.toLocaleString()}
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          <span className="text-orange-400">🔥</span>{" "}
+                          {user.dailyStreak}
+                        </td>
+                      </tr>
+                    );
+                  })}
                   {/* Current user row */}
                   <tr className="border-t border-yellow-500/30 bg-yellow-500/10">
-                    <td className="py-3 px-4 text-yellow-400 font-bold">#4</td>
+                    <td className="py-3 px-4 text-yellow-400 font-bold">#{userRank}</td>
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-sm font-bold text-black">
@@ -418,7 +437,7 @@ export default function Dashboard() {
                         background: `linear-gradient(135deg, ${course.color}33 0%, ${course.color}11 100%)`,
                       }}
                     >
-                      {course.icon}
+                      {resolveIcon(course.icon)}
                     </div>
                     <div className="p-4">
                       <span

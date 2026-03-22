@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { courses, Topic } from "@/lib/curriculum";
@@ -28,6 +28,10 @@ export default function CourseClient() {
   );
   const [xpGained, setXpGained] = useState(0);
   const [masteryLevel, setMasteryLevel] = useState(0);
+
+  // Ref to always access the latest selectedTopic (avoids stale closures)
+  const selectedTopicRef = useRef(selectedTopic);
+  selectedTopicRef.current = selectedTopic;
 
   useEffect(() => {
     if (course && !selectedTopic) {
@@ -605,7 +609,8 @@ export default function CourseClient() {
                         </span>
                       </div>
                       <p className="text-lg">
-                        {currentExamples[0]?.q || `Practice: ${currentKp.name}`}
+                        {currentExamples[1]?.q ||
+                          `Now you try: Apply your understanding of ${currentKp.name}`}
                       </p>
                       <input
                         type="text"
@@ -653,7 +658,7 @@ export default function CourseClient() {
                               <p className="text-sm text-gray-400">
                                 The correct answer was:{" "}
                                 <span className="text-green-400">
-                                  {currentExamples[0]?.a}
+                                  {currentExamples[1]?.a || currentExamples[0]?.a}
                                 </span>
                               </p>
                             </div>
@@ -683,9 +688,12 @@ export default function CourseClient() {
                 {/* Navigation */}
                 <div className="flex items-center justify-between">
                   <button
-                    onClick={() =>
-                      setCurrentKpIndex((prev) => Math.max(0, prev - 1))
-                    }
+                    onClick={() => {
+                      setCurrentKpIndex((prev) => Math.max(0, prev - 1));
+                      setShowExample(true);
+                      setUserAnswer("");
+                      setFeedback(null);
+                    }}
                     disabled={currentKpIndex === 0}
                     className={`
                       px-4 py-2 rounded-lg transition
@@ -704,10 +712,14 @@ export default function CourseClient() {
                   ) : (
                     <button
                       onClick={() => {
+                        const topic = selectedTopicRef.current;
+                        const total = topic?.knowledgePoints.length || 0;
                         setCurrentKpIndex((prev) =>
-                          Math.min(totalKps - 1, prev + 1),
+                          Math.min(total - 1, prev + 1),
                         );
                         setShowExample(true);
+                        setUserAnswer("");
+                        setFeedback(null);
                       }}
                       className="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg font-semibold transition"
                     >
