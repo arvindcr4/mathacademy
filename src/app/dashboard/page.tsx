@@ -238,7 +238,7 @@ export default function Dashboard() {
             <div>
               <h2 className="text-xl font-semibold mb-4">Continue Learning</h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {courses.slice(0, 3).map((course) => (
+                {courses.slice(0, 3).map((course, index) => (
                   <Link key={course.id} href={`/course/${course.slug}`}>
                     <div className="bg-white/5 border border-white/10 rounded-xl p-6 hover:bg-white/10 hover:border-white/20 transition">
                       <div className="flex items-center gap-3 mb-3">
@@ -259,7 +259,7 @@ export default function Dashboard() {
                         <div
                           className="h-full rounded-full"
                           style={{
-                            width: `${Math.random() * 60 + 10}%`,
+                            width: `${[45, 72, 28][index % 3]}%`,
                             backgroundColor: course.color,
                           }}
                         />
