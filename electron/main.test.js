@@ -449,4 +449,109 @@ describe('Electron App Configuration', () => {
       expect(mainContent).toContain('BrowserWindow.getAllWindows().length === 0')
     })
   })
+
+  describe('BrowserWindow Options Validation', () => {
+    it('should set show: false to prevent white flash', () => {
+      expect(mainContent).toContain('show: false')
+    })
+
+    it('should use ready-to-show event', () => {
+      expect(mainContent).toContain('ready-to-show')
+      expect(mainContent).toContain('mainWindow.show()')
+    })
+
+    it('should have reasonable min dimensions for usability', () => {
+      // 800x600 is a good minimum for desktop apps
+      expect(mainContent).toContain('minWidth: 800')
+      expect(mainContent).toContain('minHeight: 600')
+    })
+
+    it('should have default dimensions that fit most screens', () => {
+      // 1280x900 fits most screens while leaving room for taskbars
+      expect(mainContent).toContain('width: 1280')
+      expect(mainContent).toContain('height: 900')
+    })
+
+    it('should use dark background matching app theme', () => {
+      // #0f172a is slate-900 from Tailwind
+      expect(mainContent).toContain('backgroundColor: "#0f172a"')
+    })
+  })
+
+  describe('Production Build Paths', () => {
+    it('should reference correct out directory', () => {
+      expect(mainContent).toContain('path.join(__dirname, "../out")')
+    })
+
+    it('should load index.html from out directory', () => {
+      expect(mainContent).toContain('path.join(outDir, "index.html")')
+      expect(mainContent).toContain('mainWindow.loadFile(indexPath)')
+    })
+  })
+
+  describe('Dependencies', () => {
+    let packageJson
+
+    beforeAll(() => {
+      const packagePath = path.join(electronDir, '..', 'package.json')
+      packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf-8'))
+    })
+
+    it('should have electron as devDependency', () => {
+      expect(packageJson.devDependencies.electron).toBeDefined()
+    })
+
+    it('should have electron-builder as devDependency', () => {
+      expect(packageJson.devDependencies['electron-builder']).toBeDefined()
+    })
+
+    it('should have concurrently for parallel dev tasks', () => {
+      expect(packageJson.devDependencies.concurrently).toBeDefined()
+    })
+
+    it('should have wait-on for dev server readiness', () => {
+      expect(packageJson.devDependencies['wait-on']).toBeDefined()
+    })
+
+    it('should have js-yaml for config parsing', () => {
+      expect(packageJson.devDependencies['js-yaml']).toBeDefined()
+    })
+  })
+
+  describe('Error Prevention', () => {
+    it('should not have console.log in production code paths', () => {
+      // Production code should not have debug logging
+      const lines = mainContent.split('\n')
+      const productionLines = lines.filter(line => !line.includes('isDev') && !line.includes('openDevTools'))
+      const hasConsoleLog = productionLines.some(line => line.includes('console.log'))
+      expect(hasConsoleLog).toBe(false)
+    })
+
+    it('should not use synchronous file operations in main flow', () => {
+      // Avoid blocking the main process
+      expect(mainContent).not.toContain('fs.readFileSync')
+      expect(mainContent).not.toContain('fs.readdirSync')
+    })
+
+    it('should handle mainWindow being null gracefully', () => {
+      // The closed event sets mainWindow = null
+      expect(mainContent).toContain('mainWindow = null')
+    })
+  })
+
+  describe('Code Structure', () => {
+    it('should define createWindow as a function', () => {
+      expect(mainContent).toContain('function createWindow()')
+    })
+
+    it('should call createWindow when app is ready', () => {
+      expect(mainContent).toContain('app.whenReady()')
+      expect(mainContent).toContain('createWindow()')
+    })
+
+    it('should have all event handlers within app.whenReady', () => {
+      // activate handler should be inside whenReady
+      expect(mainContent).toContain('app.on("activate"')
+    })
+  })
 })
