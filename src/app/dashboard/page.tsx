@@ -223,7 +223,7 @@ export default function Dashboard() {
                   <div className="text-sm text-[var(--text-muted)]">Topics Mastered</div>
                 </div>
                 <div className="bg-[var(--surface-700)] rounded-xl p-4 text-center">
-                  <div className="text-3xl font-bold text-[#3FB950]">
+                  <div className="text-3xl font-bold text-[var(--success-green)]">
                     {currentUser.accuracy}%
                   </div>
                   <div className="text-sm text-[var(--text-muted)]">Accuracy</div>
@@ -327,7 +327,7 @@ export default function Dashboard() {
                   className={`
                     ${index === 0 ? "bg-gradient-to-b from-[var(--xp-gold)]/20 to-transparent border-[var(--xp-gold)] order-2" : ""}
                     ${index === 1 ? "bg-gradient-to-b from-[var(--league-silver)]/20 to-transparent border-[var(--league-silver)] order-1" : ""}
-                    ${index === 2 ? "bg-gradient-to-b from-[#CD7F32]/20 to-transparent border-[#CD7F32] order-3" : ""}
+                    ${index === 2 ? "bg-gradient-to-b from-[var(--league-bronze)]/20 to-transparent border-[var(--league-bronze)] order-3" : ""}
                     bg-[var(--surface-800)] border border-[var(--surface-600)] rounded-xl p-4 text-center
                   `}
                 >

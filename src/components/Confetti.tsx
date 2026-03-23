@@ -19,8 +19,8 @@ interface Particle {
 const COLORS = [
   "var(--xp-gold)",
   "var(--mastery-blue)",
-  "#3FB950",
-  "#E05252",
+  "var(--success-green)",
+  "var(--danger-red)",
   "#D4A72C",
 ];
 

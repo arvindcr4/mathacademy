@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 
 interface ConfettiPiece {
   id: number;
@@ -24,9 +24,9 @@ export function Confetti({ active }: { active: boolean }) {
       const colors = [
         "var(--xp-gold)",
         "var(--mastery-blue)",
-        "#3FB950",
-        "#F85149",
-        "#A371F7",
+        "var(--success-green)",
+        "var(--danger-red)",
+        "var(--accent-coral)",
       ];
 
       const newPieces: ConfettiPiece[] = Array.from({ length: 50 }, (_, i) => ({
@@ -140,7 +140,7 @@ export function AnimatedCheckmark({ show }: { show: boolean }) {
 
   return (
     <svg
-      className="w-16 h-16 text-[#3FB950]"
+      className="w-16 h-16 text-[var(--success-green)]"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"

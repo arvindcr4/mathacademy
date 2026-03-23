@@ -41,9 +41,9 @@ export const ProgressBar = forwardRef<HTMLDivElement, ProgressBarProps>(
 
     const variants = {
       default: "bg-gradient-to-r from-[var(--mastery-blue)] to-teal-500",
-      success: "bg-gradient-to-r from-[#3FB950] to-emerald-400",
+      success: "bg-gradient-to-r from-[var(--success-green)] to-emerald-400",
       warning: "bg-gradient-to-r from-[var(--xp-gold)] to-orange-400",
-      mastery: "bg-gradient-to-r from-[var(--mastery-blue)] to-[#3FB950]",
+      mastery: "bg-gradient-to-r from-[var(--mastery-blue)] to-[var(--success-green)]",
     };
 
     const sizes = {

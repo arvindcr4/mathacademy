@@ -468,7 +468,7 @@ export default function CourseClient() {
               <span className="text-sm text-[var(--text-muted)]">Mastery:</span>
               <div className="w-24 h-2 bg-[var(--surface-600)] rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-[var(--mastery-blue)] to-[#3FB950] transition-all duration-500"
+                  className="h-full bg-gradient-to-r from-[var(--mastery-blue)] to-[var(--success-green)] transition-all duration-500"
                   style={{ width: `${masteryLevel * 100}%` }}
                 />
               </div>
@@ -508,14 +508,14 @@ export default function CourseClient() {
                           {topic.name}
                         </span>
                         {topicProgress > 0 && (
-                          <span className="text-xs text-[#3FB950]">
+                          <span className="text-xs text-[var(--success-green)]">
                             {Math.round(topicProgress * 100)}%
                           </span>
                         )}
                       </div>
                       <div className="w-full bg-[var(--surface-600)] rounded-full h-1">
                         <div
-                          className="h-full rounded-full bg-[#3FB950] transition-all"
+                          className="h-full rounded-full bg-[var(--success-green)] transition-all"
                           style={{ width: `${topicProgress * 100}%` }}
                         />
                       </div>
@@ -577,7 +577,7 @@ export default function CourseClient() {
                           <span className="text-[var(--text-muted)] text-sm">
                             Answer:{" "}
                           </span>
-                          <span className="text-[#3FB950]">
+                          <span className="text-[var(--success-green)]">
                             {currentExamples[0]?.a}
                           </span>
                         </div>
@@ -621,8 +621,8 @@ export default function CourseClient() {
                         className={`
                           w-full bg-[var(--surface-900)]/50 border rounded-lg px-4 py-3 text-white
                           focus:outline-none focus:ring-2
-                          ${feedback === "correct" ? "border-[#3FB950] focus:ring-[#3FB950]" : ""}
-                          ${feedback === "incorrect" ? "border-[#E05252] focus:ring-[#E05252]" : ""}
+                          ${feedback === "correct" ? "border-[var(--success-green)] focus:ring-[var(--success-green)]" : ""}
+                          ${feedback === "incorrect" ? "border-[var(--danger-red)] focus:ring-[var(--danger-red)]" : ""}
                           ${!feedback ? "border-[var(--surface-500)] focus:ring-[var(--mastery-blue)]" : ""}
                         `}
                         disabled={feedback !== null}
@@ -631,18 +631,18 @@ export default function CourseClient() {
                         <div
                           className={`
                           p-4 rounded-lg animate-slide-up
-                          ${feedback === "correct" ? "bg-[#3FB950]/20 border border-[#3FB950]/50" : ""}
-                          ${feedback === "incorrect" ? "bg-[#E05252]/20 border border-[#E05252]/50" : ""}
+                          ${feedback === "correct" ? "bg-[var(--success-green)]/20 border border-[var(--success-green)]/50" : ""}
+                          ${feedback === "incorrect" ? "bg-[var(--danger-red)]/20 border border-[var(--danger-red)]/50" : ""}
                         `}
                           role="alert"
                         >
                           {feedback === "correct" ? (
                             <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full bg-[#3FB950]/30 flex items-center justify-center">
+                              <div className="w-10 h-10 rounded-full bg-[var(--success-green)]/30 flex items-center justify-center">
                                 <span className="text-2xl">✓</span>
                               </div>
                               <div>
-                                <div className="font-semibold text-[#3FB950]">
+                                <div className="font-semibold text-[var(--success-green)]">
                                   Nice work! You got it right.
                                 </div>
                                 <div className="text-sm text-[var(--text-muted)]">
@@ -653,25 +653,23 @@ export default function CourseClient() {
                           ) : (
                             <div>
                               <div className="flex items-center gap-3 mb-3">
-                                <div className="w-10 h-10 rounded-full bg-[#E05252]/30 flex items-center justify-center">
+                                <div className="w-10 h-10 rounded-full bg-[var(--danger-red)]/30 flex items-center justify-center">
                                   <span className="text-2xl">✗</span>
                                 </div>
                                 <div>
-                                  <div className="font-semibold text-[#E05252]">
+                                  <div className="font-semibold text-[var(--danger-red)]">
                                     Not quite — but you&apos;re learning!
                                   </div>
                                   <p className="text-sm text-[var(--text-muted)] mt-1">
                                     The answer is:{" "}
-                                    <span className="text-[#3FB950] font-medium">
+                                    <span className="text-[var(--success-green)] font-medium">
                                       {currentExamples[0]?.a}
                                     </span>
                                   </p>
                                 </div>
                               </div>
-<<<<<<< HEAD
                               <p className="text-xs text-[var(--text-muted)] pl-13">
-                                💡 Review this concept and try again — mastery takes practice.
-                              </p>
+                                Review this concept and try again — mastery takes practice.
                               </p>
                             </div>
                           )}
@@ -717,7 +715,7 @@ export default function CourseClient() {
                   {currentKpIndex === totalKps - 1 ? (
                     <Link
                       href={`/course/${course.slug}`}
-                      className="px-6 py-2 bg-[#3FB950] hover:bg-[#2EA043] rounded-lg font-semibold transition"
+                      className="px-6 py-2 bg-[var(--success-green)] hover:bg-[var(--success-green)] rounded-lg font-semibold transition"
                     >
                       Complete Topic ✓
                     </Link>

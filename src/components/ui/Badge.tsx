@@ -20,11 +20,11 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
 
     const variants = {
       default: "bg-[var(--surface-600)] text-[var(--text-secondary)]",
-      success: "bg-[#3FB950]/20 text-[#3FB950]",
-      warning: "bg-[var(--xp-gold)]/20 text-[var(--xp-gold)]",
-      error: "bg-[#E05252]/20 text-[#E05252]",
-      info: "bg-[var(--mastery-blue)]/20 text-[var(--mastery-blue)]",
-      gold: "bg-[var(--xp-gold)]/20 text-[var(--xp-gold)]",
+      success: "bg-[color:color-mix(in_oklch,var(--success-green)_20%,transparent)] text-[var(--success-green)]",
+      warning: "bg-[color:color-mix(in_oklch,var(--xp-gold)_20%,transparent)] text-[var(--xp-gold)]",
+      error: "bg-[color:color-mix(in_oklch,var(--danger-red)_20%,transparent)] text-[var(--danger-red)]",
+      info: "bg-[color:color-mix(in_oklch,var(--mastery-blue)_20%,transparent)] text-[var(--mastery-blue)]",
+      gold: "bg-[color:color-mix(in_oklch,var(--xp-gold)_20%,transparent)] text-[var(--xp-gold)]",
     };
 
     const sizes = {

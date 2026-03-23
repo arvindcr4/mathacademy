@@ -116,7 +116,7 @@ export default function Home() {
                 <div className="text-sm text-[var(--text-muted)]">Topics Mastered</div>
               </div>
               <div className="bg-[var(--surface-700)] rounded-xl p-4">
-                <div className="text-2xl font-bold text-[#3FB950]">89%</div>
+                <div className="text-2xl font-bold text-[var(--success-green)]">89%</div>
                 <div className="text-sm text-[var(--text-muted)]">Accuracy</div>
               </div>
             </div>
@@ -186,7 +186,7 @@ export default function Home() {
             </div>
 
             <div className="bg-[var(--surface-800)] rounded-2xl p-6 border border-[var(--surface-600)]">
-              <div className="w-12 h-12 rounded-xl bg-[#3FB950] flex items-center justify-center text-xl font-bold mb-4">
+              <div className="w-12 h-12 rounded-xl bg-[var(--success-green)] flex items-center justify-center text-xl font-bold mb-4">
                 2
               </div>
               <h3 className="text-xl font-semibold mb-2">Learn with XP</h3>

@@ -24,8 +24,8 @@ export const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
       default: "[&_.value]:text-[var(--text-primary)]",
       gold: "[&_.value]:text-[var(--xp-gold)]",
       blue: "[&_.value]:text-[var(--mastery-blue)]",
-      green: "[&_.value]:text-[#3FB950]",
-      coral: "[&_.value]:text-[#FF6B35]",
+      green: "[&_.value]:text-[var(--success-green)]",
+      coral: "[&_.value]:text-[var(--accent-coral)]",
     };
 
     return (

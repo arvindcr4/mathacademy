@@ -40,8 +40,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         hover:bg-[var(--surface-700)] hover:text-white
       `,
       danger: `
-        bg-[#E05252] text-white
-        hover:bg-[#DC2626]
+        bg-[var(--danger-red)] text-white
+        hover:bg-[var(--danger-red)]
       `,
     };
 
