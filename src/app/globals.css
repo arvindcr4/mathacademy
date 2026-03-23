@@ -3,37 +3,60 @@
 @tailwind utilities;
 
 :root {
-  --xp-gold: #FFD700;
-  --mastery-blue: #3B82F6;
+  /* Primary palette - warm gold for XP, cool blue for mastery */
+  --xp-gold: #F5C518;
+  --xp-gold-dim: #C9A227;
+  --mastery-blue: #4A90D9;
+  --mastery-blue-dim: #2E6AB3;
+
+  /* Tinted neutrals - avoid pure gray, use blue-tinted for dark mode */
+  --surface-900: #0D1117;
+  --surface-800: #161B22;
+  --surface-700: #21262D;
+  --surface-600: #30363D;
+  --surface-500: #484F58;
+
+  /* Text hierarchy - warm whites, blue-tinted muted text */
+  --text-primary: #E6EDF3;
+  --text-secondary: #8B949E;
+  --text-muted: #6E7681;
+
+  /* League colors - distinct, avoid purple */
   --league-bronze: #CD7F32;
+  --league-silver: #C0C0C0;
+  --league-gold: #FFD700;
+  --league-platinum: #00D4AA;
+  --league-diamond: #00BFFF;
+  --league-master: #FF6B35;
 }
 
 body {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  background: linear-gradient(180deg, var(--surface-900) 0%, var(--surface-800) 100%);
+  color: var(--text-primary);
   min-height: 100vh;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - tinted to match surface */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a1a2e;
+  background: var(--surface-800);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #3B82F6;
+  background: var(--surface-500);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #60A5FA;
+  background: var(--mastery-blue);
 }
 
-/* XP bar animation */
+/* XP bar animation - warm gold gradient */
 .xp-bar {
-  background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
+  background: linear-gradient(90deg, var(--xp-gold) 0%, var(--xp-gold-dim) 100%);
   transition: width 0.5s ease-out;
 }
 
@@ -47,9 +70,389 @@ body {
   filter: brightness(1.1);
 }
 
-/* Mastery level indicator colors */
-.mastery-none { background-color: #374151; }
-.mastery-low { background-color: #EF4444; }
-.mastery-medium { background-color: #F59E0B; }
-.mastery-high { background-color: #10B981; }
-.mastery-mastered { background-color: #3B82F6; }
+/* Mastery level indicator colors - warm progression */
+.mastery-none { background-color: var(--surface-600); }
+.mastery-low { background-color: #E05252; }
+.mastery-medium { background-color: #D4A72C; }
+.mastery-high { background-color: #3FB950; }
+.mastery-mastered { background-color: var(--mastery-blue); }
+
+/* ===== ANIMATION SYSTEM (Impeccable /animate) ===== */
+
+/* Easing curves - natural deceleration, never bounce */
+:root {
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+/* Reduced motion support (accessibility) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===== HARDENING (/harden) - Text overflow, edge cases ===== */
+
+/* Text overflow utilities */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Prevent flex/grid overflow */
+.flex-min-width {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.grid-min-size {
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Word breaking for long content */
+.break-words {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* ===== OPTIMIZE (/optimize) - Performance improvements ===== */
+
+/* Content visibility for long lists - lazy rendering */
+.content-auto {
+  content-visibility: auto;
+}
+
+/* Contain for independent rendering regions */
+.contain-layout {
+  contain: layout;
+}
+
+.contain-paint {
+  contain: paint;
+}
+
+/* Image aspect ratio reservation - prevents CLS */
+.aspect-video { aspect-ratio: 16 / 9; }
+.aspect-square { aspect-ratio: 1 / 1; }
+.aspect-card { aspect-ratio: 4 / 3; }
+
+/* Font display optimization */
+@font-face {
+  font-family: 'SystemUI';
+  src: local('system-ui'), local('-apple-system'), local('BlinkMacSystemFont'), local('Segoe UI'), local('Roboto');
+  font-display: swap;
+}
+
+/* ===== ONBOARD (/onboard) - Empty state styles ===== */
+
+/* Empty state containers */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  min-height: 200px;
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.6;
+}
+
+.empty-state-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.empty-state-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  max-width: 280px;
+  margin-bottom: 1rem;
+}
+
+.empty-state-action {
+  margin-top: 0.5rem;
+}
+
+/* ===== RESPONSIVE (/adapt) - Mobile-first utilities ===== */
+
+/* Touch targets - minimum 44x44px on mobile */
+@media (max-width: 768px) {
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.75rem;
+  }
+}
+
+/* Focus visible for keyboard navigation */
+.focus-ring:focus-visible {
+  outline: 2px solid var(--mastery-blue);
+  outline-offset: 2px;
+}
+
+/* Hide scrollbar but keep functionality */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Entrance animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Animation utility classes */
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s var(--ease-out-quart) forwards;
+}
+
+.stagger-1 { animation-delay: 0.1s; opacity: 0; }
+.stagger-2 { animation-delay: 0.2s; opacity: 0; }
+.stagger-3 { animation-delay: 0.3s; opacity: 0; }
+.stagger-4 { animation-delay: 0.4s; opacity: 0; }
+.stagger-5 { animation-delay: 0.5s; opacity: 0; }
+
+/* Interactive button class */
+.btn-interactive {
+  transition: transform 0.2s var(--ease-out-quart), box-shadow 0.2s var(--ease-out-quart), background-color 0.2s;
+}
+
+.btn-interactive:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Delight animations */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-100%) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(245, 197, 24, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px 10px rgba(245, 197, 24, 0.2);
+  }
+}
+
+@keyframes bounce-subtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes checkmark-draw {
+  0% {
+    stroke-dashoffset: 24;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes xp-pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Animation utility classes */
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s var(--ease-out-quart) forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s var(--ease-out-quart) forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.4s var(--ease-out-quart) forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 0.6s var(--ease-out-quart);
+}
+
+.animate-xp-pop {
+  animation: xp-pop 0.4s var(--ease-out-quart);
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Stagger delays for choreographed entrances */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+
+/* Button micro-interactions */
+.btn-interactive {
+  transition: transform 0.15s var(--ease-out-quart),
+              box-shadow 0.15s var(--ease-out-quart),
+              background-color 0.2s ease;
+}
+
+.btn-interactive:hover {
+  transform: translateY(-2px);
+}
+
+.btn-interactive:active {
+  transform: translateY(1px);
+  transition-duration: 0.05s;
+}
+
+/* Card hover effects */
+.card-interactive {
+  transition: transform 0.3s var(--ease-out-quart),
+              box-shadow 0.3s var(--ease-out-quart),
+              border-color 0.3s ease;
+}
+
+.card-interactive:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Focus states (accessibility) */
+.focus-ring:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.5);
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--mastery-blue);
+  outline-offset: 2px;
+}
+
+/* Loading skeleton animation */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-700) 25%,
+    var(--surface-600) 50%,
+    var(--surface-700) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Confetti container for celebrations */
+.confetti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  animation: confetti-fall 3s ease-out forwards;
+}

@@ -18,34 +18,34 @@ interface CourseCardProps {
 export default function CourseCard({ course }: CourseCardProps) {
   return (
     <Link href={`/course/${course.slug}`}>
-      <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 hover:bg-white/10 transition-all duration-300 group">
+      <div className="border border-[var(--surface-600)] rounded-2xl overflow-hidden hover:border-[var(--mastery-blue)] hover:bg-[var(--surface-700)] hover:-translate-y-1 hover:shadow-lg transition-all duration-300 ease-[var(--ease-out-quart)] group cursor-pointer">
         <div
-          className="h-32 flex items-center justify-center text-6xl"
+          className="h-32 flex items-center justify-center text-6xl transition-transform duration-300 group-hover:scale-110"
           style={{
-            background: `linear-gradient(135deg, ${course.color}33 0%, ${course.color}11 100%)`,
+            background: `linear-gradient(135deg, ${course.color}22 0%, ${course.color}08 100%)`,
           }}
         >
           {resolveIcon(course.icon)}
         </div>
-        <div className="p-6">
+        <div className="p-6 bg-[var(--surface-800)]">
           <div className="flex items-center gap-2 mb-2">
             <span
-              className="px-2 py-1 rounded text-xs font-medium"
+              className="px-2 py-1 rounded text-xs font-medium transition-colors duration-300 group-hover:bg-[var(--xp-gold)]/20 group-hover:text-[var(--xp-gold)]"
               style={{
-                backgroundColor: `${course.color}33`,
+                backgroundColor: `${course.color}22`,
                 color: course.color,
               }}
             >
               {course.category.replace("-", " ")}
             </span>
           </div>
-          <h3 className="text-xl font-semibold mb-2 group-hover:text-yellow-400 transition">
+          <h3 className="text-xl font-semibold mb-2 group-hover:text-[var(--xp-gold)] transition-colors duration-300">
             {course.name}
           </h3>
-          <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+          <p className="text-[var(--text-secondary)] text-sm mb-4 line-clamp-2">
             {course.description}
           </p>
-          <div className="flex items-center gap-4 text-sm text-gray-500">
+          <div className="flex items-center gap-4 text-sm text-[var(--text-muted)]">
             <span className="flex items-center gap-1">
               <svg
                 className="w-4 h-4"
@@ -79,10 +79,10 @@ export default function CourseCard({ course }: CourseCardProps) {
               ~{course.estimatedHours}h
             </span>
           </div>
-          <div className="mt-4 flex items-center gap-2 text-sm text-blue-400 group-hover:text-yellow-400 transition">
+          <div className="mt-4 flex items-center gap-2 text-sm text-[var(--mastery-blue)] group-hover:text-[var(--xp-gold)] transition-colors duration-300">
             <span>Start learning</span>
             <svg
-              className="w-4 h-4 group-hover:translate-x-1 transition"
+              className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

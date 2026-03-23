@@ -421,14 +421,14 @@ export default function CourseClient() {
     : [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
+    <div className="min-h-screen bg-gradient-to-b from-[var(--surface-900)] to-[var(--surface-800)]">
       {/* Header */}
-      <header className="border-b border-white/10 bg-black/20 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b border-[var(--surface-600)] bg-[var(--surface-900)]/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link
               href="/dashboard"
-              className="text-gray-400 hover:text-white transition"
+              className="text-[var(--text-muted)] hover:text-white transition"
             >
               <svg
                 className="w-6 h-6"
@@ -447,28 +447,28 @@ export default function CourseClient() {
             <div className="flex items-center gap-3">
               <div
                 className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
-                style={{ backgroundColor: `${course.color}33` }}
+                style={{ backgroundColor: `${course.color}22` }}
               >
                 {course.icon}
               </div>
               <div>
                 <div className="font-semibold">{course.name}</div>
-                <div className="text-xs text-gray-400">
+                <div className="text-xs text-[var(--text-muted)]">
                   {course.category.replace("-", " ")}
                 </div>
               </div>
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-yellow-500/20 rounded-full">
-              <span className="text-yellow-400 font-bold">+{xpGained}</span>
-              <span className="text-xs text-gray-400">XP</span>
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-[var(--xp-gold)]/20 rounded-full">
+              <span className="text-[var(--xp-gold)] font-bold">+{xpGained}</span>
+              <span className="text-xs text-[var(--text-muted)]">XP</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-400">Mastery:</span>
-              <div className="w-24 h-2 bg-slate-700 rounded-full overflow-hidden">
+              <span className="text-sm text-[var(--text-muted)]">Mastery:</span>
+              <div className="w-24 h-2 bg-[var(--surface-600)] rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-blue-500 to-green-500 transition-all duration-500"
+                  className="h-full bg-gradient-to-r from-[var(--mastery-blue)] to-[#3FB950] transition-all duration-500"
                   style={{ width: `${masteryLevel * 100}%` }}
                 />
               </div>
@@ -481,8 +481,8 @@ export default function CourseClient() {
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Sidebar - Topic List */}
           <div className="lg:col-span-1">
-            <div className="bg-white/5 border border-white/10 rounded-xl p-4 sticky top-24">
-              <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">
+            <div className="bg-[var(--surface-800)] border border-[var(--surface-600)] rounded-xl p-4 sticky top-24">
+              <h2 className="text-sm font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-4">
                 Topics
               </h2>
               <div className="space-y-2">
@@ -500,7 +500,7 @@ export default function CourseClient() {
                       }}
                       className={`
                         w-full text-left px-3 py-2 rounded-lg transition
-                        ${isActive ? "bg-blue-500/20 text-blue-400" : "hover:bg-white/5"}
+                        ${isActive ? "bg-[var(--mastery-blue)]/20 text-[var(--mastery-blue)]" : "hover:bg-[var(--surface-700)]"}
                       `}
                     >
                       <div className="flex items-center justify-between mb-1">
@@ -508,14 +508,14 @@ export default function CourseClient() {
                           {topic.name}
                         </span>
                         {topicProgress > 0 && (
-                          <span className="text-xs text-green-400">
+                          <span className="text-xs text-[#3FB950]">
                             {Math.round(topicProgress * 100)}%
                           </span>
                         )}
                       </div>
-                      <div className="w-full bg-slate-700 rounded-full h-1">
+                      <div className="w-full bg-[var(--surface-600)] rounded-full h-1">
                         <div
-                          className="h-full rounded-full bg-green-500 transition-all"
+                          className="h-full rounded-full bg-[#3FB950] transition-all"
                           style={{ width: `${topicProgress * 100}%` }}
                         />
                       </div>
@@ -535,22 +535,22 @@ export default function CourseClient() {
                   <h1 className="text-2xl font-bold mb-2">
                     {selectedTopic.name}
                   </h1>
-                  <p className="text-gray-400">{selectedTopic.description}</p>
+                  <p className="text-[var(--text-secondary)]">{selectedTopic.description}</p>
                 </div>
 
                 {/* Progress Bar */}
-                <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+                <div className="bg-[var(--surface-800)] border border-[var(--surface-600)] rounded-xl p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-gray-400">
+                    <span className="text-sm text-[var(--text-muted)]">
                       Knowledge Points ({currentKpIndex + 1} of {totalKps})
                     </span>
                     <span className="text-sm font-medium">
                       {currentKp?.name || "Complete"}
                     </span>
                   </div>
-                  <div className="w-full bg-slate-700 rounded-full h-2">
+                  <div className="w-full bg-[var(--surface-600)] rounded-full h-2">
                     <div
-                      className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-500"
+                      className="h-full bg-gradient-to-r from-[var(--mastery-blue)] to-teal-500 rounded-full transition-all duration-500"
                       style={{
                         width: `${((currentKpIndex + 1) / totalKps) * 100}%`,
                       }}
@@ -560,35 +560,35 @@ export default function CourseClient() {
 
                 {/* Lesson Content */}
                 {currentKp && (
-                  <div className="bg-white/5 border border-white/10 rounded-xl p-6 space-y-6">
+                  <div className="bg-[var(--surface-800)] border border-[var(--surface-600)] rounded-xl p-6 space-y-6">
                     {/* Example Section */}
-                    <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-4">
+                    <div className="bg-[var(--mastery-blue)]/10 border border-[var(--mastery-blue)]/20 rounded-xl p-4">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-blue-400 font-semibold">
+                        <span className="text-[var(--mastery-blue)] font-semibold">
                           Example
                         </span>
-                        <span className="text-xs text-gray-400 bg-white/10 px-2 py-0.5 rounded">
+                        <span className="text-xs text-[var(--text-muted)] bg-[var(--surface-600)] px-2 py-0.5 rounded">
                           Follow along
                         </span>
                       </div>
                       <div className="space-y-3">
                         <p className="text-lg">{currentExamples[0]?.q}</p>
-                        <div className="bg-black/30 rounded-lg p-3 border-l-4 border-blue-500">
-                          <span className="text-gray-400 text-sm">
+                        <div className="bg-[var(--surface-900)]/50 rounded-lg p-3 border-l-4 border-[var(--mastery-blue)]">
+                          <span className="text-[var(--text-muted)] text-sm">
                             Answer:{" "}
                           </span>
-                          <span className="text-green-400">
+                          <span className="text-[#3FB950]">
                             {currentExamples[0]?.a}
                           </span>
                         </div>
                         {showExample && currentExamples[0]?.hints && (
                           <details className="text-sm">
-                            <summary className="text-gray-400 cursor-pointer hover:text-white">
+                            <summary className="text-[var(--text-muted)] cursor-pointer hover:text-white">
                               Need a hint?
                             </summary>
                             <div className="mt-2 space-y-1">
                               {currentExamples[0].hints.map((hint, i) => (
-                                <div key={i} className="text-yellow-400/80">
+                                <div key={i} className="text-[var(--xp-gold)]/80">
                                   → {hint}
                                 </div>
                               ))}
@@ -601,10 +601,10 @@ export default function CourseClient() {
                     {/* Practice Problem */}
                     <div className="space-y-4">
                       <div className="flex items-center gap-2">
-                        <span className="text-yellow-400 font-semibold">
+                        <span className="text-[var(--xp-gold)] font-semibold">
                           Practice
                         </span>
-                        <span className="text-xs text-gray-400 bg-white/10 px-2 py-0.5 rounded">
+                        <span className="text-xs text-[var(--text-muted)] bg-[var(--surface-600)] px-2 py-0.5 rounded">
                           {10} XP
                         </span>
                       </div>
@@ -619,11 +619,11 @@ export default function CourseClient() {
                         onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
                         placeholder="Type your answer..."
                         className={`
-                          w-full bg-black/30 border rounded-lg px-4 py-3 text-white
+                          w-full bg-[var(--surface-900)]/50 border rounded-lg px-4 py-3 text-white
                           focus:outline-none focus:ring-2
-                          ${feedback === "correct" ? "border-green-500 focus:ring-green-500" : ""}
-                          ${feedback === "incorrect" ? "border-red-500 focus:ring-red-500" : ""}
-                          ${!feedback ? "border-white/20 focus:ring-blue-500" : ""}
+                          ${feedback === "correct" ? "border-[#3FB950] focus:ring-[#3FB950]" : ""}
+                          ${feedback === "incorrect" ? "border-[#E05252] focus:ring-[#E05252]" : ""}
+                          ${!feedback ? "border-[var(--surface-500)] focus:ring-[var(--mastery-blue)]" : ""}
                         `}
                         disabled={feedback !== null}
                       />
@@ -631,35 +631,47 @@ export default function CourseClient() {
                         <div
                           className={`
                           p-4 rounded-lg animate-slide-up
-                          ${feedback === "correct" ? "bg-green-500/20 border border-green-500/50" : ""}
-                          ${feedback === "incorrect" ? "bg-red-500/20 border border-red-500/50" : ""}
+                          ${feedback === "correct" ? "bg-[#3FB950]/20 border border-[#3FB950]/50" : ""}
+                          ${feedback === "incorrect" ? "bg-[#E05252]/20 border border-[#E05252]/50" : ""}
                         `}
+                          role="alert"
                         >
                           {feedback === "correct" ? (
-                            <div className="flex items-center gap-2">
-                              <span className="text-2xl">✓</span>
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-full bg-[#3FB950]/30 flex items-center justify-center">
+                                <span className="text-2xl">✓</span>
+                              </div>
                               <div>
-                                <div className="font-semibold text-green-400">
-                                  Correct!
+                                <div className="font-semibold text-[#3FB950]">
+                                  Nice work! You got it right.
                                 </div>
-                                <div className="text-sm text-gray-400">
-                                  +{10} XP earned
+                                <div className="text-sm text-[var(--text-muted)]">
+                                  +{10} XP earned — Keep building that streak!
                                 </div>
                               </div>
                             </div>
                           ) : (
                             <div>
-                              <div className="flex items-center gap-2 mb-2">
-                                <span className="text-2xl">✗</span>
-                                <div className="font-semibold text-red-400">
-                                  Incorrect
+                              <div className="flex items-center gap-3 mb-3">
+                                <div className="w-10 h-10 rounded-full bg-[#E05252]/30 flex items-center justify-center">
+                                  <span className="text-2xl">✗</span>
+                                </div>
+                                <div>
+                                  <div className="font-semibold text-[#E05252]">
+                                    Not quite — but you&apos;re learning!
+                                  </div>
+                                  <p className="text-sm text-[var(--text-muted)] mt-1">
+                                    The answer is:{" "}
+                                    <span className="text-[#3FB950] font-medium">
+                                      {currentExamples[0]?.a}
+                                    </span>
+                                  </p>
                                 </div>
                               </div>
-                              <p className="text-sm text-gray-400">
-                                The correct answer was:{" "}
-                                <span className="text-green-400">
-                                  {currentExamples[1]?.a || currentExamples[0]?.a}
-                                </span>
+<<<<<<< HEAD
+                              <p className="text-xs text-[var(--text-muted)] pl-13">
+                                💡 Review this concept and try again — mastery takes practice.
+                              </p>
                               </p>
                             </div>
                           )}
@@ -673,8 +685,8 @@ export default function CourseClient() {
                             px-6 py-3 rounded-lg font-semibold transition
                             ${
                               userAnswer.trim()
-                                ? "bg-blue-500 hover:bg-blue-600 text-white"
-                                : "bg-slate-700 text-slate-400 cursor-not-allowed"
+                                ? "bg-[var(--mastery-blue)] hover:bg-[var(--mastery-blue-dim)] text-white"
+                                : "bg-[var(--surface-600)] text-[var(--text-muted)] cursor-not-allowed"
                             }
                           `}
                         >
@@ -697,7 +709,7 @@ export default function CourseClient() {
                     disabled={currentKpIndex === 0}
                     className={`
                       px-4 py-2 rounded-lg transition
-                      ${currentKpIndex === 0 ? "bg-slate-700 text-slate-400 cursor-not-allowed" : "bg-white/10 hover:bg-white/20"}
+                      ${currentKpIndex === 0 ? "bg-[var(--surface-600)] text-[var(--text-muted)] cursor-not-allowed" : "bg-[var(--surface-700)] hover:bg-[var(--surface-600)]"}
                     `}
                   >
                     ← Previous
@@ -705,7 +717,7 @@ export default function CourseClient() {
                   {currentKpIndex === totalKps - 1 ? (
                     <Link
                       href={`/course/${course.slug}`}
-                      className="px-6 py-2 bg-green-500 hover:bg-green-600 rounded-lg font-semibold transition"
+                      className="px-6 py-2 bg-[#3FB950] hover:bg-[#2EA043] rounded-lg font-semibold transition"
                     >
                       Complete Topic ✓
                     </Link>
@@ -721,7 +733,7 @@ export default function CourseClient() {
                         setUserAnswer("");
                         setFeedback(null);
                       }}
-                      className="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg font-semibold transition"
+                      className="px-4 py-2 bg-[var(--mastery-blue)] hover:bg-[var(--mastery-blue-dim)] rounded-lg font-semibold transition"
                     >
                       Next →
                     </button>

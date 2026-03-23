@@ -13,9 +13,9 @@ const leagueConfig = {
     icon: "🥉",
   },
   silver: {
-    bg: "bg-gradient-to-br from-gray-400 to-gray-600",
-    text: "text-gray-200",
-    border: "border-gray-400",
+    bg: "bg-gradient-to-br from-slate-400 to-slate-600",
+    text: "text-slate-200",
+    border: "border-slate-400",
     icon: "🥈",
   },
   gold: {
@@ -37,9 +37,9 @@ const leagueConfig = {
     icon: "💠",
   },
   master: {
-    bg: "bg-gradient-to-br from-purple-500 to-pink-600",
-    text: "text-purple-900",
-    border: "border-purple-400",
+    bg: "bg-gradient-to-br from-orange-500 to-red-600",
+    text: "text-orange-100",
+    border: "border-orange-400",
     icon: "👑",
   },
 };
