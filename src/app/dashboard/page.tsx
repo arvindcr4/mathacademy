@@ -1,12 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import XPBar from "@/components/XPBar";
 import LeagueBadge from "@/components/LeagueBadge";
-import { ThemeToggle } from "@/components/ThemeToggle";
-import { StreakCounter } from "@/components/StreakCounter";
 import { courses } from "@/lib/curriculum";
+import {
+  loadUserData,
+  getAccuracy,
+  getLeague,
+  type UserData,
+} from "@/lib/user-data";
 
 // Map string icon names to emoji equivalents
 const iconMap: Record<string, string> = {
@@ -105,115 +109,97 @@ const simulatedUsers = [
   },
 ];
 
-// Current user (simulated session)
-const currentUser = {
-  id: "current",
-  name: "You",
-  xp: 2450,
-  league: "gold" as const,
-  avatar: "JD",
-  dailyXp: 847,
-  dailyGoal: 1000,
-  topicsMastered: 12,
-  accuracy: 89,
-};
 
 export default function Dashboard() {
-  // const [selectedCourse, setSelectedCourse] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<
     "dashboard" | "leaderboard" | "courses"
   >("dashboard");
+  const [userData, setUserData] = useState<UserData | null>(null);
+
+  useEffect(() => {
+    setUserData(loadUserData());
+  }, []);
+
+  if (!userData) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
+        <div className="text-gray-400">Loading...</div>
+      </div>
+    );
+  }
+
 
   const sortedLeaderboard = [
     ...simulatedUsers,
-    { id: "current", name: currentUser.name, xp: currentUser.xp, league: currentUser.league, avatar: currentUser.avatar, dailyStreak: 12 },
+    { id: "current", name: "You", xp: userData.xp, league: getLeague(userData.xp), avatar: userData.avatar, dailyStreak: userData.streak },
   ].sort((a, b) => b.xp - a.xp);
-  const leaderboardUsers = sortedLeaderboard.filter((user) => user.id !== "current");
-  const userRank =
-    sortedLeaderboard.findIndex((u) => u.id === "current") + 1;
+  const userRank = sortedLeaderboard.findIndex((u) => u.id === "current") + 1;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[var(--surface-900)] to-[var(--surface-800)]">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
       {/* Header */}
-      <header className="border-b border-[var(--surface-600)] bg-[var(--surface-900)]/80 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b border-white/10 bg-black/20 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--xp-gold)] to-orange-500 flex items-center justify-center font-bold text-xl text-black">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center font-bold text-xl text-black">
               M
             </div>
-            <span className="text-xl font-bold">MathAcademy</span>
+            <span className="text-xl font-bold">LearnNova</span>
           </Link>
           <div className="flex items-center gap-4">
-            <nav className="flex flex-wrap items-center justify-end gap-2 sm:gap-6 text-sm sm:text-base">
+            <nav className="hidden md:flex items-center gap-6">
               <button
-                type="button"
                 onClick={() => setActiveTab("dashboard")}
-                aria-current={activeTab === "dashboard" ? "page" : undefined}
-                className={`hover:text-[var(--xp-gold)] transition focus-ring rounded-md px-2 py-1 ${activeTab === "dashboard" ? "text-[var(--xp-gold)]" : ""}`}
+                className={`hover:text-yellow-400 transition ${activeTab === "dashboard" ? "text-yellow-400" : ""}`}
               >
                 Dashboard
               </button>
               <button
-                type="button"
                 onClick={() => setActiveTab("leaderboard")}
-                aria-current={activeTab === "leaderboard" ? "page" : undefined}
-                className={`hover:text-[var(--xp-gold)] transition focus-ring rounded-md px-2 py-1 ${activeTab === "leaderboard" ? "text-[var(--xp-gold)]" : ""}`}
+                className={`hover:text-yellow-400 transition ${activeTab === "leaderboard" ? "text-yellow-400" : ""}`}
               >
                 Leaderboard
               </button>
               <button
-                type="button"
                 onClick={() => setActiveTab("courses")}
-                aria-current={activeTab === "courses" ? "page" : undefined}
-                className={`hover:text-[var(--xp-gold)] transition focus-ring rounded-md px-2 py-1 ${activeTab === "courses" ? "text-[var(--xp-gold)]" : ""}`}
+                className={`hover:text-yellow-400 transition ${activeTab === "courses" ? "text-yellow-400" : ""}`}
               >
                 Courses
               </button>
             </nav>
             <div className="flex items-center gap-3">
-              <Link
-                href="/settings"
-                className="w-10 h-10 flex items-center justify-center rounded-xl bg-[var(--surface-700)] hover:bg-[var(--surface-600)] border border-[var(--border-soft)] transition focus-ring"
-                aria-label="Settings"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              </Link>
-              <ThemeToggle />
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--xp-gold)] to-orange-500 flex items-center justify-center font-bold text-black">
-                {currentUser.avatar}
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center font-bold text-black">
+                {userData.avatar}
               </div>
             </div>
           </div>
         </div>
       </header>
 
-      <main id="main-content" className="max-w-7xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-4 py-8">
         {activeTab === "dashboard" && (
-          <div className="space-y-8 content-auto">
+          <div className="space-y-8">
             {/* Welcome + XP Section */}
-            <div className="bg-[var(--surface-800)] rounded-2xl p-6 border border-[var(--surface-600)]">
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 border border-white/10">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[var(--xp-gold)] to-orange-500 flex items-center justify-center text-2xl font-bold text-black">
-                    {currentUser.avatar}
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-2xl font-bold text-black">
+                    {userData.avatar}
                   </div>
                   <div>
-                    <h1 className="display-type text-2xl font-bold">Welcome back!</h1>
-                    <p className="text-[var(--text-secondary)]">
+                    <h1 className="text-2xl font-bold">Welcome back!</h1>
+                    <p className="text-gray-400">
                       Ready to continue your learning journey?
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
-                  <StreakCounter count={18} />
-                  <LeagueBadge league={currentUser.league} size="lg" />
+                  <LeagueBadge league={getLeague(userData.xp)} size="lg" />
                   <div>
-                    <div className="text-sm text-[var(--text-muted)]">League Rank</div>
-                    <div className="text-lg font-semibold capitalize">
-                      {currentUser.league}
+                    <div className="text-sm text-gray-400">League Rank</div>
+                    <div className="text-2xl font-bold text-yellow-400">#{userRank}</div>
+                      <div className="text-lg font-semibold capitalize">
+                      {getLeague(userData.xp)}
                     </div>
                   </div>
                 </div>
@@ -221,62 +207,62 @@ export default function Dashboard() {
 
               <div className="mt-6">
                 <XPBar
-                  current={currentUser.dailyXp}
-                  goal={currentUser.dailyGoal}
+                  current={userData.dailyXp}
+                  goal={userData.dailyGoal}
                   showDaily
                 />
               </div>
 
               <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-[var(--surface-700)] rounded-xl p-4 text-center">
-                  <div className="text-3xl font-bold text-[var(--xp-gold)]">
-                    {currentUser.xp.toLocaleString()}
+                <div className="bg-white/5 rounded-xl p-4 text-center">
+                  <div className="text-3xl font-bold text-yellow-400">
+                    {userData.xp.toLocaleString("en-US")}
                   </div>
-                  <div className="text-sm text-[var(--text-muted)]">Total XP</div>
+                  <div className="text-sm text-gray-400">Total XP</div>
                 </div>
-                <div className="bg-[var(--surface-700)] rounded-xl p-4 text-center">
-                  <div className="text-3xl font-bold text-[var(--mastery-blue)]">
-                    {currentUser.topicsMastered}
+                <div className="bg-white/5 rounded-xl p-4 text-center">
+                  <div className="text-3xl font-bold text-blue-400">
+                    {userData.topicsMastered}
                   </div>
-                  <div className="text-sm text-[var(--text-muted)]">Topics Mastered</div>
+                  <div className="text-sm text-gray-400">Topics Mastered</div>
                 </div>
-                <div className="bg-[var(--surface-700)] rounded-xl p-4 text-center">
-                  <div className="text-3xl font-bold text-[var(--success-green)]">
-                    {currentUser.accuracy}%
+                <div className="bg-white/5 rounded-xl p-4 text-center">
+                  <div className="text-3xl font-bold text-green-400">
+                    {getAccuracy(userData)}%
                   </div>
-                  <div className="text-sm text-[var(--text-muted)]">Accuracy</div>
+                  <div className="text-sm text-gray-400">Accuracy</div>
                 </div>
-                <div className="bg-[var(--surface-700)] rounded-xl p-4 text-center">
-                  <div className="text-3xl font-bold text-[var(--xp-gold)]">
+                <div className="bg-white/5 rounded-xl p-4 text-center">
+                  <div className="text-3xl font-bold text-purple-400">
                     #{userRank}
                   </div>
-                  <div className="text-sm text-[var(--text-muted)]">League Rank</div>
+                  <div className="text-sm text-gray-400">League Rank</div>
                 </div>
               </div>
             </div>
 
             {/* Continue Learning Section */}
             <div>
-              <h2 className="display-type text-xl font-semibold mb-4">Continue Learning</h2>
+              <h2 className="text-xl font-semibold mb-4">Continue Learning</h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {courses.slice(0, 3).map((course, index) => (
                   <Link key={course.id} href={`/course/${course.slug}`}>
-                    <div className="bg-[var(--surface-800)] border border-[var(--surface-600)] rounded-xl p-6 hover:bg-[var(--surface-700)] hover:border-[var(--mastery-blue)] transition">
+                    <div className="bg-white/5 border border-white/10 rounded-xl p-6 hover:bg-white/10 hover:border-white/20 transition">
                       <div className="flex items-center gap-3 mb-3">
                         <div
                           className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
-                          style={{ backgroundColor: `${course.color}22` }}
+                          style={{ backgroundColor: `${course.color}33` }}
                         >
                           {resolveIcon(course.icon)}
                         </div>
                         <div>
                           <h3 className="font-semibold">{course.name}</h3>
-                          <div className="text-xs text-[var(--text-muted)]">
+                          <div className="text-xs text-gray-400">
                             {course.topicCount} topics
                           </div>
                         </div>
                       </div>
-                      <div className="w-full bg-[var(--surface-600)] rounded-full h-2">
+                      <div className="w-full bg-slate-700 rounded-full h-2">
                         <div
                           className="h-full rounded-full"
                           style={{
@@ -285,7 +271,7 @@ export default function Dashboard() {
                           }}
                         />
                       </div>
-                      <div className="text-xs text-[var(--text-muted)] mt-2">
+                      <div className="text-xs text-gray-400 mt-2">
                         In progress
                       </div>
                     </div>
@@ -296,30 +282,30 @@ export default function Dashboard() {
 
             {/* Knowledge Graph Preview */}
             <div>
-              <h2 className="display-type text-xl font-semibold mb-4">
+              <h2 className="text-xl font-semibold mb-4">
                 Your Knowledge Graph
               </h2>
-              <div className="bg-[var(--surface-800)] border border-[var(--surface-600)] rounded-xl p-6">
+              <div className="bg-white/5 border border-white/10 rounded-xl p-6">
                 <div className="flex flex-wrap gap-3 justify-center">
                   {courses.map((course) => (
                     <div key={course.id} className="flex flex-col items-center">
                       <div
                         className="w-16 h-16 rounded-xl flex items-center justify-center text-2xl knowledge-node"
                         style={{
-                          backgroundColor: `${course.color}22`,
+                          backgroundColor: `${course.color}33`,
                           boxShadow: `0 0 20px ${course.color}22`,
                         }}
                         title={course.name}
                       >
                         {resolveIcon(course.icon)}
                       </div>
-                      <div className="text-xs text-[var(--text-muted)] mt-1 max-w-20 text-center truncate">
+                      <div className="text-xs text-gray-400 mt-1 max-w-20 text-center truncate">
                         {course.name.split(" ")[0]}
                       </div>
                     </div>
                   ))}
                 </div>
-                <p className="text-center text-[var(--text-secondary)] mt-4 text-sm">
+                <p className="text-center text-gray-400 mt-4 text-sm">
                   Topics you&apos;ve mastered appear with darker colors
                 </p>
               </div>
@@ -328,9 +314,9 @@ export default function Dashboard() {
         )}
 
         {activeTab === "leaderboard" && (
-          <div className="space-y-6 content-auto">
+          <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h1 className="display-type text-2xl font-bold">League Leaderboard</h1>
+              <h1 className="text-2xl font-bold">League Leaderboard</h1>
               <div className="flex items-center gap-2">
                 <LeagueBadge league="gold" size="md" />
                 <span className="font-medium">Gold League</span>
@@ -339,103 +325,104 @@ export default function Dashboard() {
 
             {/* Top 3 */}
             <div className="grid grid-cols-3 gap-4">
-              {leaderboardUsers.slice(0, 3).map((user, index) => (
+              {sortedLeaderboard.slice(0, 3).map((user, index) => (
                 <div
                   key={user.id}
                   className={`
-                    ${index === 0 ? "bg-gradient-to-b from-[var(--xp-gold)]/20 to-transparent border-[var(--xp-gold)] order-2" : ""}
-                    ${index === 1 ? "bg-gradient-to-b from-[var(--league-silver)]/20 to-transparent border-[var(--league-silver)] order-1" : ""}
-                    ${index === 2 ? "bg-gradient-to-b from-[var(--league-bronze)]/20 to-transparent border-[var(--league-bronze)] order-3" : ""}
-                    bg-[var(--surface-800)] border border-[var(--surface-600)] rounded-xl p-4 text-center
+                    ${index === 0 ? "bg-gradient-to-b from-yellow-500/20 to-transparent border-yellow-500 order-2" : ""}
+                    ${index === 1 ? "bg-gradient-to-b from-gray-400/20 to-transparent border-gray-400 order-1" : ""}
+                    ${index === 2 ? "bg-gradient-to-b from-orange-600/20 to-transparent border-orange-600 order-3" : ""}
+                    bg-white/5 border border-white/10 rounded-xl p-4 text-center
                   `}
                 >
                   <div className="text-4xl mb-2">
                     {index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉"}
                   </div>
-                  <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-[var(--mastery-blue)] to-teal-500 flex items-center justify-center text-xl font-bold text-white mb-2">
+                  <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-xl font-bold text-white mb-2">
                     {user.avatar}
                   </div>
                   <div className="font-semibold">{user.name}</div>
-                  <div className="text-2xl font-bold text-[var(--xp-gold)] mt-2">
+                  <div className="text-2xl font-bold text-yellow-400 mt-2">
                     {user.xp.toLocaleString()}
                   </div>
-                  <div className="text-xs text-[var(--text-muted)]">XP</div>
+                  <div className="text-xs text-gray-400">XP</div>
                 </div>
               ))}
             </div>
 
             {/* Rest of leaderboard */}
-            <div className="bg-[var(--surface-800)] border border-[var(--surface-600)] rounded-xl overflow-hidden">
+            <div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
               <table className="w-full">
-                <thead className="bg-[var(--surface-700)]">
+                <thead className="bg-white/5">
                   <tr>
-                    <th className="text-left py-3 px-4 text-[var(--text-muted)] font-medium">
+                    <th className="text-left py-3 px-4 text-gray-400 font-medium">
                       Rank
                     </th>
-                    <th className="text-left py-3 px-4 text-[var(--text-muted)] font-medium">
+                    <th className="text-left py-3 px-4 text-gray-400 font-medium">
                       Player
                     </th>
-                    <th className="text-left py-3 px-4 text-[var(--text-muted)] font-medium">
+                    <th className="text-left py-3 px-4 text-gray-400 font-medium">
                       League
                     </th>
-                    <th className="text-right py-3 px-4 text-[var(--text-muted)] font-medium">
+                    <th className="text-right py-3 px-4 text-gray-400 font-medium">
                       XP
                     </th>
-                    <th className="text-right py-3 px-4 text-[var(--text-muted)] font-medium">
+                    <th className="text-right py-3 px-4 text-gray-400 font-medium">
                       Streak
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {leaderboardUsers.slice(3).map((user) => (
-                    <tr
-                      key={user.id}
-                      className="border-t border-[var(--surface-600)] hover:bg-[var(--surface-700)]"
-                    >
-                      <td className="py-3 px-4 text-[var(--text-muted)]">
-                        #{sortedLeaderboard.findIndex((entry) => entry.id === user.id) + 1}
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--mastery-blue)] to-teal-500 flex items-center justify-center text-sm font-bold text-white">
-                            {user.avatar}
+                  {sortedLeaderboard.slice(3).map((user, index) => {
+                    if (user.id === "current") return null;
+                    return (
+                      <tr
+                        key={user.id}
+                        className="border-t border-white/5 hover:bg-white/5"
+                      >
+                        <td className="py-3 px-4 text-gray-400">#{index + 4}</td>
+                        <td className="py-3 px-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-sm font-bold text-white">
+                              {user.avatar}
+                            </div>
+                            <span>{user.name}</span>
                           </div>
-                          <span>{user.name}</span>
-                        </div>
-                      </td>
-                      <td className="py-3 px-4">
-                        <LeagueBadge league={user.league} size="sm" />
-                      </td>
-                      <td className="py-3 px-4 text-right font-medium">
-                        {user.xp.toLocaleString()}
-                      </td>
-                      <td className="py-3 px-4 text-right">
-                        <span className="text-[var(--xp-gold)]">🔥</span>{" "}
-                        {user.dailyStreak}
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td className="py-3 px-4">
+                          <LeagueBadge league={user.league} size="sm" />
+                        </td>
+                        <td className="py-3 px-4 text-right font-medium">
+                          {user.xp.toLocaleString()}
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          <span className="text-orange-400">🔥</span>{" "}
+                          {user.dailyStreak}
+                        </td>
+                      </tr>
+                    );
+                  })}
                   {/* Current user row */}
-                  <tr className="border-t border-[var(--xp-gold)]/30 bg-[var(--xp-gold)]/10">
-                    <td className="py-3 px-4 text-[var(--xp-gold)] font-bold">#{userRank}</td>
+                  <tr className="border-t border-yellow-500/30 bg-yellow-500/10">
+                    <td className="py-3 px-4 text-yellow-400 font-bold">#{userRank}</td>
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--xp-gold)] to-orange-500 flex items-center justify-center text-sm font-bold text-black">
-                          {currentUser.avatar}
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-sm font-bold text-black">
+                          {userData.avatar}
                         </div>
-                        <span className="font-medium text-[var(--xp-gold)]">
-                          {currentUser.name}
+                        <span className="font-medium text-yellow-400">
+                          {"You"}
                         </span>
                       </div>
                     </td>
                     <td className="py-3 px-4">
-                      <LeagueBadge league={currentUser.league} size="sm" />
+                      <LeagueBadge league={getLeague(userData.xp)} size="sm" />
                     </td>
-                    <td className="py-3 px-4 text-right font-medium text-[var(--xp-gold)]">
-                      {currentUser.xp.toLocaleString()}
+                    <td className="py-3 px-4 text-right font-medium text-yellow-400">
+                      {userData.xp.toLocaleString("en-US")}
                     </td>
                     <td className="py-3 px-4 text-right">
-                      <span className="text-[var(--xp-gold)]">🔥</span> 12
+                      <span className="text-orange-400">🔥</span> 12
                     </td>
                   </tr>
                 </tbody>
@@ -445,16 +432,16 @@ export default function Dashboard() {
         )}
 
         {activeTab === "courses" && (
-          <div className="space-y-6 content-auto">
-            <h1 className="display-type text-2xl font-bold">All Courses</h1>
+          <div className="space-y-6">
+            <h1 className="text-2xl font-bold">All Courses</h1>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {courses.map((course) => (
                 <Link key={course.id} href={`/course/${course.slug}`}>
-                  <div className="bg-[var(--surface-800)] border border-[var(--surface-600)] rounded-xl overflow-hidden hover:bg-[var(--surface-700)] hover:border-[var(--mastery-blue)] transition">
+                  <div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:bg-white/10 hover:border-white/20 transition">
                     <div
                       className="h-24 flex items-center justify-center text-4xl"
                       style={{
-                        background: `linear-gradient(135deg, ${course.color}22 0%, ${course.color}08 100%)`,
+                        background: `linear-gradient(135deg, ${course.color}33 0%, ${course.color}11 100%)`,
                       }}
                     >
                       {resolveIcon(course.icon)}
@@ -463,7 +450,7 @@ export default function Dashboard() {
                       <span
                         className="px-2 py-1 rounded text-xs font-medium"
                         style={{
-                          backgroundColor: `${course.color}22`,
+                          backgroundColor: `${course.color}33`,
                           color: course.color,
                         }}
                       >
@@ -472,10 +459,10 @@ export default function Dashboard() {
                       <h3 className="text-lg font-semibold mt-2">
                         {course.name}
                       </h3>
-                      <p className="text-sm text-[var(--text-secondary)] mt-1">
+                      <p className="text-sm text-gray-400 mt-1">
                         {course.description}
                       </p>
-                      <div className="flex items-center gap-4 mt-3 text-sm text-[var(--text-muted)]">
+                      <div className="flex items-center gap-4 mt-3 text-sm text-gray-400">
                         <span>{course.topicCount} topics</span>
                         <span>~{course.estimatedHours}h</span>
                       </div>

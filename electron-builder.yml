@@ -1,6 +1,6 @@
-appId: com.mathacademy.app
-productName: MathAcademy
-copyright: Copyright © 2026 MathAcademy
+appId: com.learnnova.app
+productName: LearnNova
+copyright: Copyright © 2026 LearnNova
 
 directories:
   output: dist-electron

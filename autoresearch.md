@@ -1,42 +1,29 @@
-# Autoresearch: MathAcademy Design Quality
+# Autoresearch: LearnNova Style Lessons
 
 ## Objective
-Apply the impeccable frontend-design skill to MathAcademy and measure design quality improvements through automated compliance scoring against the skill's guidelines.
+Populate the LearnNova curriculum with comprehensive knowledge points (lesson content) for Coding Interview Prep and Reinforcement Learning courses. The platform renders lesson content from `src/lib/curriculum.ts` (metadata) and `src/app/course/[slug]/page.tsx` (exampleProblems dictionary).
 
 ## Metrics
-- **Primary**: design_compliance_score (0-100, higher is better)
-- **Secondary**: oklch_usage_count, custom_fonts_present, a11y_score, anti_patterns_found
+- **Primary**: knowledge_points_added (count, higher is better)
+- **Secondary**: topics_with_content (count), topics_fully_covered (count)
 
 ## How to Run
 `./autoresearch.sh` — outputs `METRIC name=number` lines.
 
-## Design Compliance Checks
-The scoring script evaluates:
-
-| Check | Points | Description |
-|-------|--------|-------------|
-| OKLCH Colors | 20 | Uses oklch() instead of HSL/RGB |
-| Custom Fonts | 15 | Uses distinctive fonts (not Inter/Roboto/system) |
-| Focus States | 10 | Has :focus-visible styles |
-| Skip Links | 10 | Includes skip-link for accessibility |
-| Reduced Motion | 10 | Supports prefers-reduced-motion |
-| CSS Variables | 15 | Uses design tokens (CSS custom properties) |
-| No Anti-Patterns | 20 | No pure black (#000), no gray on color |
-
 ## Files in Scope
-- `src/app/globals.css` — Design tokens and global styles
-- `src/app/layout.tsx` — Font loading and metadata
-- `src/components/ui/*.tsx` — UI component library
+- `src/lib/curriculum.ts` — Course/Topic/KnowledgePoint metadata definitions
+- `src/app/course/[slug]/page.tsx` — Example problems and practice content dictionary
 
 ## Off Limits
-- Database schema
-- Content/curriculum files
-- API routes
+- Database schema (`prisma/schema.prisma`)
+- Component files (`src/components/`)
+- Dashboard and home pages
 
 ## Constraints
-- All checks must pass without errors
-- Design tokens must remain semantically named
-- No regression in existing functionality
+- Keep knowledge point slugs kebab-case (e.g., `two-sum`, `bellman-optimality`)
+- Each knowledge point needs: id, slug, name in curriculum.ts
+- Each knowledge point slug in page.tsx needs at least 1 practice problem with question, answer, hints
+- Topic descriptions must remain meaningful and accurate
 
 ## What's Been Tried
 _(empty — fresh start)_

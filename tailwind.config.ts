@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // League colors (from MathAcademy)
+        // League colors (from LearnNova)
         bronze: '#CD7F32',
         silver: '#C0C0C0',
         gold: '#FFD700',

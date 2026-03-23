@@ -11,11 +11,6 @@ vi.mock("next", () => ({
   // Metadata type mock
 }));
 
-vi.mock("next/font/google", () => ({
-  Fraunces: () => ({ variable: "font-display" }),
-  Figtree: () => ({ variable: "font-body" }),
-}));
-
 describe("RootLayout", () => {
   describe("Module exports", () => {
     it("should export metadata with correct title", async () => {
@@ -23,14 +18,14 @@ describe("RootLayout", () => {
       const layoutModule = await import("./layout");
       expect(layoutModule.metadata).toBeDefined();
       expect(layoutModule.metadata.title).toBe(
-        "MathAcademy | Daily Mastery for Math and AI"
+        "LearnNova - Master Math 4x Faster"
       );
     });
 
     it("should export metadata with correct description", async () => {
       const layoutModule = await import("./layout");
       expect(layoutModule.metadata.description).toBe(
-        "AI-powered adaptive learning for mathematics, reinforcement learning, and software engineering practice."
+        "AI-powered adaptive learning platform for mathematics, reinforcement learning, and software engineering"
       );
     });
 
@@ -79,6 +74,7 @@ describe("RootLayout", () => {
       const body = result.props.children;
       expect(body.type).toBe("body");
       expect(body.props.className).toContain("antialiased");
+      expect(body.props.className).toContain("text-white");
     });
 
     it("should pass children through to body", async () => {
@@ -90,19 +86,7 @@ describe("RootLayout", () => {
       });
 
       const body = result.props.children;
-      expect(body.props.children[1]).toBe(testChild);
-    });
-
-    it("should include a skip link before page content", async () => {
-      const layoutModule = await import("./layout");
-      const RootLayout = layoutModule.default;
-      const result = RootLayout({ children: null });
-      const body = result.props.children;
-      const skipLink = body.props.children[0];
-
-      expect(skipLink.type).toBe("a");
-      expect(skipLink.props.href).toBe("#main-content");
-      expect(skipLink.props.children).toBe("Skip to content");
+      expect(body.props.children).toBe(testChild);
     });
   });
 
@@ -113,7 +97,7 @@ describe("RootLayout", () => {
       const layoutModule = await import("./layout");
       const icons = layoutModule.metadata.icons as { icon: string };
       // In test env, CAPACITOR_BUILD is not set, so it should use the non-capacitor path
-      expect(icons.icon).toBe("/mathacademy/favicon.svg");
+      expect(icons.icon).toBe("/learnnova/favicon.svg");
     });
   });
 });

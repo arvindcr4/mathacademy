@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.mathacademy.app',
-  appName: 'MathAcademy',
+  appId: 'com.learnnova.app',
+  appName: 'LearnNova',
   webDir: 'out',
   plugins: {
     StatusBar: {

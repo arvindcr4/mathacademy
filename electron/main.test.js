@@ -30,7 +30,7 @@ describe('Electron App Configuration', () => {
     })
 
     it('should have correct window title', () => {
-      expect(mainContent).toContain('title: "MathAcademy"')
+      expect(mainContent).toContain('title: "LearnNova"')
     })
   })
 
@@ -102,7 +102,7 @@ describe('Electron App Configuration', () => {
     })
 
     it('should load from localhost in dev mode', () => {
-      expect(mainContent).toContain('http://localhost:3000/mathacademy')
+      expect(mainContent).toContain('http://localhost:3000/learnnova')
     })
 
     it('should open DevTools in dev mode', () => {
@@ -244,11 +244,11 @@ describe('Electron App Configuration', () => {
     })
 
     it('should have valid app ID', () => {
-      expect(builderConfig.appId).toBe('com.mathacademy.app')
+      expect(builderConfig.appId).toBe('com.learnnova.app')
     })
 
     it('should have correct product name', () => {
-      expect(builderConfig.productName).toBe('MathAcademy')
+      expect(builderConfig.productName).toBe('LearnNova')
     })
 
     it('should include electron files in build', () => {
@@ -293,7 +293,7 @@ describe('Electron App Configuration', () => {
     })
 
     it('should include copyright notice', () => {
-      expect(builderConfig.copyright).toContain('MathAcademy')
+      expect(builderConfig.copyright).toContain('LearnNova')
     })
   })
 
@@ -357,18 +357,18 @@ describe('Electron App Configuration', () => {
 
   describe('URL and Path Handling', () => {
     it('should construct correct dev URL with basePath', () => {
-      const devUrl = 'http://localhost:3000/mathacademy'
+      const devUrl = 'http://localhost:3000/learnnova'
       const url = new URL(devUrl)
-      expect(url.pathname).toBe('/mathacademy')
+      expect(url.pathname).toBe('/learnnova')
       expect(url.hostname).toBe('localhost')
       expect(url.port).toBe('3000')
     })
 
     it('should have consistent basePath in dev and production', () => {
-      // Dev: http://localhost:3000/mathacademy
-      // Prod: out/index.html (built with basePath: '/mathacademy')
-      const devPath = '/mathacademy'
-      const prodBasePath = '/mathacademy'
+      // Dev: http://localhost:3000/learnnova
+      // Prod: out/index.html (built with basePath: '/learnnova')
+      const devPath = '/learnnova'
+      const prodBasePath = '/learnnova'
       expect(devPath).toBe(prodBasePath)
     })
 
@@ -778,9 +778,9 @@ describe('Electron App Configuration', () => {
   })
 
   describe('Protocol Handler', () => {
-    it('should register mathacademy protocol', () => {
+    it('should register learnnova protocol', () => {
       expect(mainContent).toContain('setAsDefaultProtocolClient')
-      expect(mainContent).toContain('mathacademy')
+      expect(mainContent).toContain('learnnova')
     })
 
     it('should handle second-instance event', () => {
@@ -919,7 +919,7 @@ describe('Electron App Configuration', () => {
     })
 
     it('should have Open option in tray menu', () => {
-      expect(mainContent).toContain('Open MathAcademy')
+      expect(mainContent).toContain('Open LearnNova')
     })
 
     it('should have Quit option in tray menu', () => {

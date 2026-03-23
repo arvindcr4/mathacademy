@@ -1,27 +1,14 @@
 import type { Metadata } from "next";
-import { Fraunces, Figtree } from "next/font/google";
 import "./globals.css";
 
-const isCapacitor = process.env.CAPACITOR_BUILD === "true";
-
-const bodyFont = Figtree({
-  subsets: ["latin"],
-  variable: "--font-body",
-  display: "swap",
-});
-
-const displayFont = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-display",
-  display: "swap",
-});
+const isCapacitor = process.env.CAPACITOR_BUILD === 'true';
 
 export const metadata: Metadata = {
-  title: "MathAcademy | Daily Mastery for Math and AI",
+  title: "LearnNova - Master Math 4x Faster",
   description:
-    "AI-powered adaptive learning for mathematics, reinforcement learning, and software engineering practice.",
+    "AI-powered adaptive learning platform for mathematics, reinforcement learning, and software engineering",
   icons: {
-    icon: isCapacitor ? "./favicon.svg" : "/mathacademy/favicon.svg",
+    icon: isCapacitor ? "./favicon.svg" : "/learnnova/favicon.svg",
   },
 };
 
@@ -31,13 +18,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${bodyFont.variable} ${displayFont.variable}`}>
-      <body className="antialiased">
-        <a href="#main-content" className="skip-link">
-          Skip to content
-        </a>
-        {children}
-      </body>
+    <html lang="en">
+      <body className="antialiased text-white">{children}</body>
     </html>
   );
 }

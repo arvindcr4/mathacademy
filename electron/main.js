@@ -1,11 +1,23 @@
-const { app, BrowserWindow, Menu, shell, dialog, MenuItem, powerMonitor, Tray, nativeImage } = require("electron");
+const { app, BrowserWindow, Menu, shell, dialog, MenuItem, powerMonitor, Tray, nativeImage, ipcMain, Notification, session } = require("electron");
 const path = require("path");
-const url = require("url");
 const fs = require("fs");
+const {
+  buildAppLoadUrl,
+  isSafeExternalUrl,
+  normalizeDeepLinkRoute,
+  resolveAppNavigationTarget,
+  resolveFileAssetRequestTarget,
+} = require("./url-utils");
 
 let mainWindow;
 let loadingWindow;
 let tray = null;
+let assetRedirectsRegistered = false;
+
+const DEV_BASE_URL = "http://localhost:3000/learnnova";
+const APP_BASE_PATH = "/learnnova";
+const OUT_DIR = path.join(__dirname, "../out");
+const PUBLIC_DIR = path.join(__dirname, "../public");
 
 // Single instance lock - prevent multiple app instances
 const gotTheLock = app.requestSingleInstanceLock();
@@ -22,7 +34,7 @@ if (!gotTheLock) {
       mainWindow.focus();
 
       // Handle the protocol URL if provided
-      const protocolUrl = commandLine.find((arg) => arg.startsWith("mathacademy://"));
+      const protocolUrl = commandLine.find((arg) => arg.startsWith("learnnova://"));
       if (protocolUrl) {
         handleProtocolUrl(protocolUrl);
       }
@@ -73,6 +85,50 @@ function saveWindowState() {
   }
 }
 
+function openExternalUrl(url) {
+  if (!isSafeExternalUrl(url)) {
+    console.warn("Blocked external URL:", url);
+    return;
+  }
+
+  shell.openExternal(url);
+}
+
+function getRendererNavigationTarget(rawUrl) {
+  const isDev = process.env.ELECTRON_DEV === "true";
+  return resolveAppNavigationTarget(rawUrl, {
+    isDev,
+    outDir: OUT_DIR,
+    devBaseUrl: DEV_BASE_URL,
+  });
+}
+
+function registerFileProtocolAssetRedirects() {
+  if (assetRedirectsRegistered) {
+    return;
+  }
+
+  session.defaultSession.webRequest.onBeforeRequest(
+    { urls: ["file://*/*"] },
+    (details, callback) => {
+      const redirectURL = resolveFileAssetRequestTarget(details.url, {
+        outDir: OUT_DIR,
+        publicDir: PUBLIC_DIR,
+        basePath: APP_BASE_PATH,
+      });
+
+      if (redirectURL && redirectURL !== details.url) {
+        callback({ redirectURL });
+        return;
+      }
+
+      callback({});
+    }
+  );
+
+  assetRedirectsRegistered = true;
+}
+
 // Create loading window
 function createLoadingWindow() {
   loadingWindow = new BrowserWindow({
@@ -86,6 +142,9 @@ function createLoadingWindow() {
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
+      sandbox: true,
+      webSecurity: true,
+      allowRunningInsecureContent: false,
     },
   });
 
@@ -124,7 +183,7 @@ function createLoadingWindow() {
       <body>
         <div class="loader">
           <div class="spinner"></div>
-          <div>Loading MathAcademy...</div>
+          <div>Loading LearnNova...</div>
         </div>
       </body>
     </html>`
@@ -219,14 +278,14 @@ function createMenu() {
         {
           label: "Learn More",
           click: async () => {
-            await shell.openExternal("https://mathacademy.com");
+            await shell.openExternal("https://learnnova.com");
           },
         },
         {
           label: "Report Issue",
           click: async () => {
             await shell.openExternal(
-              "https://github.com/mathacademy/mathacademy/issues"
+              "https://github.com/learnnova/learnnova/issues"
             );
           },
         },
@@ -257,14 +316,19 @@ function createMenu() {
 
 // Create system tray icon
 function createTray() {
-  const iconPath = path.join(__dirname, "../public/favicon.svg");
+  // Try PNG first (nativeImage doesn't support SVG)
+  const pngIconPath = path.join(__dirname, "../public/icon.png");
+  const svgIconPath = path.join(__dirname, "../public/favicon.svg");
+  const iconPath = fs.existsSync(pngIconPath) ? pngIconPath : svgIconPath;
 
   // Create tray icon
   const trayIcon = nativeImage.createFromPath(iconPath);
 
   if (trayIcon.isEmpty()) {
-    // Fallback to a simple 16x16 icon if SVG fails
-    const fallbackIcon = nativeImage.createEmpty();
+    // Fallback: create a simple 16x16 colored icon
+    const fallbackIcon = nativeImage.createFromBuffer(
+      Buffer.alloc(16 * 16 * 4, 0xff) // 16x16 RGBA white
+    , { width: 16, height: 16 });
     tray = new Tray(fallbackIcon);
   } else {
     tray = new Tray(trayIcon.resize({ width: 16, height: 16 }));
@@ -272,7 +336,7 @@ function createTray() {
 
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: "Open MathAcademy",
+      label: "Open LearnNova",
       click: () => {
         if (mainWindow) {
           if (mainWindow.isMinimized()) mainWindow.restore();
@@ -290,7 +354,7 @@ function createTray() {
     },
   ]);
 
-  tray.setToolTip("MathAcademy");
+  tray.setToolTip("LearnNova");
   tray.setContextMenu(contextMenu);
 
   // Double-click tray icon to show window
@@ -336,6 +400,11 @@ function clearRecentDocuments() {
 function createWindow() {
   const windowState = loadWindowState();
 
+  // Use PNG icon if available (SVG not supported on all platforms)
+  const pngIconPath = path.join(__dirname, "../public/icon.png");
+  const svgIconPath = path.join(__dirname, "../public/favicon.svg");
+  const iconPath = fs.existsSync(pngIconPath) ? pngIconPath : svgIconPath;
+
   mainWindow = new BrowserWindow({
     width: windowState.width,
     height: windowState.height,
@@ -343,12 +412,15 @@ function createWindow() {
     y: windowState.y,
     minWidth: 800,
     minHeight: 600,
-    title: "MathAcademy",
-    icon: path.join(__dirname, "../public/favicon.svg"),
+    title: "LearnNova",
+    icon: iconPath,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
       nodeIntegration: false,
+      sandbox: true,
+      webSecurity: true,
+      allowRunningInsecureContent: false,
       spellcheck: true,
     },
     backgroundColor: "#0f172a",
@@ -378,23 +450,30 @@ function createWindow() {
 
   // Handle external links - open in default browser
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    // Open external links in default browser
-    if (url.startsWith("http://") || url.startsWith("https://")) {
-      shell.openExternal(url);
+    const targetUrl = getRendererNavigationTarget(url);
+    if (targetUrl) {
+      if (targetUrl !== url) {
+        mainWindow.loadURL(targetUrl);
+      }
+      return { action: "deny" };
     }
+
+    openExternalUrl(url);
     return { action: "deny" };
   });
 
   // Handle navigation to external URLs
   mainWindow.webContents.on("will-navigate", (event, url) => {
-    const isInternal =
-      url.startsWith("http://localhost:") ||
-      url.startsWith("file://") ||
-      url.includes("mathacademy");
-
-    if (!isInternal && (url.startsWith("http://") || url.startsWith("https://"))) {
+    const targetUrl = getRendererNavigationTarget(url);
+    if (!targetUrl) {
       event.preventDefault();
-      shell.openExternal(url);
+      openExternalUrl(url);
+      return;
+    }
+
+    if (targetUrl !== url) {
+      event.preventDefault();
+      mainWindow.loadURL(targetUrl);
     }
   });
 
@@ -422,7 +501,7 @@ function createWindow() {
       menu.append(
         new MenuItem({
           label: "Open Link in Browser",
-          click: () => shell.openExternal(params.linkURL),
+          click: () => openExternalUrl(params.linkURL),
         })
       );
       menu.append(
@@ -446,7 +525,7 @@ function createWindow() {
         menu.append(
           new MenuItem({
             label: "Open Image in Browser",
-            click: () => shell.openExternal(params.srcURL),
+            click: () => openExternalUrl(params.srcURL),
           })
         );
       }
@@ -459,7 +538,7 @@ function createWindow() {
       menu.append(new MenuItem({ role: "inspect" }));
     }
 
-    menu.popup(mainWindow, params.x, params.y);
+    menu.popup({ window: mainWindow, x: params.x, y: params.y });
   });
 
   // Keyboard shortcuts for navigation
@@ -484,14 +563,12 @@ function createWindow() {
 
   if (isDev) {
     // Development: load from Next.js dev server
-    mainWindow.loadURL("http://localhost:3000/mathacademy");
+    mainWindow.loadURL(DEV_BASE_URL);
     mainWindow.webContents.openDevTools();
   } else {
     // Production: load from static export
-    const outDir = path.join(__dirname, "../out");
-
     // Check if out directory exists
-    if (!fs.existsSync(outDir)) {
+    if (!fs.existsSync(OUT_DIR)) {
       dialog.showErrorBox(
         "Build Error",
         "Application not built. Please run 'pnpm build' first."
@@ -500,7 +577,7 @@ function createWindow() {
       return;
     }
 
-    const indexPath = path.join(outDir, "index.html");
+    const indexPath = path.join(OUT_DIR, "index.html");
     mainWindow.loadFile(indexPath);
   }
 
@@ -511,14 +588,47 @@ function createWindow() {
 
 app.whenReady().then(() => {
   // Register protocol handler for deep links
-  const protocolSuccess = app.setAsDefaultProtocolClient("mathacademy");
+  const protocolSuccess = app.setAsDefaultProtocolClient("learnnova");
   if (!protocolSuccess) {
     console.error("Failed to register protocol handler");
   }
 
+  registerFileProtocolAssetRedirects();
+  // IPC handler for notifications from renderer via preload
+  ipcMain.on("show-notification", (_event, payload) => {
+    if (
+      !payload ||
+      typeof payload.title !== "string" ||
+      (payload.body !== undefined && typeof payload.body !== "string")
+    ) {
+      return;
+    }
+
+    if (Notification.isSupported()) {
+      const { title, body = "", silent = false } = payload;
+      new Notification({ title, body, silent }).show();
+    }
+  });
+
+  // Database IPC handlers
+  const database = require("./database");
+
+  ipcMain.handle("db:load-user-data", () => {
+    return database.loadUserData();
+  });
+
+  ipcMain.handle("db:record-answer", (_event, { kpSlug, topicSlug, totalKpsInTopic, correct, questionId }) => {
+    return database.recordAnswer(kpSlug, topicSlug, totalKpsInTopic, correct, questionId);
+  });
+
   createMenu();
   createLoadingWindow();
   createWindow();
+  createTray();
+  setupDownloadManager();
+  setupAutoUpdater();
+  setupDockMenu();
+  setupJumpList();
 
   // Power monitor - handle system power events
   powerMonitor.on("suspend", () => {
@@ -547,21 +657,6 @@ app.whenReady().then(() => {
   });
 });
 
-// Handle protocol links (Windows/Linux)
-app.on("second-instance", (event, commandLine, workingDirectory) => {
-  // Someone tried to run a second instance, focus our window instead
-  if (mainWindow) {
-    if (mainWindow.isMinimized()) mainWindow.restore();
-    mainWindow.focus();
-
-    // Handle the protocol URL if provided
-    const protocolUrl = commandLine.find((arg) => arg.startsWith("mathacademy://"));
-    if (protocolUrl) {
-      handleProtocolUrl(protocolUrl);
-    }
-  }
-});
-
 // Handle protocol links (macOS)
 app.on("open-url", (event, url) => {
   event.preventDefault();
@@ -571,19 +666,21 @@ app.on("open-url", (event, url) => {
 // Parse and handle protocol URLs
 function handleProtocolUrl(urlString) {
   try {
-    const url = new URL(urlString);
-    if (url.protocol === "mathacademy:") {
-      const path = url.pathname;
-      const search = url.search;
+    const parsedUrl = new URL(urlString);
+    if (parsedUrl.protocol === "learnnova:") {
+      const routePath = normalizeDeepLinkRoute(parsedUrl);
+      const search = parsedUrl.search;
 
       // Navigate to the path in the app
       if (mainWindow) {
         const isDev = process.env.ELECTRON_DEV === "true";
-        const baseUrl = isDev
-          ? "http://localhost:3000/mathacademy"
-          : `file://${path.join(__dirname, "../out/index.html")}`;
-
-        const fullUrl = `${baseUrl}${path}${search}`;
+        const fullUrl = buildAppLoadUrl({
+          routePath,
+          search,
+          isDev,
+          outDir: OUT_DIR,
+          devBaseUrl: DEV_BASE_URL,
+        });
         mainWindow.loadURL(fullUrl);
       }
     }
@@ -704,7 +801,6 @@ function setupDockMenu() {
 function setupJumpList() {
   if (process.platform !== "win32") return;
 
-  const { JumpListCategory } = require("electron");
   app.setJumpList([
     {
       name: "Recent",
@@ -717,7 +813,7 @@ function setupJumpList() {
         {
           type: "task",
           title: "New Window",
-          description: "Open a new MathAcademy window",
+          description: "Open a new LearnNova window",
           program: process.execPath,
           args: "--new-window",
           iconPath: process.execPath,
@@ -732,4 +828,8 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
+});
+
+app.on("before-quit", () => {
+  try { require("./database").closeDb(); } catch {}
 });
