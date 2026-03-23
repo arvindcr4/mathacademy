@@ -176,3 +176,53 @@ describe("CourseCard", () => {
     });
   });
 });
+
+describe("resolveIcon via CourseCard rendering", () => {
+  it("should resolve 'cube' to box emoji", () => {
+    const course = { ...mockCourse, icon: "cube" };
+    render(<CourseCard course={course} />);
+    expect(screen.getByText("📦")).toBeInTheDocument();
+  });
+
+  it("should resolve 'cpu' to computer emoji", () => {
+    const course = { ...mockCourse, icon: "cpu" };
+    render(<CourseCard course={course} />);
+    expect(screen.getByText("🖥️")).toBeInTheDocument();
+  });
+
+  it("should resolve 'leaf' to leaf emoji", () => {
+    const course = { ...mockCourse, icon: "leaf" };
+    render(<CourseCard course={course} />);
+    expect(screen.getByText("🌿")).toBeInTheDocument();
+  });
+
+  it("should resolve 'atom' to atom emoji", () => {
+    const course = { ...mockCourse, icon: "atom" };
+    render(<CourseCard course={course} />);
+    expect(screen.getByText("⚛️")).toBeInTheDocument();
+  });
+
+  it("should resolve 'microphone' to microphone emoji", () => {
+    const course = { ...mockCourse, icon: "microphone" };
+    render(<CourseCard course={course} />);
+    expect(screen.getByText("🎙️")).toBeInTheDocument();
+  });
+
+  it("should pass through unknown icon strings unchanged", () => {
+    const course = { ...mockCourse, icon: "🧠" };
+    render(<CourseCard course={course} />);
+    expect(screen.getByText("🧠")).toBeInTheDocument();
+  });
+
+  it("should pass through emoji icons unchanged", () => {
+    const course = { ...mockCourse, icon: "🤖" };
+    render(<CourseCard course={course} />);
+    expect(screen.getByText("🤖")).toBeInTheDocument();
+  });
+
+  it("should pass through unmapped string icons unchanged", () => {
+    const course = { ...mockCourse, icon: "rocket" };
+    render(<CourseCard course={course} />);
+    expect(screen.getByText("rocket")).toBeInTheDocument();
+  });
+});
