@@ -2,38 +2,94 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Font face declarations for distinctive typography */
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: local('Fraunces');
+}
+
+@font-face {
+  font-family: 'Figtree';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: local('Figtree');
+}
+
 :root {
-  /* Primary palette - warm gold for XP, cool blue for mastery */
-  --xp-gold: #F5C518;
-  --xp-gold-dim: #C9A227;
-  --mastery-blue: #4A90D9;
-  --mastery-blue-dim: #2E6AB3;
+  /* Typography */
+  --font-body: "Figtree", system-ui, sans-serif;
+  --font-display: "Fraunces", Georgia, serif;
 
-  /* Tinted neutrals - avoid pure gray, use blue-tinted for dark mode */
-  --surface-900: #0D1117;
-  --surface-800: #161B22;
-  --surface-700: #21262D;
-  --surface-600: #30363D;
-  --surface-500: #484F58;
+  /* Primary palette - warm gold for XP, cool blue for mastery (OKLCH) */
+  --xp-gold: oklch(0.85 0.17 85);
+  --xp-gold-dim: oklch(0.72 0.14 85);
+  --mastery-blue: oklch(0.62 0.15 250);
+  --mastery-blue-dim: oklch(0.52 0.13 250);
 
-  /* Text hierarchy - warm whites, blue-tinted muted text */
-  --text-primary: #E6EDF3;
-  --text-secondary: #8B949E;
-  --text-muted: #6E7681;
+  /* Tinted neutrals - avoid pure gray, use blue-tinted for dark mode (OKLCH) */
+  --surface-900: oklch(0.15 0.01 250);
+  --surface-800: oklch(0.19 0.01 250);
+  --surface-700: oklch(0.24 0.01 250);
+  --surface-600: oklch(0.30 0.01 250);
+  --surface-500: oklch(0.38 0.01 250);
 
-  /* League colors - distinct, avoid purple */
-  --league-bronze: #CD7F32;
-  --league-silver: #C0C0C0;
-  --league-gold: #FFD700;
-  --league-platinum: #00D4AA;
-  --league-diamond: #00BFFF;
-  --league-master: #FF6B35;
+  /* Text hierarchy - warm whites, blue-tinted muted text (OKLCH) */
+  --text-primary: oklch(0.92 0.01 250);
+  --text-secondary: oklch(0.62 0.02 250);
+  --text-muted: oklch(0.52 0.02 250);
+
+  /* League colors - distinct, avoid purple (OKLCH) */
+  --league-bronze: oklch(0.65 0.12 55);
+  --league-silver: oklch(0.78 0.01 250);
+  --league-gold: oklch(0.88 0.15 85);
+  --league-platinum: oklch(0.75 0.14 175);
+  --league-diamond: oklch(0.72 0.14 220);
+  --league-master: oklch(0.68 0.18 35);
+
+  /* Accent colors (OKLCH) */
+  --success-green: oklch(0.72 0.17 145);
+  --danger-red: oklch(0.62 0.20 25);
+  --warning-amber: oklch(0.78 0.14 75);
+  --accent-coral: oklch(0.68 0.18 25);
+  --border-soft: oklch(0.35 0.01 250);
+  --canvas: oklch(0.12 0.01 250);
+}
+
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--mastery-blue);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0 0 0.5rem 0.5rem;
+  font-weight: 600;
+  z-index: 9999;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
 }
 
 body {
+  font-family: var(--font-body, "Figtree", system-ui, sans-serif);
   background: linear-gradient(180deg, var(--surface-900) 0%, var(--surface-800) 100%);
   color: var(--text-primary);
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6,
+.display-type {
+  font-family: var(--font-display, "Fraunces", Georgia, serif);
+  letter-spacing: -0.02em;
 }
 
 /* Custom scrollbar - tinted to match surface */
@@ -70,11 +126,11 @@ body {
   filter: brightness(1.1);
 }
 
-/* Mastery level indicator colors - warm progression */
+/* Mastery level indicator colors - uses semantic tokens */
 .mastery-none { background-color: var(--surface-600); }
-.mastery-low { background-color: #E05252; }
-.mastery-medium { background-color: #D4A72C; }
-.mastery-high { background-color: #3FB950; }
+.mastery-low { background-color: var(--danger-red); }
+.mastery-medium { background-color: var(--warning-amber); }
+.mastery-high { background-color: var(--success-green); }
 .mastery-mastered { background-color: var(--mastery-blue); }
 
 /* ===== ANIMATION SYSTEM (Impeccable /animate) ===== */
@@ -163,7 +219,7 @@ body {
 /* Font display optimization */
 @font-face {
   font-family: 'SystemUI';
-  src: local('system-ui'), local('-apple-system'), local('BlinkMacSystemFont'), local('Segoe UI'), local('Roboto');
+  src: local('system-ui'), local('-apple-system'), local('BlinkMacSystemFont'), local('Segoe UI');
   font-display: swap;
 }
 
@@ -275,7 +331,7 @@ body {
 .stagger-4 { animation-delay: 0.4s; opacity: 0; }
 .stagger-5 { animation-delay: 0.5s; opacity: 0; }
 
-/* Interactive button class */
+/* Button action class */
 .btn-interactive {
   transition: transform 0.2s var(--ease-out-quart), box-shadow 0.2s var(--ease-out-quart), background-color 0.2s;
 }
