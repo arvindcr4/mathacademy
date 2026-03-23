@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import XPBar from "@/components/XPBar";
 import LeagueBadge from "@/components/LeagueBadge";
-import ThemeToggle from "@/components/ThemeToggle";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { StreakCounter } from "@/components/StreakCounter";
 import { courses } from "@/lib/curriculum";
 

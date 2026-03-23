@@ -5,7 +5,7 @@ import Link from "next/link";
 import XPBar from "@/components/XPBar";
 import CourseCard from "@/components/CourseCard";
 import LeagueBadge from "@/components/LeagueBadge";
-import ThemeToggle from "@/components/ThemeToggle";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { EmptyState } from "@/components/EmptyState";
 import { courses, categories } from "@/lib/curriculum";
 
