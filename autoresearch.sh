@@ -2,6 +2,7 @@
 set -euo pipefail
 
 SCORE=0
+BONUS=0
 
 echo "=== Design Compliance Audit ==="
 
@@ -93,26 +94,59 @@ fi
 # Check 8: Component Quality - forwardRef usage (10 bonus points)
 forwardref_count=$(grep -l "forwardRef" src/components/ui/*.tsx 2>/dev/null | wc -l || echo 0)
 if [ "${forwardref_count:-0}" -ge 4 ]; then
-    SCORE=$((SCORE + 10))
+    BONUS=$((BONUS + 10))
     echo "✓ Components: ${forwardref_count} use forwardRef (+10)"
 fi
 
 # Check 9: Component proper ARIA roles (5 bonus points)
 aria_count=$(grep -l "role=" src/components/ui/*.tsx 2>/dev/null | wc -l || echo 0)
 if [ "${aria_count:-0}" -gt 0 ]; then
-    SCORE=$((SCORE + 5))
+    BONUS=$((BONUS + 5))
     echo "✓ Components: ${aria_count} have ARIA roles (+5)"
 fi
 
-# Bound score (we can exceed 100 with bonus points)
-if [ "$SCORE" -lt 0 ]; then SCORE=0; fi
+# Check 10: Micro-interactions (5 bonus points)
+animation_count=$(grep -c "@keyframes" src/app/globals.css 2>/dev/null || true)
+animation_count=${animation_count:-0}
+if [ "$animation_count" -ge 8 ]; then
+    BONUS=$((BONUS + 5))
+    echo "✓ Micro-interactions: ${animation_count} keyframe animations (+5)"
+fi
+
+# Check 11: Responsive breakpoints (5 bonus points)
+media_count=$(grep -c "@media" src/app/globals.css 2>/dev/null || true)
+media_count=${media_count:-0}
+if [ "$media_count" -ge 5 ]; then
+    BONUS=$((BONUS + 5))
+    echo "✓ Responsive: ${media_count} media queries (+5)"
+fi
+
+# Check 12: Container queries (5 bonus points)
+container_count=$(grep -c "container-type\|@container" src/app/globals.css 2>/dev/null || true)
+container_count=${container_count:-0}
+if [ "$container_count" -gt 0 ]; then
+    BONUS=$((BONUS + 5))
+    echo "✓ Container Queries: ${container_count} present (+5)"
+fi
+
+# Calculate total
+TOTAL=$((SCORE + BONUS))
+
+# Bound score
+if [ "$TOTAL" -lt 0 ]; then TOTAL=0; fi
 
 echo ""
 echo "=== Design Compliance Score: ${SCORE}/115 ==="
+echo "=== Bonus Points: +${BONUS} ==="
+echo "=== Total Score: ${TOTAL}/135 ==="
 
 echo "METRIC design_compliance_score=${SCORE}"
+echo "METRIC total_score=${TOTAL}"
 echo "METRIC oklch_usage_count=${oklch_count:-0}"
 echo "METRIC css_token_count=${css_var_count:-0}"
 echo "METRIC anti_patterns_found=${anti_patterns:-0}"
 echo "METRIC component_forwardref_count=${forwardref_count:-0}"
 echo "METRIC component_aria_count=${aria_count:-0}"
+echo "METRIC animation_count=${animation_count:-0}"
+echo "METRIC media_query_count=${media_count:-0}"
+echo "METRIC container_query_count=${container_count:-0}"
