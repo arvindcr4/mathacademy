@@ -2,8 +2,29 @@
  * @vitest-environment jsdom
  */
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import Dashboard from "./page";
+
+// Mock user-data module
+vi.mock("@/lib/user-data", () => ({
+  loadUserData: vi.fn(() => ({
+    name: "John Doe",
+    avatar: "JD",
+    xp: 2450,
+    dailyXp: 847,
+    dailyGoal: 1000,
+    dailyDate: "2026-03-23",
+    topicsMastered: 12,
+    totalAnswered: 245,
+    totalCorrect: 198,
+    streak: 7,
+    lastActiveDate: "2026-03-23",
+    topicProgress: {},
+    kpProgress: {},
+  })),
+  getAccuracy: vi.fn(() => 89),
+  getLeague: vi.fn(() => "gold"),
+}));
 
 // Mock next/link
 vi.mock("next/link", () => ({
@@ -107,28 +128,29 @@ describe("Dashboard Page", () => {
   });
 
   describe("Header", () => {
-    it("should render the MathAcademy brand", () => {
+    it("should render the LearnNova brand", async () => {
       render(<Dashboard />);
-      expect(screen.getByText("MathAcademy")).toBeInTheDocument();
+      expect(await screen.findByText("LearnNova")).toBeInTheDocument();
     });
 
-    it("should link logo back to home", () => {
+    it("should link logo back to home", async () => {
       render(<Dashboard />);
-      const homeLink = screen.getByText("MathAcademy").closest("a");
-      expect(homeLink).toHaveAttribute("href", "/");
+      const homeLink = await screen.findByText("LearnNova");
+      expect(homeLink.closest("a")).toHaveAttribute("href", "/");
     });
 
-    it("should render navigation tabs", () => {
+    it("should render navigation tabs", async () => {
       render(<Dashboard />);
-      expect(screen.getByText("Dashboard")).toBeInTheDocument();
+      expect(await screen.findByText("Dashboard")).toBeInTheDocument();
       expect(screen.getByText("Leaderboard")).toBeInTheDocument();
       // "Courses" tab in navigation
       const coursesButtons = screen.getAllByText("Courses");
       expect(coursesButtons.length).toBeGreaterThanOrEqual(1);
     });
 
-    it("should render user avatar", () => {
+    it("should render user avatar", async () => {
       render(<Dashboard />);
+      await screen.findByText("LearnNova");
       // The current user avatar is "JD"
       const avatars = screen.getAllByText("JD");
       expect(avatars.length).toBeGreaterThan(0);
@@ -136,20 +158,21 @@ describe("Dashboard Page", () => {
   });
 
   describe("Dashboard Tab (default)", () => {
-    it("should show the welcome message by default", () => {
+    it("should show the welcome message by default", async () => {
       render(<Dashboard />);
-      expect(screen.getByText("Welcome back!")).toBeInTheDocument();
+      expect(await screen.findByText("Welcome back!")).toBeInTheDocument();
     });
 
-    it("should show the learning journey prompt", () => {
+    it("should show the learning journey prompt", async () => {
       render(<Dashboard />);
       expect(
-        screen.getByText("Ready to continue your learning journey?")
+        await screen.findByText("Ready to continue your learning journey?")
       ).toBeInTheDocument();
     });
 
-    it("should render the XPBar with daily XP props", () => {
+    it("should render the XPBar with daily XP props", async () => {
       render(<Dashboard />);
+      await screen.findByText("Welcome back!");
       const xpBar = screen.getByTestId("xp-bar");
       expect(xpBar).toBeInTheDocument();
       expect(xpBar).toHaveAttribute("data-current", "847");
@@ -157,83 +180,94 @@ describe("Dashboard Page", () => {
       expect(xpBar).toHaveAttribute("data-show-daily", "true");
     });
 
-    it("should render user stats grid", () => {
+    it("should render user stats grid", async () => {
       render(<Dashboard />);
+      await screen.findByText("Welcome back!");
       expect(screen.getByText("Total XP")).toBeInTheDocument();
       expect(screen.getByText("Topics Mastered")).toBeInTheDocument();
       expect(screen.getByText("Accuracy")).toBeInTheDocument();
     });
 
-    it("should show the gold league badge", () => {
+    it("should show the gold league badge", async () => {
       render(<Dashboard />);
+      await screen.findByText("Welcome back!");
       expect(screen.getByTestId("league-badge-gold-lg")).toBeInTheDocument();
     });
 
-    it("should show the league name", () => {
+    it("should show the league name", async () => {
       render(<Dashboard />);
+      await screen.findByText("Welcome back!");
       // There's a capitalized "gold" in the League Rank section
       const leagueElements = screen.getAllByText("gold");
       expect(leagueElements.length).toBeGreaterThan(0);
     });
 
-    it("should render Continue Learning section", () => {
+    it("should render Continue Learning section", async () => {
       render(<Dashboard />);
-      expect(screen.getByText("Continue Learning")).toBeInTheDocument();
+      expect(await screen.findByText("Continue Learning")).toBeInTheDocument();
     });
 
-    it("should render first 3 courses in Continue Learning", () => {
+    it("should render first 3 courses in Continue Learning", async () => {
       render(<Dashboard />);
+      await screen.findByText("Welcome back!");
       expect(screen.getByText("Test Course One")).toBeInTheDocument();
       expect(screen.getByText("Test Course Two")).toBeInTheDocument();
       expect(screen.getByText("Test Course Three")).toBeInTheDocument();
     });
 
-    it("should link continue learning courses to their pages", () => {
+    it("should link continue learning courses to their pages", async () => {
       render(<Dashboard />);
+      await screen.findByText("Welcome back!");
       const courseLink = screen.getByText("Test Course One").closest("a");
       expect(courseLink).toHaveAttribute("href", "/course/test-course-one");
     });
 
-    it("should render Your Knowledge Graph section", () => {
+    it("should render Your Knowledge Graph section", async () => {
       render(<Dashboard />);
-      expect(screen.getByText("Your Knowledge Graph")).toBeInTheDocument();
+      expect(await screen.findByText("Your Knowledge Graph")).toBeInTheDocument();
     });
 
-    it("should render mastered topics description", () => {
+    it("should render mastered topics description", async () => {
       render(<Dashboard />);
+      await screen.findByText("Welcome back!");
       expect(
         screen.getByText(/Topics you.*ve mastered appear with darker colors/)
       ).toBeInTheDocument();
     });
 
-    it("should show the user accuracy percentage", () => {
+    it("should show the user accuracy percentage", async () => {
       render(<Dashboard />);
+      await screen.findByText("Welcome back!");
       expect(screen.getByText("89%")).toBeInTheDocument();
     });
 
-    it("should show the topics mastered count", () => {
+    it("should show the topics mastered count", async () => {
       render(<Dashboard />);
+      await screen.findByText("Welcome back!");
       expect(screen.getByText("12")).toBeInTheDocument();
     });
 
-    it("should show In progress label for courses", () => {
+    it("should show In progress label for courses", async () => {
       render(<Dashboard />);
+      await screen.findByText("Welcome back!");
       const inProgressLabels = screen.getAllByText("In progress");
       expect(inProgressLabels.length).toBe(3);
     });
   });
 
   describe("Tab Navigation", () => {
-    it("should switch to Leaderboard tab when clicked", () => {
+    it("should switch to Leaderboard tab when clicked", async () => {
       render(<Dashboard />);
+      await screen.findByText("Welcome back!");
       const leaderboardButton = screen.getByText("Leaderboard");
       fireEvent.click(leaderboardButton);
 
       expect(screen.getByText("League Leaderboard")).toBeInTheDocument();
     });
 
-    it("should switch to Courses tab when clicked", () => {
+    it("should switch to Courses tab when clicked", async () => {
       render(<Dashboard />);
+      await screen.findByText("Welcome back!");
       // There may be multiple "Courses" elements; find the nav button
       const coursesButtons = screen.getAllByText("Courses");
       const navButton = coursesButtons.find(
@@ -246,7 +280,7 @@ describe("Dashboard Page", () => {
       expect(screen.getByText("All Courses")).toBeInTheDocument();
     });
 
-    it("should switch back to Dashboard tab", () => {
+    it("should switch back to Dashboard tab", async () => {
       render(<Dashboard />);
 
       // Go to leaderboard
@@ -258,7 +292,7 @@ describe("Dashboard Page", () => {
       expect(screen.getByText("Welcome back!")).toBeInTheDocument();
     });
 
-    it("should hide dashboard content when on other tabs", () => {
+    it("should hide dashboard content when on other tabs", async () => {
       render(<Dashboard />);
 
       fireEvent.click(screen.getByText("Leaderboard"));
@@ -268,8 +302,9 @@ describe("Dashboard Page", () => {
   });
 
   describe("Leaderboard Tab", () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       render(<Dashboard />);
+      await screen.findByText("Welcome back!");
       fireEvent.click(screen.getByText("Leaderboard"));
     });
 
@@ -312,8 +347,9 @@ describe("Dashboard Page", () => {
   });
 
   describe("Courses Tab", () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       render(<Dashboard />);
+      await screen.findByText("Welcome back!");
       const coursesButtons = screen.getAllByText("Courses");
       const navButton = coursesButtons.find(
         (el) => el.tagName === "BUTTON"
@@ -363,8 +399,9 @@ describe("Dashboard Page", () => {
 });
 
 describe("resolveIcon via Dashboard rendering", () => {
-  it("should resolve icon map keys in courses tab", () => {
+  it("should resolve icon map keys in courses tab", async () => {
     render(<Dashboard />);
+    await screen.findByText("Welcome back!");
     const coursesButtons = screen.getAllByText("Courses");
     const navButton = coursesButtons.find((el) => el.tagName === "BUTTON");
     if (navButton) {
@@ -379,7 +416,7 @@ describe("resolveIcon via Dashboard rendering", () => {
     expect(screen.getByText("TC4")).toBeInTheDocument();
   });
 
-  it("should resolve 'cube' icon to box emoji in course cards", () => {
+  it("should resolve 'cube' icon to box emoji in course cards", async () => {
     // Re-render with a custom mock that has 'cube' icon
     // We verify the behavior by checking the rendered output
     // The resolveIcon function returns iconMap[icon] ?? icon
@@ -399,13 +436,12 @@ describe("resolveIcon via Dashboard rendering", () => {
 });
 
 describe("Leaderboard ranking", () => {
-  it("should rank current user correctly by XP", () => {
+  it("should rank current user correctly by XP", async () => {
     render(<Dashboard />);
+    await screen.findByText("Welcome back!");
     fireEvent.click(screen.getByText("Leaderboard"));
 
     // Current user has 2450 XP
-    // Sophie Taylor has 2100 XP, Ryan Miller has 3210 XP
-    // So current user (2450) should be between Ryan Miller (3210) and Sophie Taylor (2100)
     // Users sorted by XP desc:
     // Alex Chen 12450, Sarah Kim 11320, James Wilson 9870, Emma Davis 8920,
     // Michael Brown 7650, Lisa Zhang 6540, David Park 5430, Anna Lee 4320,
@@ -414,25 +450,28 @@ describe("Leaderboard ranking", () => {
     expect(screen.getByText("#10")).toBeInTheDocument();
   });
 
-  it("should show current user highlighted in leaderboard table", () => {
+  it("should show current user highlighted in leaderboard table", async () => {
     render(<Dashboard />);
+    await screen.findByText("Welcome back!");
     fireEvent.click(screen.getByText("Leaderboard"));
 
     // The current user row should contain "You"
     expect(screen.getByText("You")).toBeInTheDocument();
   });
 
-  it("should show user rank in dashboard stats", () => {
+  it("should show user rank in dashboard stats", async () => {
     render(<Dashboard />);
-    // Dashboard tab shows League Rank stat - may appear multiple times (label + section)
+    await screen.findByText("Welcome back!");
     const leagueRankElements = screen.getAllByText("League Rank");
     expect(leagueRankElements.length).toBeGreaterThanOrEqual(1);
-    // The rank should be #10
-    expect(screen.getByText("#10")).toBeInTheDocument();
+    // The rank #10 appears in both league rank section and stats grid
+    const rankElements = screen.getAllByText("#10");
+    expect(rankElements.length).toBeGreaterThanOrEqual(1);
   });
 
-  it("should sort leaderboard users by XP descending", () => {
+  it("should sort leaderboard users by XP descending", async () => {
     render(<Dashboard />);
+    await screen.findByText("Welcome back!");
     fireEvent.click(screen.getByText("Leaderboard"));
 
     // Top 3 should be displayed with medals
@@ -445,8 +484,9 @@ describe("Leaderboard ranking", () => {
     expect(screen.getByText("12,450")).toBeInTheDocument();
   });
 
-  it("should show current user XP in leaderboard", () => {
+  it("should show current user XP in leaderboard", async () => {
     render(<Dashboard />);
+    await screen.findByText("Welcome back!");
     fireEvent.click(screen.getByText("Leaderboard"));
 
     // Current user XP is 2450 -> "2,450"
@@ -455,8 +495,9 @@ describe("Leaderboard ranking", () => {
 });
 
 describe("Progress bar widths stability", () => {
-  it("should have deterministic progress bar widths for continue learning courses", () => {
+  it("should have deterministic progress bar widths for continue learning courses", async () => {
     const { container } = render(<Dashboard />);
+    await screen.findByText("Welcome back!");
 
     // The Continue Learning section uses fixed widths: [45, 72, 28][index % 3]
     // Course 1: 45%, Course 2: 72%, Course 3: 28%
@@ -477,8 +518,9 @@ describe("Progress bar widths stability", () => {
     expect(widths).toContain("28%");
   });
 
-  it("should produce the same progress widths on re-render", () => {
+  it("should produce the same progress widths on re-render", async () => {
     const { container: container1, unmount } = render(<Dashboard />);
+    await screen.findByText("Welcome back!");
     const bars1 = container1.querySelectorAll(".h-full.rounded-full");
     const widths1: string[] = [];
     bars1.forEach((bar) => {
@@ -489,6 +531,7 @@ describe("Progress bar widths stability", () => {
     unmount();
 
     const { container: container2 } = render(<Dashboard />);
+    await screen.findByText("Welcome back!");
     const bars2 = container2.querySelectorAll(".h-full.rounded-full");
     const widths2: string[] = [];
     bars2.forEach((bar) => {

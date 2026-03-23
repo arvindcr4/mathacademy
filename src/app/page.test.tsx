@@ -5,6 +5,23 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import Home from "./page";
 
+vi.mock("@/lib/user-data", () => ({
+  loadUserData: vi.fn(() => ({
+    name: "John Doe",
+    avatar: "JD",
+    xp: 2450,
+    dailyXp: 847,
+    dailyGoal: 3000,
+    topicsMastered: 12,
+    totalAnswered: 45,
+    totalCorrect: 40,
+    streak: 12,
+  })),
+  getAccuracy: vi.fn(() => 89),
+  getLeague: vi.fn(() => "gold"),
+  getTopicMastery: vi.fn(() => 0.5),
+}));
+
 // Mock next/link to render as a simple anchor
 vi.mock("next/link", () => ({
   default: ({
@@ -129,7 +146,7 @@ describe("Home Page", () => {
   describe("Header", () => {
     it("should render the MathAcademy brand name", () => {
       render(<Home />);
-      expect(screen.getByText("MathAcademy")).toBeInTheDocument();
+      expect(screen.getByText("LearnNova")).toBeInTheDocument();
     });
 
     it("should render the M logo", () => {
@@ -213,14 +230,14 @@ describe("Home Page", () => {
   });
 
   describe("XP System Demo", () => {
-    it("should render the demo user profile", () => {
+    it("should render the demo user profile", async () => {
       render(<Home />);
-      expect(screen.getByText("John Doe")).toBeInTheDocument();
+      expect(await screen.findByText("John Doe")).toBeInTheDocument();
     });
 
     it("should render the demo user level info", () => {
       render(<Home />);
-      expect(screen.getByText(/Level 12/)).toBeInTheDocument();
+      expect(screen.getByText(/2,450 XP/)).toBeInTheDocument();
     });
 
     it("should render the XPBar component with correct props", () => {
@@ -410,7 +427,7 @@ describe("Home Page", () => {
       render(<Home />);
       expect(
         screen.getByText(
-          /MathAcademy.*Learn 4x Faster with AI-Powered Adaptive Learning/
+          /LearnNova.*Learn 4x Faster with AI-Powered Adaptive Learning/
         )
       ).toBeInTheDocument();
     });
