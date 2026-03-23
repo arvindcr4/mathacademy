@@ -694,3 +694,97 @@ h1, h2, h3, h4, h5, h6,
   outline: none;
   box-shadow: 0 0 0 3px oklch(0.62 0.15 250 / 50%);
 }
+
+/* ===== RESPONSIVE (/adapt) - Container queries ===== */
+
+/* Container query support for responsive components */
+.container-query {
+  container-type: inline-size;
+  container-name: card;
+}
+
+/* Responsive card layouts */
+@container card (min-width: 300px) {
+  .card-responsive {
+    flex-direction: row;
+  }
+}
+
+@container card (max-width: 299px) {
+  .card-responsive {
+    flex-direction: column;
+  }
+}
+
+/* Mobile-first spacing scale */
+:root {
+  --space-xs: clamp(0.25rem, 0.5vw, 0.5rem);
+  --space-sm: clamp(0.5rem, 1vw, 0.75rem);
+  --space-md: clamp(0.75rem, 2vw, 1rem);
+  --space-lg: clamp(1rem, 3vw, 1.5rem);
+  --space-xl: clamp(1.5rem, 4vw, 2rem);
+  --space-2xl: clamp(2rem, 6vw, 3rem);
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 640px) {
+  .mobile-stack {
+    flex-direction: column !important;
+    gap: var(--space-md);
+  }
+
+  .mobile-full {
+    width: 100% !important;
+  }
+
+  .mobile-center {
+    text-align: center !important;
+  }
+
+  .mobile-hide {
+    display: none !important;
+  }
+
+  /* Reduce heading sizes on mobile */
+  .display-type {
+    font-size: clamp(1.5rem, 5vw, 2.5rem) !important;
+  }
+
+  /* Reduce padding on mobile */
+  .surface-panel {
+    padding: var(--space-md) !important;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .tablet-stack {
+    flex-direction: column;
+  }
+
+  .tablet-half {
+    width: 50%;
+  }
+}
+
+/* Desktop-only elements */
+@media (min-width: 1025px) {
+  .desktop-only {
+    display: block;
+  }
+
+  .desktop-hide {
+    display: none;
+  }
+}
+
+/* Safe area insets for notched devices */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+}
