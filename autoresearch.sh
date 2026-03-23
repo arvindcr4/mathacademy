@@ -1,67 +1,118 @@
 #!/bin/bash
 set -euo pipefail
 
-cd /home/arvind/mathacademy
+SCORE=0
 
-# Count knowledge points (lines with full definition)
-KP_COUNT=$(grep -cE "^\s+\{ id: '[^']+', slug: '[^']+', name: '[^']+' \}," src/lib/curriculum.ts)
+echo "=== Design Compliance Audit ==="
 
-# Count topics with empty knowledgePoints (need to be filled)
-TOPICS_EMPTY=$(grep -c "knowledgePoints: \[\]" src/lib/curriculum.ts || true)
-TOPICS_EMPTY=${TOPICS_EMPTY:-0}
+# Check 1: OKLCH Colors in globals.css (20 points)
+oklch_count=$(grep -c "oklch(" src/app/globals.css 2>/dev/null || true)
+oklch_count=${oklch_count:-0}
+if [ "$oklch_count" -gt 10 ]; then
+    SCORE=$((SCORE + 20))
+    echo "✓ OKLCH Colors: ${oklch_count} usages (+20)"
+else
+    echo "✗ OKLCH Colors: only ${oklch_count} usages (need >10)"
+fi
 
-# Count topics with non-empty knowledgePoints (total topics = 79)
-TOPICS_FILLED=$((79 - TOPICS_EMPTY))
+# Check 2: Custom Fonts (15 points)
+has_fraunces=$(grep -c "Fraunces" src/app/layout.tsx 2>/dev/null || true)
+has_figtree=$(grep -c "Figtree" src/app/layout.tsx 2>/dev/null || true)
+has_generic=$(grep -cE "Inter|Roboto|Arial|OpenSans" src/app/globals.css 2>/dev/null || true)
+has_fraunces=${has_fraunces:-0}
+has_figtree=${has_figtree:-0}
+has_generic=${has_generic:-0}
+if [ "$has_fraunces" -gt 0 ] && [ "$has_figtree" -gt 0 ] && [ "$has_generic" -eq 0 ]; then
+    SCORE=$((SCORE + 15))
+    echo "✓ Custom Fonts: Fraunces + Figtree (+15)"
+elif [ "$has_fraunces" -gt 0 ] || [ "$has_figtree" -gt 0 ]; then
+    SCORE=$((SCORE + 8))
+    echo "~ Custom Fonts: Some custom fonts (+8)"
+else
+    echo "✗ Custom Fonts: Using generic fonts"
+fi
 
-# Target: 79 total topics, 0 empty means 100% coverage
-echo "METRIC knowledge_points_count=$KP_COUNT"
-echo "METRIC topics_empty=$TOPICS_EMPTY"
-echo "METRIC topics_filled=$TOPICS_FILLED"
-python3 -c "print(f'coverage_percent={round(($TOPICS_FILLED * 100) / 79, 1)}')"
+# Check 3: Focus States (10 points)
+has_focus=$(grep -c "focus-visible" src/app/globals.css 2>/dev/null || true)
+has_focus=${has_focus:-0}
+if [ "$has_focus" -gt 0 ]; then
+    SCORE=$((SCORE + 10))
+    echo "✓ Focus States: focus-visible present (+10)"
+else
+    echo "✗ Focus States: missing"
+fi
 
-python3 - <<'PY'
-from pathlib import Path
-import re
+# Check 4: Skip Links (10 points)
+has_skiplink=$(grep -c "skip-link" src/app/globals.css 2>/dev/null || true)
+has_skiplink=${has_skiplink:-0}
+if [ "$has_skiplink" -gt 0 ]; then
+    SCORE=$((SCORE + 10))
+    echo "✓ Skip Links: accessibility skip-link (+10)"
+else
+    echo "✗ Skip Links: missing"
+fi
 
-index_text = Path('src/lib/questions/index.ts').read_text()
-question_imports = re.findall(r"^import './([^']+)'", index_text, re.M)
-question_files = [Path('src/lib/questions') / f'{name}.ts' for name in question_imports]
+# Check 5: Reduced Motion (10 points)
+has_reduced_motion=$(grep -c "prefers-reduced-motion" src/app/globals.css 2>/dev/null || true)
+has_reduced_motion=${has_reduced_motion:-0}
+if [ "$has_reduced_motion" -gt 0 ]; then
+    SCORE=$((SCORE + 10))
+    echo "✓ Reduced Motion: prefers-reduced-motion (+10)"
+else
+    echo "✗ Reduced Motion: missing"
+fi
 
-questions_count = 0
-authored_hints_count = 0
-suspicious_explanations = 0
-question_sets_total = 0
-question_sets_full_difficulty_span = 0
+# Check 6: CSS Variables/Tokens (15 points)
+css_var_count=$(grep -cE "^[[:space:]]*--[a-z]" src/app/globals.css 2>/dev/null || true)
+css_var_count=${css_var_count:-0}
+if [ "$css_var_count" -gt 20 ]; then
+    SCORE=$((SCORE + 15))
+    echo "✓ CSS Tokens: ${css_var_count} design tokens (+15)"
+elif [ "$css_var_count" -gt 10 ]; then
+    SCORE=$((SCORE + 10))
+    echo "~ CSS Tokens: ${css_var_count} tokens (+10)"
+else
+    echo "✗ CSS Tokens: only ${css_var_count} tokens"
+fi
 
-for path in question_files:
-  if not path.exists():
-    continue
+# Check 7: Anti-Patterns (20 points)
+pure_black=$(grep -cE "#000000|#000[^a-fA-F0-9]" src/app/globals.css 2>/dev/null || true)
+pure_white=$(grep -cE "#FFFFFF|#FFF[^a-fA-F0-9]" src/app/globals.css 2>/dev/null || true)
+pure_black=${pure_black:-0}
+pure_white=${pure_white:-0}
+anti_patterns=$((pure_black + pure_white))
+if [ "$anti_patterns" -eq 0 ]; then
+    SCORE=$((SCORE + 20))
+    echo "✓ Anti-Patterns: No pure black/white (+20)"
+else
+    deduction=$((anti_patterns * 5))
+    SCORE=$((SCORE - deduction))
+    echo "✗ Anti-Patterns: Found ${anti_patterns} pure color usages (-${deduction})"
+fi
 
-  text = path.read_text()
-  questions_count += len(re.findall(r"\bid:\s*'q-", text))
-  authored_hints_count += len(re.findall(r"\bhints:\s*\[", text))
-  suspicious_explanations += len(re.findall(r"Wait\b|reconsider|TODO|FIXME|On second thought", text))
+# Check 8: Component Quality - forwardRef usage (10 bonus points)
+forwardref_count=$(grep -l "forwardRef" src/components/ui/*.tsx 2>/dev/null | wc -l || echo 0)
+if [ "${forwardref_count:-0}" -ge 4 ]; then
+    SCORE=$((SCORE + 10))
+    echo "✓ Components: ${forwardref_count} use forwardRef (+10)"
+fi
 
-  for _, body in re.findall(r"'([^']+)': \[(.*?)\n  \],", text, re.S):
-    difficulties = set(re.findall(r"difficulty: '(easy|medium|hard)'", body))
-    if difficulties:
-      question_sets_total += 1
-      if {'easy', 'medium', 'hard'}.issubset(difficulties):
-        question_sets_full_difficulty_span += 1
+# Check 9: Component proper ARIA roles (5 bonus points)
+aria_count=$(grep -l "role=" src/components/ui/*.tsx 2>/dev/null | wc -l || echo 0)
+if [ "${aria_count:-0}" -gt 0 ]; then
+    SCORE=$((SCORE + 5))
+    echo "✓ Components: ${aria_count} have ARIA roles (+5)"
+fi
 
-questions_missing_authored_hints = questions_count - authored_hints_count
-question_sets_missing_full_difficulty_span = question_sets_total - question_sets_full_difficulty_span
-difficulty_span_percent = round(
-  (question_sets_full_difficulty_span * 100) / question_sets_total,
-  1,
-) if question_sets_total else 0.0
+# Bound score (we can exceed 100 with bonus points)
+if [ "$SCORE" -lt 0 ]; then SCORE=0; fi
 
-print(f"METRIC questions_count={questions_count}")
-print(f"METRIC authored_hints_count={authored_hints_count}")
-print(f"METRIC questions_missing_authored_hints={questions_missing_authored_hints}")
-print(f"METRIC suspicious_explanations={suspicious_explanations}")
-print(f"METRIC question_sets_total={question_sets_total}")
-print(f"METRIC question_sets_full_difficulty_span={question_sets_full_difficulty_span}")
-print(f"METRIC question_sets_missing_full_difficulty_span={question_sets_missing_full_difficulty_span}")
-print(f"difficulty_span_percent={difficulty_span_percent}")
-PY
+echo ""
+echo "=== Design Compliance Score: ${SCORE}/115 ==="
+
+echo "METRIC design_compliance_score=${SCORE}"
+echo "METRIC oklch_usage_count=${oklch_count:-0}"
+echo "METRIC css_token_count=${css_var_count:-0}"
+echo "METRIC anti_patterns_found=${anti_patterns:-0}"
+echo "METRIC component_forwardref_count=${forwardref_count:-0}"
+echo "METRIC component_aria_count=${aria_count:-0}"
