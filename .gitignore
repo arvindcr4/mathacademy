@@ -34,3 +34,4 @@ Thumbs.db
 
 # Playwright
 .playwright-mcp/
+output/playwright/

@@ -102,11 +102,19 @@ describe('Electron App Configuration', () => {
     })
 
     it('should load from localhost in dev mode', () => {
-      expect(mainContent).toContain('http://localhost:3000/learnnova')
+      expect(mainContent).toContain('http://localhost:3000')
+    })
+
+    it('should support overriding the dev server URL', () => {
+      expect(mainContent).toContain('process.env.ELECTRON_DEV_BASE_URL')
     })
 
     it('should open DevTools in dev mode', () => {
       expect(mainContent).toContain('openDevTools()')
+    })
+
+    it('should allow DevTools to be disabled for automation', () => {
+      expect(mainContent).toContain('process.env.ELECTRON_DISABLE_DEVTOOLS')
     })
 
     it('should load from out directory in production mode', () => {
@@ -157,7 +165,7 @@ describe('Electron App Configuration', () => {
   describe('Error Resilience', () => {
     it('should handle missing out directory gracefully in production', () => {
       // Check that the code constructs the path properly
-      expect(mainContent).toContain('const indexPath = path.join(outDir, "index.html")')
+      expect(mainContent).toContain('const indexPath = path.join(OUT_DIR, "index.html")')
     })
 
     it('should use mainWindow variable for window tracking', () => {
@@ -343,6 +351,7 @@ describe('Electron App Configuration', () => {
     it('should use concurrently for electron:dev', () => {
       expect(packageJson.scripts['electron:dev']).toContain('concurrently')
       expect(packageJson.scripts['electron:dev']).toContain('next dev')
+      expect(packageJson.scripts['electron:dev']).toContain('--port 3000')
     })
 
     it('should use wait-on for electron:dev', () => {
@@ -356,25 +365,22 @@ describe('Electron App Configuration', () => {
   })
 
   describe('URL and Path Handling', () => {
-    it('should construct correct dev URL with basePath', () => {
-      const devUrl = 'http://localhost:3000/learnnova'
+    it('should construct correct dev URL at the app root', () => {
+      const devUrl = 'http://localhost:3000'
       const url = new URL(devUrl)
-      expect(url.pathname).toBe('/learnnova')
+      expect(url.pathname).toBe('/')
       expect(url.hostname).toBe('localhost')
       expect(url.port).toBe('3000')
     })
 
-    it('should have consistent basePath in dev and production', () => {
-      // Dev: http://localhost:3000/learnnova
-      // Prod: out/index.html (built with basePath: '/learnnova')
-      const devPath = '/learnnova'
-      const prodBasePath = '/learnnova'
-      expect(devPath).toBe(prodBasePath)
+    it('should keep the dev URL at the app root', () => {
+      const devPath = '/'
+      expect(devPath).toBe('/')
     })
 
     it('should use path.join for cross-platform compatibility', () => {
       expect(mainContent).toContain('path.join(__dirname')
-      expect(mainContent).toContain('path.join(outDir')
+      expect(mainContent).toContain('path.join(OUT_DIR')
     })
 
     it('should not use backslashes in path construction', () => {
@@ -484,7 +490,7 @@ describe('Electron App Configuration', () => {
     })
 
     it('should load index.html from out directory', () => {
-      expect(mainContent).toContain('path.join(outDir, "index.html")')
+      expect(mainContent).toContain('path.join(OUT_DIR, "index.html")')
       expect(mainContent).toContain('mainWindow.loadFile(indexPath)')
     })
   })
@@ -696,7 +702,7 @@ describe('Electron App Configuration', () => {
     })
 
     it('should check if out directory exists', () => {
-      expect(mainContent).toContain('fs.existsSync(outDir)')
+      expect(mainContent).toContain('fs.existsSync(OUT_DIR)')
     })
 
     it('should quit gracefully if build not found', () => {

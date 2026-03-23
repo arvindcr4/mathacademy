@@ -14,8 +14,8 @@ let loadingWindow;
 let tray = null;
 let assetRedirectsRegistered = false;
 
-const DEV_BASE_URL = "http://localhost:3000/learnnova";
-const APP_BASE_PATH = "/learnnova";
+const DEV_BASE_URL = process.env.ELECTRON_DEV_BASE_URL || "http://localhost:3000";
+const APP_BASE_PATH = "/";
 const OUT_DIR = path.join(__dirname, "../out");
 const PUBLIC_DIR = path.join(__dirname, "../public");
 
@@ -560,11 +560,15 @@ function createWindow() {
   });
 
   const isDev = process.env.ELECTRON_DEV === "true";
+  const shouldOpenDevTools =
+    isDev && process.env.ELECTRON_DISABLE_DEVTOOLS !== "true";
 
   if (isDev) {
     // Development: load from Next.js dev server
     mainWindow.loadURL(DEV_BASE_URL);
-    mainWindow.webContents.openDevTools();
+    if (shouldOpenDevTools) {
+      mainWindow.webContents.openDevTools();
+    }
   } else {
     // Production: load from static export
     // Check if out directory exists
