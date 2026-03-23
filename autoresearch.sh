@@ -136,9 +136,9 @@ TOTAL=$((SCORE + BONUS))
 if [ "$TOTAL" -lt 0 ]; then TOTAL=0; fi
 
 echo ""
-echo "=== Design Compliance Score: ${SCORE}/115 ==="
+echo "=== Design Compliance Score: ${SCORE}/100 ==="
 echo "=== Bonus Points: +${BONUS} ==="
-echo "=== Total Score: ${TOTAL}/135 ==="
+echo "=== Total Score: ${TOTAL}/130 ==="
 
 echo "METRIC design_compliance_score=${SCORE}"
 echo "METRIC total_score=${TOTAL}"
