@@ -5,6 +5,7 @@ import Link from "next/link";
 import XPBar from "@/components/XPBar";
 import LeagueBadge from "@/components/LeagueBadge";
 import ThemeToggle from "@/components/ThemeToggle";
+import { StreakCounter } from "@/components/StreakCounter";
 import { courses } from "@/lib/curriculum";
 
 // Map string icon names to emoji equivalents
@@ -197,6 +198,7 @@ export default function Dashboard() {
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
+                  <StreakCounter count={18} />
                   <LeagueBadge league={currentUser.league} size="lg" />
                   <div>
                     <div className="text-sm text-[var(--text-muted)]">League Rank</div>
