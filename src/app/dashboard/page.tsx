@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import XPBar from "@/components/XPBar";
 import LeagueBadge from "@/components/LeagueBadge";
+import ThemeToggle from "@/components/ThemeToggle";
 import { courses } from "@/lib/curriculum";
 
 // Map string icon names to emoji equivalents
@@ -169,6 +170,7 @@ export default function Dashboard() {
               </button>
             </nav>
             <div className="flex items-center gap-3">
+              <ThemeToggle />
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--xp-gold)] to-orange-500 flex items-center justify-center font-bold text-black">
                 {currentUser.avatar}
               </div>
