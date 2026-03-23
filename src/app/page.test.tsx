@@ -183,7 +183,7 @@ describe("Home Page", () => {
       const startLearningLink = screen.getByText("Start Learning");
       expect(startLearningLink.closest("a")).toHaveAttribute(
         "href",
-        "/dashboard"
+        "/signup"
       );
     });
   });
@@ -216,10 +216,10 @@ describe("Home Page", () => {
       expect(screen.getByText("Browse Courses")).toBeInTheDocument();
     });
 
-    it("should link Start Your Journey to dashboard", () => {
+    it("should link Start Your Journey to signup", () => {
       render(<Home />);
       const ctaLink = screen.getByText("Start Your Journey");
-      expect(ctaLink.closest("a")).toHaveAttribute("href", "/dashboard");
+      expect(ctaLink.closest("a")).toHaveAttribute("href", "/signup");
     });
 
     it("should link Browse Courses to courses section", () => {
@@ -229,43 +229,6 @@ describe("Home Page", () => {
     });
   });
 
-  describe("XP System Demo", () => {
-    it("should render the demo user profile", async () => {
-      render(<Home />);
-      expect(await screen.findByText("John Doe")).toBeInTheDocument();
-    });
-
-    it("should render the demo user level info", () => {
-      render(<Home />);
-      expect(screen.getByText(/2,450 XP/)).toBeInTheDocument();
-    });
-
-    it("should render the XPBar component with correct props", () => {
-      render(<Home />);
-      const xpBar = screen.getByTestId("xp-bar");
-      expect(xpBar).toBeInTheDocument();
-      expect(xpBar).toHaveAttribute("data-current", "2450");
-      expect(xpBar).toHaveAttribute("data-goal", "3000");
-      expect(xpBar).toHaveAttribute("data-show-daily", "true");
-    });
-
-    it("should render demo stats", () => {
-      render(<Home />);
-      expect(screen.getByText("847")).toBeInTheDocument();
-      expect(screen.getByText("XP Today")).toBeInTheDocument();
-      expect(screen.getByText("12")).toBeInTheDocument();
-      expect(screen.getByText("Topics Mastered")).toBeInTheDocument();
-      expect(screen.getByText("89%")).toBeInTheDocument();
-      expect(screen.getByText("Accuracy")).toBeInTheDocument();
-    });
-
-    it("should render the gold LeagueBadge", () => {
-      render(<Home />);
-      // Gold badge appears in the XP demo section and in the league system section
-      const goldBadges = screen.getAllByTestId("league-badge-gold");
-      expect(goldBadges.length).toBeGreaterThanOrEqual(1);
-    });
-  });
 
   describe("Course Catalog", () => {
     it("should render the Course Catalog heading", () => {

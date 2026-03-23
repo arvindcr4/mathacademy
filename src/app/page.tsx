@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import XPBar from "@/components/XPBar";
 import CourseCard from "@/components/CourseCard";
 import LeagueBadge from "@/components/LeagueBadge";
 import { courses, categories } from "@/lib/curriculum";
@@ -36,7 +35,7 @@ export default function Home() {
               How It Works
             </Link>
             <Link
-              href="/dashboard"
+              href="/signup"
               className="px-4 py-2 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 transition"
             >
               Start Learning
@@ -62,7 +61,7 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/dashboard"
+              href="/signup"
               className="px-8 py-4 bg-yellow-500 text-black font-bold text-lg rounded-xl hover:bg-yellow-400 transition shadow-lg shadow-yellow-500/30"
             >
               Start Your Journey
@@ -73,45 +72,6 @@ export default function Home() {
             >
               Browse Courses
             </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* XP System Demo */}
-      <section className="py-16 px-4">
-        <div className="max-w-3xl mx-auto">
-          <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 border border-white/10">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-xl font-bold text-black">
-                  JD
-                </div>
-                <div>
-                  <div className="font-semibold">John Doe</div>
-                  <div className="text-sm text-gray-400">
-                    Level 12 • 2,450 XP
-                  </div>
-                </div>
-              </div>
-              <LeagueBadge league="gold" />
-            </div>
-
-            <XPBar current={2450} goal={3000} showDaily />
-
-            <div className="mt-6 grid grid-cols-3 gap-4 text-center">
-              <div className="bg-white/5 rounded-xl p-4">
-                <div className="text-2xl font-bold text-yellow-400">847</div>
-                <div className="text-sm text-gray-400">XP Today</div>
-              </div>
-              <div className="bg-white/5 rounded-xl p-4">
-                <div className="text-2xl font-bold text-blue-400">12</div>
-                <div className="text-sm text-gray-400">Topics Mastered</div>
-              </div>
-              <div className="bg-white/5 rounded-xl p-4">
-                <div className="text-2xl font-bold text-green-400">89%</div>
-                <div className="text-sm text-gray-400">Accuracy</div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
