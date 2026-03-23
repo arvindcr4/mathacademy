@@ -40,6 +40,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
     return (
       <div
         ref={ref}
+        role="article"
         className={`${baseStyles} ${variants[variant]} ${paddings[padding]} ${className}`}
         {...props}
       >

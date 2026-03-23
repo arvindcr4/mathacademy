@@ -31,6 +31,8 @@ export const StatCard = forwardRef<HTMLDivElement, StatCardProps>(
     return (
       <div
         ref={ref}
+        role="status"
+        aria-live="polite"
         className={`${baseStyles} ${variants[variant]} ${className}`}
         {...props}
       >

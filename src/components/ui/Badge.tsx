@@ -35,6 +35,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
     return (
       <span
         ref={ref}
+        role="status"
         className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
         style={style}
         {...props}
