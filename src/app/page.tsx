@@ -5,6 +5,7 @@ import Link from "next/link";
 import XPBar from "@/components/XPBar";
 import CourseCard from "@/components/CourseCard";
 import LeagueBadge from "@/components/LeagueBadge";
+import ThemeToggle from "@/components/ThemeToggle";
 import { EmptyState } from "@/components/EmptyState";
 import { courses, categories } from "@/lib/curriculum";
 
@@ -39,6 +40,7 @@ export default function Home() {
             >
               How It Works
             </Link>
+            <ThemeToggle />
             <Link
               href="/dashboard"
               className="px-4 py-2 bg-[var(--xp-gold)] text-black font-semibold rounded-lg hover:bg-[var(--xp-gold-dim)] transition focus-ring"
