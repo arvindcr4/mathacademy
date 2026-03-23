@@ -58,6 +58,23 @@ vi.mock("@/components/LeagueBadge", () => ({
   ),
 }));
 
+// Mock ThemeToggle to avoid localStorage issues in jsdom
+vi.mock("@/components/ThemeToggle", () => ({
+  ThemeToggle: (props: Record<string, unknown>) => (
+    <button data-testid="theme-toggle" {...props}>Theme</button>
+  ),
+}));
+
+// Mock EmptyState to avoid Button dependency chain
+vi.mock("@/components/EmptyState", () => ({
+  EmptyState: ({ title, description }: { title: string; description: string }) => (
+    <div data-testid="empty-state">
+      <span>{title}</span>
+      <span>{description}</span>
+    </div>
+  ),
+}));
+
 // Mock curriculum with a small set of courses
 vi.mock("@/lib/curriculum", () => ({
   categories: [
