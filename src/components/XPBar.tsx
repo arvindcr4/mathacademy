@@ -62,7 +62,7 @@ export default function XPBar({
           {showDaily ? "Daily XP" : "Total XP"}
         </span>
         <span className="font-medium text-[var(--text-primary)]">
-          {animatedCurrent.toLocaleString()} / {goal.toLocaleString()}
+          {animatedCurrent.toLocaleString("en-US")} / {goal.toLocaleString("en-US")}
           {celebrating && (
             <span className="ml-2 inline-block animate-xp-pop">🎉</span>
           )}

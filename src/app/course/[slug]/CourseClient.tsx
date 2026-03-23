@@ -156,8 +156,8 @@ export default function CourseClient() {
                     <span className="text-sm text-gray-400">Knowledge Points ({currentKpIndex + 1} of {totalKps})</span>
                     <span className="text-sm font-medium">{currentKp?.name || "Complete"}</span>
                   </div>
-                  <div className="w-full bg-slate-700 rounded-full h-2">
-                    <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-500" style={{ width: `${((currentKpIndex + 1) / totalKps) * 100}%` }} />
+                  <div className="w-full bg-slate-700 rounded-full h-2" role="progressbar" aria-label="Knowledge point progress">
+                    <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-500" style={{ width: `${((currentKpIndex + 1) / totalKps) * 100}%` }} data-testid="kp-progress-fill" />
                   </div>
                   {currentKp && (
                     <div className="mt-2 flex items-center gap-4 text-xs text-gray-400">

@@ -2,7 +2,7 @@
  * @vitest-environment jsdom
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, act, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import CourseClient from "./CourseClient";
 
 // Mock next/navigation
@@ -468,23 +468,18 @@ describe("CourseClient", () => {
     });
 
     it("should clear feedback after timeout", async () => {
-    vi.useFakeTimers();
     await renderAndWait();
     fireEvent.click(screen.getByText(/The board position/));
     fireEvent.click(await screen.findByText("Check Answer"));
     expect(await screen.findByText("Correct!")).toBeInTheDocument();
 
-    await act(async () => {
-      vi.advanceTimersByTime(2100);
-    });
+    await new Promise(r => setTimeout(r, 2100));
 
     expect(screen.queryByText("Correct!")).not.toBeInTheDocument();
-    vi.useRealTimers();
   });
     });
 
     it("should not advance past last KP after answering", async () => {
-    vi.useFakeTimers();
     await renderAndWait();
     fireEvent.click(screen.getByText(/Next/));
     fireEvent.click(screen.getByText(/Next/));
@@ -493,17 +488,9 @@ describe("CourseClient", () => {
     fireEvent.click(screen.getByText(/Agent is myopic/));
     fireEvent.click(await screen.findByText("Check Answer"));
 
-    await act(async () => {
-      vi.advanceTimersByTime(2100);
-    });
+    await new Promise(r => setTimeout(r, 2100));
 
     expect(screen.getByText(/3 of 3/)).toBeInTheDocument();
-    vi.useRealTimers();
-  });
-      vi.useRealTimers();
-
-      expect(screen.getByText(/3 of 3/)).toBeInTheDocument();
-    });
   });
 
   describe("XP tracking", () => {

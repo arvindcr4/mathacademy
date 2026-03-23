@@ -35,3 +35,29 @@ Thumbs.db
 # Playwright
 .playwright-mcp/
 output/playwright/
+
+# Build outputs
+dist-electron/
+out_wrap/
+serve_dir/
+
+# Temp fix scripts
+fix_*.js
+fix_*.py
+add_testid.py
+rename.py
+rewrite_dashboard.js
+rm_demo*.js
+rm_demo*.py
+
+# Temp artifacts
+*.patch
+*_raw.txt
+server.log
+deep-e2e-test.mjs
+e2e-final-regression.*
+e2e-screenshots/
+
+# Tool directories
+.claude-flow/
+.understand-anything/
