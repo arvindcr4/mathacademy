@@ -60,6 +60,31 @@
   --canvas: oklch(0.12 0.01 250);
 }
 
+/* Light theme override */
+[data-theme="light"] {
+  --surface-900: oklch(0.98 0.005 250);
+  --surface-800: oklch(0.95 0.005 250);
+  --surface-700: oklch(0.92 0.005 250);
+  --surface-600: oklch(0.88 0.005 250);
+  --surface-500: oklch(0.82 0.005 250);
+  --surface-400: oklch(0.76 0.005 250);
+
+  --text-primary: oklch(0.15 0.02 250);
+  --text-secondary: oklch(0.38 0.02 250);
+  --text-muted: oklch(0.50 0.02 250);
+
+  --canvas: oklch(0.98 0.005 250);
+  --border-soft: oklch(0.85 0.01 250);
+
+  /* Adjust accent colors for light theme */
+  --xp-gold: oklch(0.75 0.18 80);
+  --mastery-blue: oklch(0.55 0.18 250);
+}
+
+[data-theme="light"] body {
+  background: linear-gradient(180deg, var(--surface-900) 0%, var(--surface-800) 100%);
+}
+
 html {
   scroll-behavior: smooth;
 }
