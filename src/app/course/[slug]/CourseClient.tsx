@@ -39,6 +39,12 @@ export default function CourseClient() {
     }
   }, [course, selectedTopic]);
 
+  useEffect(() => {
+    if (selectedTopic) {
+      setMasteryLevel(userProgress[selectedTopic.slug] || 0);
+    }
+  }, [selectedTopic]);
+
   if (!course) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -57,6 +63,10 @@ export default function CourseClient() {
   // const progress = selectedTopic ? (userProgress[selectedTopic.slug] || 0) : 0
 
   const handleSubmit = () => {
+    if (!userAnswer.trim() || feedback !== null) {
+      return;
+    }
+
     const isCorrect = Math.random() > 0.3;
     setFeedback(isCorrect ? "correct" : "incorrect");
 
@@ -466,8 +476,16 @@ export default function CourseClient() {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-sm text-[var(--text-muted)]">Mastery:</span>
-              <div className="w-24 h-2 bg-[var(--surface-600)] rounded-full overflow-hidden">
+              <div
+                className="w-24 h-2 bg-[var(--surface-600)] rounded-full overflow-hidden"
+                role="progressbar"
+                aria-label="Topic mastery"
+                aria-valuenow={Math.round(masteryLevel * 100)}
+                aria-valuemin={0}
+                aria-valuemax={100}
+              >
                 <div
+                  data-testid="mastery-progress-fill"
                   className="h-full bg-gradient-to-r from-[var(--mastery-blue)] to-[var(--success-green)] transition-all duration-500"
                   style={{ width: `${masteryLevel * 100}%` }}
                 />
@@ -477,7 +495,7 @@ export default function CourseClient() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main id="main-content" className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Sidebar - Topic List */}
           <div className="lg:col-span-1">
@@ -548,8 +566,16 @@ export default function CourseClient() {
                       {currentKp?.name || "Complete"}
                     </span>
                   </div>
-                  <div className="w-full bg-[var(--surface-600)] rounded-full h-2">
+                  <div
+                    className="w-full bg-[var(--surface-600)] rounded-full h-2"
+                    role="progressbar"
+                    aria-label="Knowledge point progress"
+                    aria-valuenow={Math.round(((currentKpIndex + 1) / totalKps) * 100)}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                  >
                     <div
+                      data-testid="kp-progress-fill"
                       className="h-full bg-gradient-to-r from-[var(--mastery-blue)] to-teal-500 rounded-full transition-all duration-500"
                       style={{
                         width: `${((currentKpIndex + 1) / totalKps) * 100}%`,
@@ -616,8 +642,13 @@ export default function CourseClient() {
                         type="text"
                         value={userAnswer}
                         onChange={(e) => setUserAnswer(e.target.value)}
-                        onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            handleSubmit();
+                          }
+                        }}
                         placeholder="Type your answer..."
+                        aria-label="Answer input"
                         className={`
                           w-full bg-[var(--surface-900)]/50 border rounded-lg px-4 py-3 text-white
                           focus:outline-none focus:ring-2
@@ -643,10 +674,10 @@ export default function CourseClient() {
                               </div>
                               <div>
                                 <div className="font-semibold text-[var(--success-green)]">
-                                  Nice work! You got it right.
+                                  Correct!
                                 </div>
                                 <div className="text-sm text-[var(--text-muted)]">
-                                  +{10} XP earned — Keep building that streak!
+                                  Nice work. +{10} XP earned — keep building that streak.
                                 </div>
                               </div>
                             </div>
@@ -658,10 +689,10 @@ export default function CourseClient() {
                                 </div>
                                 <div>
                                   <div className="font-semibold text-[var(--danger-red)]">
-                                    Not quite — but you&apos;re learning!
+                                    Incorrect
                                   </div>
                                   <p className="text-sm text-[var(--text-muted)] mt-1">
-                                    The answer is:{" "}
+                                    Not quite, but you&apos;re learning. The answer is:{" "}
                                     <span className="text-[var(--success-green)] font-medium">
                                       {currentExamples[0]?.a}
                                     </span>

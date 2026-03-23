@@ -531,27 +531,25 @@ describe("CourseClient", () => {
     it("should update mastery level on correct answer", () => {
       vi.spyOn(Math, "random").mockReturnValue(0.8);
 
-      const { container } = render(<CourseClient />);
+      render(<CourseClient />);
 
-      // Initially mastery is 0%
-      const masteryBars = container.querySelectorAll(".bg-gradient-to-r.from-blue-500.to-green-500");
-      expect(masteryBars.length).toBeGreaterThan(0);
-      const masteryBar = masteryBars[0] as HTMLElement;
-      expect(masteryBar.style.width).toBe("0%");
+      // The first topic starts from saved user progress (85%)
+      const masteryBar = screen.getByTestId("mastery-progress-fill") as HTMLElement;
+      expect(masteryBar.style.width).toBe("85%");
 
       // Answer correctly
       const input = screen.getByPlaceholderText("Type your answer...");
       fireEvent.change(input, { target: { value: "answer" } });
       fireEvent.click(screen.getByText("Check Answer"));
 
-      // Mastery should increase to 10%
-      expect(masteryBar.style.width).toBe("10%");
+      // Mastery should increase from 85% to 95%
+      expect(masteryBar.style.width).toBe("95%");
 
       vi.mocked(Math.random).mockRestore();
     });
 
     it("should update mastery when switching topics based on userProgress", () => {
-      const { container } = render(<CourseClient />);
+      render(<CourseClient />);
 
       // Switch to bellman-equations topic (60% progress)
       const bellmanButton = screen.getByRole("button", { name: /Bellman Equations/ });
@@ -559,9 +557,7 @@ describe("CourseClient", () => {
 
       // After topic switch, mastery is set to topicProgress (0.6)
       // The mastery bar width should reflect 60%
-      const masteryBars = container.querySelectorAll(".bg-gradient-to-r.from-blue-500.to-green-500");
-      expect(masteryBars.length).toBeGreaterThan(0);
-      const masteryBar = masteryBars[0] as HTMLElement;
+      const masteryBar = screen.getByTestId("mastery-progress-fill") as HTMLElement;
       expect(masteryBar.style.width).toBe("60%");
     });
   });
@@ -613,16 +609,16 @@ describe("CourseClient", () => {
 
   describe("Progress bar", () => {
     it("should show knowledge points progress bar", () => {
-      const { container } = render(<CourseClient />);
-      // Find the progress bar by looking for the gradient style
-      const progressBars = container.querySelectorAll(".bg-gradient-to-r.from-blue-500.to-purple-500");
-      expect(progressBars.length).toBeGreaterThan(0);
+      render(<CourseClient />);
+      expect(
+        screen.getByRole("progressbar", { name: "Knowledge point progress" })
+      ).toBeInTheDocument();
     });
 
     it("should update progress bar width when navigating KPs", () => {
-      const { container } = render(<CourseClient />);
+      render(<CourseClient />);
 
-      const progressBar = container.querySelector(".bg-gradient-to-r.from-blue-500.to-purple-500") as HTMLElement;
+      const progressBar = screen.getByTestId("kp-progress-fill") as HTMLElement;
       // KP 1 of 3: width should be ~33%
       const initialWidth = progressBar.style.width;
 

@@ -5,6 +5,7 @@ import Link from "next/link";
 import XPBar from "@/components/XPBar";
 import CourseCard from "@/components/CourseCard";
 import LeagueBadge from "@/components/LeagueBadge";
+import { EmptyState } from "@/components/EmptyState";
 import { courses, categories } from "@/lib/curriculum";
 
 export default function Home() {
@@ -26,24 +27,29 @@ export default function Home() {
             <span className="text-xl font-bold">MathAcademy</span>
           </div>
           <nav className="hidden md:flex items-center gap-6">
-            <Link href="#courses" className="hover:text-[var(--xp-gold)] transition">
+            <Link
+              href="#courses"
+              className="hover:text-[var(--xp-gold)] transition focus-ring"
+            >
               Courses
             </Link>
             <Link
               href="#how-it-works"
-              className="hover:text-[var(--xp-gold)] transition"
+              className="hover:text-[var(--xp-gold)] transition focus-ring"
             >
               How It Works
             </Link>
             <Link
               href="/dashboard"
-              className="px-4 py-2 bg-[var(--xp-gold)] text-black font-semibold rounded-lg hover:bg-[var(--xp-gold-dim)] transition"
+              className="px-4 py-2 bg-[var(--xp-gold)] text-black font-semibold rounded-lg hover:bg-[var(--xp-gold-dim)] transition focus-ring"
             >
               Start Learning
             </Link>
           </nav>
         </div>
       </header>
+
+      <main id="main-content">
 
       {/* Hero Section - Refined boldness (/bolder + /quieter balance) */}
       <section className="py-20 md:py-28 px-4 relative overflow-hidden">
@@ -55,7 +61,7 @@ export default function Home() {
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--xp-gold)]"></span>
             AI-Powered Adaptive Learning
           </div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight animate-fade-in-up stagger-1">
+          <h1 className="display-type text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight animate-fade-in-up stagger-1">
             <span className="text-white">Master Skills</span>
             <br />
             <span className="bg-gradient-to-r from-[var(--xp-gold)] via-amber-400 to-[var(--xp-gold)] bg-clip-text text-transparent">
@@ -70,14 +76,14 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center animate-fade-in-up stagger-3">
             <Link
               href="/dashboard"
-              className="group px-8 py-4 bg-[var(--xp-gold)] text-black font-semibold text-base rounded-xl hover:bg-[var(--xp-gold-dim)] transition-all duration-300 shadow-lg shadow-[var(--xp-gold)]/20 hover:shadow-xl hover:shadow-[var(--xp-gold)]/25 hover:-translate-y-0.5 btn-interactive"
+              className="group px-8 py-4 bg-[var(--xp-gold)] text-black font-semibold text-base rounded-xl hover:bg-[var(--xp-gold-dim)] transition-all duration-300 shadow-lg shadow-[var(--xp-gold)]/20 hover:shadow-xl hover:shadow-[var(--xp-gold)]/25 hover:-translate-y-0.5 btn-interactive focus-ring"
             >
               Start Your Journey
               <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
             </Link>
             <Link
               href="#courses"
-              className="px-8 py-4 bg-[var(--surface-700)] border border-[var(--surface-500)] font-medium text-base rounded-xl hover:bg-[var(--surface-600)] hover:border-[var(--surface-400)] transition-all duration-300"
+              className="px-8 py-4 bg-[var(--surface-700)] border border-[var(--surface-500)] font-medium text-base rounded-xl hover:bg-[var(--surface-600)] hover:border-[var(--surface-400)] transition-all duration-300 focus-ring"
             >
               Browse Courses
             </Link>
@@ -127,13 +133,14 @@ export default function Home() {
       {/* Category Filter */}
       <section id="courses" className="py-8 px-4">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold mb-8">Course Catalog</h2>
+          <h2 className="display-type text-3xl font-bold mb-8">Course Catalog</h2>
 
           <div className="flex flex-wrap gap-3 mb-8">
             <button
               type="button"
+              aria-pressed={!selectedCategory}
               onClick={() => setSelectedCategory(null)}
-              className={`px-4 py-2 rounded-lg font-medium transition ${
+              className={`px-4 py-2 rounded-lg font-medium transition focus-ring ${
                 !selectedCategory
                   ? "bg-[var(--mastery-blue)] text-white"
                   : "bg-[var(--surface-600)] hover:bg-[var(--surface-500)]"
@@ -145,8 +152,9 @@ export default function Home() {
               <button
                 type="button"
                 key={cat.id}
+                aria-pressed={selectedCategory === cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
+                className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 focus-ring ${
                   selectedCategory === cat.id
                     ? "bg-[var(--mastery-blue)] text-white"
                     : "bg-[var(--surface-600)] hover:bg-[var(--surface-500)]"
@@ -158,18 +166,30 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCourses.map((course) => (
-              <CourseCard key={course.id} course={course} />
-            ))}
-          </div>
+          {filteredCourses.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 content-auto">
+              {filteredCourses.map((course) => (
+                <CourseCard key={course.id} course={course} />
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              icon="🧭"
+              title="No matching courses yet"
+              description="Try another track or reset the catalog filters to explore everything MathAcademy offers."
+              action={{
+                label: "Show all courses",
+                onClick: () => setSelectedCategory(null),
+              }}
+            />
+          )}
         </div>
       </section>
 
       {/* How It Works */}
       <section id="how-it-works" className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
+          <h2 className="display-type text-3xl font-bold text-center mb-12">How It Works</h2>
 
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-[var(--surface-800)] rounded-2xl p-6 border border-[var(--surface-600)]">
@@ -215,7 +235,7 @@ export default function Home() {
       {/* League System */}
       <section className="py-20 px-4 bg-gradient-to-b from-transparent to-[var(--surface-900)]/50">
         <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4">Compete in Weekly Leagues</h2>
+          <h2 className="display-type text-3xl font-bold mb-4">Compete in Weekly Leagues</h2>
           <p className="text-[var(--text-secondary)] mb-12 max-w-2xl mx-auto">
             Climb through Bronze, Silver, Gold, Platinum, Diamond, and Master
             leagues. Earn XP each week to advance, but don&apos;t worry—your XP
@@ -243,6 +263,7 @@ export default function Home() {
           <p>MathAcademy — Learn 4x Faster with AI-Powered Adaptive Learning</p>
         </div>
       </footer>
+      </main>
     </div>
   );
 }

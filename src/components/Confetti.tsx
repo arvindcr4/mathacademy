@@ -69,9 +69,7 @@ export default function Confetti({
           style={{
             left: `${particle.x}%`,
             top: `${particle.y}%`,
-            backgroundColor: particle.color.includes("var(")
-              ? undefined
-              : particle.color,
+            backgroundColor: particle.color,
             transform: `rotate(${particle.rotation}deg)`,
             animation: `confetti-fall ${duration}ms ease-in-out forwards`,
             animationDelay: `${particle.delay}ms`,

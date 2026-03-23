@@ -126,6 +126,7 @@ export default function Dashboard() {
     ...simulatedUsers,
     { id: "current", name: currentUser.name, xp: currentUser.xp, league: currentUser.league, avatar: currentUser.avatar, dailyStreak: 12 },
   ].sort((a, b) => b.xp - a.xp);
+  const leaderboardUsers = sortedLeaderboard.filter((user) => user.id !== "current");
   const userRank =
     sortedLeaderboard.findIndex((u) => u.id === "current") + 1;
 
@@ -141,25 +142,28 @@ export default function Dashboard() {
             <span className="text-xl font-bold">MathAcademy</span>
           </Link>
           <div className="flex items-center gap-4">
-            <nav className="hidden md:flex items-center gap-6">
+            <nav className="flex flex-wrap items-center justify-end gap-2 sm:gap-6 text-sm sm:text-base">
               <button
                 type="button"
                 onClick={() => setActiveTab("dashboard")}
-                className={`hover:text-[var(--xp-gold)] transition ${activeTab === "dashboard" ? "text-[var(--xp-gold)]" : ""}`}
+                aria-current={activeTab === "dashboard" ? "page" : undefined}
+                className={`hover:text-[var(--xp-gold)] transition focus-ring rounded-md px-2 py-1 ${activeTab === "dashboard" ? "text-[var(--xp-gold)]" : ""}`}
               >
                 Dashboard
               </button>
               <button
                 type="button"
                 onClick={() => setActiveTab("leaderboard")}
-                className={`hover:text-[var(--xp-gold)] transition ${activeTab === "leaderboard" ? "text-[var(--xp-gold)]" : ""}`}
+                aria-current={activeTab === "leaderboard" ? "page" : undefined}
+                className={`hover:text-[var(--xp-gold)] transition focus-ring rounded-md px-2 py-1 ${activeTab === "leaderboard" ? "text-[var(--xp-gold)]" : ""}`}
               >
                 Leaderboard
               </button>
               <button
                 type="button"
                 onClick={() => setActiveTab("courses")}
-                className={`hover:text-[var(--xp-gold)] transition ${activeTab === "courses" ? "text-[var(--xp-gold)]" : ""}`}
+                aria-current={activeTab === "courses" ? "page" : undefined}
+                className={`hover:text-[var(--xp-gold)] transition focus-ring rounded-md px-2 py-1 ${activeTab === "courses" ? "text-[var(--xp-gold)]" : ""}`}
               >
                 Courses
               </button>
@@ -173,9 +177,9 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main id="main-content" className="max-w-7xl mx-auto px-4 py-8">
         {activeTab === "dashboard" && (
-          <div className="space-y-8">
+          <div className="space-y-8 content-auto">
             {/* Welcome + XP Section */}
             <div className="bg-[var(--surface-800)] rounded-2xl p-6 border border-[var(--surface-600)]">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -184,7 +188,7 @@ export default function Dashboard() {
                     {currentUser.avatar}
                   </div>
                   <div>
-                    <h1 className="text-2xl font-bold">Welcome back!</h1>
+                    <h1 className="display-type text-2xl font-bold">Welcome back!</h1>
                     <p className="text-[var(--text-secondary)]">
                       Ready to continue your learning journey?
                     </p>
@@ -239,7 +243,7 @@ export default function Dashboard() {
 
             {/* Continue Learning Section */}
             <div>
-              <h2 className="text-xl font-semibold mb-4">Continue Learning</h2>
+              <h2 className="display-type text-xl font-semibold mb-4">Continue Learning</h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {courses.slice(0, 3).map((course, index) => (
                   <Link key={course.id} href={`/course/${course.slug}`}>
@@ -278,7 +282,7 @@ export default function Dashboard() {
 
             {/* Knowledge Graph Preview */}
             <div>
-              <h2 className="text-xl font-semibold mb-4">
+              <h2 className="display-type text-xl font-semibold mb-4">
                 Your Knowledge Graph
               </h2>
               <div className="bg-[var(--surface-800)] border border-[var(--surface-600)] rounded-xl p-6">
@@ -310,9 +314,9 @@ export default function Dashboard() {
         )}
 
         {activeTab === "leaderboard" && (
-          <div className="space-y-6">
+          <div className="space-y-6 content-auto">
             <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold">League Leaderboard</h1>
+              <h1 className="display-type text-2xl font-bold">League Leaderboard</h1>
               <div className="flex items-center gap-2">
                 <LeagueBadge league="gold" size="md" />
                 <span className="font-medium">Gold League</span>
@@ -321,7 +325,7 @@ export default function Dashboard() {
 
             {/* Top 3 */}
             <div className="grid grid-cols-3 gap-4">
-              {sortedLeaderboard.slice(0, 3).map((user, index) => (
+              {leaderboardUsers.slice(0, 3).map((user, index) => (
                 <div
                   key={user.id}
                   className={`
@@ -369,12 +373,14 @@ export default function Dashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {sortedLeaderboard.slice(3).map((user, index) => (
+                  {leaderboardUsers.slice(3).map((user) => (
                     <tr
                       key={user.id}
                       className="border-t border-[var(--surface-600)] hover:bg-[var(--surface-700)]"
                     >
-                      <td className="py-3 px-4 text-[var(--text-muted)]">#{index + 4}</td>
+                      <td className="py-3 px-4 text-[var(--text-muted)]">
+                        #{sortedLeaderboard.findIndex((entry) => entry.id === user.id) + 1}
+                      </td>
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--mastery-blue)] to-teal-500 flex items-center justify-center text-sm font-bold text-white">
@@ -425,8 +431,8 @@ export default function Dashboard() {
         )}
 
         {activeTab === "courses" && (
-          <div className="space-y-6">
-            <h1 className="text-2xl font-bold">All Courses</h1>
+          <div className="space-y-6 content-auto">
+            <h1 className="display-type text-2xl font-bold">All Courses</h1>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {courses.map((course) => (
                 <Link key={course.id} href={`/course/${course.slug}`}>

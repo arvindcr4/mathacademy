@@ -157,7 +157,9 @@ describe("Home Page", () => {
   describe("Hero Section", () => {
     it("should render the hero headline", () => {
       render(<Home />);
-      expect(screen.getByText("Master Skills 4x Faster")).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: /Master Skills\s*4x Faster/i })
+      ).toBeInTheDocument();
     });
 
     it("should render the AI-Powered badge", () => {
